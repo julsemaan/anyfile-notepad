@@ -13,7 +13,11 @@ class GApi
     @client = Google::APIClient.new
     @client.authorization.client_id = "449833954230-2t7rh19kj9n4cjb1t290ipq5m3meeja3.apps.googleusercontent.com"
     @client.authorization.client_secret = "iTEiPHBh7O5K5wxx7aKazAqn"
-    @client.authorization.redirect_uri = "http://scentos2.wiprogram.info:3000"
+    if Rails.env.production?
+      @client.authorization.redirect_uri = "http://anyfile-notepad.herokuapp.com"
+    else
+      @client.authorization.redirect_uri = "http://scentos2.wiprogram.info:3000"
+    end
     @client.authorization.scope = SCOPES
   end
   
