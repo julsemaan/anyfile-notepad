@@ -1,0 +1,17 @@
+<%= form_for @file do |f| %>
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :folder_id %>
+  <div>
+    <%= f.label "Editing file : " %>
+    <%= f.text_field :title %>
+    <%= f.text_field :type, :disabled => true %>
+  </div>
+  <div>
+    <%= f.text_area :content %>
+  </div>
+  <div>
+    <%= f.label :new_revision %>
+    <%= f.check_box :new_revision %>
+  </div>
+  <%= f.submit %>
+<% end %>
