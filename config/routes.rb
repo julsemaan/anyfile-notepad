@@ -6,8 +6,11 @@ AnyfileNotepad::Application.routes.draw do
   match 'g_api/about' => 'g_api#about'
   match 'g_api/svc' => 'g_api#svc'
 
-  match 'editor/new' => 'editor#new'
-  match 'editor/edit' => 'editor#edit'
+  match 'editor/new/' => 'editor#new'
+  match 'editor/new/:folder_id' => 'editor#new'
+  match 'editor/edit/:id' => 'editor#edit'
+  
+  resources :g_files, :controller => :editor
   
   root :to => 'g_api#user'
 end

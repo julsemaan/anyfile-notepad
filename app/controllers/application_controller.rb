@@ -26,8 +26,8 @@ class ApplicationController < ActionController::Base
     
     if params[:state]
       state = MultiJson.decode(params[:state] || '{}')
-      if state['parentId']
-        redirect_to "/editor/new/#{state['parentId']}"
+      if state['folderId']
+        redirect_to "/editor/new/#{state['folderId']}"
       else
         doc_id = state['ids'] ? state['ids'].first : ''
         redirect_to "/editor/edit/#{doc_id}"
