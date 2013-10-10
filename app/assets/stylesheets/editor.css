@@ -1,0 +1,31 @@
+/*html{
+  height:100%;
+}
+
+body{
+  min-height:100%;
+}
+
+form.edit_g_file{
+
+}*/
+
+form.edit_g_file div.g_file_menu{
+  display:inline-block;
+  width:15%;
+  height:100%;
+}
+
+form.edit_g_file div.g_file_editor{
+  height:100%;
+  display:inline-block;
+}
+
+form.edit_g_file div#editor{
+  position:absolute;
+  top:0;
+  bottom:0;
+  right:0;
+  width:85%;
+  display:inline-block;
+}

@@ -1,17 +1,31 @@
 <%= form_for @file do |f| %>
   <%= f.hidden_field :id %>
   <%= f.hidden_field :folder_id %>
-  <div>
-    <%= f.label "Editing file : " %>
-    <%= f.text_field :title %>
-    <%= f.text_field :type, :disabled => true %>
+  <div class="g_file_menu">
+    <div>
+      <%= f.label "Editing file : " %>
+      <%= f.text_field :title %>
+      <%= f.text_field :type, :disabled => true %>
+    </div>
+    <div>
+      <%= f.label :new_revision %>
+      <%= f.check_box :new_revision %>
+    </div>
+    <%= f.submit %>
   </div>
-  <div>
-    <%= f.text_area :content %>
+  <div class="g_file_editor">
+    <%= f.hidden_field :content %>
+    <div id="editor"><%= @file.content %></div>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        //editor.getSession().setMode("ace/mode/javascript");
+        
+        $('.edit_g_file').submit(function(){
+            $('#g_file_content').val(editor.getValue())
+        });
+    </script>
   </div>
-  <div>
-    <%= f.label :new_revision %>
-    <%= f.check_box :new_revision %>
-  </div>
-  <%= f.submit %>
+  
+  
 <% end %>
