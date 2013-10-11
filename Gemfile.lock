@@ -75,6 +75,7 @@ GEM
     mime-types (1.25)
     multi_json (1.8.1)
     multipart-post (1.2.0)
+    newrelic_rpm (3.6.7.152)
     pg (0.16.0)
     polyglot (0.3.3)
     rack (1.4.5)
@@ -140,6 +141,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   google-api-client
   jquery-rails
+  newrelic_rpm
   pg
   rails (= 3.2.14)
   sass-rails (~> 3.2.3)
