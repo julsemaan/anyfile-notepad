@@ -10,10 +10,12 @@ form.edit_g_file{
 
 }*/
 
+
 form.edit_g_file div.g_file_menu{
   display:inline-block;
-  width:15%;
+  width:17%;
   height:100%;
+  padding:0.7em;;
 }
 
 form.edit_g_file div.g_file_editor{
@@ -26,6 +28,27 @@ form.edit_g_file div#editor{
   top:0;
   bottom:0;
   right:0;
-  width:85%;
+  width:83%;
   display:inline-block;
+}
+
+div.g_file_menu{
+  margin-top:1em;
+}
+
+div.g_file_menu div.panel-heading{
+  padding:0;
+}
+
+div.g_file_menu h3{
+  text-align:center;
+  font-family:Lucida Grande;
+  font-size:180%;
+  font-style:italic;
+  font-weight:bold;
+  color:#d9534f;
+}
+
+div.file_title{
+  padding-bottom:5px;
 }

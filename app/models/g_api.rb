@@ -13,14 +13,17 @@ class GApi
   def initialize()
     @client = Google::APIClient.new
     if Rails.env.production?
-      g_api_config = ActiveSupport::JSON.decode(File.read('config/client_secret_449833954230-2t7rh19kj9n4cjb1t290ipq5m3meeja3.apps.googleusercontent.com.json'))
+      @client.authorization.client_id = ENV["GOOGLE_CLIENT_ID"]
+      @client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
+      @client.authorization.redirect_uri = ENV["GOOGLE_REDIRECT_URI"]
     else
       g_api_config = ActiveSupport::JSON.decode(File.read('config/client_secret_449833954230-k0jhblecv85a48vc4e81pf1pf3sk25fe.apps.googleusercontent.com.json'))
+      web_config = g_api_config["web"]
+      @client.authorization.client_id = web_config["client_id"]
+      @client.authorization.client_secret = web_config["client_secret"]
+      @client.authorization.redirect_uri = web_config["redirect_uris"].first
     end
-    web_config = g_api_config["web"]
-    @client.authorization.client_id = web_config["client_id"]
-    @client.authorization.client_secret = web_config["client_secret"]
-    @client.authorization.redirect_uri = web_config["redirect_uris"].first
+    
 
     @client.authorization.scope = SCOPES
   end

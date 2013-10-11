@@ -3,22 +3,42 @@
   <%= f.hidden_field :folder_id %>
   <div class="g_file_menu">
     <div>
-      <%= f.label "Editing file : " %>
-      <%= f.text_field :title %>
-      <%= f.text_field :type, :disabled => true %>
+      <% f.text_field :type, :disabled => true %>
     </div>
+    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        
+        <h3 class="panel-title"><%= image_tag "logo.png", :width => 25, :height => 25 %> <%= f.label "Anyfile Notepad" %> <%= image_tag "logo.png", :width => 25, :height => 25 %></h3>
+      </div>
+      <div class="panel-body">
+        <div class="file_title  input-group">
+          <%= f.text_field :title, :class=> "form-control" %>
+          <span class="input-group-btn ">
+            <%= f.submit "SAVE", :class => "btn btn-primary"%>
+          </span>
+        </div>
+        
+        <div class="input-group ">
+          <%= f.label "Save as new revision", :class => "form-control" %>
+          <span class="input-group-addon">
+            <%= f.check_box :new_revision %>
+          </span>
+        </div>
+      </div>
+    </div>
+    
     <div>
-      <%= f.label :new_revision %>
-      <%= f.check_box :new_revision %>
+      
     </div>
-    <%= f.submit %>
+    
   </div>
   <div class="g_file_editor">
     <%= f.hidden_field :content %>
     <div id="editor"><%= @file.content %></div>
     <script>
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
+        editor.setTheme("ace/theme/dawn");
         //editor.getSession().setMode("ace/mode/javascript");
         
         $('.edit_g_file').submit(function(){
