@@ -1,29 +1,41 @@
-/*html{
-  height:100%;
+@import "bootstrap-min.css.scss";
+
+html{
+  background-color:#EBEBEB;
 }
 
-body{
-  min-height:100%;
+/* errors */
+div.error_panel_body{
+  padding:0.1em;
+  color:#b94a48;
+  font-weight:bold;
 }
 
-form.edit_g_file{
+.field_with_errors {
+  @extend .has-error;
+  
+  
+}
 
-}*/
+
+form.editor_form{
+  background-color:#EBEBEB;
+}
 
 
-form.edit_g_file div.g_file_menu{
+form.editor_form div.g_file_menu{
   display:inline-block;
   width:17%;
   height:100%;
   padding:0.7em;;
 }
 
-form.edit_g_file div.g_file_editor{
+form.editor_form div.g_file_editor{
   height:100%;
   display:inline-block;
 }
 
-form.edit_g_file div#editor{
+form.editor_form div#editor{
   position:absolute;
   top:0;
   bottom:0;
@@ -40,7 +52,7 @@ div.g_file_menu div.panel-heading{
   padding:0;
 }
 
-div.g_file_menu h3{
+div.g_file_menu h3.app_title{
   text-align:center;
   font-family:Lucida Grande;
   font-size:180%;

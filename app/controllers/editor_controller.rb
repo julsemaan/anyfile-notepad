@@ -11,9 +11,13 @@ class EditorController < ApplicationController
   def create
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
-    @file.create
+    success = @file.create
     #render text: @file.id
-    redirect_to edit_g_file_path @file.id
+    if success
+      redirect_to edit_g_file_path @file.id
+    else
+      render 'new'
+    end
   end
   
 	def edit

@@ -5,6 +5,8 @@ class GFile
   
   attr_accessor :id, :title, :type, :content, :new_revision, :persisted, :gapi, :folder_id
   
+  validates :title, :presence => true
+  
   def self.attr_accessor(*vars)
     @attributes ||= []
     @attributes.concat( vars )
@@ -27,6 +29,9 @@ class GFile
   end
   
   def create
+    if not self.valid? 
+      return false 
+    end
     file_hash = gapi.drive_api.files.insert.request_schema.new({"title" => title, "mimeType" => "text/plain", "parents" => [{"kind" => "drive#fileLink", "id" => folder_id}]}).to_hash
 
     
@@ -45,9 +50,13 @@ class GFile
         'alt' => 'json'})
     
     self.id = result.data.to_hash['id']
+    true
   end
   
   def save
+    if not self.valid? 
+      return false 
+    end
     file_hash = gapi.get_file_data(id)
     
     file_hash['title'] = title
@@ -67,6 +76,7 @@ class GFile
         'uploadType' => 'multipart',
         'alt' => 'json' }
     )
+    true
   end
   
   def persisted?
