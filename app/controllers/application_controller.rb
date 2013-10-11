@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     
     redirect_to api_client.authorization.authorization_uri.to_s unless @gapi.authorized?
     
-    if params[:state]
+    if params[:state] and @gapi.authorized?
       state = MultiJson.decode(params[:state] || '{}')
       
       if state['folderId']
