@@ -1,0 +1,7 @@
+
+<h3> Hi <%= @user['given_name'] %>, </h3>
+<p> Welcome to Anyfile Notepad. The notepad that let's you open any type of file on Google Drive. Although this program doesn't directly support binary files as word document or pdf document you can still open them BUT when you will save them they will not be reconverted so please be careful. To open a file simply go in Google Drive and right click on any file and select open with Anyfile Notepad. Not all mime types have been sent to Google. If you need to open a file and it's not working directly with the Google Drive interface open it with the file explorer directly in the app. It will automaticly be sent to the maintainers of the app and will be added after. </p>
+
+<p> Julien Semaan, creator of this app </p>
+
+<%= link_to "Create new file", new_g_file_path  %>

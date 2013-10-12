@@ -14,5 +14,5 @@ AnyfileNotepad::Application.routes.draw do
   
   resources :g_files, :controller => :editor
   
-  root :to => 'g_api#user'
+  root :to => 'g_api#welcome'
 end
