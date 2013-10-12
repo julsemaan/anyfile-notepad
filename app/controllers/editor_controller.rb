@@ -23,7 +23,8 @@ class EditorController < ApplicationController
 	def edit
     file_hash = @gapi.get_file_data(params[:id])
     #render json: JSON.pretty_generate(file_hash)
-    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> file_hash['content'].force_encoding("UTF-8").unpack("C*").pack("U*") , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
+    # .force_encoding("UTF-8").unpack("C*").pack("U*")
+    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> file_hash['content'] , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
   end
   
   def update
