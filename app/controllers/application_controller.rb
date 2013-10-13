@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
     end
     rescue Signet::AuthorizationError
       redirect_to api_client.authorization.authorization_uri.to_s
+      return
     end
     
     
@@ -28,7 +29,10 @@ class ApplicationController < ActionController::Base
       render :status => :forbidden, :text => "Authorization failed with Google API"
     end
     
-    redirect_to api_client.authorization.authorization_uri.to_s unless @gapi.authorized?
+    unless @gapi.authorized?
+      redirect_to api_client.authorization.authorization_uri.to_s 
+      return
+    end
     
     if params[:state] and @gapi.authorized?
       state = MultiJson.decode(params[:state] || '{}')
