@@ -19,7 +19,7 @@ class GApi
   ]
   
   def initialize()
-    @client = Google::APIClient.new
+    @client = Google::APIClient.new(:application_name => "Anyfile Notepad", :application_version => "0.1")
     if Rails.env.production?
       @client.authorization.client_id = ENV["GOOGLE_CLIENT_ID"]
       @client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
