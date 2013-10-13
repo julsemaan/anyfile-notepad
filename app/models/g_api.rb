@@ -80,7 +80,6 @@ class GApi
     api_client = @client
     api_client.authorization.code = code
     api_client.authorization.fetch_access_token!
-    # put the tokens to the sesion
     return {:access_token => api_client.authorization.access_token, :refresh_token => api_client.authorization.refresh_token, :expires_in => api_client.authorization.expires_in, :issued_at => api_client.authorization.issued_at}
   end
   

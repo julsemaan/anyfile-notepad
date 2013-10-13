@@ -16,20 +16,13 @@ class ApplicationController < ActionController::Base
       render :status => :forbidden, :text => "Authorization failed with Google API"
     end
     
-    begin
-      api_client.authorization.update_token!(session)
-      api_client.authorization.inspect
-      if api_client.authorization.refresh_token &&
-        api_client.authorization.expired?
-        api_client.authorization.fetch_access_token!
-      end
-    rescue Signet::AuthorizationError
-      redirect_to api_client.authorization.authorization_uri.to_s
-      return
+
+    api_client.authorization.update_token!(session)
+    api_client.authorization.inspect
+    if api_client.authorization.refresh_token &&
+      api_client.authorization.expired?
+      api_client.authorization.fetch_access_token!
     end
-    
-    
-    
     
     unless @gapi.authorized?
       redirect_to api_client.authorization.authorization_uri.to_s 
