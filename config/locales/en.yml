@@ -140,8 +140,8 @@ en:
         one:  "Here is the reported error :"
         other:  "Here are the reported errors :"
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: ! '%{count} errors prohibited this %{model} from being saved'
+        one: 1 error prohibited this operation on this %{model} 
+        other: ! '%{count} errors prohibited this operation on this %{model}'
   helpers:
     select:
       prompt: Please select

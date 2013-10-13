@@ -7,9 +7,6 @@ class EditorController < ApplicationController
     @dir = Jqueryfiletree.new('root', @gapi).get_content
   end
   
-  def new
-  
-  end
   
   def new
     @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
@@ -28,10 +25,15 @@ class EditorController < ApplicationController
   end
   
 	def edit
-    file_hash = @gapi.get_file_data(params[:id])
+    begin
+      file_hash = @gapi.get_file_data(params[:id])
+      @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> file_hash['content'] , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
+    rescue NoMethodError
+      @file = GFile.new
+      @file.errors.add(:base, "Document content was not downloaded. Note that Google docs are not currently supported.")
+    end
     #render json: JSON.pretty_generate(file_hash)
     # .force_encoding("UTF-8").unpack("C*").pack("U*")
-    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> file_hash['content'] , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
   end
   
   def update
