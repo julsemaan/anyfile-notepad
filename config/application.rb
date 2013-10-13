@@ -9,6 +9,17 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
+# hacky ack sass compressor
+module Sass
+  module Rails
+    class CssCompressor
+      def compress(css)
+        css
+      end
+    end
+  end
+end
+
 module AnyfileNotepad
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
