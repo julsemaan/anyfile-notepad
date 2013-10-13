@@ -7,19 +7,6 @@ class ApplicationController < ActionController::Base
     @gapi = GApi.new
     api_client = @gapi.client
     
-    begin
-      api_client.authorization.update_token!(session)
-      api_client.authorization.inspect
-      if api_client.authorization.refresh_token &&
-        api_client.authorization.expired?
-        api_client.authorization.fetch_access_token!
-    end
-    rescue Signet::AuthorizationError
-      redirect_to api_client.authorization.authorization_uri.to_s
-      return
-    end
-    
-    
     if params[:code]
       @to_store = @gapi.authorize_code(params[:code])
       @to_store.each do |key,value|
@@ -28,6 +15,21 @@ class ApplicationController < ActionController::Base
     elsif params[:error]
       render :status => :forbidden, :text => "Authorization failed with Google API"
     end
+    
+    begin
+      api_client.authorization.update_token!(session)
+      api_client.authorization.inspect
+      if api_client.authorization.refresh_token &&
+        api_client.authorization.expired?
+        api_client.authorization.fetch_access_token!
+      end
+    rescue Signet::AuthorizationError
+      redirect_to api_client.authorization.authorization_uri.to_s
+      return
+    end
+    
+    
+    
     
     unless @gapi.authorized?
       redirect_to api_client.authorization.authorization_uri.to_s 
