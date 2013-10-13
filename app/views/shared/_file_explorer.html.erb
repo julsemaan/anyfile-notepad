@@ -1,0 +1,64 @@
+
+
+<div class="file_explorer panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title" id="open_file_explorer_title" >Open File <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span></h3>
+  </div>
+  <div class="panel-body" id="file_tree_panel" >
+  <p id="file_tree_loading_message" style="display:none">Loading...</p>
+  <div id="fileTree" class="demo"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+    var opened = false
+    var loaded = false
+
+    watch_tree_job = setInterval(watch_tree,1000)
+    
+    function watch_tree(){
+      if( $('#fileTree').html() == "" ) {
+        
+      }
+      else{
+        $('#file_tree_loading_message').fadeOut()
+        clearInterval(watch_tree_job);
+      }
+
+    }
+    
+    function load_explorer(){
+      $('#file_tree_loading_message').fadeIn()
+      $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', callback: function(){alert('hello')}});
+      loaded = true
+    }
+    
+    <% if with_dropdown %>
+      $(document).ready(function(){
+        $('#file_tree_panel').hide()
+        $('#open_file_explorer').show()
+        $('#open_file_explorer').show()
+        $('#open_file_explorer_title').css('cursor', 'pointer')
+      })
+      
+      $('#open_file_explorer_title').click( function() {
+          if(!opened){
+            
+            $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-up")
+            $('#file_tree_panel').slideDown()
+            if(!loaded){
+              load_explorer()
+            }
+            opened = !opened
+          }
+          else{
+            $('#file_tree_panel').slideUp()
+            $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-down")
+            opened = !opened
+          }
+      });
+    <% else %>
+      load_explorer()
+    <% end %>
+</script>

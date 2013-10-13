@@ -1,5 +1,12 @@
 class EditorController < ApplicationController
   require 'json'
+  
+  before_filter :init_file_explorer
+  
+  def init_file_explorer
+    @dir = Jqueryfiletree.new('root', @gapi).get_content
+  end
+  
   def new
   
   end
@@ -30,8 +37,12 @@ class EditorController < ApplicationController
   def update
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
-    @file.save
-    redirect_to edit_g_file_path params[:id]
+    success = @file.save
+    if success
+      redirect_to edit_g_file_path params[:id]
+    else
+      render 'edit'
+    end
     #render json: params
   end
 

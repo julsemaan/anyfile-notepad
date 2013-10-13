@@ -3,11 +3,19 @@ class GApi
 
   class_attribute :client
   
+  FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder'
+  
   SCOPES = [
     'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/drive.install'
+    'https://www.googleapis.com/auth/drive.install',
+    'https://www.googleapis.com/auth/drive.readonly',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+    'https://www.googleapis.com/auth/drive.appdata',
+    'https://www.googleapis.com/auth/drive.apps.readonly'
+    
   ]
   
   def initialize()
@@ -42,12 +50,42 @@ class GApi
     file_hash
   end
   
+  def root_folder_id
+    about_user['rootFolderId']
+  end
+  
+  def get_folder_files(folder_id)
+    query = "'#{folder_id}' in parents and trashed = false"
+    parameters = {'q' => query}
+    result = client.execute(
+        :api_method => drive_api.files.list,
+        :parameters => parameters)
+
+    children = result.data
+
+    folders = []
+    files = []
+    
+    children.items.each do |child|
+      if child.mimeType == FOLDER_MIME_TYPE
+        folders << GFolder.new(:id => child.id, :title => child.title, :persisted => true)
+      else
+        files << GFile.new(:id => child.id, :title => child.title)
+      end
+    end
+    {:folders => folders, :files => files}
+  end
+  
   def authorize_code(code)
     api_client = @client
     api_client.authorization.code = code
     api_client.authorization.fetch_access_token!
     # put the tokens to the sesion
     return {:access_token => api_client.authorization.access_token, :refresh_token => api_client.authorization.refresh_token, :expires_in => api_client.authorization.expires_in, :issued_at => api_client.authorization.issued_at}
+  end
+  
+  def about_user
+    @client.execute!(:api_method => drive_api.about.get).data
   end
   
   def oauth_api

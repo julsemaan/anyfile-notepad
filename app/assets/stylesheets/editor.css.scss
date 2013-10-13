@@ -4,6 +4,10 @@ html{
   background-color:#EBEBEB;
 }
 
+body{
+  background-color:#EBEBEB;
+}
+
 /* errors */
 div.error_panel_body{
   padding:0.1em;
@@ -17,25 +21,70 @@ div.error_panel_body{
   
 }
 
+div.file_explorer{
+  h3{
+    padding:0.4em;
+  }
+  div.panel-title{
+    padding:0.5em;
+  }
+}
 
 form.editor_form{
   background-color:#EBEBEB;
 }
 
 
-form.editor_form div.g_file_menu{
+
+
+div.g_file_menu{
   display:inline-block;
   width:17%;
   height:100%;
   padding:0.7em;;
+  margin-top:1em;
+  
+  div.panel-heading{
+    padding:0;
+  }
+  
+  h3.app_title{
+    text-align:center;
+    *{
+      margin:0;
+      padding:0;
+      vertical-align:middle;
+      text-align:center;
+      font-family:Lucida Grande;
+      font-size:170%;
+      display:inline-block;
+      font-style:italic;
+      font-weight:bold;
+      color:#d9534f;
+    }
+  }
+  
+  div.file_title{
+    padding-bottom:5px;
+  }
+  
+  div.g_file_editor_file_explorer{
+  
+    #fileTree{
+      overflow-y:auto;
+      max-height:300px;
+    }
+  }
+  
+
 }
 
-form.editor_form div.g_file_editor{
+div.g_file_editor{
   height:100%;
   display:inline-block;
 }
 
-form.editor_form div#editor{
+div#editor{
   position:absolute;
   top:0;
   bottom:0;
@@ -44,23 +93,3 @@ form.editor_form div#editor{
   display:inline-block;
 }
 
-div.g_file_menu{
-  margin-top:1em;
-}
-
-div.g_file_menu div.panel-heading{
-  padding:0;
-}
-
-div.g_file_menu h3.app_title{
-  text-align:center;
-  font-family:Lucida Grande;
-  font-size:180%;
-  font-style:italic;
-  font-weight:bold;
-  color:#d9534f;
-}
-
-div.file_title{
-  padding-bottom:5px;
-}

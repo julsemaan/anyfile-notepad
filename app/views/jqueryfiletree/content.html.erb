@@ -1,0 +1,9 @@
+<ul class="jqueryFileTree" style="display: none;">
+  <% @dir[0].each do |dir| %>
+<li class="directory collapsed">
+  <a href="#" rel="<%= dir.id %>/"><%= dir.title %></a></li>
+  <%end%>
+<% @dir[1].each do |file|%>
+  <li class="file ext_<%=File.extname(file.title)[1..-1]%>"><a href="<%= edit_g_file_path file.id %>"><%= file.title %></a></li>
+  <% end %>
+</ul>
