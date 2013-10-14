@@ -28,16 +28,8 @@ class GOauthController < ApplicationController
       redirect_to api_client.authorization.authorization_uri.to_s 
     end
     
-    if params[:state] and @gapi.authorized?
-      state = MultiJson.decode(params[:state] || '{}')
-      
-      if state['folderId']
-        redirect_to "/editor/new/#{state['folderId']}"
-      else
-        doc_id = state['ids'] ? state['ids'].first : ''
-        redirect_to "/editor/edit/#{doc_id}"
-      end
-    end
+
+    
     
     
   end
