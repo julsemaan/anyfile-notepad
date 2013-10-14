@@ -25,11 +25,14 @@
   <h1 class="">Anyfile Notepad </h1>
   </div>
   <div class="col-md-6 col-md-offset-1">
-  <div class="col-md-12">
-      <a class="btn btn-primary" href="#">Download in Chrome Store <%= image_tag "chrome_store.jpg", :width => 30, :height => 30 %></a>
-      <a class="btn btn-primary" href="https://plus.google.com/communities/109168786116242892967">Find us on <%= image_tag "gplus.jpg", :width => 30, :height => 30 %></a>
+      <div class="row">
+        <a class="btn btn-primary" href="#">Download in Chrome Store <%= image_tag "chrome_store.jpg", :width => 30, :height => 30 %></a>
+        <a class="btn btn-primary" href="https://plus.google.com/communities/109168786116242892967">Find us on <%= image_tag "gplus.jpg", :width => 30, :height => 30 %></a>
+      </div>
+      <div class="row launch_app_container">
+        <a class="btn btn-primary" href="<%= new_g_file_path %>">Launch Anyfile Notepad <%= image_tag "logo.png", :width => 30, :height => 30 %></a>
+      </div>
       </div>  
-  </div>
   </div>
   
   <div class="home_content">

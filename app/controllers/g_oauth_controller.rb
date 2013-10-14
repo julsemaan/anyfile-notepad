@@ -9,7 +9,12 @@ class GOauthController < ApplicationController
     api_client.authorization.inspect
     if api_client.authorization.refresh_token &&
       api_client.authorization.expired?
-      api_client.authorization.fetch_access_token!
+      begin
+        api_client.authorization.fetch_access_token!
+      rescue Signet::AuthorizationError
+        redirect_to api_client.authorization.authorization_uri.to_s 
+        return
+      end
     end
     
     unless @gapi.authorized?
