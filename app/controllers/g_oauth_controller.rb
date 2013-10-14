@@ -17,6 +17,12 @@ class GOauthController < ApplicationController
       return
     end
     
+    begin
+      @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data
+    rescue
+      redirect_to api_client.authorization.authorization_uri.to_s 
+    end
+    
     if params[:state] and @gapi.authorized?
       state = MultiJson.decode(params[:state] || '{}')
       
