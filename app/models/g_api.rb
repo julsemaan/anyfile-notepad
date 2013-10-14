@@ -23,7 +23,7 @@ class GApi
     if Rails.env.production?
       @client.authorization.client_id = ENV["GOOGLE_CLIENT_ID"]
       @client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
-      @client.authorization.redirect_uri = ActiveSupport::JSON.decode(ENV["GOOGLE_REDIRECT_URI"])
+      @client.authorization.redirect_uri = ENV["GOOGLE_REDIRECT_URI"]
     else
       g_api_config = ActiveSupport::JSON.decode(File.read('config/client_secret_449833954230-k0jhblecv85a48vc4e81pf1pf3sk25fe.apps.googleusercontent.com.json'))
       web_config = g_api_config["web"]
