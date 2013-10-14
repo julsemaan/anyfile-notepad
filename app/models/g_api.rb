@@ -41,9 +41,10 @@ class GApi
   end
   
   def get_file_data(id)
+    fields = "downloadUrl,id,mimeType,title"
     result = @client.execute!(
     :api_method => drive_api.files.get,
-    :parameters => { :fileId => id })
+    :parameters => { :fileId => id, :fields => fields })
     file_hash = result.data.to_hash
     result = @client.execute(:uri => result.data.downloadUrl)
     file_hash['content'] = result.body
@@ -56,7 +57,8 @@ class GApi
   
   def get_folder_files(folder_id)
     query = "'#{folder_id}' in parents and trashed = false"
-    parameters = {'q' => query}
+    fields = "items(id,mimeType,title)"
+    parameters = {'q' => query, 'fields' => fields}
     result = client.execute(
         :api_method => drive_api.files.list,
         :parameters => parameters)
