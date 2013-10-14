@@ -3,9 +3,7 @@ class GOauthController < ApplicationController
   after_filter :execute_after
   
   def execute_default
-    @gapi = GApi.new
-    api_client = @gapi.client
-    
+
 
     api_client.authorization.update_token!(session)
     api_client.authorization.inspect

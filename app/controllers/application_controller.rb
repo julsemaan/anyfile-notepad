@@ -3,6 +3,10 @@ class ApplicationController < ActionController::Base
   before_filter :capture_auth
   
   def capture_auth
+    @gapi = GApi.new
+    api_client = @gapi.client
+    
+    
     if params[:code]
       @to_store = @gapi.authorize_code(params[:code])
       @to_store.each do |key,value|
