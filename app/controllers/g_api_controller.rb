@@ -1,4 +1,4 @@
-class GApiController < ApplicationController
+class GApiController < GOauthController
   require 'json'
   def welcome
     @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data

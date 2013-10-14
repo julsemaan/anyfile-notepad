@@ -1,4 +1,4 @@
-class JqueryfiletreeController < ApplicationController
+class JqueryfiletreeController < GOauthController
   protect_from_forgery :only => []
   def content
     @root_id = params[:dir]

@@ -8,6 +8,7 @@
         <% f.text_field :type, :disabled => true %>
       </div>
       
+      <%= render 'shared/flash', :flash => flash %>
       <div class="panel panel-default">
         <div class="panel-heading">
           
@@ -32,6 +33,7 @@
       </div>
 
       <%= render 'shared/error_messages', :object => f.object %>
+      
   <% end %>
   <div class="g_file_editor_file_explorer">
     <%= render 'shared/file_explorer', :with_dropdown => true %>

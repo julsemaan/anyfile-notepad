@@ -1,0 +1,27 @@
+<%= form_for(@mime_type) do |f| %>
+  <% if @mime_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@mime_type.errors.count, "error") %> prohibited this mime_type from being saved:</h2>
+
+      <ul>
+      <% @mime_type.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+    
+  <% end %>
+  
+  <div class="field">
+    <%= f.label :type_name %>
+    <%= f.text_field :type_name %>
+  </div>
+    <div class="field">
+    <%= f.label :integrated %>
+    <%= f.check_box :integrated %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

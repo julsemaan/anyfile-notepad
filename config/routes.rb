@@ -1,6 +1,6 @@
 AnyfileNotepad::Application.routes.draw do
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
+  resources :mime_types
+
 
   match 'jqueryfiletree/content' => 'jqueryfiletree#content'
   
@@ -16,6 +16,7 @@ AnyfileNotepad::Application.routes.draw do
   match 'editor/edit/:id' => 'editor#edit'
   
   resources :g_files, :controller => :editor
+  resources :mime_types
   
-  root :to => 'g_api#welcome'
+  root :to => 'pages#home'
 end

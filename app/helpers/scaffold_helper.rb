@@ -1,0 +1,2 @@
+module ScaffoldHelper
+end

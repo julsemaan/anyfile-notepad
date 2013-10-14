@@ -1,0 +1,27 @@
+
+.container{
+  max-width:1000px;
+  background-color:white;
+  padding:0;
+  padding-bottom:1em;
+}
+
+.home_header{
+  vertical-align:middle;
+  text-align:center;
+  padding:1em  0em;
+  color:#d9534f;
+  margin:0;
+  *{
+    font-family:courier;
+    font-weight:bold;
+  }
+}
+
+.home_content{
+  padding:1em;
+}
+
+.links{
+  font-size:130%;
+}
