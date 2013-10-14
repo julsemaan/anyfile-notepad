@@ -31,6 +31,7 @@ class EditorController < GOauthController
     rescue NoMethodError
       @file = GFile.new
       @file.errors.add(:base, "Document content was not downloaded. Note that Google docs are not currently supported.")
+      return
     end
     
     begin
