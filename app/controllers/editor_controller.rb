@@ -27,17 +27,19 @@ class EditorController < GOauthController
 	def edit
     begin
       file_hash = @gapi.get_file_data(params[:id])
-      begin
-        content = file_hash['content'].encode("UTF-8")
-      rescue
-        content = file_hash['content'].force_encoding("UTF-8").unpack("C*").pack("U*")
-        flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
-      end
-      @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
+      content = file_hash['content']
     rescue NoMethodError
       @file = GFile.new
       @file.errors.add(:base, "Document content was not downloaded. Note that Google docs are not currently supported.")
     end
+    
+    begin
+      content = content.encode("UTF-8")
+    rescue
+      content = content.force_encoding("UTF-8").unpack("C*").pack("U*")
+      flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
+    end
+    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
     
     MimeType.add_if_not_known file_hash['mimeType']
     
