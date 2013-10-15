@@ -9,7 +9,11 @@ class EditorController < GOauthController
   
   
   def new
-    @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
+    if params[:folder_id]
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
+    else
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => 'root')
+    end
   end
   
   def create
