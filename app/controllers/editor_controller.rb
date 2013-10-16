@@ -39,7 +39,7 @@ class EditorController < GOauthController
     end
     
     begin
-      content = content.encode("UTF-8")
+      content.encode("UTF-8")
     rescue
       content = content.force_encoding("UTF-8").unpack("C*").pack("U*")
       flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
