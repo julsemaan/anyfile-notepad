@@ -1,6 +1,6 @@
-class MimeTypesController < ApplicationController
-  layout 'common_website'
-  http_basic_authenticate_with :name => "super", :password => "man"
+class MimeTypesController < AdminController
+  
+  
   # GET /mime_types
   # GET /mime_types.json
   def index

@@ -1,4 +1,7 @@
 AnyfileNotepad::Application.routes.draw do
+  resources :syntaxes
+
+
   resources :mime_types
 
 

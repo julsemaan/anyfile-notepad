@@ -11,13 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131014172826) do
+ActiveRecord::Schema.define(:version => 20131018011357) do
 
   create_table "mime_types", :force => true do |t|
     t.string   "type_name"
     t.boolean  "integrated", :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "syntaxes", :force => true do |t|
+    t.string   "display_name"
+    t.string   "ace_js_mode"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
 end
