@@ -44,7 +44,7 @@ class EditorController < GOauthController
       content = content.force_encoding("UTF-8").unpack("C*").pack("U*")
       flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
     end
-    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true)
+    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
     
     MimeType.add_if_not_known file_hash['mimeType']
     

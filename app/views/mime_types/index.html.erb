@@ -4,7 +4,7 @@
   <tr>
     <th>TYPE</th>
     <th>Integrated with Drive SDK</th>
-    <th></th>
+    <th>Syntax</th>
     <th></th>
     <th></th>
   </tr>
@@ -13,6 +13,7 @@
   <tr>
     <td><%= mime_type.type_name %></td>
     <td><%= mime_type.integrated %></td>
+    <td><%= mime_type.syntax.display_name %></td>
     <td><%= link_to 'Show', mime_type %></td>
     <td><%= link_to 'Edit', edit_mime_type_path(mime_type) %></td>
     <td><%= link_to 'Destroy', mime_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>

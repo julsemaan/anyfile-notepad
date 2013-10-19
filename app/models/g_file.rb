@@ -3,7 +3,7 @@ class GFile
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
-  attr_accessor :id, :title, :type, :content, :new_revision, :persisted, :gapi, :folder_id
+  attr_accessor :id, :title, :type, :content, :new_revision, :persisted, :gapi, :folder_id, :syntax
   
   validates :title, :presence => true
   
@@ -18,6 +18,15 @@ class GFile
   end
 
   def initialize(attributes={})
+    # set the corresponding syntax or default syntax if not specified
+    if attributes[:syntax].nil?
+      begin
+        attributes[:syntax] = MimeType.find_by_type_name(attributes[:type]).syntax
+      rescue
+        attributes[:syntax] = Syntax.find_by_ace_js_mode :plain_text
+      end
+    end
+    
     attributes && attributes.each do |name, value|
       send("#{name}=", value) if respond_to? name.to_sym 
     end

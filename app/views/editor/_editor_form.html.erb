@@ -22,7 +22,7 @@
               <%= f.submit "SAVE", :class => "btn btn-primary"%>
             </span>
           </div>
-          
+          <span><%= @file.type %></span>
           <div class="input-group ">
             <%= f.label "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
             <span class="input-group-addon">
@@ -47,7 +47,7 @@
   <script>
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/dawn");
-      //editor.getSession().setMode("ace/mode/javascript");
+      editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
       
       $('.editor_form').submit(function(){
           $('#g_file_content').val(editor.getValue())
