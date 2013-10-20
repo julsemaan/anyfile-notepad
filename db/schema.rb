@@ -35,4 +35,11 @@ ActiveRecord::Schema.define(:version => 20131020170308) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "syntaxes", :force => true do |t|
+    t.string   "display_name"
+    t.string   "ace_js_mode"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
 end
