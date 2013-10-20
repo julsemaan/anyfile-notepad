@@ -16,12 +16,18 @@ class GFile
   def self.attributes
     @attributes
   end
+  
+  def extension
+    File.extname(self.title)
+  end
 
   def initialize(attributes={})
     # set the corresponding syntax or default syntax if not specified
+    
     if attributes[:syntax].nil?
       begin
-        attributes[:syntax] = MimeType.find_by_type_name(attributes[:type]).syntax
+        extension_tmp = File.extname(attributes[:title])
+        attributes[:syntax] = Extension.find_by_name(extension_tmp).syntax
       rescue
         attributes[:syntax] = Syntax.find_by_ace_js_mode :plain_text
       end

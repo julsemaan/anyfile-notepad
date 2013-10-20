@@ -20,7 +20,7 @@
     <%= f.label :integrated %>
     <%= f.check_box :integrated %>
   </div>
-    <div class="field">
+  <div class="field">
     <%= f.label :syntax %>
     <%= f.select :syntax_id, Syntax.all.map { |syntax| [syntax.display_name, syntax.id] } %>
   </div>

@@ -1,4 +1,7 @@
 AnyfileNotepad::Application.routes.draw do
+  resources :extensions
+
+
   resources :syntaxes
 
 
