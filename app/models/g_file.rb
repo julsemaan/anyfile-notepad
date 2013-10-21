@@ -3,9 +3,15 @@ class GFile
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
+  
+  
   attr_accessor :id, :title, :type, :content, :new_revision, :persisted, :gapi, :folder_id, :syntax
   
   validates :title, :presence => true
+  
+  def MAX_FILE_SIZE 
+    1048576
+  end
   
   def self.attr_accessor(*vars)
     @attributes ||= []
@@ -54,6 +60,9 @@ class GFile
     temp.write content
     temp.rewind
     media = Google::APIClient::UploadIO.new(temp, type)
+    if temp.size > self.MAX_FILE_SIZE
+      return false
+    end
     
     result = gapi.client.execute!(
       :api_method => gapi.drive_api.files.insert,
@@ -80,7 +89,10 @@ class GFile
     temp.write content
     temp.rewind
     media = Google::APIClient::UploadIO.new(temp, type)
-    
+    if temp.size > self.MAX_FILE_SIZE
+      return false
+    end
+
     result = @gapi.client.execute!(
       :api_method => gapi.drive_api.files.update,
       :body_object => file_hash,
