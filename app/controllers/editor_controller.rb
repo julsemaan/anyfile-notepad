@@ -9,6 +9,7 @@ class EditorController < GOauthController
   
   
   def new
+    @title = "New file"
     if params[:folder_id]
       @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
     else
@@ -49,7 +50,9 @@ class EditorController < GOauthController
       content = content.force_encoding("UTF-8").unpack("C*").pack("U*")
       flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
     end
+    
     @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
+    @title = @file.title
     
     MimeType.add_if_not_known file_hash['mimeType']
     
@@ -60,6 +63,8 @@ class EditorController < GOauthController
   def update
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
+    @title = @file.title
+    
     begin
       success = @file.save
     rescue Google::APIClient::ClientError

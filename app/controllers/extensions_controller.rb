@@ -2,6 +2,7 @@ class ExtensionsController < AdminController
   # GET /extensions
   # GET /extensions.json
   def index
+    @title = "Extensions"
     @extensions = Extension.all
 
     respond_to do |format|
@@ -14,7 +15,7 @@ class ExtensionsController < AdminController
   # GET /extensions/1.json
   def show
     @extension = Extension.find(params[:id])
-
+    @title = @extension.name
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @extension }
@@ -24,8 +25,9 @@ class ExtensionsController < AdminController
   # GET /extensions/new
   # GET /extensions/new.json
   def new
+    @title = "New extension"
     @extension = Extension.new
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @extension }
@@ -35,13 +37,14 @@ class ExtensionsController < AdminController
   # GET /extensions/1/edit
   def edit
     @extension = Extension.find(params[:id])
+    @title = "Edit #{@extension.name}"
   end
 
   # POST /extensions
   # POST /extensions.json
   def create
     @extension = Extension.new(params[:extension])
-
+    
     respond_to do |format|
       if @extension.save
         format.html { redirect_to new_extension_path, notice: 'Extension was successfully created.' }

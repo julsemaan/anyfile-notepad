@@ -4,6 +4,7 @@ class MimeTypesController < AdminController
   # GET /mime_types
   # GET /mime_types.json
   def index
+    @title = "Mimetypes"
     @mime_types = MimeType.all
 
     respond_to do |format|
@@ -14,8 +15,9 @@ class MimeTypesController < AdminController
 
   # GET /mime_types/1
   # GET /mime_types/1.json
-  def show
+  def show 
     @mime_type = MimeType.find(params[:id])
+    @title = @mime_type.type_name
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,6 +28,7 @@ class MimeTypesController < AdminController
   # GET /mime_types/new
   # GET /mime_types/new.json
   def new
+    @title = "New Mimetype"
     @mime_type = MimeType.new
 
     respond_to do |format|
@@ -37,6 +40,7 @@ class MimeTypesController < AdminController
   # GET /mime_types/1/edit
   def edit
     @mime_type = MimeType.find(params[:id])
+    @title = "Edit #{@mime_type.type_name}"
   end
 
   # POST /mime_types

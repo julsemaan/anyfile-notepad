@@ -2,6 +2,7 @@ class SyntaxesController < AdminController
   # GET /syntaxes
   # GET /syntaxes.json
   def index
+    @title = "Syntaxes"
     @syntaxes = Syntax.all
 
     respond_to do |format|
@@ -14,7 +15,7 @@ class SyntaxesController < AdminController
   # GET /syntaxes/1.json
   def show
     @syntax = Syntax.find(params[:id])
-
+    @title = @syntax.display_name
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @syntax }
@@ -24,6 +25,7 @@ class SyntaxesController < AdminController
   # GET /syntaxes/new
   # GET /syntaxes/new.json
   def new
+    @title = "New syntax"
     @syntax = Syntax.new
 
     respond_to do |format|
@@ -35,6 +37,7 @@ class SyntaxesController < AdminController
   # GET /syntaxes/1/edit
   def edit
     @syntax = Syntax.find(params[:id])
+    @title = "Edit #{@syntax.display_name}"
   end
 
   # POST /syntaxes
