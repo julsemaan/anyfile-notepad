@@ -36,6 +36,11 @@ class EditorController < GOauthController
       @file = GFile.new
       @file.errors.add(:base, "Document content was not downloaded. Note that Google docs are not currently supported.")
       return
+    rescue Google::APIClient::ClientError
+      @file = GFile.new
+      flash[:error] = "Couldn't get file. Are you sure it exists ?"
+      redirect_to new_g_file_path
+      return
     end
     
     begin
@@ -55,7 +60,11 @@ class EditorController < GOauthController
   def update
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
-    success = @file.save
+    begin
+      success = @file.save
+    rescue Google::APIClient::ClientError
+      @file.errors.add(:base, "An error occurred with Google Drive while saving the file.")
+    end
     if success
       redirect_to edit_g_file_path params[:id]
     else

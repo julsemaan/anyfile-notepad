@@ -6,6 +6,12 @@
   @extend .alert-dismissable;
 }
 
+.flash_error{
+  @extend .alert;
+  @extend .alert-danger;
+  @extend .alert-dismissable;
+}
+
 .launch_app_container{
   padding-top:0.5em;
 }

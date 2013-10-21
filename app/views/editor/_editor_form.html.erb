@@ -1,5 +1,5 @@
 <div class="g_file_menu">
-  <%= form_for @file, :html => {:class => :editor_form } do |f| %>
+  <%= form_for @file, :html => {:class => :editor_form, :multipart => true } do |f| %>
     
     <%= f.hidden_field :id %>
     <%= f.hidden_field :folder_id %>
