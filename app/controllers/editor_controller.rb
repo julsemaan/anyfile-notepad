@@ -48,8 +48,8 @@ class EditorController < GOauthController
       file_hash = @gapi.get_file_data(params[:id])
       content = file_hash['content']
     rescue NoMethodError
-      @file = GFile.new
-      @file.errors.add(:base, "Document content was not downloaded. Note that Google docs are not currently supported.")
+      redirect_to new_g_file_path
+      flash[:error]= "Document content was not downloaded. Files larger then 10M are not supported. Also note that Google docs are not currently supported."
       return
     rescue Google::APIClient::ClientError
       @file = GFile.new

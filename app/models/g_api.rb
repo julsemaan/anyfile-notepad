@@ -18,6 +18,10 @@ class GApi
     
   ]
   
+  def MAX_GET_FILE_SIZE
+    10485760
+  end
+  
   def initialize()
     @client = Google::APIClient.new(:application_name => "Anyfile Notepad", :application_version => "0.1")
     if Rails.env.production?
@@ -41,14 +45,19 @@ class GApi
   end
   
   def get_file_data(id)
-    fields = "downloadUrl,id,mimeType,title"
+    fields = "downloadUrl,id,mimeType,title,fileSize"
     result = @client.execute!(
     :api_method => drive_api.files.get,
     :parameters => { :fileId => id, :fields => fields })
     file_hash = result.data.to_hash
-    result = @client.execute(:uri => result.data.downloadUrl)
-    file_hash['content'] = result.body
-    file_hash
+    puts "SIZE : " + result.data.fileSize.to_s
+    if result.data.fileSize < self.MAX_GET_FILE_SIZE
+      result = @client.execute(:uri => result.data.downloadUrl)
+      file_hash['content'] = result.body
+      file_hash
+    else
+      return nil
+    end
   end
   
   def root_folder_id

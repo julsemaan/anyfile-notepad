@@ -13,6 +13,8 @@ class GFile
     1048576
   end
   
+  
+  
   def self.attr_accessor(*vars)
     @attributes ||= []
     @attributes.concat( vars )
