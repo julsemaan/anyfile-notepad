@@ -17,7 +17,11 @@ AnyfileNotepad::Application.routes.draw do
   match 'editor/new/:folder_id' => 'editor#new'
   match 'editor/edit/:id' => 'editor#edit'
   
-  resources :g_files, :controller => :editor
+  resources :g_files, :controller => :editor do
+    member do
+      get 'set_syntax/:ace_syntax', :action => 'set_syntax'
+    end
+  end
   resources :mime_types
   
   root :to => 'pages#home'

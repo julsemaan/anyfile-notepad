@@ -88,6 +88,7 @@
 <script type="text/javascript">
     var editor = ace.edit("editor");
     var syntax = "<%= @file.syntax.ace_js_mode %>"
+    var file_id = "<%= @file.id %>"
     editor.setTheme("ace/theme/dawn");
     editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
     
@@ -96,6 +97,11 @@
       var check = $('#syntax_check').detach();
       $('#syntax_'+mode).prepend(check)
       editor.getSession().setMode("ace/mode/"+mode);
+      if(file_id != ""){
+        $.ajax(
+          {url: 'set_syntax/'+syntax}
+        )//.done(function(return_val){alert(return_val)})
+      }
     }
     
     $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
