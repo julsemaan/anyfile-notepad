@@ -19,7 +19,7 @@ class GApi
   ]
   
   def MAX_GET_FILE_SIZE
-    10485760/2
+    10485760
   end
   
   def initialize()
