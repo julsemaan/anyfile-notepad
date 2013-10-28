@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131028161420) do
+ActiveRecord::Schema.define(:version => 20131028210821) do
 
   create_table "columns", :force => true do |t|
     t.integer  "page_id"
@@ -51,9 +51,9 @@ ActiveRecord::Schema.define(:version => 20131028161420) do
 
   create_table "site_contents", :force => true do |t|
     t.string   "key"
-    t.string   "value", :default => ""
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.text     "value",      :limit => 255, :default => ""
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
   end
 
   create_table "syntaxes", :force => true do |t|
