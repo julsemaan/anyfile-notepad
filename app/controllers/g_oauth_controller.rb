@@ -12,20 +12,20 @@ class GOauthController < ApplicationController
       begin
         api_client.authorization.fetch_access_token!
       rescue Signet::AuthorizationError
-        redirect_to api_client.authorization.authorization_uri.to_s 
+        redirect_to @gapi.get_authorization_uri.to_s
         return
       end
     end
     
     unless @gapi.authorized?
-      redirect_to api_client.authorization.authorization_uri.to_s 
+      redirect_to @gapi.get_authorization_uri.to_s
       return
     end
     
     begin
       @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data
     rescue
-      redirect_to api_client.authorization.authorization_uri.to_s 
+      redirect_to @gapi.get_authorization_url.to_s 
     end
     
 

@@ -44,6 +44,10 @@ class GApi
     return @client.authorization.access_token
   end
   
+  def get_authorization_uri
+    return client.authorization.authorization_uri(:approval_prompt => :auto,)
+  end
+  
   def get_file_data(id)
     fields = "downloadUrl,id,mimeType,title,fileSize"
     result = @client.execute!(
