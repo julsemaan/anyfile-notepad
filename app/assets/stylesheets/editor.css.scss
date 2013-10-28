@@ -1,4 +1,5 @@
 @import "bootstrap-min.css.scss";
+@import "common.css.scss";
 
 html{
   background-color:#EBEBEB;
@@ -34,8 +35,12 @@ form.editor_form{
   background-color:#EBEBEB;
 }
 
-
-
+.close_menu_button{
+  float:right;
+  margin-top:0.5em;
+  margin-right:0.5em;
+  cursor:pointer;
+}
 
 div.g_file_menu{
   display:inline-block;
@@ -62,6 +67,7 @@ div.g_file_menu{
     }
   }
   
+  
   div.file_title{
     padding-bottom:5px;
   }
@@ -75,6 +81,23 @@ div.g_file_menu{
   }
   
 
+}
+
+div.small_g_file_menu{
+  width:30px;
+  padding:7px 0;
+  display:inline-block;
+  text-align:center;
+  border-right:2px solid black;
+  border-bottom:2px solid black;
+  @include border-radius(5px);
+  span{
+    margin-top:2px;
+    padding:3px;
+    @extend .btn;
+    @extend .btn-default;
+    cursor:pointer;
+  }
 }
 
 div.g_file_editor{
