@@ -80,14 +80,16 @@ div.g_file_menu{
 div.g_file_editor{
   height:100%;
   display:inline-block;
+  
+  div#editor{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:280px;
+    right:0;
+    display:inline-block;
+  }
 }
 
-div#editor{
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:280px;
-  right:0;
-  display:inline-block;
-}
+
 

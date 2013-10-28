@@ -1,5 +1,11 @@
 @import "bootstrap-min.css.scss";
 
+.flash_notice{
+  @extend .alert;
+  @extend .alert-info;
+  @extend .alert-dismissable;
+}
+
 .flash_warn{
   @extend .alert;
   @extend .alert-warning;
