@@ -1,0 +1,34 @@
+<div class="footer_menu panel panel-default" >
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn-group">
+        <% if not is_admin %>
+          <%= link_to "Admin login", login_path %>
+        <% else %>
+          <%= link_to "Admin logout", logout_path %>
+        <% end %>
+        
+        <%= link_to "Contact", g_plus_url %>
+        
+        
+      </div>
+    </div>
+  </div>   
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn-group">
+        <a href="http://rubyonrails.org/">
+          Proudly powered by Rails 3.
+          <%= image_tag "rails.png" , :width => 13 %>
+        </a>
+        <a href="https://drive.google.com">
+          Google Drive
+          <%= image_tag "gdrive.png" , :width => 13 %>
+        </a>
+        
+      </div>
+    </div>
+  </div>   
+    
+</div>

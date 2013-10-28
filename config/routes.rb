@@ -17,6 +17,9 @@ AnyfileNotepad::Application.routes.draw do
   match 'editor/new/:folder_id' => 'editor#new'
   match 'editor/edit/:id' => 'editor#edit'
   
+  match 'login' => 'admin#login'
+  match 'logout' => 'admin#logout'
+  
   resources :g_files, :controller => :editor do
     member do
       get 'set_syntax/:ace_syntax', :action => 'set_syntax'
