@@ -1,12 +1,7 @@
 class EditorController < GOauthController
   require 'json'
   
-  before_filter :init_file_explorer
   before_filter :check_preferences
-  
-  def init_file_explorer
-    @dir = Jqueryfiletree.new('root', @gapi).get_content
-  end
   
   def check_preferences
     if params[:prefers_minimized]
