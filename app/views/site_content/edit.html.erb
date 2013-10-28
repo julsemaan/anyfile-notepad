@@ -1,0 +1,49 @@
+<%= render 'shared/error_messages', :object => @site_content%>
+
+<%= form_for @site_content do |f| %>
+  <%= f.hidden_field :value %>
+  <%= f.submit %>
+  <%= button_tag :preview, :type => :button, :onclick => "javascript:preview_content()"%>
+<% end %>
+
+<div class="site_content_editor">
+  <div id="editor"><%= @site_content.value %></div>
+</div>
+
+ <!-- Button trigger modal -->
+  <a data-toggle="modal" href="#myModal" class="btn btn-primary btn-lg">Launch demo modal</a>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog site_content_preview">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Modal title</h4>
+        </div>
+        <div class="modal-body" id="site_content_preview_value">
+          <%= @site_content.value.html_safe %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+<script>
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/dawn");
+editor.getSession().setMode("ace/mode/html");
+
+$('.edit_site_content').submit(
+  function(){
+    $("#site_content_value").val(editor.getValue())
+  }
+)
+
+function preview_content(){
+  $('#site_content_preview_value').html(editor.getValue())
+  $('#myModal').modal('show')
+}
+</script>

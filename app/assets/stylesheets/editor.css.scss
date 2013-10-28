@@ -87,6 +87,7 @@ div.small_g_file_menu{
   width:30px;
   padding:7px 0;
   display:inline-block;
+<<<<<<< .merge_file_P1Wghb
   text-align:center;
   border-right:2px solid black;
   border-bottom:2px solid black;
@@ -103,14 +104,15 @@ div.small_g_file_menu{
 div.g_file_editor{
   height:100%;
   display:inline-block;
+  
+  div#editor{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:280px;
+    right:0;
+    display:inline-block;
+  }
 }
 
-div#editor{
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:280px;
-  right:0;
-  display:inline-block;
-}
 

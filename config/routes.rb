@@ -20,6 +20,8 @@ AnyfileNotepad::Application.routes.draw do
   match 'login' => 'admin#login'
   match 'logout' => 'admin#logout'
   
+  resources :site_content
+  
   resources :g_files, :controller => :editor do
     member do
       get 'set_syntax/:ace_syntax', :action => 'set_syntax'
