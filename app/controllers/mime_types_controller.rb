@@ -5,8 +5,9 @@ class MimeTypesController < AdminController
   # GET /mime_types.json
   def index
     @title = "Mimetypes"
-    @mime_types = MimeType.all
-
+    @integrated_mime_types = MimeType.find_all_by_integrated(true)
+    @not_integrated_mime_types = MimeType.find_all_by_integrated(false)
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @mime_types }
