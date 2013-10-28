@@ -83,6 +83,23 @@ div.g_file_menu{
 
 }
 
+div.small_g_file_menu{
+  width:30px;
+  padding:7px 0;
+  display:inline-block;
+  text-align:center;
+  border-right:2px solid black;
+  border-bottom:2px solid black;
+  @include border-radius(5px);
+  span{
+    margin-top:2px;
+    padding:3px;
+    @extend .btn;
+    @extend .btn-default;
+    cursor:pointer;
+  }
+}
+
 div.g_file_editor{
   height:100%;
   display:inline-block;
