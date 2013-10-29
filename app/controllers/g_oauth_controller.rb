@@ -25,7 +25,7 @@ class GOauthController < ApplicationController
     begin
       @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data
     rescue
-      redirect_to @gapi.get_authorization_url.to_s 
+      redirect_to @gapi.get_authorization_uri.to_s 
     end
     
 
