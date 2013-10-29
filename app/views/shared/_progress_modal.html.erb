@@ -1,0 +1,13 @@
+<div class="modal fade" id="progress_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><%= title %></h4>
+      </div>
+      <div class="modal-body" id="progress_body">
+        <%= render 'shared/loading_bar'%>
+        <%= message %>
+      </div>
+    </div>
+  </div>
+</div>

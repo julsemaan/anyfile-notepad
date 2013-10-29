@@ -1,3 +1,5 @@
+<%= render :partial => 'shared/progress_modal', :locals => {:title => "Your file is being saved", :message => "Press escape to cancel."} %>
+
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
   <%= form_for @file, :html => {:class => :editor_form, :multipart => true} do |f| %>
     
@@ -104,6 +106,7 @@
       else{
         $('#g_file_content').val(editor.getValue())
         $(button).closest('form').submit()
+        $('#progress_modal').modal('show')
       }
       return false;
     }
