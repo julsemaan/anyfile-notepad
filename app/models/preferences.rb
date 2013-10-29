@@ -12,21 +12,15 @@ class Preferences
     'syntaxes'
   ]
   
-  attr_accessor :preferences, :gapi
+  attr_accessor :preferences
   
-  def initialize(gapi, previous_preferences={})
-    self.gapi = gapi
+  def initialize(previous_preferences={})
     init_preferences(previous_preferences)
   end
   
   def init_preferences(previous_preferences)
-    if previous_preferences.nil?
-      stored_preferences = @gapi.get_preferences
-      if stored_preferences.nil?
-        self.preferences = {}
-      else
-        self.preferences = ActiveSupport::JSON.decode(stored_preferences['content'])
-      end
+    if previous_preferences.nil? 
+      self.preferences = {}
     else
       self.preferences = previous_preferences
     end
@@ -52,19 +46,6 @@ class Preferences
         old_value = self.preferences[key]
         self.preferences[key] = {}
       end
-    end
-  end
-  
-  def save
-    saved_preferences = @gapi.get_preferences
-    content = ActiveSupport::JSON.encode(self.preferences)
-    if saved_preferences.nil?
-      
-      file = GFile.new(:title => 'preferences.json', :content=> content , :type => 'text/plain',:new_revision => false, :folder_id => 'appdata', :gapi => self.gapi)
-      file.create
-    else
-      file = GFile.new(:id => saved_preferences['id'], :title => saved_preferences['title'], :content => saved_preferences['content'], :type => 'text/plain',:new_revision => 0, :folder_id => 'appdata', :gapi => self.gapi)
-      file.save
     end
   end
   

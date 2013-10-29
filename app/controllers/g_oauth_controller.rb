@@ -28,7 +28,11 @@ class GOauthController < ApplicationController
       redirect_to @gapi.get_authorization_uri.to_s 
     end
     
-    @preferences = Preferences.new(@gapi, session[:preferences])
+    begin
+      @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
+    rescue 
+      @preferences = Preferences.new
+    end
   end
   
   def execute_after

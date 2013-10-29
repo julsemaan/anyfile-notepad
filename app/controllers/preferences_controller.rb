@@ -1,8 +1,9 @@
 class PreferencesController < GOauthController
   def get_update
     @preferences.set_preferences(params)
-    session[:preferences] = @preferences.hash
-    @preferences.save
+    cookies[:preferences] = ActiveSupport::JSON.encode(@preferences.hash)
+    #@preferences.save
+    #puts cookies[:preferences]
     render text: "#{@preferences.hash} #{params}"
   end
   
