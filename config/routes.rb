@@ -29,5 +29,7 @@ AnyfileNotepad::Application.routes.draw do
   end
   resources :mime_types
   
+  match 'preferences/get_update' => 'preferences#get_update'
+  
   root :to => 'pages#home'
 end
