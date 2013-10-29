@@ -89,7 +89,7 @@
       editor.getSession().setMode("ace/mode/"+mode);
       if(file_id != ""){
         $.ajax(
-          {url: 'set_syntax/'+syntax}
+          {url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax}
         )//.done(function(return_val){alert(return_val)})
       }
     }

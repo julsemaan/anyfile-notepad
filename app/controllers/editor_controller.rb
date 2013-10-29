@@ -9,21 +9,6 @@ class EditorController < GOauthController
     end
   end
   
-  def set_syntax
-    syntax_id = Syntax.find_by_ace_js_mode(params[:ace_syntax]).id
-    file_id = params[:id]
-    file_hash = @gapi.get_file_data(file_id)
-    file_ext = GFile.new(:title => file_hash['title']).extension
-    begin
-      session[:syntaxes][file_ext] = syntax_id
-    rescue
-      session[:syntaxes] = {}
-      session[:syntaxes][file_ext] = syntax_id
-    end
-    
-    render text: "#{file_ext} : #{session[:syntaxes][file_id]}"
-  end
-  
   def new
     @title = "New file"
     if params[:folder_id]
@@ -69,8 +54,8 @@ class EditorController < GOauthController
     
     @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
     begin
-      syntax_id = session[:syntaxes][@file.extension]
-      @file.syntax = Syntax.find(syntax_id)
+      syntax_mode = @preferences.get_preference('syntaxes')[@file.extension]
+      @file.syntax = Syntax.find_by_ace_js_mode(syntax_mode)
     rescue
     end
     

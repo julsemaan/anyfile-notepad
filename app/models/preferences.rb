@@ -8,7 +8,7 @@ class Preferences
     'ace_js_font_size' => "1em", 
   }
   
-  ARRAY_PREFERENCES = [
+  HASH_PREFERENCES = [
     'syntaxes'
   ]
   
@@ -39,13 +39,12 @@ class Preferences
       end
     end
     
-    ARRAY_PREFERENCES.each do |key|
+    HASH_PREFERENCES.each do |key|
       if not self.preferences.has_key?(key)
-        self.preferences[key] = []
+        self.preferences[key] = {}
       elsif not self.preferences[key].respond_to?('each')
         old_value = self.preferences[key]
-        self.preferences[key] = []
-        self.preferences[key] << old_value
+        self.preferences[key] = {}
       end
     end
   end
@@ -65,7 +64,7 @@ class Preferences
   def set_preferences(pref_hash)
     puts "Setting prefs #{pref_hash}"
     pref_hash.each do |key, val|
-      if PREFERENCES.keys.include?(key) or ARRAY_PREFERENCES.include?(key)
+      if PREFERENCES.keys.include?(key) or HASH_PREFERENCES.include?(key)
         puts "Array includes key #{key}"
         if pref_hash[key].respond_to?('each')
           pref_hash[key].each do |ukey, val|

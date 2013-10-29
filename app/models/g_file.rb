@@ -26,7 +26,12 @@ class GFile
   end
   
   def extension
-    File.extname(self.title)
+    if self.title.nil?
+      ""
+    else
+      File.extname(self.title) 
+    end
+    
   end
 
   def initialize(attributes={})

@@ -28,10 +28,7 @@ class GOauthController < ApplicationController
       redirect_to @gapi.get_authorization_uri.to_s 
     end
     
-
-    
-    
-    
+    @preferences = Preferences.new(session[:preferences])
   end
   
   def execute_after
