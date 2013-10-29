@@ -30,6 +30,7 @@ AnyfileNotepad::Application.routes.draw do
   resources :mime_types
   
   match 'preferences/get_update' => 'preferences#get_update'
+  match 'preferences/persisted_preferences_files' => 'preferences#get_persisted_preferences_files'
   
   root :to => 'pages#home'
 end

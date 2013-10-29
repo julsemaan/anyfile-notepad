@@ -3,6 +3,8 @@ class GApi
 
   class_attribute :client
   
+  PREFERENCE_FILE_NAME = "preferences.json"
+  
   FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder'
   
   SCOPES = [
@@ -96,6 +98,31 @@ class GApi
     api_client.authorization.code = code
     api_client.authorization.fetch_access_token!
     return {:access_token => api_client.authorization.access_token, :refresh_token => api_client.authorization.refresh_token, :expires_in => api_client.authorization.expires_in, :issued_at => api_client.authorization.issued_at}
+  end
+  
+  def get_preferences
+    query = "'appdata' in parents and trashed = false"
+    fields = "items(id,mimeType,title,downloadUrl)"
+    parameters = {'q' => query, 'fields' => fields}
+    result = client.execute(
+        :api_method => drive_api.files.list,
+        :parameters => parameters)
+    result.data.items.each do |child|
+      if child.title == PREFERENCE_FILE_NAME
+        return self.get_file_data(child.id)
+      end
+    end
+    return nil
+  end
+  
+  def count_preferences
+    query = "'appdata' in parents and trashed = false"
+    fields = "items(id,mimeType,title,downloadUrl)"
+    parameters = {'q' => query, 'fields' => fields}
+    result = client.execute(
+        :api_method => drive_api.files.list,
+        :parameters => parameters)
+    return result.data.items.size
   end
   
   def about_user

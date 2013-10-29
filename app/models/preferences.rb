@@ -12,15 +12,21 @@ class Preferences
     'syntaxes'
   ]
   
-  attr_accessor :preferences
+  attr_accessor :preferences, :gapi
   
-  def initialize(previous_preferences={})
+  def initialize(gapi, previous_preferences={})
+    self.gapi = gapi
     init_preferences(previous_preferences)
   end
   
   def init_preferences(previous_preferences)
     if previous_preferences.nil?
-      self.preferences = {}
+      stored_preferences = @gapi.get_preferences
+      if stored_preferences.nil?
+        self.preferences = {}
+      else
+        self.preferences = ActiveSupport::JSON.decode(stored_preferences['content'])
+      end
     else
       self.preferences = previous_preferences
     end
@@ -50,7 +56,16 @@ class Preferences
   end
   
   def save
-    
+    saved_preferences = @gapi.get_preferences
+    content = ActiveSupport::JSON.encode(self.preferences)
+    if saved_preferences.nil?
+      
+      file = GFile.new(:title => 'preferences.json', :content=> content , :type => 'text/plain',:new_revision => false, :folder_id => 'appdata', :gapi => self.gapi)
+      file.create
+    else
+      file = GFile.new(:id => saved_preferences.id, :title => saved_preferences.title, :content => content, :type => 'text/plain',:new_revision => 0, :folder_id => 'appdata', :gapi => self.gapi)
+      file.save
+    end
   end
   
   def get_preference(key)
@@ -62,17 +77,14 @@ class Preferences
   end
   
   def set_preferences(pref_hash)
-    puts "Setting prefs #{pref_hash}"
     pref_hash.each do |key, val|
       if PREFERENCES.keys.include?(key) or HASH_PREFERENCES.include?(key)
-        puts "Array includes key #{key}"
         if pref_hash[key].respond_to?('each')
           pref_hash[key].each do |ukey, val|
             self.preferences[key][ukey] = val
           end
         else
           self.preferences[key] = val
-          puts "Setted pref #{key}"
         end
       end
     end
