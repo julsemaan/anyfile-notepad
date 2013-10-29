@@ -63,7 +63,7 @@ class Preferences
       file = GFile.new(:title => 'preferences.json', :content=> content , :type => 'text/plain',:new_revision => false, :folder_id => 'appdata', :gapi => self.gapi)
       file.create
     else
-      file = GFile.new(:id => saved_preferences.id, :title => saved_preferences.title, :content => content, :type => 'text/plain',:new_revision => 0, :folder_id => 'appdata', :gapi => self.gapi)
+      file = GFile.new(:id => saved_preferences['id'], :title => saved_preferences['title'], :content => saved_preferences['content'], :type => 'text/plain',:new_revision => 0, :folder_id => 'appdata', :gapi => self.gapi)
       file.save
     end
   end
