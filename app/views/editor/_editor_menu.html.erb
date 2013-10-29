@@ -1,0 +1,43 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    File/Options <span class="caret"></span>
+  </button>
+  
+  <ul class="dropdown-menu">
+    <li><a href="<%= new_g_file_path %>" target="_blank">New</a></li>
+    <li><a href="#" onclick="javascript:validate_file_size_and_submit(this)">Save</a></li>
+    <li class="dropdown-submenu">
+      <a href="#" >Syntax</a>
+      <ul class="dropdown-menu">
+        <% build_syntax_menus.each do |letters, syntaxes| %>
+          <li class="dropdown-submenu">
+          <a href="#" ><Syntax><%=letters%></a>
+          <ul class="dropdown-menu">
+            <% syntaxes.each do |syntax| %>
+              <li>
+                <a href="#" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
+                  <% if syntax == @file.syntax %>
+                    <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
+                  <% end %>
+                  <%= syntax.display_name %>
+                  
+                </a>                  
+              </li>
+            <% end %>
+          </ul>
+        </li>
+     
+        <% end %>
+       
+      </ul>
+      
+    </li>
+    <li>
+      <a href="#" onclick="javascript:close_menu()">
+        Minimize the menu 
+        <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
+      </a>
+    </li>
+    <li><a href="<%= root_path %>">App home page</a></li>
+  </ul>
+</div>
