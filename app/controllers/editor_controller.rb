@@ -46,11 +46,12 @@ class EditorController < GOauthController
     end
     
     @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
-    begin
-      syntax_mode = @preferences.get_preference('syntaxes')[@file.extension]
+    
+    syntax_mode = @preferences.get_preference('syntaxes')[@file.extension]
+    if not syntax_mode.nil?
       @file.syntax = Syntax.find_by_ace_js_mode(syntax_mode)
-    rescue
     end
+
     
     @title = @file.title
     

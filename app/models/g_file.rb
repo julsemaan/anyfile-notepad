@@ -88,10 +88,8 @@ class GFile
     if not self.valid? 
       return false 
     end
-    file_hash = gapi.get_file_data(id)
-    
-    file_hash['title'] = title
-    
+    file_hash = gapi.drive_api.files.update.request_schema.new({"id" => id, "title" => title}).to_hash
+
     temp = Tempfile.new "temp.tmp"
     temp.write content
     temp.rewind
