@@ -1,4 +1,4 @@
-
+<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded.", :message => "Press escape to cancel"} %>
 
 <div class="file_explorer panel panel-default ">
   <div class="panel-heading">
@@ -6,7 +6,7 @@
   </div>
   <div class="panel-body" id="file_tree_panel" >
   <div id="file_tree_loading_message">
-    <%= render 'shared/loading_bar' %>
+    <%= render :partial => 'shared/loading_bar', :locals => {:bar_message => "Loading your files."} %>
   </div>
   <div id="fileTree" class="demo"></div>
   </div>
@@ -28,6 +28,10 @@
         clearInterval(watch_tree_job);
       }
 
+    }
+    
+    function show_loading(){
+      $('#file_explorer_progress_modal').modal('show')
     }
     
     function load_explorer(){
