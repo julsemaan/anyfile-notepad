@@ -83,6 +83,17 @@
     editor.setTheme("ace/theme/dawn");
     editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
     
+    <% if not @preferences.get_preference('ace_js_font_size').nil? %>
+      editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
+      $('#font_check').show()
+      var check = $('#font_check').detach()
+      $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
+    <% end %>
+    
+    $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
+    $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
+    
+    
     function set_ace_mode(mode){
       syntax = mode
       var check = $('#syntax_check').detach();
@@ -94,8 +105,6 @@
         )
       }
     }
-    
-    $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
     
     function validate_file_size_and_submit(button){
       var length = $(button).closest('form').html().length
@@ -135,5 +144,17 @@
           {url: '/preferences/get_update?prefers_minimized=false'}
         )
       })
+    }
+    
+    function change_font_size(font_size){
+      editor.setFontSize(font_size)
+      $('#font_check').show()
+      var check = $('#font_check').detach()
+      console.log($(document.getElementById("font_"+font_size)).prepend(check))
+      
+      $.ajax(
+        {url: '/preferences/get_update?ace_js_font_size='+font_size}
+      )
+      
     }
 </script>
