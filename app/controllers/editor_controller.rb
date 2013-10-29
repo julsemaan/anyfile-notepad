@@ -1,13 +1,6 @@
 class EditorController < GOauthController
   require 'json'
   
-  before_filter :check_preferences
-  
-  def check_preferences
-    if params[:prefers_minimized]
-      session[:prefers_minimized] = params[:prefers_minimized]
-    end
-  end
   
   def new
     @title = "New file"

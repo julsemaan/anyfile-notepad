@@ -4,7 +4,6 @@
     <%= f.hidden_field :id %>
     <%= f.hidden_field :folder_id %>
     <%= f.hidden_field :content %>
-    <%= hidden_field_tag :prefers_minimized, prefers_minimized %>
     <div>
       <% f.text_field :type, :disabled => true %>
     </div>
@@ -90,7 +89,7 @@
       if(file_id != ""){
         $.ajax(
           {url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax}
-        )//.done(function(return_val){alert(return_val)})
+        )
       }
     }
     
@@ -118,6 +117,9 @@
             })
           })
         });
+      $.ajax(
+          {url: '/preferences/get_update?prefers_minimized=true'}
+      )
     }
     
     function open_menu(){
@@ -126,7 +128,9 @@
         editor.resize()  
         $('.g_file_menu').fadeIn()
         $('#prefers_minimized').val('false')
-        
+        $.ajax(
+          {url: '/preferences/get_update?prefers_minimized=false'}
+        )
       })
     }
 </script>

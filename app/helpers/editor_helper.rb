@@ -1,9 +1,9 @@
 module EditorHelper
   def prefers_minimized
-    if session[:prefers_minimized].nil?
+    if @preferences.get_preference('prefers_minimized').nil?
       false
     else
-      session[:prefers_minimized].to_bool
+      @preferences.get_preference('prefers_minimized').to_bool
     end
   end
   
