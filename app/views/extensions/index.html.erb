@@ -4,7 +4,7 @@
   <tr>
     <th>Name</th>
     <th>Syntax</th>
-    <th></th>
+    <th>Mime type</th>
     <th></th>
     <th></th>
   </tr>
@@ -13,7 +13,7 @@
   <tr>
     <td><%= extension.name %></td>
     <td><%= extension.syntax.display_name %></td>
-    <td><%= link_to 'Show', extension %></td>
+    <td><%= extension.mime_type.type_name %></td>
     <td><%= link_to 'Edit', edit_extension_path(extension) %></td>
     <td><%= link_to 'Destroy', extension, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>

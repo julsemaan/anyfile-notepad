@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131028210821) do
+ActiveRecord::Schema.define(:version => 20131030201727) do
 
   create_table "columns", :force => true do |t|
     t.integer  "page_id"
@@ -23,8 +23,9 @@ ActiveRecord::Schema.define(:version => 20131028210821) do
   create_table "extensions", :force => true do |t|
     t.string   "name"
     t.integer  "syntax_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "mime_type_id"
   end
 
   create_table "mime_types", :force => true do |t|
