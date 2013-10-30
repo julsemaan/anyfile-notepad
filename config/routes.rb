@@ -20,6 +20,8 @@ AnyfileNotepad::Application.routes.draw do
   match 'login' => 'admin#login'
   match 'logout' => 'admin#logout'
   
+  match 'long_query_test' => 'admin#long_query_test'
+  
   resources :site_content
   
   resources :g_files, :controller => :editor do

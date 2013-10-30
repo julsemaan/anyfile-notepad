@@ -20,4 +20,9 @@ class AdminController < ActionController::Base
     forget_auth
     render 'shared/logout'
   end
+  
+  def long_query_test
+    sleep(10)
+    render text: 'Done.'
+  end
 end
