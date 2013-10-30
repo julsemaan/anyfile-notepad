@@ -1,4 +1,4 @@
-<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to cancel."} %>
+<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved though)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
@@ -115,7 +115,6 @@
     
     function ready_to_submit(){
       for(key in ajax_defered_waiting){
-        //console.log(key)
         if(ajax_defered_waiting[key]){
           return false
         }
@@ -145,12 +144,10 @@
           $('#g_file_content').val(editor.getValue())
           $('.editor_form').submit()
           $('#file_save_modal').modal('show')
-          //alert("submit")
         }
         else{
           wait_for_clearance()
           clearance_interval = setInterval(wait_for_clearance, 1000)
-          //alert("not ready")
         }
       }
       return false;
