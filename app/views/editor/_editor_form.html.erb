@@ -99,12 +99,12 @@
     <% end %>
     
     function set_ace_mode(mode){
-      ajax_defered_waiting['set_ace_mode'] = true
       syntax = mode
       var check = $('#syntax_check').detach();
       $('#syntax_'+mode).prepend(check)
       editor.getSession().setMode("ace/mode/"+mode);
       if(file_id != ""){
+        ajax_defered_waiting['set_ace_mode'] = true
         $.ajax(
           {url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax}
         ).done(function(){
