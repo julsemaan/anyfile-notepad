@@ -60,13 +60,20 @@ class GFile
     if not self.valid? 
       return false 
     end
-    file_hash = gapi.drive_api.files.insert.request_schema.new({"title" => title, "mimeType" => "text/plain", "parents" => [{"kind" => "drive#fileLink", "id" => folder_id}]}).to_hash
+    
+    extension_obj = Extension.find_by_name(extension)
+    mime_type = "text/plain"
+    unless extension_obj.nil?
+      mime_type = extension_obj.mime_type.type_name
+    end
+    
+    file_hash = gapi.drive_api.files.insert.request_schema.new({"title" => title, "mimeType" => mime_type, "parents" => [{"kind" => "drive#fileLink", "id" => folder_id}]}).to_hash
 
     
     temp = Tempfile.new "temp.tmp"
     temp.write content
     temp.rewind
-    media = Google::APIClient::UploadIO.new(temp, type)
+    media = Google::APIClient::UploadIO.new(temp, mime_type)
     if temp.size > self.MAX_FILE_SIZE
       return false
     end
