@@ -65,3 +65,45 @@
     <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:close_menu()" title="Minimize menu"></a></li>
   </ul>
 </nav>
+
+<script>
+    function close_menu(){
+      ajax_defered_waiting['close_menu'] = true
+      $('.g_file_menu').fadeOut(function(){
+          $('.g_file_menu').hide(
+            function(){$('#editor').animate(EDITOR_FULL_METRICS, function(){
+              editor.resize()   
+              $('.small_g_file_menu').fadeIn(function(){
+                
+                $.ajax(
+                    {url: '/preferences/get_update?prefers_minimized=true'}
+                ).done(function(){
+                  ajax_defered_waiting['close_menu'] = false
+                })
+              })
+              
+            })
+          })
+        });
+      
+    }
+    
+    function open_menu(){
+      ajax_defered_waiting['open_menu'] = true 
+      $('.small_g_file_menu').fadeOut()
+      $('#editor').animate(EDITOR_W_MENU_METRICS,function(){
+        editor.resize()  
+        $('.g_file_menu').fadeIn(function(){
+            $.ajax(
+              {url: '/preferences/get_update?prefers_minimized=false'}
+            ).done(function(){
+              ajax_defered_waiting['open_menu'] = false
+            })
+          }
+        )
+        
+      })
+      
+    }
+
+</script>
