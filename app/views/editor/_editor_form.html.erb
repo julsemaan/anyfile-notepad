@@ -1,4 +1,4 @@
-<%= render :partial => 'shared/progress_modal', :locals => {:title => "Your file is being saved", :message => "Press escape to cancel."} %>
+<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved though)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
@@ -28,7 +28,7 @@
         
         <%= f.text_field :title, :class=> "field form-control", :placeholder => "File title" %>
         <span class="input-group-btn ">
-          <%= link_to "SAVE", "#", :class => "btn btn-primary", :onclick => "javascript:validate_file_size_and_submit(this)"%>
+          <%= link_to "SAVE", "#", :class => "btn btn-primary", :onclick => "javascript:validate_file_size_and_submit()"%>
         </span>
       </div>
       <div class="input-group ">
@@ -53,7 +53,7 @@
 </div>
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
-  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit(document.getElementsByClassName('editor_form'))" title="Save"></span>
+  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu()" title="Maximize menu"></span>
 </div>
 
@@ -85,19 +85,18 @@
       $('#editor').css(prop,value)
     });
     
+    $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
+    $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
+    
     editor.setTheme("ace/theme/dawn");
     editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
     
-    <% if not @preferences.get_preference('ace_js_font_size').nil? %>
+    <% unless @preferences.get_preference('ace_js_font_size').nil? %>
       editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
       $('#font_check').show()
       var check = $('#font_check').detach()
       $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
     <% end %>
-    
-    $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
-    $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
-    
     
     function set_ace_mode(mode){
       ajax_defered_waiting['set_ace_mode'] = true
@@ -116,7 +115,6 @@
     
     function ready_to_submit(){
       for(key in ajax_defered_waiting){
-        //console.log(key)
         if(ajax_defered_waiting[key]){
           return false
         }
@@ -129,14 +127,14 @@
       if(ready_to_submit() || skip_clearance){
         clearInterval(clearance_interval)
         $('#clearance_wait_modal').modal('hide')
-        validate_file_size_and_submit(null)
+        validate_file_size_and_submit()
       }
       else{
         $('#clearance_wait_modal').modal('show')
       }
     }
     
-    function validate_file_size_and_submit(button){
+    function validate_file_size_and_submit(){
       var length = $('.editor_form').html().length
       if (length > <%= @file.MAX_FILE_SIZE %>){
         alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
@@ -145,56 +143,16 @@
         if(ready_to_submit() || skip_clearance){
           $('#g_file_content').val(editor.getValue())
           $('.editor_form').submit()
-          $('#progress_modal').modal('show')
-          //alert("submit")
+          $('#file_save_modal').modal('show')
         }
         else{
           wait_for_clearance()
           clearance_interval = setInterval(wait_for_clearance, 1000)
-          //alert("not ready")
         }
       }
       return false;
     }
     
-    function close_menu(){
-      ajax_defered_waiting['close_menu'] = true
-      $('.g_file_menu').fadeOut(function(){
-          $('.g_file_menu').hide(
-            function(){$('#editor').animate(EDITOR_FULL_METRICS, function(){
-              editor.resize()   
-              $('.small_g_file_menu').fadeIn(function(){
-                
-                $.ajax(
-                    {url: '/preferences/get_update?prefers_minimized=true'}
-                ).done(function(){
-                  ajax_defered_waiting['close_menu'] = false
-                })
-              })
-              
-            })
-          })
-        });
-      
-    }
-    
-    function open_menu(){
-      ajax_defered_waiting['open_menu'] = true 
-      $('.small_g_file_menu').fadeOut()
-      $('#editor').animate(EDITOR_W_MENU_METRICS,function(){
-        editor.resize()  
-        $('.g_file_menu').fadeIn(function(){
-            $.ajax(
-              {url: '/preferences/get_update?prefers_minimized=false'}
-            ).done(function(){
-              ajax_defered_waiting['open_menu'] = false
-            })
-          }
-        )
-        
-      })
-      
-    }
     
     function change_font_size(font_size){
       ajax_defered_waiting['change_font_size'] = true
@@ -210,4 +168,6 @@
       })
       
     }
+    
+
 </script>
