@@ -8,6 +8,13 @@
         <%= render 'shared/loading_bar' %>
         <%= message %>
       </div>
+      <% if defined?(buttons) %>
+        <% buttons.each do |id, value| %>
+          <div class="modal-footer">
+            <button id="<%= id %>" type="button" class="btn btn-primary"><Save changes><%= value%></button>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
