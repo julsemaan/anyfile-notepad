@@ -8,9 +8,12 @@ class ApplicationController < ActionController::Base
     
     
     if params[:code]
-      @to_store = @gapi.authorize_code(params[:code])
-      @to_store.each do |key,value|
-        session[key] = value
+      begin
+        @to_store = @gapi.authorize_code(params[:code])
+        @to_store.each do |key,value|
+          session[key] = value
+        end
+      rescue Signet::AuthorizationError
       end
     elsif params[:error]
       render :status => :forbidden, :text => "Authorization failed with Google API"
