@@ -28,7 +28,7 @@
         
         <%= f.text_field :title, :class=> "field form-control", :placeholder => "File title" %>
         <span class="input-group-btn ">
-          <%= link_to "SAVE", "#", :class => "btn btn-primary", :onclick => "javascript:validate_file_size_and_submit(this)"%>
+          <%= link_to "SAVE", "#", :class => "btn btn-primary", :onclick => "javascript:validate_file_size_and_submit()"%>
         </span>
       </div>
       <div class="input-group ">
@@ -53,7 +53,7 @@
 </div>
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
-  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit(document.getElementsByClassName('editor_form'))" title="Save"></span>
+  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu()" title="Maximize menu"></span>
 </div>
 
@@ -129,14 +129,14 @@
       if(ready_to_submit() || skip_clearance){
         clearInterval(clearance_interval)
         $('#clearance_wait_modal').modal('hide')
-        validate_file_size_and_submit(null)
+        validate_file_size_and_submit()
       }
       else{
         $('#clearance_wait_modal').modal('show')
       }
     }
     
-    function validate_file_size_and_submit(button){
+    function validate_file_size_and_submit(){
       var length = $('.editor_form').html().length
       if (length > <%= @file.MAX_FILE_SIZE %>){
         alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
