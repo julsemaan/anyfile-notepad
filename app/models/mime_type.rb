@@ -1,6 +1,8 @@
 class MimeType < ActiveRecord::Base
   attr_accessible :id, :type_name, :integrated, :syntax_id
   
+  default_scope order('type_name ASC')
+  
   belongs_to :syntax
   
   validates_presence_of :type_name
