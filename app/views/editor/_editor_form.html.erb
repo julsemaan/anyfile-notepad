@@ -1,5 +1,6 @@
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved though)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+<%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
   <%= form_for @file, :html => {:class => :editor_form, :multipart => true} do |f| %>
@@ -87,6 +88,10 @@
     
     $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
     $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
+    
+    $(".show_file_info").click(function(){
+      $('#file_info_modal').modal('show')
+    })
     
     editor.setTheme("ace/theme/dawn");
     editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
