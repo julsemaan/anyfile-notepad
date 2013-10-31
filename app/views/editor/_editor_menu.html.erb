@@ -48,6 +48,9 @@
           </ul>
           
         </li>
+        <% if @file.persisted %>
+          <li><a href="<%= g_file_path(@file)%>" target="_blank">Print</a></li>
+        <% end %>
         <li>
           <a href="#" onclick="javascript:close_menu()">
             Minimize the menu 

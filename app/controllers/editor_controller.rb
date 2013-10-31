@@ -1,29 +1,7 @@
 class EditorController < GOauthController
   require 'json'
   
-  
-  def new
-    @title = "New file"
-    if params[:folder_id]
-      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
-    else
-      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => 'root')
-    end
-  end
-  
-  def create
-    params[:g_file][:gapi] = @gapi
-    @file = GFile.new(params[:g_file])
-    success = @file.create
-    #render text: @file.id
-    if success
-      redirect_to edit_g_file_path @file.id
-    else
-      render 'new'
-    end
-  end
-  
-	def edit
+  def get_file_flow
     begin
       file_hash = @gapi.get_file_data(params[:id])
       content = file_hash['content']
@@ -60,6 +38,35 @@ class EditorController < GOauthController
     @title = @file.title
     
     MimeType.add_if_not_known file_hash['mimeType']
+  end
+  
+  def new
+    @title = "New file"
+    if params[:folder_id]
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
+    else
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => 'root')
+    end
+  end
+  
+  def create
+    params[:g_file][:gapi] = @gapi
+    @file = GFile.new(params[:g_file])
+    success = @file.create
+    #render text: @file.id
+    if success
+      redirect_to edit_g_file_path @file.id
+    else
+      render 'new'
+    end
+  end
+  
+  def show
+    get_file_flow
+  end
+  
+	def edit
+    get_file_flow
   end
   
   def update
