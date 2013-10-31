@@ -1,0 +1,6 @@
+<% line_number = 1 %>
+<pre><% @file.content.split(/\n/).each do |line| %><%= "#{line_number}. #{line}" %><% line_number += 1 %><% end %></pre>
+
+<script>
+  window.print()
+</script>

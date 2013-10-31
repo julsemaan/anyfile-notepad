@@ -21,7 +21,7 @@ class GApi
   ]
   
   def MAX_GET_FILE_SIZE
-    10485760/2
+    1048576
   end
   
   def initialize()
@@ -62,7 +62,7 @@ class GApi
       file_hash['content'] = result.body
       file_hash
     else
-      return nil
+      raise Exceptions::FileTooBigError.new
     end
   end
   

@@ -1,35 +1,17 @@
 class EditorController < GOauthController
   require 'json'
   
-  
-  def new
-    @title = "New file"
-    if params[:folder_id]
-      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
-    else
-      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => 'root')
-    end
-  end
-  
-  def create
-    params[:g_file][:gapi] = @gapi
-    @file = GFile.new(params[:g_file])
-    success = @file.create
-    #render text: @file.id
-    if success
-      redirect_to edit_g_file_path @file.id
-    else
-      render 'new'
-    end
-  end
-  
-	def edit
+  def get_file_flow
     begin
       file_hash = @gapi.get_file_data(params[:id])
       content = file_hash['content']
     rescue NoMethodError
       redirect_to new_g_file_path
-      flash[:error]= "Document content was not downloaded. Files larger then 5M are not supported. Also note that Google docs are not currently supported."
+      flash[:error]= "Document content was not downloaded. Google docs are not currently supported."
+      return
+    rescue Exceptions::FileTooBigError
+      redirect_to new_g_file_path
+      flash[:error]= "Document content was not downloaded. Files larger then 1M are not supported."
       return
     rescue Google::APIClient::ClientError
       @file = GFile.new
@@ -56,6 +38,35 @@ class EditorController < GOauthController
     @title = @file.title
     
     MimeType.add_if_not_known file_hash['mimeType']
+  end
+  
+  def new
+    @title = "New file"
+    if params[:folder_id]
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => params[:folder_id])
+    else
+      @file = GFile.new(:type => 'text/plain', :persisted => false, :folder_id => 'root')
+    end
+  end
+  
+  def create
+    params[:g_file][:gapi] = @gapi
+    @file = GFile.new(params[:g_file])
+    success = @file.create
+    #render text: @file.id
+    if success
+      redirect_to edit_g_file_path @file.id
+    else
+      render 'new'
+    end
+  end
+  
+  def show
+    get_file_flow
+  end
+  
+	def edit
+    get_file_flow
   end
   
   def update

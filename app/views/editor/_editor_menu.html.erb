@@ -2,38 +2,63 @@
   <ul class="editor_nav_bar nav navbar-nav">
     <li>
       <a id="file_drop_btn" data-toggle="dropdown" class="dropdown dropdown-toggle" href="#">
-        File/Options
+        File
         <b class="caret"></b>
       </a>
       <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
         <li><a href="<%= new_g_file_path %>" target="_blank">New</a></li>
         <li><a href="#" onclick="javascript:validate_file_size_and_submit()">Save</a></li>
+        
+       
+        <% if @file.persisted %>
+          <li><a href="<%= g_file_path(@file)%>" target="_blank">Print</a></li>
+        <% end %>
+        
+        <li><a href="<%= root_path %>">App home page</a></li>
+        <li><a href="#" class="show_file_info" >Show file info</a></li>
+      </ul>
+      
+      
+    </li>
+    
+    <li>
+      <a id="file_drop_btn" data-toggle="dropdown" class="dropdown dropdown-toggle" href="#">
+        Options
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
+        <li>
+          <a href="#" onclick="javascript:close_menu()">
+            Minimize the menu 
+            <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
+          </a>
+        </li>
+      
+      
         <li class="dropdown-submenu">
           <a href="#" >Syntax</a>
           <ul class="dropdown-menu">
             <% build_syntax_menus.each do |letters, syntaxes| %>
               <li class="dropdown-submenu">
-              <a href="#" ><%=letters%></a>
-              <ul class="dropdown-menu">
-                <% syntaxes.each do |syntax| %>
-                  <li>
-                    <a href="#" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
-                      <% if syntax == @file.syntax %>
-                        <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
-                      <% end %>
-                      <%= syntax.display_name %>
-                      
-                    </a>                  
-                  </li>
-                <% end %>
-              </ul>
-            </li>
-         
+                <a href="#" ><%=letters%></a>
+                <ul class="dropdown-menu">
+                  <% syntaxes.each do |syntax| %>
+                    <li>
+                      <a href="#" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
+                        <% if syntax == @file.syntax %>
+                          <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
+                        <% end %>
+                        <%= syntax.display_name %>
+                        
+                      </a>                  
+                    </li>
+                  <% end %>
+                </ul>
+              </li>
             <% end %>
-           
           </ul>
-          
         </li>
+        
         <li class="dropdown-submenu">
           <a href="#" >Font size</a>
           <ul class="dropdown-menu">
@@ -43,23 +68,17 @@
               <a href="#" value="1em" id="font_1em" class="font_size_button"> Normal</a>
               <a href="#" value="1.5em" id="font_1.5em" class="font_size_button"> Large</a>
               <a href="#" value="2em" id="font_2em" class="font_size_button"> X-Large</a>
-
             </li>
           </ul>
-          
         </li>
-        <li>
-          <a href="#" onclick="javascript:close_menu()">
-            Minimize the menu 
-            <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
-          </a>
-        </li>
-        <li><a href="<%= root_path %>">App home page</a></li>
+        
       </ul>
     </li>
     
     
   </ul>
+ 
+
   
   <ul class="nav navbar-nav navbar-right">
     <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:close_menu()" title="Minimize menu"></a></li>
