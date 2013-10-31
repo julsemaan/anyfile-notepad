@@ -97,6 +97,14 @@
       var check = $('#font_check').detach()
       $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
     <% end %>
+       
+    $(window).bind('beforeunload',function(){
+        if(!ready_to_submit() && !skip_clearance){
+          clearance_interval = setInterval(function(){wait_for_clearance(function(){location.reload()})}, 1000)
+          return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
+        }
+    
+    });
     
     function set_ace_mode(mode){
       syntax = mode
@@ -123,11 +131,11 @@
       return true
     }
     
-    function wait_for_clearance(){
+    function wait_for_clearance(after){
       if(ready_to_submit() || skip_clearance){
         clearInterval(clearance_interval)
         $('#clearance_wait_modal').modal('hide')
-        validate_file_size_and_submit()
+        after()
       }
       else{
         $('#clearance_wait_modal').modal('show')
@@ -146,8 +154,8 @@
           $('#file_save_modal').modal('show')
         }
         else{
-          wait_for_clearance()
-          clearance_interval = setInterval(wait_for_clearance, 1000)
+          wait_for_clearance(validate_file_size_and_submit)
+          clearance_interval = setInterval(function(){wait_for_clearance(validate_file_size_and_submit)}, 1000)
         }
       }
       return false;
