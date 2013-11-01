@@ -24,15 +24,10 @@ AnyfileNotepad::Application.routes.draw do
   
   resources :site_content
   
-  resources :g_files, :controller => :editor do
-    member do
-      get 'set_syntax/:ace_syntax', :action => 'set_syntax'
-    end
-  end
+  resources :g_files, :controller => :editor
   resources :mime_types
   
   match 'preferences/get_update' => 'preferences#get_update'
-  match 'preferences/persisted_preferences_files' => 'preferences#get_persisted_preferences_files'
   
   root :to => 'pages#home'
 end
