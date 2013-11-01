@@ -138,6 +138,8 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    unicorn-worker-killer (0.4.2)
+      unicorn (~> 4)
     uuidtools (2.1.4)
 
 PLATFORMS
@@ -155,3 +157,4 @@ DEPENDENCIES
   therubyracer
   uglifier (>= 1.0.3)
   unicorn
+  unicorn-worker-killer
