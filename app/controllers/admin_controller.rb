@@ -26,6 +26,10 @@ class AdminController < GOauthController
     render 'shared/logout'
   end
   
+  def menu
+    
+  end
+  
   def long_query_test
     sleep(10)
     render text: 'Done.'

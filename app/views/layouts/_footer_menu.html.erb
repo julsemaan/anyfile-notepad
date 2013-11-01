@@ -3,9 +3,10 @@
     <div class="col-md-12">
       <div class="btn-group">
         <% if not is_admin %>
-          <%= link_to "Admin login", login_path %>
+          <%= link_to "Admin login", admin_login_path %>
         <% else %>
-          <%= link_to "Admin logout", logout_path %>
+          <%= link_to "Admin logout", admin_logout_path %>
+          <%= link_to "Admin menu", admin_menu_path %>
         <% end %>
         
         <%= link_to "Contact", g_plus_url %>
