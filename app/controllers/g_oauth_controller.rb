@@ -13,17 +13,20 @@ class GOauthController < ApplicationController
         api_client.authorization.fetch_access_token!
       rescue Signet::AuthorizationError
         do_g_oauth
+        return
       end
     end
     
     unless @gapi.authorized?
       do_g_oauth
+      return
     end
     
     begin
       @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data
     rescue
       do_g_oauth
+      return
     end
     
     begin
@@ -36,7 +39,6 @@ class GOauthController < ApplicationController
   def do_g_oauth
     redirect_to @gapi.get_authorization_uri.to_s 
     session[:afn_redirect_to]=request.original_url
-    return
   end
   
   def execute_after
