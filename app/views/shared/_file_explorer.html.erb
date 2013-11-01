@@ -8,6 +8,7 @@
   <div id="file_tree_loading_message">
     <%= render :partial => 'shared/loading_bar', :locals => {:bar_message => "Loading your files."} %>
   </div>
+  <p class="flash_error" id="loading_error" style="display:none;">Your files couldn't load.<br/><a id="reauth_file_tree" href="#">Click here to reauthenticate.</a></p>
   <div id="fileTree" class="demo"></div>
   </div>
 </div>
@@ -16,6 +17,9 @@
 
     var opened = false
     var loaded = false
+    var reload_url = window.location.href
+    
+    $('#reauth_file_tree').attr('href', reload_url)
 
     watch_tree_job = setInterval(watch_tree,1000)
     
@@ -34,9 +38,16 @@
       $('#file_explorer_progress_modal').modal('show')
     }
     
+    function show_error(){
+      if( $('#fileTree').html() == "" ) {
+        $('#loading_error').show()
+      }
+    }
+    
     function load_explorer(){
       $('#file_tree_loading_message').fadeIn()
       $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
+      setTimeout(show_error, 10000)
       loaded = true
     }
     

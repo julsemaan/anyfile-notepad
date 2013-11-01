@@ -34,4 +34,8 @@ AnyfileNotepad::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+  
+  # Setup the env variables for development
+  ENV.update YAML.load(File.read(File.expand_path('../../development.yml', __FILE__)))
+
 end

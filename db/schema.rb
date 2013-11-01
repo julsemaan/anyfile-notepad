@@ -11,17 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131031210229) do
+ActiveRecord::Schema.define(:version => 20131101170419) do
 
   create_table "administrators", :force => true do |t|
     t.string   "google_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "columns", :force => true do |t|
-    t.integer  "page_id"
-    t.integer  "position"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -39,21 +32,6 @@ ActiveRecord::Schema.define(:version => 20131031210229) do
     t.boolean  "integrated", :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
-    t.integer  "syntax_id"
-  end
-
-  create_table "pages", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "posts", :force => true do |t|
-    t.integer  "column_id"
-    t.integer  "position"
-    t.string   "content"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
   create_table "site_contents", :force => true do |t|
