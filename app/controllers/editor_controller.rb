@@ -55,6 +55,7 @@ class EditorController < GOauthController
     success = @file.create
     #render text: @file.id
     if success
+      flash[:notice] = "Your file has been created."
       redirect_to edit_g_file_path @file.id
     else
       render 'new'
@@ -80,6 +81,7 @@ class EditorController < GOauthController
       @file.errors.add(:base, "An error occurred with Google Drive while saving the file.")
     end
     if success
+      flash[:notice] = "Your file has been saved."
       redirect_to edit_g_file_path params[:id]
     else
       render 'edit'
