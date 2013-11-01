@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131030201727) do
+ActiveRecord::Schema.define(:version => 20131031210229) do
+
+  create_table "administrators", :force => true do |t|
+    t.string   "google_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "columns", :force => true do |t|
     t.integer  "page_id"
