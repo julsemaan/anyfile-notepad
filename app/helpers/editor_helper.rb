@@ -11,8 +11,10 @@ module EditorHelper
     #puts "Flash : "+flash
     #puts "Errors : "+g_file.errors
     if prefers_minimized
-      if flash.empty?
-        if not g_file.errors.any?
+      if not g_file.errors.any?
+        if flash.empty?
+          return true
+        elsif not flash[:notice].nil? and flash.keys.count == 1
           return true
         end
       end
