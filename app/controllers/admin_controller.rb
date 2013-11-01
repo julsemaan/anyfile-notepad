@@ -9,7 +9,7 @@ class AdminController < GOauthController
     if Administrator.is_admin(@user["id"])
       session[:logged_in] = true
     else
-      render :status => :forbidden, :text => "Nice try... but you're not a registered admin. The FBI and your mother have been alerted. Find your own way back to the app."
+      render :status => :forbidden, :text => "Nice try #{@user['given_name']}... but you're not a registered admin. The FBI and your mother have been alerted. Find your own way back to the app."
     end
   end
   

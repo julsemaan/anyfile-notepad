@@ -10,7 +10,13 @@ class ApplicationController < ActionController::Base
 
     unless session[:afn_redirect_to].nil?
       redirect_to session[:afn_redirect_to]
+      if session[:afn_lost_changes]
+        flash[:error] = "You have been reauthenticated with Google. All your changes were discarded."
+      else
+        flash[:notice] = "You have been reauthenticated with Google." 
+      end
       session[:afn_redirect_to] = nil
+      session[:afn_lost_changes]=nil
     end
     
   end
