@@ -2,6 +2,7 @@ class GApi
   
 
   class_attribute :client
+  class_attribute :authorization_uri_param
   
   PREFERENCE_FILE_NAME = "preferences.json"
   
@@ -47,7 +48,7 @@ class GApi
   end
   
   def get_authorization_uri
-    return client.authorization.authorization_uri(:approval_prompt => :auto,)
+    return @client.authorization.authorization_uri(:approval_prompt => :auto,)
   end
   
   def get_file_data(id)
