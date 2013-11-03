@@ -9,7 +9,11 @@ class ApplicationController < ActionController::Base
     capture_drive_commands
 
     unless session[:afn_redirect_to].nil?
-      redirect_to session[:afn_redirect_to]
+      begin
+        redirect_to session[:afn_redirect_to]
+      rescue AbstractController::DoubleRenderError
+        # a redirect flow has already been initiated
+      end
       if session[:afn_lost_changes]
         flash[:error] = "You have been reauthenticated with Google. All your changes were discarded."
       else
