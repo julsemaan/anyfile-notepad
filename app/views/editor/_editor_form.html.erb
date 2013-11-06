@@ -3,6 +3,7 @@
 <%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
+
   <%= form_for @file, :html => {:class => :editor_form, :multipart => true} do |f| %>
     
     <%= f.hidden_field :id %>
@@ -50,7 +51,8 @@
     <%= render 'shared/file_explorer', :with_dropdown => true %>
   </div>
   
-  
+  <%= render 'shared/ask_feedback' %>
+
 </div>
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
