@@ -75,20 +75,26 @@ class GFile
     temp.rewind
     media = Google::APIClient::UploadIO.new(temp, mime_type)
     if temp.size > self.MAX_FILE_SIZE
+      errors[:base] << "This file is too big for this app."
       return false
     end
     
-    result = gapi.client.execute!(
-      :api_method => gapi.drive_api.files.insert,
-      :body_object => file_hash,
-      :media => media,
-      :parameters => {
-        'folderId' => folder_id,
-        'uploadType' => 'multipart',
-        'alt' => 'json'})
+    begin
+      result = gapi.client.execute!(
+        :api_method => gapi.drive_api.files.insert,
+        :body_object => file_hash,
+        :media => media,
+        :parameters => {
+          'folderId' => folder_id,
+          'uploadType' => 'multipart',
+          'alt' => 'json'})
+      self.id = result.data.to_hash['id']
+      return true
+    rescue Google::APIClient::ClientError => api_error
+      errors[:base] << api_error.to_s
+      return false
+    end
     
-    self.id = result.data.to_hash['id']
-    true
   end
   
   def save
@@ -105,17 +111,23 @@ class GFile
       return false
     end
 
-    result = @gapi.client.execute!(
-      :api_method => gapi.drive_api.files.update,
-      :body_object => file_hash,
-      :media => media,
-      :parameters => {
-        'fileId' => id,
-        'newRevision' => !new_revision.to_i.zero? || false,
-        'uploadType' => 'multipart',
-        'alt' => 'json' }
-    )
-    true
+    begin
+      result = @gapi.client.execute!(
+        :api_method => gapi.drive_api.files.update,
+        :body_object => file_hash,
+        :media => media,
+        :parameters => {
+          'fileId' => id,
+          'newRevision' => !new_revision.to_i.zero? || false,
+          'uploadType' => 'multipart',
+          'alt' => 'json' }
+      )
+      return true
+    rescue Google::APIClient::ClientError => api_error
+      errors[:base] << api_error.to_s
+      return false
+    end
+    
   end
   
   def persisted?
