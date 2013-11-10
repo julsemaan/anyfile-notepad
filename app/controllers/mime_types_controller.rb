@@ -10,7 +10,7 @@ class MimeTypesController < AdminController
     
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @mime_types }
+      format.json { render json: MimeType.all }
     end
   end
 
