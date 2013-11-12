@@ -37,7 +37,7 @@ class EditorController < GOauthController
     
     @title = @file.title
     
-    MimeType.add_if_not_known file_hash['mimeType']
+    MimeType.add_if_not_known file_hash['mimeType'], @user.name
   end
   
   def new
