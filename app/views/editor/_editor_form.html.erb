@@ -78,7 +78,7 @@
     var skip_clearance = false
     var clearance_interval = null
     $('#skip_clearance').click(function(){skip_clearance = true})
-    $('#go_reauth').click(function(){window.location.reload()})
+    $('#go_reauth').click(function(){skip_clearance = true;window.location.reload();})
     $('#cancel_reauth').click(function(){
       $('#reauthenticate_modal').modal('hide')
     })
