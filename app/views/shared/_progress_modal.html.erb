@@ -5,7 +5,7 @@
         <h4 class="modal-title"><%= title %></h4>
       </div>
       <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "progress_modal_body" %>">
-        <% if defined?(with_bar) and with_bar%>
+        <% if not defined?(with_bar) or with_bar%>
           <%= render 'shared/loading_bar' %>
         <% end %>
         <%= message %>
