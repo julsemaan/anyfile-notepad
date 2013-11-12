@@ -5,16 +5,18 @@
         <h4 class="modal-title"><%= title %></h4>
       </div>
       <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "progress_modal_body" %>">
-        <%= render 'shared/loading_bar' %>
+        <% if defined?(with_bar) and with_bar%>
+          <%= render 'shared/loading_bar' %>
+        <% end %>
         <%= message %>
       </div>
+      <div class="modal-footer">
       <% if defined?(buttons) %>
         <% buttons.each do |id, value| %>
-          <div class="modal-footer">
             <button id="<%= id %>" type="button" class="btn btn-primary"><Save changes><%= value%></button>
-          </div>
         <% end %>
       <% end %>
+      </div>
     </div>
   </div>
 </div>
