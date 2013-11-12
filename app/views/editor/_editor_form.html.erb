@@ -1,5 +1,6 @@
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved though)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+<%= render :partial => 'shared/progress_modal', :locals => {:id => "reauthenticate_modal", :title => "Reauthentification needed", :message => "You are not authenticated with Google anymore. You vill need to reauthenticate (this will discard your changes). Click cancel to continue working.", :buttons => {'cancel_reauth' => 'Cancel', 'go_reauth' => "Reauthenticate"}, :with_bar => false} %>
 <%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
@@ -77,6 +78,10 @@
     var skip_clearance = false
     var clearance_interval = null
     $('#skip_clearance').click(function(){skip_clearance = true})
+    $('#go_reauth').click(function(){window.location.reload()})
+    $('#cancel_reauth').click(function(){
+      $('#reauthenticate_modal').modal('hide')
+    })
     
     <% if show_minimized?(@file) %>
       INITIAL_METRICS = EDITOR_FULL_METRICS
@@ -121,10 +126,18 @@
       if(file_id != ""){
         ajax_defered_waiting['set_ace_mode'] = true
         $.ajax(
-          {url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax}
-        ).done(function(){
-          ajax_defered_waiting['set_ace_mode'] = false
-        })
+          {
+            url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax,
+            statusCode: {
+          	 403: function(data){
+          	   show_reauth()
+          	 },
+          	 200: function(data){
+          	   ajax_defered_waiting['set_ace_mode'] = false
+          	 }
+            }	
+          }
+        )
       }
     }
     
@@ -136,6 +149,10 @@
         
       }
       return true
+    }
+    
+    function show_reauth(){
+      $('#reauthenticate_modal').modal('show')
     }
     
     function wait_for_clearance(after){
@@ -177,10 +194,17 @@
       $(document.getElementById("font_"+font_size)).prepend(check)
       
       $.ajax(
-        {url: '/preferences/get_update?ace_js_font_size='+font_size}
-      ).done(function(){
-        ajax_defered_waiting['change_font_size'] = false
-      })
+        {
+          url: '/preferences/get_update?ace_js_font_size='+font_size,
+          statusCode: {
+            403: function(data){
+              show_reauth()
+            },
+            200: function(data){
+              ajax_defered_waiting['change_font_size'] = false
+            }
+          }
+        })
       
     }
     
