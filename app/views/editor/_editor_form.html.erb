@@ -113,6 +113,13 @@
     
     });
     
+    $(window).keydown(function(event) {
+	    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+	    validate_file_size_and_submit()
+	    event.preventDefault();
+	    return false;
+	});
+    
     function set_ace_mode(mode){
       syntax = mode
       var check = $('#syntax_check').detach();
