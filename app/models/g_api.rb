@@ -102,7 +102,13 @@ class GApi
         :parameters => parameters)
     result.data.items.each do |child|
       if child.title == PREFERENCE_FILE_NAME
-        return self.get_file_data(child.id)
+        begin
+          return self.get_file_data(child.id)
+        rescue Google::APIClient::ClientError
+          return nil
+        rescue Google::APIClient::ServerError
+          return nil
+        end
       end
     end
     return nil
@@ -112,9 +118,15 @@ class GApi
     query = "'appdata' in parents and trashed = false"
     fields = "items(id,mimeType,title,downloadUrl)"
     parameters = {'q' => query, 'fields' => fields}
-    result = client.execute(
-        :api_method => drive_api.files.list,
-        :parameters => parameters)
+    begin
+      result = client.execute(
+          :api_method => drive_api.files.list,
+          :parameters => parameters)
+    rescue Google::APIClient::ClientError
+      return nil
+    rescue Google::APIClient::ServerError
+      return nil
+    end
     return result.data.items.size
   end
   

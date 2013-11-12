@@ -14,10 +14,12 @@ class EditorController < GOauthController
       flash[:error]= "Document content was not downloaded. Files larger then 1M are not supported."
       return
     rescue Google::APIClient::ClientError
-      @file = GFile.new
       flash[:error] = "Couldn't get file. Are you sure it exists ?"
       redirect_to new_g_file_path
       return
+    rescue Google::APIClient::ServerError
+      flash[:error] = "A fatal error occured when communicating with Google's servers. We tried our best to recover it."
+      redirect_to :back
     end
     
     begin
@@ -75,11 +77,7 @@ class EditorController < GOauthController
     @file = GFile.new(params[:g_file])
     @title = @file.title
     
-    begin
-      success = @file.save
-    rescue Google::APIClient::ClientError
-      @file.errors.add(:base, "An error occurred with Google Drive while saving the file.")
-    end
+    success = @file.save
     if success
       flash[:notice] = "Your file has been saved."
       redirect_to edit_g_file_path params[:id]
