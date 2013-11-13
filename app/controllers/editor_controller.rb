@@ -63,12 +63,13 @@ class EditorController < GOauthController
         }
         format.js{
           flash.now[:notice] = "Your file has been created."
+          render 'update_editor'
         }
       end
     else
       respond_to do |format|
         format.html {render 'new'}
-        format.js
+        format.js {render 'update_editor'}
       end
     end
     
@@ -96,12 +97,13 @@ class EditorController < GOauthController
         }
         format.js{
           flash.now[:notice] = "Your file has been saved."
+          render 'update_editor'
         }
       end
     else
       respond_to do |format|
         format.html {render 'edit'}
-        format.js
+        format.js {render 'update_editor'}
       end
     end
   end
