@@ -136,6 +136,13 @@
         $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
       <% end %>
       
+      $(window).keydown(function(event) {
+  	    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+	    validate_file_size_and_submit()
+	    event.preventDefault();
+	    return false;
+	  });
+      
     }
     
     initialize()
