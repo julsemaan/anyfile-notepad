@@ -54,8 +54,8 @@ class EditorController < GOauthController
   def create
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
-    success = @file.create
-    if success
+    @success = @file.create
+    if @success
       respond_to do |format|
         format.html {
           flash[:notice] = "Your file has been created."

@@ -1,0 +1,2 @@
+$("#editor_flash").html("<%= escape_javascript(render('shared/flash', :flash => flash)) %>")
+$("#editor_errors").html("<%= escape_javascript(render('shared/error_messages', :object => @file)) %>")

@@ -1,1 +1,6 @@
-window.location = "<%= edit_g_file_path @file.id %>"
+<%= render 'editor_layout' %>
+<% if @success %>
+  window.location = "<%= edit_g_file_path @file.id %>"
+<% else %>
+  $("#file_save_modal").modal('hide')
+<% end %>
