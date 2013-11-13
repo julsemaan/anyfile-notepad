@@ -57,6 +57,7 @@
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
+  <span class="glyphicon glyphicon-folder-open" onclick="javascript:show_file_explorer()" title="Open file"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu()" title="Maximize menu"></span>
 </div>
 
@@ -182,6 +183,11 @@
         ajax_defered_waiting['change_font_size'] = false
       })
       
+    }
+    
+    function show_file_explorer(){
+      open_menu()
+      open_explorer()
     }
     
 
