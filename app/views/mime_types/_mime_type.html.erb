@@ -1,6 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <%= mime_type.type_name %> <span class="mime_type_discoved_date">discovered on <%= mime_type.created_at %></span>
+    <%= mime_type.type_name %>
+    <span class="mime_type_discoved_date">discovered on <%= mime_type.created_at %></span>
+    <span class="mime_type_discovered_by">Discovered by: <%= mime_type.discovered_by %></span>
     <% if is_admin %>
       <%= link_to 'Edit', edit_mime_type_path(mime_type) %>
       <%= link_to 'Destroy', mime_type, method: :delete, data: { confirm: 'Are you sure?' } %>
