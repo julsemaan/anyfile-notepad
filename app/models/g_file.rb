@@ -93,6 +93,9 @@ class GFile
     rescue Google::APIClient::ClientError => api_error
       errors[:base] << api_error.to_s
       return false
+    rescue Google::APIClient::ServerError => server_error
+      errors[:base] << "A fatal error occured when communicating with Google's servers. Here's what it said : #{server_error.to_s}. Try saving again."
+      return false
     end
     
   end
@@ -125,6 +128,9 @@ class GFile
       return true
     rescue Google::APIClient::ClientError => api_error
       errors[:base] << api_error.to_s
+      return false
+    rescue Google::APIClient::ServerError => server_error
+      errors[:base] << "A fatal error occured when communicating with Google's servers. Here's what it said : #{server_error.to_s}. Try saving again."
       return false
     end
     
