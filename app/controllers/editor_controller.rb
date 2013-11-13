@@ -53,13 +53,23 @@ class EditorController < GOauthController
     params[:g_file][:gapi] = @gapi
     @file = GFile.new(params[:g_file])
     success = @file.create
-    #render text: @file.id
     if success
-      flash[:notice] = "Your file has been created."
-      redirect_to edit_g_file_path @file.id
+      respond_to do |format|
+        format.html {
+          flash[:notice] = "Your file has been created."
+          redirect_to edit_g_file_path @file.id
+        }
+        format.js{
+          flash.now[:notice] = "Your file has been created."
+        }
+      end
     else
-      render 'new'
+      respond_to do |format|
+        format.html {render 'new'}
+        format.js
+      end
     end
+    
   end
   
   def show
@@ -81,12 +91,21 @@ class EditorController < GOauthController
       @file.errors.add(:base, "An error occurred with Google Drive while saving the file.")
     end
     if success
-      flash[:notice] = "Your file has been saved."
-      redirect_to edit_g_file_path params[:id]
+      respond_to do |format|
+        format.html {
+          flash[:notice] = "Your file has been saved."
+          redirect_to edit_g_file_path params[:id]
+        }
+        format.js{
+          flash.now[:notice] = "Your file has been saved."
+        }
+      end
     else
-      render 'edit'
+      respond_to do |format|
+        format.html {render 'edit'}
+        format.js
+      end
     end
-    #render json: params
   end
 
 end

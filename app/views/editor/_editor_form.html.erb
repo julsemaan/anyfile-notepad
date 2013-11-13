@@ -1,11 +1,11 @@
-<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved though)"} %>
+<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "reauthenticate_modal", :title => "Reauthentification needed", :message => "You are not authenticated with Google anymore. You vill need to reauthenticate (this will discard your changes). Click cancel to continue working.", :buttons => {'cancel_reauth' => 'Cancel', 'go_reauth' => "Reauthenticate"}, :with_bar => false} %>
 <%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
 
-  <%= form_for @file, :html => {:class => :editor_form, :multipart => true} do |f| %>
+  <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
     
     <%= f.hidden_field :id %>
     <%= f.hidden_field :folder_id %>
@@ -31,7 +31,7 @@
         
         <%= f.text_field :title, :class=> "field form-control", :placeholder => "File title" %>
         <span class="input-group-btn ">
-          <%= link_to "SAVE", "#", :class => "btn btn-primary", :onclick => "javascript:validate_file_size_and_submit()"%>
+          <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
         </span>
       </div>
       <div class="input-group ">
@@ -43,11 +43,15 @@
     </div>
   </div>
 
+  <div id="editor_errors">
     <%= render 'shared/error_messages', :object => f.object %>
-      
-  <% end %>
+  </div>
   
-  <%= render 'shared/flash', :flash => flash %>
+  <% end %>
+  <div id="editor_flash">
+    <%= render 'shared/flash', :flash => flash %>
+  </div>
+  
   <div class="g_file_editor_file_explorer">
     <%= render 'shared/file_explorer', :with_dropdown => true %>
   </div>
@@ -68,6 +72,15 @@
 </div>
 
 <script type="text/javascript">
+    jQuery(function($) {
+      $(".editor_form").bind("ajax:error",  function(){
+        $("#file_save_modal").modal('hide')
+        allow_saving()
+        alert("A fatal error occured when saving your file. Please try again or refresh the page (don't forget you'll lose your changes ;-) )")
+      });
+        
+    });
+
     var EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"0"}
     var EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"0"}
     
@@ -77,46 +90,54 @@
     var ajax_defered_waiting = {}
     var skip_clearance = false
     var clearance_interval = null
-    $('#skip_clearance').click(function(){skip_clearance = true})
-    $('#go_reauth').click(function(){skip_clearance = true;window.location.reload();})
-    $('#cancel_reauth').click(function(){
-      $('#reauthenticate_modal').modal('hide')
-    })
+  
+    function initialize(){
+      $('#skip_clearance').click(function(){skip_clearance = true})
+      $('#go_reauth').click(function(){skip_clearance = true;window.location.reload();})
+      $('#cancel_reauth').click(function(){
+        $('#reauthenticate_modal').modal('hide')
+      })
+      
+      $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
+      $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
+      
+      $(".show_file_info").click(function(){
+        $('#file_info_modal').modal('show')
+      })
+      
+      allow_saving()
     
-    <% if show_minimized?(@file) %>
-      INITIAL_METRICS = EDITOR_FULL_METRICS
-    <% else %>
-      INITIAL_METRICS = EDITOR_W_MENU_METRICS
-    <% end %>
-    
-    $.each( INITIAL_METRICS , function( prop, value ) {
-      $('#editor').css(prop,value)
-    });
-    
-    $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
-    $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
-    
-    $(".show_file_info").click(function(){
-      $('#file_info_modal').modal('show')
-    })
-    
-    editor.setTheme("ace/theme/dawn");
-    editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
-    
-    <% unless @preferences.get_preference('ace_js_font_size').nil? %>
-      editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
-      $('#font_check').show()
-      var check = $('#font_check').detach()
-      $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
-    <% end %>
-       
-    $(window).bind('beforeunload',function(){
+      <% if show_minimized?(@file) %>
+        INITIAL_METRICS = EDITOR_FULL_METRICS
+      <% else %>
+        INITIAL_METRICS = EDITOR_W_MENU_METRICS
+      <% end %>
+      
+      $.each( INITIAL_METRICS , function( prop, value ) {
+        $('#editor').css(prop,value)
+      });
+      
+      editor.setTheme("ace/theme/dawn");
+      editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
+      
+      
+      $(window).bind('beforeunload',function(){
         if(!ready_to_submit() && !skip_clearance){
           clearance_interval = setInterval(function(){wait_for_clearance(function(){location.reload()})}, 1000)
           return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
         }
+      });
+      
+      <% unless @preferences.get_preference('ace_js_font_size').nil? %>
+        editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
+        $('#font_check').show()
+        var check = $('#font_check').detach()
+        $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
+      <% end %>
+      
+    }
     
-    });
+    initialize()
     
     function set_ace_mode(mode){
       syntax = mode
@@ -173,6 +194,7 @@
       }
       else{
         if(ready_to_submit() || skip_clearance){
+          block_saving()
           $('#g_file_content').val(editor.getValue())
           $('.editor_form').submit()
           $('#file_save_modal').modal('show')
@@ -208,5 +230,14 @@
       
     }
     
+    function block_saving(){
+      $('.editor_save_button').html("Saving...")
+      $('.editor_save_button').unbind('click')
+    }
+    
+    function allow_saving(){
+      $('.editor_save_button').html("Save")
+      $('.editor_save_button').click(validate_file_size_and_submit)
+    }
 
 </script>
