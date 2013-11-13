@@ -3,4 +3,5 @@
   window.location = "<%= edit_g_file_path @file.id %>"
 <% else %>
   $("#file_save_modal").modal('hide')
+  allow_saving()
 <% end %>
