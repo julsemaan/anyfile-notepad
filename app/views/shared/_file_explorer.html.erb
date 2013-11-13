@@ -44,6 +44,15 @@
       }
     }
     
+    function open_explorer(){
+      $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-up")
+      $('#file_tree_panel').slideDown()
+      if(!loaded){
+        load_explorer()
+      }
+      opened = true
+    }
+    
     function load_explorer(){
       $('#file_tree_loading_message').fadeIn()
       $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
@@ -61,18 +70,12 @@
       
       $('#open_file_explorer_title').click( function() {
           if(!opened){
-            
-            $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-up")
-            $('#file_tree_panel').slideDown()
-            if(!loaded){
-              load_explorer()
-            }
-            opened = !opened
+            open_explorer()
           }
           else{
             $('#file_tree_panel').slideUp()
             $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-down")
-            opened = !opened
+            opened = false
           }
       });
     <% else %>

@@ -62,6 +62,7 @@
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
+  <span class="glyphicon glyphicon-folder-open" onclick="javascript:show_file_explorer()" title="Open file"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu()" title="Maximize menu"></span>
 </div>
 
@@ -239,5 +240,10 @@
       $('.editor_save_button').html("Save")
       $('.editor_save_button').click(validate_file_size_and_submit)
     }
+    function show_file_explorer(){
+      open_menu()
+      open_explorer()
+    }
+    
 
 </script>
