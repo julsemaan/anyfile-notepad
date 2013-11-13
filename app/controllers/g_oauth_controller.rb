@@ -3,6 +3,40 @@ class GOauthController < ApplicationController
   after_filter :execute_after
   
   def execute_default
+    # if it's an ajax request
+    if request.xhr?
+      smooth_flow
+    else
+      enforced_flow
+    end
+        
+    begin
+      @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
+    rescue 
+      @preferences = Preferences.new
+    end
+  end
+  
+  def smooth_flow
+    @gapi.client.authorization.update_token!(session)
+    @gapi.client.authorization.inspect
+    @gapi.client.authorization.refresh_token
+    
+    unless @gapi.authorized?
+      render :status => :forbidden, :text => "Authorization failed."
+      return
+    end
+    
+    begin
+      @user = @gapi.client.execute!(:api_method => @gapi.oauth_api.userinfo.get).data
+    rescue
+      render :status => :forbidden, :text => "Authorization failed."
+      return
+    end
+    
+  end
+  
+  def enforced_flow
     api_client = @gapi.client
 
     api_client.authorization.update_token!(session)
@@ -27,12 +61,6 @@ class GOauthController < ApplicationController
     rescue
       do_g_oauth
       return
-    end
-    
-    begin
-      @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
-    rescue 
-      @preferences = Preferences.new
     end
   end
   
