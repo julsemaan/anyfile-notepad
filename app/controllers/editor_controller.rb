@@ -21,11 +21,11 @@ class EditorController < GOauthController
       flash[:error] = "A fatal error occured when communicating with Google's servers. We tried our best to recover it."
       redirect_to :back
     end
-    
+        
     begin
       content.encode("UTF-8")
     rescue
-      content = content.force_encoding("UTF-8").unpack("C*").pack("U*")
+      content = content.force_encoding("UTF-8")#.unpack("C*").pack("U*")
       flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
     end
     
