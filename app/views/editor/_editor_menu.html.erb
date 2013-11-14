@@ -28,7 +28,7 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
         <li>
-          <a href="#" onclick="javascript:close_menu()">
+          <a href="#" onclick="javascript:close_menu(true)">
             Minimize the menu 
             <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
           </a>
@@ -81,63 +81,63 @@
 
   
   <ul class="nav navbar-nav navbar-right">
-    <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:close_menu()" title="Minimize menu"></a></li>
+    <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:close_menu(true)" title="Minimize menu"></a></li>
   </ul>
 </nav>
 
 <script>
-    function close_menu(){
-      ajax_defered_waiting['close_menu'] = true
+    function close_menu(save_pref){
+      save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
       $('.g_file_menu').fadeOut(function(){
           $('.g_file_menu').hide(
             function(){$('#editor').animate(EDITOR_FULL_METRICS, function(){
               editor.resize()   
               $('.small_g_file_menu').fadeIn(function(){
-                
-                $.ajax(
-                {
-                  url: '/preferences/get_update?prefers_minimized=true',
-                  statusCode: {
-                    403: function(data){
-                      show_reauth()
-                    },
-                    200: function(data){
-                      ajax_defered_waiting['close_menu'] = false
-                    }
-                  }
-                })
-                
+                if(save_pref){
+                  send_prefers_opened(false)
+                }
               })
-              
             })
           })
         });
       
     }
     
-    function open_menu(){
-      ajax_defered_waiting['open_menu'] = true 
+    function open_menu(save_pref){
+      save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
       $('.small_g_file_menu').fadeOut()
       $('#editor').animate(EDITOR_W_MENU_METRICS,function(){
         editor.resize()  
         $('.g_file_menu').fadeIn(function(){
-            $.ajax(
-            {
-              url: '/preferences/get_update?prefers_minimized=false',
-              statusCode: {
-                403: function(data){
-                  show_reauth()
-                },
-                200: function(data){
-                  ajax_defered_waiting['open_menu'] = false
-                }
-              }
-            })
+          if(save_pref){
+            send_prefers_opened(true)
           }
-        )
-        
+        })
       })
-      
+    }
+    
+    function send_prefers_opened(opened){
+      ajax_defered_waiting['send_prefers_opened'] = true 
+      var prefers_minimized;
+      if(opened){
+        prefers_minimized = "false"
+      }
+      else{
+        prefers_minimized = "true"
+      }
+      $.ajax(
+      {
+        url: '/preferences/get_update?prefers_minimized='+prefers_minimized, 
+        statusCode: {
+          403: function(data){
+            ajax_defered_waiting['send_prefers_opened'] = false
+            show_reauth()
+          },
+          200: function(data){
+            ajax_defered_waiting['send_prefers_opened'] = false
+          }
+        }
+      })
     }
 
 </script>
