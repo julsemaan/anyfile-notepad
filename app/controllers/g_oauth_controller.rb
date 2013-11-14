@@ -66,17 +66,7 @@ class GOauthController < ApplicationController
   
   def do_g_oauth
     redirect_to @gapi.get_authorization_uri.to_s 
-    puts request.method
-    if request.put?
-      session[:afn_redirect_to]=request.original_url+"/edit"
-      session[:afn_lost_changes]=true
-    elsif request.post?
-      session[:afn_redirect_to]=request.original_url+"/new"
-      session[:afn_lost_changes]=true
-    else
-      session[:afn_redirect_to]=request.original_url
-      session[:afn_lost_changes]=false
-    end
+    register_redirect_to
   end
   
   def execute_after
