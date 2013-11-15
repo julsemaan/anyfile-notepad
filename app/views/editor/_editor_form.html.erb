@@ -63,7 +63,7 @@
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
   <span class="glyphicon glyphicon-folder-open" onclick="javascript:show_file_explorer()" title="Open file"></span>
-  <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu()" title="Maximize menu"></span>
+  <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu(true)" title="Maximize menu"></span>
 </div>
 
 <div class="g_file_editor">
@@ -91,6 +91,11 @@
     var ajax_defered_waiting = {}
     var skip_clearance = false
     var clearance_interval = null
+    
+    function reset_options(){
+      skip_clearance = false
+      allow_saving()
+    }
   
     function initialize(){
       $('#skip_clearance').click(function(){skip_clearance = true})
@@ -159,6 +164,7 @@
             url: '/preferences/get_update?syntaxes[<%= @file.extension %>]='+syntax,
             statusCode: {
           	 403: function(data){
+          	   ajax_defered_waiting['set_ace_mode'] = false
           	   show_reauth()
           	 },
           	 200: function(data){
@@ -228,6 +234,7 @@
           url: '/preferences/get_update?ace_js_font_size='+font_size,
           statusCode: {
             403: function(data){
+              ajax_defered_waiting['set_ace_mode'] = false
               show_reauth()
             },
             200: function(data){
