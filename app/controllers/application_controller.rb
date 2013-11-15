@@ -25,6 +25,19 @@ class ApplicationController < ActionController::Base
     
   end
   
+  def register_redirect_to
+    if request.put?
+      session[:afn_redirect_to]=request.original_url+"/edit"
+      session[:afn_lost_changes]=true
+    elsif request.post?
+      session[:afn_redirect_to]=request.original_url+"/new"
+      session[:afn_lost_changes]=true
+    else
+      session[:afn_redirect_to]=request.original_url
+      session[:afn_lost_changes]=false
+    end
+  end
+  
   def capture_auth_code
     if params[:code]
       begin
