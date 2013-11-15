@@ -3,6 +3,7 @@ class AdminController < GOauthController
   layout 'common_website'
   #http_basic_authenticate_with :name => "super", :password => "man", :except => :index
   skip_before_filter :execute_default, :only => :index
+  skip_after_filter :execute_after, :only => :index
   before_filter :authenticate_admin, :except => [:index, :logout]
   
   def authenticate_admin 
