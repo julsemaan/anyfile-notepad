@@ -18,12 +18,19 @@ class AdminController < GOauthController
   end
  
   def login
-    render 'shared/login'
+    if params[:redirect_to]
+      flash[:notice] = "You are now logged in"
+      redirect_to params[:redirect_to]
+    else
+      flash.now[:notice] = "You are now logged in"
+      render 'shared/login'
+    end
   end
   
   def logout
+    flash[:notice] = "You are now logged out"
     forget_auth
-    render 'shared/logout'
+    redirect_to root_path
   end
   
   def menu
