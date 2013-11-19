@@ -1,6 +1,5 @@
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
 <%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
-<%= render :partial => 'shared/progress_modal', :locals => {:id => "reauthenticate_modal", :title => "Reauthentification needed", :message => "You are not authenticated with Google anymore. You vill need to reauthenticate (this will discard your changes). Click cancel to continue working.", :buttons => {'cancel_reauth' => 'Cancel', 'go_reauth' => "Reauthenticate"}, :with_bar => false} %>
 <%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
@@ -99,10 +98,6 @@
   
     function initialize(){
       $('#skip_clearance').click(function(){skip_clearance = true})
-      $('#go_reauth').click(function(){skip_clearance = true;window.location.reload();})
-      $('#cancel_reauth').click(function(){
-        $('#reauthenticate_modal').modal('hide')
-      })
       
       $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
       $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
@@ -186,9 +181,7 @@
       return true
     }
     
-    function show_reauth(){
-      $('#reauthenticate_modal').modal('show')
-    }
+    
     
     function wait_for_clearance(after){
       if(ready_to_submit() || skip_clearance){
@@ -261,3 +254,5 @@
     
 
 </script>
+
+<%= render 'shared/g_reauth'%>

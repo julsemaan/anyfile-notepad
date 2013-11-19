@@ -10,6 +10,7 @@ AnyfileNotepad::Application.routes.draw do
   match 'g_api/about' => 'g_api#about'
   match 'g_api/svc' => 'g_api#svc'
   match 'g_api/welcome' => 'g_api#welcome'
+  match 'g_oauth/keep_alive' => 'g_oauth#keep_alive'
 
   match '/editor/edit' => 'application#execute_default'
   
