@@ -1,10 +1,10 @@
-<div class="modal fade" id="<%= defined?(id) ? id : "progress_modal" %>" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+<div class="modal fade" id="<%= defined?(id) ? id : "modal" %>" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title"><%= title %></h4>
       </div>
-      <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "progress_modal_body" %>">
+      <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "modal_body" %>">
         <% if not defined?(with_bar) or with_bar%>
           <%= render 'shared/loading_bar' %>
         <% end %>

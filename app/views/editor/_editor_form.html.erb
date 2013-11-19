@@ -1,5 +1,5 @@
-<%= render :partial => 'shared/progress_modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
-<%= render :partial => 'shared/progress_modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render 'file_info' %>
 
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
