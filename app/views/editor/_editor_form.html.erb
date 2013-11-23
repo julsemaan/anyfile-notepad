@@ -90,6 +90,8 @@
     var ajax_defered_waiting = {}
     var skip_clearance = false
     var clearance_interval = null
+    var content_saved = ""
+    var safe_to_quit = true
     
     function reset_options(){
       skip_clearance = false
@@ -107,6 +109,8 @@
       })
       
       allow_saving()
+      remember_content()
+      setInterval(check_content_changed, 1000)
     
       <% if show_minimized?(@file) %>
         INITIAL_METRICS = EDITOR_FULL_METRICS
@@ -123,11 +127,15 @@
       
       
       $(window).bind('beforeunload',function(){
+        if(!safe_to_quit || editor.getValue() != content_saved){
+          return "You have unsaved changes or your file is still being saved. You will lose your changes"
+        }
         if(!ready_to_submit() && !skip_clearance){
           clearance_interval = setInterval(function(){wait_for_clearance(function(){location.reload()})}, 1000)
           return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
         }
       });
+      
       
       <% unless @preferences.get_preference('ace_js_font_size').nil? %>
         editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
@@ -136,7 +144,12 @@
         $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
       <% end %>
       
-      
+      $(window).keydown(function(event) {
+  	    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+  	    validate_file_size_and_submit()
+  	    event.preventDefault();
+  	    return false;
+  	  });
       
     }
     
@@ -197,6 +210,7 @@
       else{
         if(ready_to_submit() || skip_clearance){
           block_saving()
+          remember_content()
           $('#g_file_content').val(editor.getValue())
           $('.editor_form').submit()
           $('#file_save_modal').modal('show')
@@ -236,8 +250,8 @@
     function block_saving(){
       $('.editor_save_button').html("Saving...")
       $('.editor_save_button').unbind('click')
-      
-      $(window).off('keydown.save')
+      safe_to_quit = false
+	  $(window).off('keydown.save')
       $(window).on('keydown.stop_save', function(event) {
         if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
         alert("This file is already being saved. Calm down.")
@@ -249,7 +263,7 @@
     function allow_saving(){
       $('.editor_save_button').html("Save")
       $('.editor_save_button').click(validate_file_size_and_submit)
-      
+      safe_to_quit = true
       $(window).off('keydown.stop_save')
       $(window).on('keydown.save', function(event) {
         if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
@@ -263,6 +277,18 @@
       open_explorer()
     }
     
+    function remember_content(){
+      content_saved = editor.getValue()
+    }
+    
+    function check_content_changed(){
+      if(editor.getValue() != content_saved){
+        $('.editor_save_button').addClass('btn-warning')
+      }
+      else{
+        $('.editor_save_button').removeClass('btn-warning')
+      }
+    }
 
 </script>
 
