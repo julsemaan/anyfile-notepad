@@ -144,12 +144,6 @@
         $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
       <% end %>
       
-      $(window).keydown(function(event) {
-  	    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-  	    validate_file_size_and_submit()
-  	    event.preventDefault();
-  	    return false;
-  	  });
       
     }
     
@@ -203,7 +197,7 @@
     }
     
     function validate_file_size_and_submit(){
-      var length = $('.editor_form').html().length
+      var length = editor.getValue().length
       if (length > <%= @file.MAX_FILE_SIZE %>){
         alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
       }
@@ -251,10 +245,10 @@
       $('.editor_save_button').html("Saving...")
       $('.editor_save_button').unbind('click')
       safe_to_quit = false
-	  $(window).off('keydown.save')
+	    $(window).off('keydown.save')
       $(window).on('keydown.stop_save', function(event) {
         if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-        alert("This file is already being saved. Calm down.")
+        //alert("This file is already being saved. Calm down.")
         event.preventDefault();
         return false;
       });
