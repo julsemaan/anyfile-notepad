@@ -136,12 +136,7 @@
         $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
       <% end %>
       
-      $(window).keydown(function(event) {
-  	    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-  	    validate_file_size_and_submit()
-  	    event.preventDefault();
-  	    return false;
-  	  });
+      
       
     }
     
@@ -241,11 +236,27 @@
     function block_saving(){
       $('.editor_save_button').html("Saving...")
       $('.editor_save_button').unbind('click')
+      
+      $(window).off('keydown.save')
+      $(window).on('keydown.stop_save', function(event) {
+        if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+        alert("This file is already being saved. Calm down.")
+        event.preventDefault();
+        return false;
+      });
     }
     
     function allow_saving(){
       $('.editor_save_button').html("Save")
       $('.editor_save_button').click(validate_file_size_and_submit)
+      
+      $(window).off('keydown.stop_save')
+      $(window).on('keydown.save', function(event) {
+        if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+        validate_file_size_and_submit()
+        event.preventDefault();
+        return false;
+      });
     }
     function show_file_explorer(){
       open_menu()
