@@ -91,6 +91,7 @@
     var skip_clearance = false
     var clearance_interval = null
     var content_saved = ""
+    var safe_to_quit = true
     
     function reset_options(){
       skip_clearance = false
@@ -126,11 +127,15 @@
       
       
       $(window).bind('beforeunload',function(){
+        if(!safe_to_quit || editor.getValue() != content_saved){
+          return "You have unsaved changes or your file is still being saved. You will lose your changes"
+        }
         if(!ready_to_submit() && !skip_clearance){
           clearance_interval = setInterval(function(){wait_for_clearance(function(){location.reload()})}, 1000)
           return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
         }
       });
+      
       
       <% unless @preferences.get_preference('ace_js_font_size').nil? %>
         editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
@@ -245,11 +250,13 @@
     function block_saving(){
       $('.editor_save_button').html("Saving...")
       $('.editor_save_button').unbind('click')
+      safe_to_quit = false
     }
     
     function allow_saving(){
       $('.editor_save_button').html("Save")
       $('.editor_save_button').click(validate_file_size_and_submit)
+      safe_to_quit = true
     }
     function show_file_explorer(){
       open_menu()
