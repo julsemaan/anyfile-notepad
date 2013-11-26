@@ -21,18 +21,20 @@ class EditorController < GOauthController
       flash[:error] = "A fatal error occured when communicating with Google's servers. We tried our best to recover it."
       redirect_to request.original_url
     end
-        
-    begin
-      content.encode("UTF-8")
-    rescue
-      
-      content = content.force_encoding("UTF-8")
-      if not content.valid_encoding?
-        content = content.unpack("C*").pack("U*")
+
+    if not content.nil?
+      begin
+        content.encode("UTF-8")
+      rescue
+        content = content.force_encoding("UTF-8")
+        if not content.valid_encoding?
+          content = content.unpack("C*").pack("U*")
+        end
+        flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
       end
-      
-      
-      flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
+    else
+      flash[:error] = "Your file seems to have invalid content. Make sure your file exists and try again."
+      redirect_to new_g_file_path
     end
     
     @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
