@@ -5,10 +5,6 @@ html{
   background-color:#EBEBEB;
 }
 
-body{
-  background-color:#EBEBEB;
-}
-
 /* errors */
 div.error_panel_body{
   padding:0.1em;
@@ -33,10 +29,6 @@ div.file_explorer{
   div.panel-title{
     padding:0.5em;
   }
-}
-
-form.editor_form{
-  background-color:#EBEBEB;
 }
 
 /*
@@ -83,6 +75,10 @@ div.g_file_menu{
       overflow-y:auto;
       max-height:300px;
     }
+    
+    #open_file_explorer_title{
+      @include border-radius(5px);
+    }
   }
   
 
@@ -120,5 +116,32 @@ div.g_file_editor{
   }
 }
 
+div#select_theme_modal{
+  .modal-dialog{
+    //width:650px;
+    text-align:center;
+    position:fixed;
+    left:0;
+    bottom:0;
+  }
+  .modal-body{
+    padding:0;
+  }
+  .modal-footer{
+    padding:0;
+  }
+  
+  .row{
+    margin:0;
+  }
+  
+  .col-md-4{
+    padding:0;
+  }
+}
+
+div.theme_choice_column{
+  width:100%;
+}
 
 

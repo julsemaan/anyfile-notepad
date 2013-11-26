@@ -122,7 +122,6 @@
         $('#editor').css(prop,value)
       });
       
-      editor.setTheme("ace/theme/dawn");
       editor.getSession().setMode("ace/mode/<%= @file.syntax.ace_js_mode %>");
       
       
@@ -287,3 +286,4 @@
 </script>
 
 <%= render 'shared/g_reauth'%>
+<%= render 'select_theme_modal' %>

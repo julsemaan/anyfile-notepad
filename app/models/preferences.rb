@@ -6,6 +6,7 @@ class Preferences
   PREFERENCES = {
     'prefers_minimized' => 'false',
     'ace_js_font_size' => "1em", 
+    'theme' => nil,
   }
   
   HASH_PREFERENCES = [
