@@ -21,4 +21,27 @@ module EditorHelper
     end
     return false
   end
+  
+  def themes_list
+    themes = []
+    Dir.foreach("#{Rails.root}/public/ace.js") do |filename|
+      if filename.index("theme-")
+        themes << filename
+      end
+    end
+    themes.sort
+  end
+  
+  def theme_display_name(filename)
+    filename.slice!("theme-")
+    filename.slice!(".js")
+    filename.gsub! "_", " "
+    filename.capitalize
+  end
+  
+  def theme_name(filename)
+    filename.slice!("theme-")
+    filename.slice!(".js")
+    "ace/theme/#{filename}"
+  end
 end
