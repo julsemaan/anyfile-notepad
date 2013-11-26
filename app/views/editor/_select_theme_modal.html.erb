@@ -1,9 +1,6 @@
 <div class="modal fade" id="select_theme_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
-  <div class="modal-dialog" id="select_theme_dialog">
+  <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Select a theme</h4>
-      </div>
       <div class="modal-body">
         <div class="row">
           <% themes_list.each_slice(10).to_a.each do |theme_array| %>
@@ -26,9 +23,10 @@
 </div>
 
 <script>
-  setInterval(set_background_color_from_theme, 1000)
-  var current_theme = "ace/theme/dawn"
+  setInterval(set_background_color_from_theme, 500)
+  var current_theme = "<%= current_theme %>"
   editor.setTheme(current_theme)
+  set_background_color_from_theme()
   $(document.getElementById("theme_"+current_theme)).addClass("btn-primary")
   
   function watch_theme(){
@@ -37,12 +35,28 @@
   }
   
   function select_theme(name){
+    ajax_defered_waiting["select_theme"]
     $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
     current_theme = name
     editor.setTheme(current_theme)
     set_background_color_from_theme()
     var check = $('#theme_check').detach()
     $(document.getElementById("theme_"+name)).addClass("btn-primary")
+    
+    $.ajax(
+    {
+      url: '/preferences/get_update?theme='+name, 
+      statusCode: {
+        403: function(data){
+          ajax_defered_waiting['select_theme'] = false
+          show_reauth()
+        },
+        200: function(data){
+          ajax_defered_waiting['select_theme'] = false
+        }
+      }
+    })
+    
   }
   
   function set_background_color_from_theme(){
@@ -51,4 +65,6 @@
     body_element = document.getElementsByTagName("body")[0]
     $(body_element).css('background-color', $('.ace_gutter').css('background-color'))
   }
+  
+  
 </script>

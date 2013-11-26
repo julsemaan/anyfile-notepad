@@ -44,4 +44,12 @@ module EditorHelper
     filename.slice!(".js")
     "ace/theme/#{filename}"
   end
+  
+  def current_theme
+    if @preferences.get_preference('theme').nil?
+      return "ace/theme/dawn"
+    else
+      return @preferences.get_preference('theme')
+    end
+  end
 end
