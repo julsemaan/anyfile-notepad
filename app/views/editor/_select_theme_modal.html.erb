@@ -1,0 +1,70 @@
+<div class="modal fade" id="select_theme_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <% themes_list.each_slice(10).to_a.each do |theme_array| %>
+            <div class="col-md-4">
+              <div class="theme_choice_column btn-group-vertical">
+                
+                <% theme_array.each do |theme| %>
+                  <a href="#" class="btn btn-default" id='theme_<%=theme_name(theme)%>' onclick="javascript:select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#select_theme_modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  setInterval(set_background_color_from_theme, 500)
+  var current_theme = "<%= current_theme %>"
+  editor.setTheme(current_theme)
+  set_background_color_from_theme()
+  $(document.getElementById("theme_"+current_theme)).addClass("btn-primary")
+  
+  function watch_theme(){
+    name = editor.getTheme()
+    set_background_color_from_theme
+  }
+  
+  function select_theme(name){
+    ajax_defered_waiting["select_theme"]
+    $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
+    current_theme = name
+    editor.setTheme(current_theme)
+    set_background_color_from_theme()
+    var check = $('#theme_check').detach()
+    $(document.getElementById("theme_"+name)).addClass("btn-primary")
+    
+    $.ajax(
+    {
+      url: '/preferences/get_update?theme='+name, 
+      statusCode: {
+        403: function(data){
+          ajax_defered_waiting['select_theme'] = false
+          show_reauth()
+        },
+        200: function(data){
+          ajax_defered_waiting['select_theme'] = false
+        }
+      }
+    })
+    
+  }
+  
+  function set_background_color_from_theme(){
+    html_element = document.getElementsByTagName("html")[0]
+    $(html_element).css('background-color', $('.ace_gutter').css('background-color'))
+    body_element = document.getElementsByTagName("body")[0]
+    $(body_element).css('background-color', $('.ace_gutter').css('background-color'))
+  }
+  
+  
+</script>
