@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   
   def capture_auth_and_commands
     @gapi = GApi.new
-    
+
     capture_auth_code
     capture_drive_commands
 
@@ -53,8 +53,10 @@ class ApplicationController < ActionController::Base
   end
   
   def capture_drive_commands
-    if params[:state] and @gapi.authorized?
+    puts "hello"
+    if params[:state]
       state = MultiJson.decode(params[:state] || '{}')
+      puts state.nil?
       if state['folderId']
         redirect_to "/editor/new/#{state['folderId']}"
       else
