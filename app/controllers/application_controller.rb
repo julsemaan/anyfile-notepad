@@ -58,10 +58,18 @@ class ApplicationController < ActionController::Base
       state = MultiJson.decode(params[:state] || '{}')
       puts state.nil?
       if state['folderId']
-        redirect_to "/editor/new/#{state['folderId']}"
+        begin
+          redirect_to "/editor/new/#{state['folderId']}"
+        rescue AbstractController::DoubleRenderError
+          # a redirect flow is already initiated
+        end
       else
         doc_id = state['ids'] ? state['ids'].first : ''
-        redirect_to "/editor/edit/#{doc_id}"
+        begin
+          redirect_to "/editor/edit/#{doc_id}"
+        rescue AbstractController::DoubleRenderError
+          # a redirect flow is already initiated
+        end
       end
     end
   end
