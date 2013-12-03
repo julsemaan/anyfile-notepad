@@ -20,6 +20,7 @@ class EditorController < GOauthController
     rescue Google::APIClient::ServerError
       flash[:error] = "A fatal error occured when communicating with Google's servers. We tried our best to recover it."
       redirect_to request.original_url
+      return
     end
 
     if not content.nil?
