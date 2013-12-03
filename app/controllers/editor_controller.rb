@@ -32,9 +32,6 @@ class EditorController < GOauthController
         end
         flash.now[:warn] = "Content encoding has been changed by force. This could corrupt your file. Think about it before saving."
       end
-    else
-      flash[:error] = "Your file seems to have invalid content. Make sure your file exists and try again."
-      redirect_to new_g_file_path
     end
     
     @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
