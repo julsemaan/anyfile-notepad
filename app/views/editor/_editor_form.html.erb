@@ -28,7 +28,7 @@
    	  
       <div class="file_title input-group">
         
-        <%= f.text_field :title, :class=> "field form-control", :placeholder => "File title" %>
+        <%= f.text_field :title, :onkeydown=>"if(event.keyCode == 13){validate_file_size_and_submit();return false;}" , :class=> "field form-control", :placeholder => "File title" %>
         <span class="input-group-btn ">
           <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
         </span>
@@ -134,7 +134,6 @@
           return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
         }
       });
-      
       
       <% unless @preferences.get_preference('ace_js_font_size').nil? %>
         editor.setFontSize("<%= @preferences.get_preference('ace_js_font_size') %>")
