@@ -60,6 +60,9 @@ AnyfileNotepad::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+  
+  # Force HTTPS usage
+  config.force_ssl = true
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
