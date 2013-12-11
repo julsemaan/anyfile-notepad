@@ -11,11 +11,10 @@ AnyfileNotepad::Application.routes.draw do
   match 'g_api/svc' => 'g_api#svc'
   match 'g_api/welcome' => 'g_api#welcome'
   match 'g_oauth/keep_alive' => 'g_oauth#keep_alive'
-
-  match '/editor/edit' => 'application#execute_default'
   
   match 'editor/new/' => 'editor#new'
   match 'editor/new/:folder_id' => 'editor#new'
+  match '/editor/edit' => 'editor#new'
   match 'editor/edit/:id' => 'editor#edit'
   
   namespace :admin do
