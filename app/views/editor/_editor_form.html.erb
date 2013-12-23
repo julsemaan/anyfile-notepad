@@ -103,6 +103,7 @@
       
       $(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
       $(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
+      $(".tab_size_button").click(function(){change_tab_size($(this).attr('value'))})
       
       $(".show_file_info").click(function(){
         $('#file_info_modal').modal('show')
@@ -140,6 +141,13 @@
         $('#font_check').show()
         var check = $('#font_check').detach()
         $(document.getElementById("font_<%= @preferences.get_preference('ace_js_font_size') %>")).prepend(check)
+      <% end %>
+          
+      <% unless @preferences.get_preference('ace_js_tab_size').nil? %>
+        editor.getSession().setTabSize("<%= @preferences.get_preference('ace_js_tab_size') %>")
+        $('#tab_check').show()
+        var check = $('#tab_check').detach()
+        $(document.getElementById("tab_<%= @preferences.get_preference('ace_js_tab_size') %>")).append(check)
       <% end %>
       
       
@@ -228,7 +236,7 @@
           url: '/preferences/get_update?ace_js_font_size='+font_size,
           statusCode: {
             403: function(data){
-              ajax_defered_waiting['set_ace_mode'] = false
+              ajax_defered_waiting['change_font_size'] = false
               show_reauth()
             },
             200: function(data){
@@ -237,6 +245,29 @@
           }
         })
       
+    }
+      
+    function change_tab_size(tab_size){
+      ajax_defered_waiting['change_tab_size'] = true 
+      editor.getSession().setTabSize(tab_size)
+      
+      $('#tab_check').show()
+      var check = $('#tab_check').detach()
+      $(document.getElementById("tab_"+tab_size)).append(check)
+      
+      $.ajax(
+        {
+          url: '/preferences/get_update?ace_js_tab_size='+tab_size,
+          statusCode: {
+            403: function(data){
+              ajax_defered_waiting['change_tab_size'] = false
+              show_reauth()
+            },
+            200: function(data){
+              ajax_defered_waiting['change_tab_size'] = false
+            }
+          }
+        })      
     }
     
     function block_saving(){
