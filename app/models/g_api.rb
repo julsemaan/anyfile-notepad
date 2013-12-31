@@ -45,7 +45,7 @@ class GApi
   
   def get_file_data(id)
     fields = "downloadUrl,id,mimeType,title,fileSize"
-    result = @client.execute!(
+    result = @client.execute(
     :api_method => drive_api.files.get,
     :parameters => { :fileId => id, :fields => fields })
     file_hash = result.data.to_hash
