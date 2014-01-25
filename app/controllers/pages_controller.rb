@@ -2,12 +2,23 @@ class PagesController < ApplicationController
   layout 'common_website'
   def home
     @title = "Home"
-    @content = SiteContent.find_by_key('home').value
+    @key = 'home'
+    @content = SiteContent.find_by_key(@key).value
+    render :template => 'site_content/show'
   end
   
   def news
     @title = "News"
-    @content = SiteContent.find_by_key('news').value
+    @key = 'news'
+    @content = SiteContent.find_by_key(@key).value
+    render :template => 'site_content/show'
+  end
+  
+  def faq
+    @title = "FAQ"
+    @key = 'faq'
+    @content = SiteContent.find_by_key(@key).value
+    render :template => 'site_content/show'
   end
   
 end

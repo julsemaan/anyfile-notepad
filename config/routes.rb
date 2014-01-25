@@ -31,6 +31,7 @@ AnyfileNotepad::Application.routes.draw do
   
   match 'preferences/get_update' => 'preferences#get_update'
   
+  match 'faq' => 'pages#faq'
   match 'news' => 'pages#news'
   root :to => 'pages#home'
 end
