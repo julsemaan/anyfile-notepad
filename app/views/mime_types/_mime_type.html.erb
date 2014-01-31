@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <%= mime_type.type_name %>
-    <span class="mime_type_discoved_date">discovered <%= time_ago_in_words(mime_type.created_at) %> ago</span>
-    <span class="mime_type_discovered_by">Discovered by: <%= mime_type.discovered_by %></span>
+    <span class="mime_type_discoved_date"></span>
+    <span class="mime_type_discovered_by">Discovered <%= time_ago_in_words(mime_type.created_at) %> ago by <%=  mime_type.discovered_by %></span>
     <% if is_admin %>
       <%= link_to 'Edit', edit_mime_type_path(mime_type) %>
       <% unless mime_type.integrated %>
