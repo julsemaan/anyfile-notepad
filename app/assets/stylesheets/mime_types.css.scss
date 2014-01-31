@@ -16,11 +16,14 @@ div.mime_types_index{
   }
 
   div.integrated{
-    text-align:center;
+    display:table;
     div.mime_type{
+      vertical-align:middle;
+      display:table-cell;
       text-align:left;
       display:inline-block;
-      width:32%;
+      width:48%;
+      margin:0.5%;
     }
   }
   
