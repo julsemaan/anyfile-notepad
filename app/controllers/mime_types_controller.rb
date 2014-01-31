@@ -87,4 +87,12 @@ class MimeTypesController < AdminController
       format.json { head :no_content }
     end
   end
+  
+  def mark_integrated
+    @mime_type = MimeType.find(params[:id])
+    @mime_type.integrated = true
+    @mime_type.save
+    
+    redirect_to mime_types_url
+  end
 end

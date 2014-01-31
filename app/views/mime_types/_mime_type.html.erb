@@ -5,7 +5,9 @@
     <span class="mime_type_discovered_by">Discovered by: <%= mime_type.discovered_by %></span>
     <% if is_admin %>
       <%= link_to 'Edit', edit_mime_type_path(mime_type) %>
-      <%= link_to 'Destroy', mime_type, method: :delete, data: { confirm: 'Are you sure?' } %>
+      <% unless mime_type.integrated %>
+        <%= link_to 'Mark as integrated', mark_integrated_mime_type_path(mime_type), method: :mark_integrated, data: { confirm: 'Are you sure?' } %>
+      <% end %>
     <% end %>
   </div>
 </div>

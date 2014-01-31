@@ -1,7 +1,11 @@
 AnyfileNotepad::Application.routes.draw do
   resources :extensions
   resources :syntaxes
-  resources :mime_types
+  resources :mime_types do
+    member do
+      post 'mark_integrated'
+    end
+  end
 
 
   match 'jqueryfiletree/content' => 'jqueryfiletree#content'
