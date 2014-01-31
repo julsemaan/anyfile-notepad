@@ -14,5 +14,14 @@ div.mime_types_index{
     display:block;
     font-size:70%;
   }
+
+  div.integrated{
+    text-align:center;
+    div.mime_type{
+      text-align:left;
+      display:inline-block;
+      width:32%;
+    }
+  }
   
 }
