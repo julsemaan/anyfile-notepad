@@ -92,6 +92,13 @@
           </ul>
         </li>
         
+        <li>
+          <a href="#" onclick="javascript:toggle_word_wrap()">
+            Word wrap
+            <span id="word_wrap_check" class="glyphicon glyphicon-ok" style="display:none"></span>
+          </a>
+        </li>
+        
       </ul>
     </li>
     
@@ -159,5 +166,31 @@
         }
       })
     }
+  
+  var word_wrap_enabled = false;
+  function toggle_word_wrap(){
+     ajax_defered_waiting['toggle_word_wrap'] = true;
+    word_wrap_enabled = !word_wrap_enabled;
+    editor.getSession().setUseWrapMode(word_wrap_enabled)
+    if(word_wrap_enabled){
+        $('#word_wrap_check').show()
+    }
+    else{
+      $('#word_wrap_check').hide()
+    }
+    $.ajax(
+    {
+      url: '/preferences/get_update?word_wrap='+word_wrap_enabled, 
+      statusCode: {
+        403: function(data){
+          ajax_defered_waiting['toggle_word_wrap'] = false
+          show_reauth()
+        },
+        200: function(data){
+          ajax_defered_waiting['toggle_word_wrap'] = false
+        }
+      }
+    })
+  }
 
 </script>

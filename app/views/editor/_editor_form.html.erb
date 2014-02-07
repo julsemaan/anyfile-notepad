@@ -149,6 +149,13 @@
         var check = $('#tab_check').detach()
         $(document.getElementById("tab_<%= @preferences.get_preference('ace_js_tab_size') %>")).append(check)
       <% end %>
+          
+      <% unless @preferences.get_preference('word_wrap').nil? %>
+        editor.getSession().setUseWrapMode("<%= @preferences.get_preference('word_wrap') %>")
+        <% if @preferences.get_preference('word_wrap') %>
+          $('#word_wrap_check').show()
+        <% end %>
+      <% end %>
       
       
     }

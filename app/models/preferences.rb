@@ -8,6 +8,7 @@ class Preferences
     'ace_js_font_size' => "1em", 
     'ace_js_tab_size' => 4,
     'theme' => nil,
+    'word_wrap' => false,
   }
   
   HASH_PREFERENCES = [
