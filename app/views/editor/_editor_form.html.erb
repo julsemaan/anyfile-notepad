@@ -92,6 +92,7 @@
     var clearance_interval = null
     var content_saved = ""
     var safe_to_quit = true
+    var word_wrap_enabled = <%= @preferences.get_preference('word_wrap') %>;
     
     function reset_options(){
       skip_clearance = false
@@ -150,12 +151,10 @@
         $(document.getElementById("tab_<%= @preferences.get_preference('ace_js_tab_size') %>")).append(check)
       <% end %>
           
-      <% unless @preferences.get_preference('word_wrap').nil? %>
-        editor.getSession().setUseWrapMode("<%= @preferences.get_preference('word_wrap') %>")
-        <% if @preferences.get_preference('word_wrap') %>
-          $('#word_wrap_check').show()
-        <% end %>
-      <% end %>
+      editor.getSession().setUseWrapMode(word_wrap_enabled)
+      if(word_wrap_enabled){
+        $('#word_wrap_check').show()
+      }
       
       
     }
