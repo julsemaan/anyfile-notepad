@@ -1,10 +1,7 @@
-@import "bootstrap-min.css.scss";
+@import "bootstrap";
+@import "common.css.scss";
 
 html{
-  background-color:#EBEBEB;
-}
-
-body{
   background-color:#EBEBEB;
 }
 
@@ -21,6 +18,10 @@ div.error_panel_body{
   
 }
 
+.editor_nav_bar{
+  margin:0;
+}
+
 div.file_explorer{
   h3{
     padding:0.4em;
@@ -30,19 +31,21 @@ div.file_explorer{
   }
 }
 
-form.editor_form{
-  background-color:#EBEBEB;
-}
-
-
-
+/*
+.close_menu_button{
+  float:right;
+  margin-top:0.5em;
+  margin-right:0.5em;
+  cursor:pointer;
+}*/
 
 div.g_file_menu{
   display:inline-block;
   width:280px;
   height:100%;
   padding:0.7em;;
-  margin-top:0.5em;
+  
+  margin-top:0;
 
   div.ads{
     text-align:center;
@@ -70,6 +73,7 @@ div.g_file_menu{
     }
   }
   
+  
   div.file_title{
     padding-bottom:5px;
   }
@@ -80,22 +84,73 @@ div.g_file_menu{
       overflow-y:auto;
       max-height:300px;
     }
+    
+    #open_file_explorer_title{
+      @include border-radius(5px);
+    }
   }
   
 
 }
 
+div.small_g_file_menu{
+  width:30px;
+  padding:7px 0;
+  display:inline-block;
+  text-align:center;
+  border-right:2px solid black;
+  border-bottom:2px solid black;
+  @include border-radius(5px);
+  span{
+    margin-top:2px;
+    padding:3px;
+    @extend .btn;
+    @extend .btn-default;
+    cursor:pointer;
+  }
+}
+
 div.g_file_editor{
   height:100%;
   display:inline-block;
+  
+  div#editor{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:280px;
+    right:0;
+    display:inline-block;
+    font-size:1em;
+  }
 }
 
-div#editor{
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:280px;
-  right:0;
-  display:inline-block;
+div#select_theme_modal{
+  .modal-dialog{
+    //width:650px;
+    text-align:center;
+    position:fixed;
+    left:0;
+    bottom:0;
+  }
+  .modal-body{
+    padding:0;
+  }
+  .modal-footer{
+    padding:0;
+  }
+  
+  .row{
+    margin:0;
+  }
+  
+  .col-md-4{
+    padding:0;
+  }
 }
+
+div.theme_choice_column{
+  width:100%;
+}
+
 

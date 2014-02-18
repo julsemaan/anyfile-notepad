@@ -11,13 +11,42 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131014172826) do
+ActiveRecord::Schema.define(:version => 20140125215919) do
+
+  create_table "administrators", :force => true do |t|
+    t.string   "google_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "extensions", :force => true do |t|
+    t.string   "name"
+    t.integer  "syntax_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "mime_type_id"
+  end
 
   create_table "mime_types", :force => true do |t|
     t.string   "type_name"
-    t.boolean  "integrated", :default => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.boolean  "integrated",    :default => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.string   "discovered_by", :default => "John Doe"
+  end
+
+  create_table "site_contents", :force => true do |t|
+    t.string   "key"
+    t.text     "value",      :limit => 255, :default => ""
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
+  create_table "syntaxes", :force => true do |t|
+    t.string   "display_name"
+    t.string   "ace_js_mode"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
 end

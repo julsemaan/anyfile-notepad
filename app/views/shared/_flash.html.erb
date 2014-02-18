@@ -1,3 +1,13 @@
 <% flash.each do |key, value| %>
   <div class="flash_<%= key %>"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> <%= value %></div>
 <% end %>
+
+<script>
+  function alert_timeout(identifier, wait){
+      setTimeout(function(){
+          $(identifier).slideUp();
+      }, wait);
+  }
+  
+  alert_timeout('.flash_notice', 3000)
+</script>

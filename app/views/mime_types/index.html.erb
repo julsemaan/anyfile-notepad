@@ -1,25 +1,37 @@
-<h1>Mimetypes</h1>
 
-<table>
-  <tr>
-    <th>TYPE</th>
-    <th>Integrated with Drive SDK</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">What are mime types for ?</h3>
+  </div>
+  <div class="panel-body">
+    <p>In the case of Google Drive, mime types are what allow us to make an association with Anyfile Notepad directly in the Drive UI. Without these you would have to open every file with the file explorer. Help us build the database by opening unknown files with the app built-in file explorer.</h3>
+  </div>
+</div>
 
-<% @mime_types.each do |mime_type| %>
-  <tr>
-    <td><%= mime_type.type_name %></td>
-    <td><%= mime_type.integrated %></td>
-    <td><%= link_to 'Show', mime_type %></td>
-    <td><%= link_to 'Edit', edit_mime_type_path(mime_type) %></td>
-    <td><%= link_to 'Destroy', mime_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Mime type', new_mime_type_path %>
+<div class="mime_types_index">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Mime types pending integration with Google Drive UI</h3>
+    </div>
+    <div class="panel-body">
+      <% if @not_integrated_mime_types.empty? %>
+        There are currently no pending mime types for integration with Google Drive UI. Make us discover more mime types by opening files with the app built-in file explorer.
+      <% else %>
+        <% @not_integrated_mime_types.each do |mime_type| %>
+          <%= render mime_type %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Mime types integrated with Google Drive UI (<%= @integrated_mime_types.size %> mime types)</h3>
+    </div>
+    <div class="integrated panel-body">
+      <% @integrated_mime_types.each do |mime_type| %>
+        <%= render mime_type %>
+      <% end %>
+    </div>
+  </div>
+</div>

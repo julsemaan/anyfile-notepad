@@ -1,21 +1,24 @@
-class MimeTypesController < ApplicationController
-  layout 'common_website'
-  http_basic_authenticate_with :name => "super", :password => "man"
+class MimeTypesController < AdminController
+  
+  
   # GET /mime_types
   # GET /mime_types.json
   def index
-    @mime_types = MimeType.all
-
+    @title = "Mimetypes"
+    @integrated_mime_types = MimeType.find_all_by_integrated(true)
+    @not_integrated_mime_types = MimeType.find_all_by_integrated(false)
+    
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @mime_types }
+      format.json { render json: MimeType.all }
     end
   end
 
   # GET /mime_types/1
   # GET /mime_types/1.json
-  def show
+  def show 
     @mime_type = MimeType.find(params[:id])
+    @title = @mime_type.type_name
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,6 +29,7 @@ class MimeTypesController < ApplicationController
   # GET /mime_types/new
   # GET /mime_types/new.json
   def new
+    @title = "New Mimetype"
     @mime_type = MimeType.new
 
     respond_to do |format|
@@ -37,6 +41,7 @@ class MimeTypesController < ApplicationController
   # GET /mime_types/1/edit
   def edit
     @mime_type = MimeType.find(params[:id])
+    @title = "Edit #{@mime_type.type_name}"
   end
 
   # POST /mime_types
@@ -81,5 +86,13 @@ class MimeTypesController < ApplicationController
       format.html { redirect_to mime_types_url }
       format.json { head :no_content }
     end
+  end
+  
+  def mark_integrated
+    @mime_type = MimeType.find(params[:id])
+    @mime_type.integrated = true
+    @mime_type.save
+    
+    redirect_to mime_types_url
   end
 end

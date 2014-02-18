@@ -1,0 +1,26 @@
+<%= form_for(@syntax) do |f| %>
+  <% if @syntax.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@syntax.errors.count, "error") %> prohibited this syntax from being saved:</h2>
+
+      <ul>
+      <% @syntax.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :display_name %>
+    <%= f.text_field :display_name %>
+  </div>
+    <div class="field">
+    <%= f.label :ace_js_mode %>
+    <%= f.text_field :ace_js_mode %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

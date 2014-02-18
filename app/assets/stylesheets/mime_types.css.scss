@@ -1,3 +1,30 @@
-// Place all the styles related to the MimeTypes controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+
+div.mime_types_index{
+  h3{
+    font-size:120%;
+  }
+  font-size:110%;
+  
+  span.mime_type_discoved_date{
+    font-style:italic;
+    font-size:90%;
+  }
+  
+  span.mime_type_discovered_by{
+    display:block;
+    font-size:70%;
+  }
+
+  div.integrated{
+    display:table;
+    div.mime_type{
+      vertical-align:middle;
+      display:table-cell;
+      text-align:left;
+      display:inline-block;
+      width:48%;
+      margin:0.5%;
+    }
+  }
+  
+}

@@ -1,11 +1,14 @@
+<%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded.", :message => "Press escape to cancel"} %>
 
-
-<div class="file_explorer panel panel-default">
+<div class="file_explorer panel panel-default ">
   <div class="panel-heading">
-    <h3 class="panel-title" id="open_file_explorer_title" >Open File <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span></h3>
+    <h3 class="panel-title btn-primary" id="open_file_explorer_title" >Open File <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span></h3>
   </div>
   <div class="panel-body" id="file_tree_panel" >
-  <p id="file_tree_loading_message" style="display:none">Loading...</p>
+  <div id="file_tree_loading_message">
+    <%= render :partial => 'shared/loading_bar', :locals => {:bar_message => "Loading your files."} %>
+  </div>
+  <p class="flash_error" id="loading_error" style="display:none;">Your files couldn't load.<br/><a id="reauth_file_tree" href="#">Click here to reauthenticate.</a></p>
   <div id="fileTree" class="demo"></div>
   </div>
 </div>
@@ -14,6 +17,9 @@
 
     var opened = false
     var loaded = false
+    var reload_url = window.location.href
+    
+    $('#reauth_file_tree').attr('href', reload_url)
 
     watch_tree_job = setInterval(watch_tree,1000)
     
@@ -28,9 +34,29 @@
 
     }
     
+    function show_loading(){
+      $('#file_explorer_progress_modal').modal('show')
+    }
+    
+    function show_error(){
+      if( $('#fileTree').html() == "" ) {
+        $('#loading_error').show()
+      }
+    }
+    
+    function open_explorer(){
+      $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-up")
+      $('#file_tree_panel').slideDown()
+      if(!loaded){
+        load_explorer()
+      }
+      opened = true
+    }
+    
     function load_explorer(){
       $('#file_tree_loading_message').fadeIn()
-      $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', callback: function(){alert('hello')}});
+      $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
+      setTimeout(show_error, 10000)
       loaded = true
     }
     
@@ -44,18 +70,12 @@
       
       $('#open_file_explorer_title').click( function() {
           if(!opened){
-            
-            $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-up")
-            $('#file_tree_panel').slideDown()
-            if(!loaded){
-              load_explorer()
-            }
-            opened = !opened
+            open_explorer()
           }
           else{
             $('#file_tree_panel').slideUp()
             $('#open_file_explorer').attr("class", "glyphicon glyphicon-chevron-down")
-            opened = !opened
+            opened = false
           }
       });
     <% else %>
