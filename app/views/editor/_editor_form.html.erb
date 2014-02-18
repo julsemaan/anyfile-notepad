@@ -2,6 +2,10 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render 'file_info' %>
 
+<div style="position:fixed;right:5px;top:5px;">
+  <%= render 'shared/skyscraper_ad' %>
+</div>
+
 <div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
 
   <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
@@ -52,10 +56,6 @@
     <%= render 'shared/flash', :flash => flash %>
   </div>
   
-  <div class="ads">
-    <%= render 'shared/small_square_ad' %>
-  </div>
-  
   <div class="g_file_editor_file_explorer">
     <%= render 'shared/file_explorer', :with_dropdown => true %>
   </div>
@@ -86,8 +86,8 @@
         
     });
 
-    var EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"0"}
-    var EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"0"}
+    var EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"130px"}
+    var EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"130px"}
     
     var editor = ace.edit("editor");
     var syntax = "<%= @file.syntax.ace_js_mode %>"
