@@ -22,6 +22,10 @@ div.error_panel_body{
   margin:0;
 }
 
+#minimize_menu_nav{
+  margin:0;
+}
+
 div.file_explorer{
   h3{
     padding:0.4em;
@@ -46,10 +50,6 @@ div.g_file_menu{
   padding:0.7em;;
   
   margin-top:0;
-
-  div.ads{
-    text-align:center;
-  }
   
   div.panel{
     margin-bottom:5px;
@@ -87,6 +87,7 @@ div.g_file_menu{
     
     #open_file_explorer_title{
       @include border-radius(5px);
+      color:white;
     }
   }
   

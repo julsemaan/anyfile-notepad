@@ -2,7 +2,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render 'file_info' %>
 
-<div style="position:fixed;right:5px;top:5px;">
+<div style="position:absolute;right:5px;top:5px;">
   <%= render 'shared/skyscraper_ad' %>
 </div>
 
@@ -13,9 +13,6 @@
     <%= f.hidden_field :id %>
     <%= f.hidden_field :folder_id %>
     <%= f.hidden_field :content %>
-    <div>
-      <% f.text_field :type, :disabled => true %>
-    </div>
       
       
   <div class="panel panel-default">

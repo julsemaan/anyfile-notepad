@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.15'
+gem 'rails', '3.2.17'
 
 gem 'unicorn'
 gem 'unicorn-worker-killer'
