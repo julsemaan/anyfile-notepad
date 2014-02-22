@@ -99,6 +99,13 @@
           </a>
         </li>
         
+        <li>
+          <a href="#" onclick="javascript:toggle_cache_file_explorer()">
+            Keep file explorer opened
+            <span id="cache_file_explorer_check" class="glyphicon glyphicon-ok" style="display:none"></span>
+          </a>
+        </li>
+        
       </ul>
     </li>
     
@@ -188,6 +195,31 @@
         },
         200: function(data){
           ajax_defered_waiting['toggle_word_wrap'] = false
+        }
+      }
+    })
+  }
+  
+  function toggle_cache_file_explorer(){
+    ajax_defered_waiting['toggle_cache_file_explorer'] = true;
+    cache_file_explorer_enabled = !cache_file_explorer_enabled;
+    if(cache_file_explorer_enabled && cache_explorer()){
+      $('#cache_file_explorer_check').show()
+    }
+    else{
+      $('#cache_file_explorer_check').hide()
+      cache_file_explorer_enabled = false;
+    }
+    $.ajax(
+    {
+      url: '/preferences/get_update?cache_file_explorer_enabled='+cache_file_explorer_enabled, 
+      statusCode: {
+        403: function(data){
+          ajax_defered_waiting['toggle_cache_file_explorer'] = false
+          show_reauth()
+        },
+        200: function(data){
+          ajax_defered_waiting['toggle_cache_file_explorer'] = false
         }
       }
     })

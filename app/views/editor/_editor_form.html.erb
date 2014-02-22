@@ -95,6 +95,7 @@
     var content_saved = ""
     var safe_to_quit = true
     var word_wrap_enabled = <%= @preferences.get_preference('word_wrap') %>;
+    var cache_file_explorer_enabled = <%= @preferences.get_preference('cache_file_explorer_enabled') %>;
     
     function reset_options(){
       skip_clearance = false
@@ -156,6 +157,10 @@
       editor.getSession().setUseWrapMode(word_wrap_enabled)
       if(word_wrap_enabled){
         $('#word_wrap_check').show()
+      }
+      
+      if(cache_file_explorer_enabled){
+        $('#cache_file_explorer_check').show()
       }
       
       

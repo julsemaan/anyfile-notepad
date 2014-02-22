@@ -2,7 +2,13 @@
 
 <div class="file_explorer panel panel-default ">
   <div class="panel-heading">
-    <h3 class="panel-title btn-primary" id="open_file_explorer_title" >Open File <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span></h3>
+    <h3 class="panel-title btn-primary" id="open_file_explorer_title" >
+      Open File 
+      <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span>
+      <button id="refresh_file_explorer" class="btn btn-warning" style="display:none">
+        <span class="glyphicon glyphicon-refresh" ></span>
+      </button>
+    </h3>
   </div>
   <div class="panel-body" id="file_tree_panel" >
   <div id="file_tree_loading_message">
@@ -59,8 +65,42 @@
       setTimeout(show_error, 10000)
       loaded = true
     }
+  
+    function cache_explorer(){
+      if(typeof(Storage)!=="undefined"){
+        localStorage.setItem('cached_explorer', $('#fileTree').html())
+        return true;
+      }
+      else{
+        alert("localStorage is not supported in this browser. This functionnality cannot work.")
+        return false;
+      }
+    }
+  
+    function load_explorer_from_cache(){
+      var cached = localStorage.getItem('cached_explorer')
+      if(cached != ""){
+        $('#fileTree').html(cached)
+        $('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', existing: true});
+        $('#refresh_file_explorer').show()
+        $('#refresh_file_explorer').click(refresh_file_explorer)
+      }
+      else{
+        load_explorer() 
+      }
+      loaded = true
+    } 
+  
+    function refresh_file_explorer(){
+      setInterval(watch_tree,1000)
+      load_explorer() 
+    }
     
-    <% if with_dropdown %>
+    <% if @preferences.get_preference('cache_file_explorer_enabled') == 'true' %>
+      load_explorer_from_cache()
+      open_explorer()
+      setInterval(cache_explorer, 1000)
+    <% elsif with_dropdown %>
       $(document).ready(function(){
         $('#file_tree_panel').hide()
         $('#open_file_explorer').show()

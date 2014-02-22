@@ -45,18 +45,26 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
+      if( o.existing == undefined ) o.existing = false;
 			
 			$(this).each( function() {
 				
 				function showTree(c, t) {
-					$(c).addClass('wait');
-					$(".jqueryFileTree.start").remove();
-					$.post(o.script, { dir: t }, function(data) {
-						$(c).find('.start').html('');
-						$(c).removeClass('wait').append(data);
-						if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
-						bindTree(c);
-					});
+          if(o.existing){
+            bindTree(c);
+            o.existing = false;
+          }
+          else{
+            $(c).addClass('wait');
+					  $(".jqueryFileTree.start").remove();
+            $.post(o.script, { dir: t }, function(data) {
+              $(c).find('.start').html('');
+              $(c).removeClass('wait').append(data);
+              if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
+              bindTree(c);
+            });
+          }
+          
 				}
 				
 				function bindTree(t) {
@@ -85,7 +93,9 @@ if(jQuery) (function($){
 					if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
 				}
 				// Loading message
-				$(this).html('<ul class="jqueryFileTree start"><li class="wait">' + o.loadMessage + '<li></ul>');
+        if(!o.existing){
+				  $(this).html('<ul class="jqueryFileTree start"><li class="wait">' + o.loadMessage + '<li></ul>');
+        }
 				// Get the initial file list
 				showTree( $(this), escape(o.root) );
 			});
