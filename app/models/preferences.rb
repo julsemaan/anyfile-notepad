@@ -9,6 +9,7 @@ class Preferences
     'ace_js_tab_size' => 4,
     'theme' => nil,
     'word_wrap' => false,
+    'cache_file_explorer_enabled' => false,
   }
   
   HASH_PREFERENCES = [
