@@ -29,6 +29,8 @@ class GFile
     if self.title.nil?
       ""
     else
+      # handle null bytes problem
+      self.title.gsub!(/\0/, '')
       File.extname(self.title) 
     end
     
