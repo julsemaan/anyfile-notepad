@@ -35,7 +35,7 @@ class EditorController < GOauthController
       end
     end
     
-    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => false, :persisted => true,)
+    @file = GFile.new(:id => params[:id], :title => file_hash['title'], :content=> content , :type => file_hash['mimeType'],:new_revision => true, :persisted => true,)
     
     syntax_mode = @preferences.get_preference('syntaxes')[@file.extension]
     if not syntax_mode.nil?
