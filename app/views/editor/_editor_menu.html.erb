@@ -14,6 +14,18 @@
           <li><a href="<%= g_file_path(@file)%>" target="_blank">Print</a></li>
         <% end %>
         
+        <li>
+          <a href="#" onclick="javascript:open_search()">
+            Search (Ctrl-F)
+          </a>
+        </li>
+        
+        <li>
+          <a href="#" onclick="javascript:open_replace()">
+            Search & replace
+          </a>
+        </li>
+        
         <li><a href="<%= root_path %>">App home page</a></li>
         <li><a href="#" class="show_file_info" >Show file info</a></li>
       </ul>
@@ -223,6 +235,13 @@
         }
       }
     })
+  }
+  
+  function open_search(){
+    editor.execCommand('find')
+  }
+  function open_replace(){
+    editor.execCommand('replace') 
   }
 
 </script>
