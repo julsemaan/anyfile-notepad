@@ -1,3 +1,4 @@
+<div id="editor_app">
 <%= render :partial => 'shared/modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render 'file_info' %>
@@ -64,7 +65,7 @@
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
   <span class="glyphicon glyphicon-folder-open" onclick="javascript:show_file_explorer()" title="Open file"></span>
-  <span class="glyphicon glyphicon-log-in" onclick="javascript:open_menu(true)" title="Maximize menu"></span>
+  <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
 </div>
 
 <div class="g_file_editor">
@@ -74,7 +75,7 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(function($) {
+  /*jQuery(function($) {
       $(".editor_form").bind("ajax:error",  function(){
         $("#file_save_modal").modal('hide')
         allow_saving()
@@ -331,8 +332,25 @@
         $('.editor_save_button').removeClass('btn-warning')
       }
     }
-
+    */
 </script>
 
 <%= render 'shared/g_reauth'%>
 <%= render 'select_theme_modal' %>
+
+</div>
+<script type="text/javascript">
+var editor_controller = new EditorController("editor_app", {
+  'file_id':'<%= @file.id %>',
+  'syntax_mode':'<%= @file.syntax.ace_js_mode %>',
+  'file_extension':'<%= @file.extension %>',
+  'word_wrap_enabled':<%= @preferences.get_preference('word_wrap') %>,
+  'cache_file_explorer_enabled':<%= @preferences.get_preference('cache_file_explorer_enabled') %>,
+  'show_minimized':<%= show_minimized?(@file) %>,
+  'font_size':'<%= @preferences.get_preference('ace_js_font_size') %>',
+  'tab_size':'<%= @preferences.get_preference('ace_js_tab_size') %>',
+  'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
+}) 
+//editor_controller.initialize_html() 
+
+</script>

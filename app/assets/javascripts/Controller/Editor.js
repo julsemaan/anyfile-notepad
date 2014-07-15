@@ -32,17 +32,17 @@ EditorController.prototype.initialize_html = function(){
    var self = this;
    this.$.find('#skip_clearance').click(function(){skip_clearance = true})
 
-   this.$.find(".syntax_button").click(function(){set_ace_mode($(this).attr('mode'))})
-   this.$.find(".font_size_button").click(function(){change_font_size($(this).attr('value'))})
-   this.$.find(".tab_size_button").click(function(){change_tab_size($(this).attr('value'))})
+   this.$.find(".syntax_button").click(function(){self.set_ace_mode($(this).attr('mode'))})
+   this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
+   this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
 
    this.$.find(".show_file_info").click(function(){
-     this.$.find('#file_info_modal').modal('show')
+     self.$.find('#file_info_modal').modal('show')
    })
 
    this.allow_saving()
    this.remember_content()
-   setInterval(this.check_content_changed, 1000)
+   setInterval(function(){self.check_content_changed()}, 1000)
 
    if(this.show_minimized){
      this.metrics = this.EDITOR_FULL_METRICS
@@ -51,8 +51,8 @@ EditorController.prototype.initialize_html = function(){
      this.metrics = this.EDITOR_W_MENU_METRICS
    }
 
-   $.each( INITIAL_METRICS , function( prop, value ) {
-     this.$editor.css(prop,value)
+   $.each( this.metrics , function( prop, value ) {
+     self.$.find('#editor').css(prop,value)
    });
 
    this.editor_view.getSession().setMode("ace/mode/"+this.syntax_mode);
@@ -69,23 +69,23 @@ EditorController.prototype.initialize_html = function(){
    });
 
    if(this.font_size != null){
-     editor.setFontSize(this.font_size)
+     this.editor_view.setFontSize(this.font_size)
    
      this.$.find('#font_check').show()
      var check = this.$.find('#font_check').detach()
      //refactor!!
-     $(document.getElementById("font_"+font_size)).prepend(check)
+     $(document.getElementById("font_"+this.font_size)).prepend(check)
    }
 
    if(this.tab_size != null){
-     editor_view.getSession().setTabSize(this.tab_size)
+     this.editor_view.getSession().setTabSize(this.tab_size)
      this.$.find('#tab_check').show()
      var check = this.$.find('#tab_check').detach()
      //refactor!!
      $(document.getElementById("tab_"+this.tab_size)).append(check)
    }
 
-   editor_view.getSession().setUseWrapMode(this.word_wrap_enabled)
+   this.editor_view.getSession().setUseWrapMode(this.word_wrap_enabled)
    if(this.word_wrap_enabled){
      this.$.find('#word_wrap_check').show()
    }
@@ -104,11 +104,13 @@ EditorController.prototype.initialize_html = function(){
 }
 
 EditorController.prototype.reset_options = function(){
+  var self = this;
   this.skip_clearance = false;
   this.allow_saving();
 }
 
 EditorController.prototype.save = function(){
+  var self = this;
   var length = editor_view.getValue().length
   if (length > this.MAX_FILE_SIZE){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
@@ -131,6 +133,7 @@ EditorController.prototype.save = function(){
 }
 
 EditorController.prototype.set_syntax_mode = function(syntax){
+  var self = this;
   var check = this.$.find('#syntax_check').detach();
   this.$.find('#syntax_'+mode).prepend(check)
   editor_view.getSession().setMode("ace/mode/"+syntax);
@@ -141,11 +144,11 @@ EditorController.prototype.set_syntax_mode = function(syntax){
         url: '/preferences/get_update?syntaxes'+this.file_extension+'='+syntax,
         statusCode: {
           403: function(data){
-            this.ajax_defered_waiting['set_ace_mode'] = false
-            this.show_reauth()
+            self.ajax_defered_waiting['set_ace_mode'] = false
+            self.show_reauth()
           },
           200: function(data){
-            this.ajax_defered_waiting['set_ace_mode'] = false
+            self.ajax_defered_waiting['set_ace_mode'] = false
           }
         }	
       }
@@ -154,6 +157,7 @@ EditorController.prototype.set_syntax_mode = function(syntax){
 }
 
 EditorController.prototype.is_ready_to_submit = function(){
+  var self = this;
   for(key in this.ajax_defered_waiting){
     if(this.ajax_defered_waiting[key]){
       return false
@@ -163,6 +167,7 @@ EditorController.prototype.is_ready_to_submit = function(){
 }
 
 EditorController.prototype.show_wait_for_clearance = function(){
+  var self = this;
   if(this.ready_to_submit() || this.skip_clearance){
     clearInterval(this.clearance_interval)
     this.$.find('#clearance_wait_modal').modal('hide')
@@ -174,8 +179,9 @@ EditorController.prototype.show_wait_for_clearance = function(){
 }
 
 EditorController.prototype.change_font_size = function(font_size){
+  var self = this;
   this.ajax_defered_waiting['change_font_size'] = true
-  editor_view.setFontSize(font_size)
+  this.editor_view.setFontSize(font_size)
   this.$.find('#font_check').show()
   var check = this.$.find('#font_check').detach()
   //refactor
@@ -186,17 +192,18 @@ EditorController.prototype.change_font_size = function(font_size){
       url: '/preferences/get_update?ace_js_font_size='+font_size,
       statusCode: {
         403: function(data){
-          this.ajax_defered_waiting['change_font_size'] = false
+          self.ajax_defered_waiting['change_font_size'] = false
           this.show_reauth()
         },
         200: function(data){
-          this.ajax_defered_waiting['change_font_size'] = false
+          self.ajax_defered_waiting['change_font_size'] = false
         }
       }
     })
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
+  var self = this;
   this.ajax_defered_waiting['change_tab_size'] = true 
   editor_view.getSession().setTabSize(tab_size)
 
@@ -210,17 +217,18 @@ EditorController.prototype.change_tab_size = function(tab_size){
       url: '/preferences/get_update?ace_js_tab_size='+tab_size,
       statusCode: {
         403: function(data){
-          this.ajax_defered_waiting['change_tab_size'] = false
+          self.ajax_defered_waiting['change_tab_size'] = false
           this.show_reauth()
         },
         200: function(data){
-          this.ajax_defered_waiting['change_tab_size'] = false
+          self.ajax_defered_waiting['change_tab_size'] = false
         }
       }
     })      
 }
 
 EditorController.prototype.block_saving = function(){
+  var self = this;
   this.$.find('.editor_save_button').html("Saving...")
   this.$.find('.editor_save_button').unbind('click')
   this.safe_to_quit = false
@@ -234,6 +242,7 @@ EditorController.prototype.block_saving = function(){
 }
 
 EditorController.prototype.allow_saving = function(){
+  var self = this;
   this.$.find('.editor_save_button').html("Save")
   this.$.find('.editor_save_button').click(this.save)
   this.safe_to_quit = true
@@ -247,16 +256,19 @@ EditorController.prototype.allow_saving = function(){
 }
 
 EditorController.prototype.show_file_explorer = function(){
+  var self = this;
   this.open_menu()
   this.open_explorer()
 }
 
 EditorController.prototype.remember_content = function(){
-  content_saved = editor.getValue()
+  var self = this;
+  this.content_saved = this.editor_view.getValue()
 }
 
 EditorController.prototype.check_content_changed = function(){
-  if(editor.getValue() != content_saved){
+  var self = this;
+  if(this.editor_view.getValue() != this.content_saved){
     this.$.find('.editor_save_button').addClass('btn-warning')
   }
   else{
@@ -265,12 +277,13 @@ EditorController.prototype.check_content_changed = function(){
 }
 
 EditorController.prototype.minimize_menu = function(save_pref){
+  var self = this;
   save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
   this.$.find('.g_file_menu').fadeOut(function(){
-    this.$.find('.g_file_menu').hide(
-      function(){this.$.find('#editor').animate(this.EDITOR_FULL_METRICS, function(){
-        this.editor_view.resize()   
-        this.$.find('.small_g_file_menu').fadeIn(function(){
+    self.$.find('.g_file_menu').hide(
+      function(){self.$.find('#editor').animate(self.EDITOR_FULL_METRICS, function(){
+        self.editor_view.resize()   
+        self$.find('.small_g_file_menu').fadeIn(function(){
         if(save_pref){
           this.prefers_menu_opened(false)
         }
@@ -281,19 +294,21 @@ EditorController.prototype.minimize_menu = function(save_pref){
 }
 
 EditorController.prototype.maximize_menu = function(save_pref){
+  var self = this;
   save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
   this.$.find('.small_g_file_menu').fadeOut()
-  this.$.find('#editor').animate(EDITOR_W_MENU_METRICS,function(){
-    this.editor_view.resize()  
-    this.$.find('.g_file_menu').fadeIn(function(){
+  this.$.find('#editor').animate(this.EDITOR_W_MENU_METRICS,function(){
+    self.editor_view.resize()  
+    self.$.find('.g_file_menu').fadeIn(function(){
       if(save_pref){
-        this.prefers_menu_open(true)
+        self.prefers_menu_open(true)
       }
     })
   })
 }
 
 EditorController.prototype.prefers_menu_opened = function(opened){
+  var self = this;
   this.ajax_defered_waiting['send_prefers_opened'] = true 
   var prefers_minimized;
   if(opened){
@@ -307,17 +322,18 @@ EditorController.prototype.prefers_menu_opened = function(opened){
       url: '/preferences/get_update?prefers_minimized='+prefers_minimized, 
       statusCode: {
         403: function(data){
-          this.ajax_defered_waiting['send_prefers_opened'] = false
+          self.ajax_defered_waiting['send_prefers_opened'] = false
           this.show_reauth()
         },
         200: function(data){
-          this.ajax_defered_waiting['send_prefers_opened'] = false
+          self.ajax_defered_waiting['send_prefers_opened'] = false
         }
       }
     })
 }
 
 EditorController.prototype.toggle_word_wrap = function(){
+  var self = this;
   this.ajax_defered_waiting['toggle_word_wrap'] = true;
   this.word_wrap_enabled = !this.word_wrap_enabled;
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_enabled)
@@ -332,17 +348,18 @@ EditorController.prototype.toggle_word_wrap = function(){
       url: '/preferences/get_update?word_wrap='+this.word_wrap_enabled, 
       statusCode: {
         403: function(data){
-          this.ajax_defered_waiting['toggle_word_wrap'] = false
+          self.ajax_defered_waiting['toggle_word_wrap'] = false
           this.show_reauth()
         },
         200: function(data){
-          this.ajax_defered_waiting['toggle_word_wrap'] = false
+          self.ajax_defered_waiting['toggle_word_wrap'] = false
         }
       }
     })
 }
 
 EditorController.prototype.toggle_cache_file_explorer = function(){
+  var self = this;
   this.ajax_defered_waiting['toggle_cache_file_explorer'] = true;
   this.cache_file_explorer_enabled = !this.cache_file_explorer_enabled;
   if(this.cache_file_explorer_enabled && this.cache_explorer()){
@@ -357,20 +374,22 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
       url: '/preferences/get_update?cache_file_explorer_enabled='+cache_file_explorer_enabled, 
       statusCode: {
         403: function(data){
-          this.ajax_defered_waiting['toggle_cache_file_explorer'] = false
+          self.ajax_defered_waiting['toggle_cache_file_explorer'] = false
           this.show_reauth()
         },
         200: function(data){
-          this.ajax_defered_waiting['toggle_cache_file_explorer'] = false
+          self.ajax_defered_waiting['toggle_cache_file_explorer'] = false
         }
       }
     })
 }
 
 EditorController.prototype.open_search = function(){
+  var self = this;
   this.editor_view.execCommand('find')
 }
 
 EditorController.prototype.open_replace = function(){
+  var self = this;
   this.editor_view.execCommand('replace') 
 }

@@ -40,7 +40,7 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
         <li>
-          <a href="#" onclick="javascript:close_menu(true)">
+          <a href="#" onclick="javascript:editor_controller.minimize_menu(true)">
             Minimize the menu 
             <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
           </a>
@@ -105,14 +105,14 @@
         </li>
         
         <li>
-          <a href="#" onclick="javascript:toggle_word_wrap()">
+          <a href="#" onclick="javascript:editor_controller.toggle_word_wrap()">
             Word wrap
             <span id="word_wrap_check" class="glyphicon glyphicon-ok" style="display:none"></span>
           </a>
         </li>
         
         <li>
-          <a href="#" onclick="javascript:toggle_cache_file_explorer()">
+          <a href="#" onclick="javascript:editor_controller.toggle_cache_file_explorer()">
             Keep file explorer opened
             <span id="cache_file_explorer_check" class="glyphicon glyphicon-ok" style="display:none"></span>
           </a>
@@ -127,12 +127,12 @@
 
   
   <ul id="minimize_menu_nav" class="nav navbar-nav navbar-right">
-    <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:close_menu(true)" title="Minimize menu"></a></li>
+    <li><a href="#" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:editor_controller.minimize_menu(true)" title="Minimize menu"></a></li>
   </ul>
 </nav>
 
 <script>
-    function close_menu(save_pref){
+/*    function close_menu(save_pref){
       save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
       $('.g_file_menu').fadeOut(function(){
           $('.g_file_menu').hide(
@@ -243,5 +243,5 @@
   function open_replace(){
     editor.execCommand('replace') 
   }
-
+*/
 </script>
