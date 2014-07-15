@@ -47,14 +47,6 @@ div.file_explorer{
   }
 }
 
-/*
-.close_menu_button{
-  float:right;
-  margin-top:0.5em;
-  margin-right:0.5em;
-  cursor:pointer;
-}*/
-
 div.g_file_menu{
   display:inline-block;
   width:280px;
@@ -129,12 +121,6 @@ div.g_file_editor{
   
   div#editor{
     position:absolute;
-    /*
-    top:0;
-    bottom:0;
-    left:280px;
-    right:0;
-    */   
     display:inline-block;
     font-size:1em;
   }
