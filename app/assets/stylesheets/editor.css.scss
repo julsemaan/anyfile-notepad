@@ -5,6 +5,14 @@ html{
   background-color:#EBEBEB;
 }
 
+body{
+  background-color:transparent;
+}
+
+#editor_app{
+  background-color:transparent;
+}
+
 /* errors */
 div.error_panel_body{
   padding:0.1em;

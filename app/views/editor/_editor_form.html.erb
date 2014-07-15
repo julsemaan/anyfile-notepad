@@ -63,8 +63,8 @@
 </div>
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
-  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:validate_file_size_and_submit()" title="Save"></span>
-  <span class="glyphicon glyphicon-folder-open" onclick="javascript:show_file_explorer()" title="Open file"></span>
+  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:editor_controller.save()" title="Save"></span>
+  <span class="glyphicon glyphicon-folder-open" onclick="javascript:file_explorer_controller.open()" title="Open file"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
 </div>
 
@@ -350,6 +350,7 @@ var editor_controller = new EditorController("editor_app", {
   'font_size':'<%= @preferences.get_preference('ace_js_font_size') %>',
   'tab_size':'<%= @preferences.get_preference('ace_js_tab_size') %>',
   'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
+  'current_theme':'<%= current_theme %>'
 }) 
 //editor_controller.initialize_html() 
 

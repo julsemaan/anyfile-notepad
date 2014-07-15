@@ -24,6 +24,8 @@ function EditorController(view, options){
   this.font_size = options["font_size"]
   this.tab_size = options["tab_size"]
   this.MAX_FILE_SIZE = options["MAX_FILE_SIZE"]
+
+  this.current_theme = options["current_theme"]
   
   this.initialize_html()
 }
@@ -32,7 +34,7 @@ EditorController.prototype.initialize_html = function(){
    var self = this;
    this.$.find('#skip_clearance').click(function(){skip_clearance = true})
 
-   this.$.find(".syntax_button").click(function(){self.set_ace_mode($(this).attr('mode'))})
+   this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
    this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
    this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
 
@@ -62,7 +64,7 @@ EditorController.prototype.initialize_html = function(){
      if(!self.safe_to_quit || self.editor_view.getValue() != self.content_saved){
        return "You have unsaved changes or your file is still being saved. You will lose your changes"
      }
-     if(!self.ready_to_submit() && !self.skip_clearance){
+     if(!self.is_ready_to_submit() && !self.skip_clearance){
        self.clearance_interval = setInterval(function(){self.wait_for_clearance(function(){location.reload()})}, 1000)
        return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
      }
@@ -101,6 +103,11 @@ EditorController.prototype.initialize_html = function(){
      }
    })
 
+  setInterval(function(){self.set_background_color_from_theme()}, 500)
+  this.editor_view.setTheme(this.current_theme)
+  this.set_background_color_from_theme()
+  $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
+
 }
 
 EditorController.prototype.reset_options = function(){
@@ -111,21 +118,22 @@ EditorController.prototype.reset_options = function(){
 
 EditorController.prototype.save = function(){
   var self = this;
-  var length = editor_view.getValue().length
+  console.log(this)
+  var length = this.editor_view.getValue().length
   if (length > this.MAX_FILE_SIZE){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
     }
     else{
-      if(this.ready_to_submit() || this.skip_clearance){
+      if(this.is_ready_to_submit() || this.skip_clearance){
         this.block_saving()
         this.remember_content()
-        this.$.find('#g_file_content').val(editor.getValue())
+        this.$.find('#g_file_content').val(this.editor_view.getValue())
         this.$.find('.editor_form').submit()
         this.$.find('#file_save_modal').modal('show')
       }
       else{
         var self = this;
-        this.wait_for_clearance(self.validate_file_size_and_submit)
+        this.wait_for_clearance(function(){self.save()})
         clearance_interval = setInterval(function(){self.wait_for_clearance(self.validate_file_size_and_submit)}, 1000)
       }
     }
@@ -135,20 +143,20 @@ EditorController.prototype.save = function(){
 EditorController.prototype.set_syntax_mode = function(syntax){
   var self = this;
   var check = this.$.find('#syntax_check').detach();
-  this.$.find('#syntax_'+mode).prepend(check)
-  editor_view.getSession().setMode("ace/mode/"+syntax);
+  this.$.find('#syntax_'+syntax).prepend(check)
+  this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != ""){
-    this.ajax_defered_waiting['set_ace_mode'] = true
+    this.ajax_defered_waiting['set_syntax_mode'] = true
     $.ajax(
       {
-        url: '/preferences/get_update?syntaxes'+this.file_extension+'='+syntax,
+        url: '/preferences/get_update?syntaxes['+self.file_extension+']='+syntax,
         statusCode: {
           403: function(data){
-            self.ajax_defered_waiting['set_ace_mode'] = false
+            self.ajax_defered_waiting['set_syntax_mode'] = false
             self.show_reauth()
           },
           200: function(data){
-            self.ajax_defered_waiting['set_ace_mode'] = false
+            self.ajax_defered_waiting['set_syntax_mode'] = false
           }
         }	
       }
@@ -168,7 +176,7 @@ EditorController.prototype.is_ready_to_submit = function(){
 
 EditorController.prototype.show_wait_for_clearance = function(){
   var self = this;
-  if(this.ready_to_submit() || this.skip_clearance){
+  if(this.is_ready_to_submit() || this.skip_clearance){
     clearInterval(this.clearance_interval)
     this.$.find('#clearance_wait_modal').modal('hide')
     //after()
@@ -205,7 +213,7 @@ EditorController.prototype.change_font_size = function(font_size){
 EditorController.prototype.change_tab_size = function(tab_size){
   var self = this;
   this.ajax_defered_waiting['change_tab_size'] = true 
-  editor_view.getSession().setTabSize(tab_size)
+  this.editor_view.getSession().setTabSize(tab_size)
 
   this.$.find('#tab_check').show()
   var check = this.$.find('#tab_check').detach()
@@ -218,7 +226,7 @@ EditorController.prototype.change_tab_size = function(tab_size){
       statusCode: {
         403: function(data){
           self.ajax_defered_waiting['change_tab_size'] = false
-          this.show_reauth()
+          self.show_reauth()
         },
         200: function(data){
           self.ajax_defered_waiting['change_tab_size'] = false
@@ -244,7 +252,7 @@ EditorController.prototype.block_saving = function(){
 EditorController.prototype.allow_saving = function(){
   var self = this;
   this.$.find('.editor_save_button').html("Save")
-  this.$.find('.editor_save_button').click(this.save)
+  this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
   $(window).off('keydown.stop_save')
   $(window).on('keydown.save', function(event) {
@@ -283,9 +291,9 @@ EditorController.prototype.minimize_menu = function(save_pref){
     self.$.find('.g_file_menu').hide(
       function(){self.$.find('#editor').animate(self.EDITOR_FULL_METRICS, function(){
         self.editor_view.resize()   
-        self$.find('.small_g_file_menu').fadeIn(function(){
+        self.$.find('.small_g_file_menu').fadeIn(function(){
         if(save_pref){
-          this.prefers_menu_opened(false)
+          self.prefers_menu_opened(false)
         }
         })
       })
@@ -301,7 +309,7 @@ EditorController.prototype.maximize_menu = function(save_pref){
     self.editor_view.resize()  
     self.$.find('.g_file_menu').fadeIn(function(){
       if(save_pref){
-        self.prefers_menu_open(true)
+        self.prefers_menu_opened(true)
       }
     })
   })
@@ -309,7 +317,7 @@ EditorController.prototype.maximize_menu = function(save_pref){
 
 EditorController.prototype.prefers_menu_opened = function(opened){
   var self = this;
-  this.ajax_defered_waiting['send_prefers_opened'] = true 
+  this.ajax_defered_waiting['prefers_menu_opened'] = true 
   var prefers_minimized;
   if(opened){
     prefers_minimized = "false"
@@ -322,11 +330,11 @@ EditorController.prototype.prefers_menu_opened = function(opened){
       url: '/preferences/get_update?prefers_minimized='+prefers_minimized, 
       statusCode: {
         403: function(data){
-          self.ajax_defered_waiting['send_prefers_opened'] = false
-          this.show_reauth()
+          self.ajax_defered_waiting['prefers_menu_opened'] = false
+          self.show_reauth()
         },
         200: function(data){
-          self.ajax_defered_waiting['send_prefers_opened'] = false
+          self.ajax_defered_waiting['prefers_menu_opened'] = false
         }
       }
     })
@@ -392,4 +400,37 @@ EditorController.prototype.open_search = function(){
 EditorController.prototype.open_replace = function(){
   var self = this;
   this.editor_view.execCommand('replace') 
+}
+
+EditorController.prototype.select_theme = function(name){
+  var self = this;
+  this.ajax_defered_waiting["select_theme"] = true
+  $(document.getElementById("theme_"+this.current_theme)).removeClass("btn-primary")
+  this.current_theme = name
+  this.editor_view.setTheme(this.current_theme)
+  this.set_background_color_from_theme()
+  var check = this.$.find('#theme_check').detach()
+  $(document.getElementById("theme_"+name)).addClass("btn-primary")
+  
+  $.ajax(
+  {
+    url: '/preferences/get_update?theme='+name, 
+    statusCode: {
+      403: function(data){
+        self.ajax_defered_waiting['select_theme'] = false
+        self.show_reauth()
+      },
+      200: function(data){
+        self.ajax_defered_waiting['select_theme'] = false
+      }
+    }
+  })
+}
+   
+EditorController.prototype.set_background_color_from_theme = function(){
+  var self = this;
+  html_element = document.getElementsByTagName("html")[0]
+  $(html_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
+  body_element = document.getElementsByTagName("body")[0]
+  $(body_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
 }
