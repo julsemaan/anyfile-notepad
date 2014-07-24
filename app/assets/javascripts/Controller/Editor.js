@@ -26,6 +26,8 @@ function EditorController(view, options){
   this.MAX_FILE_SIZE = options["MAX_FILE_SIZE"]
 
   this.current_theme = options["current_theme"]
+
+  this.file_explorer = options["file_explorer"]
   
   this.initialize_html()
 }
@@ -370,7 +372,7 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
   var self = this;
   this.ajax_defered_waiting['toggle_cache_file_explorer'] = true;
   this.cache_file_explorer_enabled = !this.cache_file_explorer_enabled;
-  if(this.cache_file_explorer_enabled && this.cache_explorer()){
+  if(this.cache_file_explorer_enabled && this.file_explorer.cache()){
     this.$.find('#cache_file_explorer_check').show()
   }
   else{
@@ -379,11 +381,11 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
   }
   $.ajax(
     {
-      url: '/preferences/get_update?cache_file_explorer_enabled='+cache_file_explorer_enabled, 
+      url: '/preferences/get_update?cache_file_explorer_enabled='+self.cache_file_explorer_enabled, 
       statusCode: {
         403: function(data){
           self.ajax_defered_waiting['toggle_cache_file_explorer'] = false
-          this.show_reauth()
+          self.show_reauth()
         },
         200: function(data){
           self.ajax_defered_waiting['toggle_cache_file_explorer'] = false

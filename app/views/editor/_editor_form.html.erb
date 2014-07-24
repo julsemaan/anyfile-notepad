@@ -350,7 +350,10 @@ var editor_controller = new EditorController("editor_app", {
   'font_size':'<%= @preferences.get_preference('ace_js_font_size') %>',
   'tab_size':'<%= @preferences.get_preference('ace_js_tab_size') %>',
   'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
-  'current_theme':'<%= current_theme %>'
+  'current_theme':'<%= current_theme %>',
+  'file_explorer': new FileExplorerController("file_explorer_container", {
+    'cached' : <%= @preferences.get_preference('cache_file_explorer_enabled') %>,
+  }),
 }) 
 //editor_controller.initialize_html() 
 

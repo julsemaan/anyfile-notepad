@@ -1,21 +1,22 @@
-<%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded.", :message => "Press escape to cancel"} %>
-
-<div class="file_explorer panel panel-default ">
-  <div class="panel-heading">
-    <h3 class="panel-title btn-primary" id="open_file_explorer_title" >
-      Open File 
-      <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span>
-      <button id="refresh_file_explorer" class="btn btn-warning" style="display:none">
-        <span class="glyphicon glyphicon-refresh" ></span>
-      </button>
-    </h3>
-  </div>
-  <div class="panel-body" id="file_tree_panel" >
-  <div id="file_tree_loading_message">
-    <%= render :partial => 'shared/loading_bar', :locals => {:bar_message => "Loading your files."} %>
-  </div>
-  <p class="flash_error" id="loading_error" style="display:none;">Your files couldn't load.<br/><a id="reauth_file_tree" href="#">Click here to reauthenticate.</a></p>
-  <div id="fileTree" class="demo"></div>
+<div id="file_explorer_container">
+  <%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded.", :message => "Press escape to cancel"} %>
+  <div class="file_explorer panel panel-default ">
+    <div class="panel-heading">
+      <h3 class="panel-title btn-primary" id="open_file_explorer_title" >
+        Open File 
+        <span id="open_file_explorer" class="glyphicon glyphicon-chevron-down" style="display:none"></span>
+        <button id="refresh_file_explorer" class="btn btn-warning" style="display:none">
+          <span class="glyphicon glyphicon-refresh" ></span>
+        </button>
+      </h3>
+    </div>
+    <div class="panel-body" id="file_tree_panel" >
+    <div id="file_tree_loading_message">
+      <%= render :partial => 'shared/loading_bar', :locals => {:bar_message => "Loading your files."} %>
+    </div>
+    <p class="flash_error" id="loading_error" style="display:none;">Your files couldn't load.<br/><a id="reauth_file_tree" href="#">Click here to reauthenticate.</a></p>
+    <div id="fileTree" class="demo"></div>
+    </div>
   </div>
 </div>
 

@@ -4,6 +4,6 @@
   <a href="#" rel="<%= dir.id %>/"><%= dir.title %></a></li>
   <%end%>
 <% @dir[1].each do |file|%>
-  <li class="file ext_<%=File.extname(file.title)[1..-1]%>"><a href="<%= edit_g_file_path file.id %>" rel="" onclick="javascript:show_loading()"><%= file.title %></a></li>
+  <li class="file ext_<%=File.extname(file.title)[1..-1]%>"><a href="<%= edit_g_file_path file.id %>" rel="" onclick="javascript:editor_controller.file_explorer.show_loading()"><%= file.title %></a></li>
   <% end %>
 </ul>
