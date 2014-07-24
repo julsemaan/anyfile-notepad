@@ -32,7 +32,7 @@ function EditorController(view, options){
 
 EditorController.prototype.initialize_html = function(){
    var self = this;
-   this.$.find('#skip_clearance').click(function(){skip_clearance = true})
+   this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
    this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
    this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
@@ -174,12 +174,12 @@ EditorController.prototype.is_ready_to_submit = function(){
   return true
 }
 
-EditorController.prototype.show_wait_for_clearance = function(){
+EditorController.prototype.wait_for_clearance = function(){
   var self = this;
   if(this.is_ready_to_submit() || this.skip_clearance){
     clearInterval(this.clearance_interval)
     this.$.find('#clearance_wait_modal').modal('hide')
-    //after()
+    after()
   }
   else{
     this.$.find('#clearance_wait_modal').modal('show')
