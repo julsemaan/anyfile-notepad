@@ -64,7 +64,7 @@
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:editor_controller.save()" title="Save"></span>
-  <span class="glyphicon glyphicon-folder-open" onclick="javascript:file_explorer_controller.open()" title="Open file"></span>
+  <span class="glyphicon glyphicon-folder-open" onclick="javascript:editor_controller.file_explorer.open()" title="Open file"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
 </div>
 
@@ -344,17 +344,17 @@ var editor_controller = new EditorController("editor_app", {
   'file_id':'<%= @file.id %>',
   'syntax_mode':'<%= @file.syntax.ace_js_mode %>',
   'file_extension':'<%= @file.extension %>',
-  'word_wrap_enabled':<%= @preferences.get_preference('word_wrap') %>,
-  'cache_file_explorer_enabled':<%= @preferences.get_preference('cache_file_explorer_enabled') %>,
+  'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
   'show_minimized':<%= show_minimized?(@file) %>,
-  'font_size':'<%= @preferences.get_preference('ace_js_font_size') %>',
-  'tab_size':'<%= @preferences.get_preference('ace_js_tab_size') %>',
+  'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
+  'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
   'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
   'current_theme':'<%= current_theme %>',
   'file_explorer': new FileExplorerController("file_explorer_container", {
     'cached' : <%= @preferences.get_preference('cache_file_explorer_enabled') %>,
   }),
-}) 
+})
+editor_controller.file_explorer.parent = editor_controller 
 //editor_controller.initialize_html() 
 
 </script>

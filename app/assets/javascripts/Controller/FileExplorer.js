@@ -1,5 +1,6 @@
 function FileExplorerController(view, options){
   var self = this;
+  this.parent = options["parent"]
   this.opened = false;
   this.loaded = false;
   this.cached = options["cached"];
@@ -77,6 +78,9 @@ FileExplorerController.prototype.open = function(){
     this.load()
   }
   this.opened = true
+  if(this.parent != null){
+    this.parent.maximize_menu(false)
+  }
 }
 
 FileExplorerController.prototype.load = function(){

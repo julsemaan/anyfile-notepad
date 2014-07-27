@@ -18,11 +18,10 @@ function EditorController(view, options){
 
   this.syntax_mode = options["syntax_mode"]
   this.file_extension = options["file_extension"]
-  this.word_wrap_enabled = options["word_wrap_enabled"]
-  this.cache_file_explorer_enabled = options["cache_file_explorer_enabled"]
+  this.word_wrap_pref = options["word_wrap_pref"]
   this.show_minimized = options["show_minimized"]
-  this.font_size = options["font_size"]
-  this.tab_size = options["tab_size"]
+  this.font_size_pref = options["font_size_pref"]
+  this.tab_size_pref = options["tab_size_pref"]
   this.MAX_FILE_SIZE = options["MAX_FILE_SIZE"]
 
   this.current_theme = options["current_theme"]
@@ -72,29 +71,29 @@ EditorController.prototype.initialize_html = function(){
      }
    });
 
-   if(this.font_size != null){
-     this.editor_view.setFontSize(this.font_size)
+   if(this.font_size_pref.get() != null){
+     this.editor_view.setFontSize(this.font_size_pref.get())
    
      this.$.find('#font_check').show()
      var check = this.$.find('#font_check').detach()
      //refactor!!
-     $(document.getElementById("font_"+this.font_size)).prepend(check)
+     $(document.getElementById("font_"+this.font_size_pref.get())).prepend(check)
    }
 
-   if(this.tab_size != null){
-     this.editor_view.getSession().setTabSize(this.tab_size)
+   if(this.tab_size_pref.get() != null){
+     this.editor_view.getSession().setTabSize(this.tab_size_pref.get())
      this.$.find('#tab_check').show()
      var check = this.$.find('#tab_check').detach()
      //refactor!!
-     $(document.getElementById("tab_"+this.tab_size)).append(check)
+     $(document.getElementById("tab_"+this.tab_size_pref.get())).append(check)
    }
 
-   this.editor_view.getSession().setUseWrapMode(this.word_wrap_enabled)
-   if(this.word_wrap_enabled){
+   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
+   if(this.word_wrap_pref.get()){
      this.$.find('#word_wrap_check').show()
    }
 
-   if(this.cache_file_explorer_enabled){
+   if(this.file_explorer.cached){
      this.$.find('#cache_file_explorer_check').show()
    }
 
@@ -148,21 +147,7 @@ EditorController.prototype.set_syntax_mode = function(syntax){
   this.$.find('#syntax_'+syntax).prepend(check)
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != ""){
-    this.ajax_defered_waiting['set_syntax_mode'] = true
-    $.ajax(
-      {
-        url: '/preferences/get_update?syntaxes['+self.file_extension+']='+syntax,
-        statusCode: {
-          403: function(data){
-            self.ajax_defered_waiting['set_syntax_mode'] = false
-            self.show_reauth()
-          },
-          200: function(data){
-            self.ajax_defered_waiting['set_syntax_mode'] = false
-          }
-        }	
-      }
-    )
+    Preference.find("syntaxes["+self.file_extension+"]", StringPreference).set(syntax, self, self.show_reauth)
   }
 }
 
@@ -190,51 +175,29 @@ EditorController.prototype.wait_for_clearance = function(){
 
 EditorController.prototype.change_font_size = function(font_size){
   var self = this;
-  this.ajax_defered_waiting['change_font_size'] = true
-  this.editor_view.setFontSize(font_size)
+
+  this.font_size_pref.set(font_size, self, function(){self.show_reauth()})
+  this.editor_view.setFontSize(this.font_size_pref.get())
   this.$.find('#font_check').show()
   var check = this.$.find('#font_check').detach()
-  //refactor
-  $(document.getElementById("font_"+font_size)).prepend(check)
 
-  $.ajax(
-    {
-      url: '/preferences/get_update?ace_js_font_size='+font_size,
-      statusCode: {
-        403: function(data){
-          self.ajax_defered_waiting['change_font_size'] = false
-          this.show_reauth()
-        },
-        200: function(data){
-          self.ajax_defered_waiting['change_font_size'] = false
-        }
-      }
-    })
+  //refactor
+  $(document.getElementById("font_"+this.font_size_pref.get())).prepend(check)
+
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
   var self = this;
-  this.ajax_defered_waiting['change_tab_size'] = true 
-  this.editor_view.getSession().setTabSize(tab_size)
+
+  this.tab_size_pref.set(tab_size, self, self.show_reauth)
+
+  this.editor_view.getSession().setTabSize(this.tab_size_pref.get())
 
   this.$.find('#tab_check').show()
   var check = this.$.find('#tab_check').detach()
   //refactor
-  $(document.getElementById("tab_"+tab_size)).append(check)
+  $(document.getElementById("tab_"+this.tab_size_pref.get())).append(check)
 
-  $.ajax(
-    {
-      url: '/preferences/get_update?ace_js_tab_size='+tab_size,
-      statusCode: {
-        403: function(data){
-          self.ajax_defered_waiting['change_tab_size'] = false
-          self.show_reauth()
-        },
-        200: function(data){
-          self.ajax_defered_waiting['change_tab_size'] = false
-        }
-      }
-    })      
 }
 
 EditorController.prototype.block_saving = function(){
@@ -259,7 +222,7 @@ EditorController.prototype.allow_saving = function(){
   $(window).off('keydown.stop_save')
   $(window).on('keydown.save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-    this.save()
+    self.save()
     event.preventDefault();
     return false;
   });
@@ -319,79 +282,38 @@ EditorController.prototype.maximize_menu = function(save_pref){
 
 EditorController.prototype.prefers_menu_opened = function(opened){
   var self = this;
-  this.ajax_defered_waiting['prefers_menu_opened'] = true 
-  var prefers_minimized;
-  if(opened){
-    prefers_minimized = "false"
-  }
-  else{
-    prefers_minimized = "true"
-  }
-  $.ajax(
-    {
-      url: '/preferences/get_update?prefers_minimized='+prefers_minimized, 
-      statusCode: {
-        403: function(data){
-          self.ajax_defered_waiting['prefers_menu_opened'] = false
-          self.show_reauth()
-        },
-        200: function(data){
-          self.ajax_defered_waiting['prefers_menu_opened'] = false
-        }
-      }
-    })
+  var prefers_minimized = opened ? "false" : "true"
+  Preference.find('prefers_minimized', StringPreference).set(prefers_minimized, self, self.show_reauth)
+}
+
+EditorController.prototype.set_wait = function(key, value){
+  var self = this;
+  this.ajax_defered_waiting[key] = value
 }
 
 EditorController.prototype.toggle_word_wrap = function(){
   var self = this;
-  this.ajax_defered_waiting['toggle_word_wrap'] = true;
-  this.word_wrap_enabled = !this.word_wrap_enabled;
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_enabled)
-  if(this.word_wrap_enabled){
+  if(this.word_wrap_pref.get()){
     this.$.find('#word_wrap_check').show()
   }
   else{
     this.$.find('#word_wrap_check').hide()
   }
-  $.ajax(
-    {
-      url: '/preferences/get_update?word_wrap='+this.word_wrap_enabled, 
-      statusCode: {
-        403: function(data){
-          self.ajax_defered_waiting['toggle_word_wrap'] = false
-          this.show_reauth()
-        },
-        200: function(data){
-          self.ajax_defered_waiting['toggle_word_wrap'] = false
-        }
-      }
-    })
+  this.word_wrap_pref.set(!this.word_wrap_pref.get(), self, function(){self.show_reauth()});
+  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
 }
 
 EditorController.prototype.toggle_cache_file_explorer = function(){
   var self = this;
-  this.ajax_defered_waiting['toggle_cache_file_explorer'] = true;
-  this.cache_file_explorer_enabled = !this.cache_file_explorer_enabled;
-  if(this.cache_file_explorer_enabled && this.file_explorer.cache()){
+  this.file_explorer.cached = !this.file_explorer.cached;
+  if(this.file_explorer.cached && this.file_explorer.cache()){
     this.$.find('#cache_file_explorer_check').show()
   }
   else{
     this.$.find('#cache_file_explorer_check').hide()
-    this.cache_file_explorer_enabled = false;
   }
-  $.ajax(
-    {
-      url: '/preferences/get_update?cache_file_explorer_enabled='+self.cache_file_explorer_enabled, 
-      statusCode: {
-        403: function(data){
-          self.ajax_defered_waiting['toggle_cache_file_explorer'] = false
-          self.show_reauth()
-        },
-        200: function(data){
-          self.ajax_defered_waiting['toggle_cache_file_explorer'] = false
-        }
-      }
-    })
+
+  Preference.find('cache_file_explorer_enabled', BooleanPreference).set(this.file_explorer.cached, self, self.show_reauth)
 }
 
 EditorController.prototype.open_search = function(){
