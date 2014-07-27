@@ -80,5 +80,11 @@ class GOauthController < ApplicationController
     session[:refresh_token] = api_client.authorization.refresh_token
     session[:expires_in] = api_client.authorization.expires_in
     session[:issued_at] = api_client.authorization.issued_at
+
+    commit_preferences
   end
+
+  def commit_preferences
+    cookies[:preferences] = {:value => ActiveSupport::JSON.encode(@preferences.hash), :expires => 1.year.from_now}
+  end  
 end
