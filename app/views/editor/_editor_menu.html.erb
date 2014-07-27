@@ -7,8 +7,10 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
         <li><a href="<%= new_g_file_path %>" target="_blank">New</a></li>
+
+        <li><a href="#" onclick="javascript:editor_controller.file_explorer.open()">Open</a></li>
+
         <li><a href="#" class="editor_save_button" >Save</a></li>
-        
        
         <% if @file.persisted %>
           <li><a href="<%= g_file_path(@file)%>" target="_blank">Print</a></li>

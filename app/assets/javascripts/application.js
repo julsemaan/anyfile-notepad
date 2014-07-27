@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require bootstrap
 //= require_tree .
 
@@ -19,5 +20,16 @@ function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function debouncer( func , timeout ) {
+   var timeoutID , timeout = timeout || 200;
+   return function () {
+      var scope = this , args = arguments;
+      clearTimeout( timeoutID );
+      timeoutID = setTimeout( function () {
+          func.apply( scope , Array.prototype.slice.call( args ) );
+      } , timeout );
+   }
 }
 

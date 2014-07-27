@@ -83,10 +83,10 @@ div.g_file_menu{
   }
   
   div.g_file_editor_file_explorer{
-  
+    
     #fileTree{
       overflow-y:auto;
-      max-height:300px;
+      min-height:50px;
     }
     
     #open_file_explorer_title{

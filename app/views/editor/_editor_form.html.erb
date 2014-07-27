@@ -352,6 +352,7 @@ var editor_controller = new EditorController("editor_app", {
   'current_theme':'<%= current_theme %>',
   'file_explorer': new FileExplorerController("file_explorer_container", {
     'cached' : <%= @preferences.get_preference('cache_file_explorer_enabled') %>,
+    'height_pref' : Preference.find('file_explorer_height', StringPreference),
   }),
 })
 editor_controller.file_explorer.parent = editor_controller 

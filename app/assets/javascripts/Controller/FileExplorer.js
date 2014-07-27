@@ -4,8 +4,10 @@ function FileExplorerController(view, options){
   this.opened = false;
   this.loaded = false;
   this.cached = options["cached"];
+  this.height_pref = options["height_pref"]
   this.reload_url = window.location.href;
   this.$ = $("#"+view)
+  this.current_height;
   
   this.watch_tree_job = setInterval(function(){self.watch_tree()},1000)
 
@@ -53,7 +55,9 @@ FileExplorerController.prototype.watch_tree = function(){
 
   }
   else{
-    this.$.find('#file_tree_loading_message').fadeOut()
+    this.$.find('#file_tree_loading_message').fadeOut("slow", function(){
+      self.activate_resizing()
+    })
     clearInterval(self.watch_tree_job);
   }  
 }
@@ -86,6 +90,7 @@ FileExplorerController.prototype.open = function(){
 FileExplorerController.prototype.load = function(){
   var self = this;
   this.$.find('#file_tree_loading_message').fadeIn()
+  this.$.find("#fileTree").height(this.height_pref.get())
   this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
   setTimeout(function(){self.show_error()}, 10000)
   this.loaded = true
@@ -109,6 +114,7 @@ FileExplorerController.prototype.load_from_cache = function(){
   var cached_data = localStorage.getItem('cached_explorer')
   if(cached_data != ""){
     this.cached = true;
+    this.$.find("#fileTree").height(this.height_pref.get())
     this.$.find('#fileTree').html(cached_data)
     this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', existing: true});
     this.$.find('#refresh_file_explorer').show()
@@ -131,4 +137,30 @@ FileExplorerController.prototype.open_from_cache = function(){
   this.load_from_cache()
   this.open()
   setInterval(function(){self.cache()}, 1000)
+}
+
+FileExplorerController.prototype.resize_explorer = function(){
+  var self = this;
+  var height_modification = this.$.height() - this.current_height
+  this.$.find("#fileTree").height(this.$.find('#fileTree').height() + height_modification)
+  //the default bootstrap margin disapears so we put it back
+  this.$.css("margin-bottom", '5px')
+  this.current_height = this.$.height()
+}
+
+FileExplorerController.prototype.save_height_pref = function(){
+  var self = this;
+  this.height_pref.set(this.$.find('#fileTree').height()+"px", this.parent, this.parent.show_reauth)
+}
+
+FileExplorerController.prototype.activate_resizing = function(){
+  var self = this;
+  this.current_height = this.$.height()
+  this.$.resizable({
+    handles: "s" ,
+    minHeight: 120,
+    maxHeight: 550,
+  })
+  this.$.resize(function(){self.resize_explorer()})
+  this.$.resize(debouncer(function(){self.save_height_pref()}, 1000))
 }

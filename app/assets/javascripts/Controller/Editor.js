@@ -166,7 +166,6 @@ EditorController.prototype.wait_for_clearance = function(){
   if(this.is_ready_to_submit() || this.skip_clearance){
     clearInterval(this.clearance_interval)
     this.$.find('#clearance_wait_modal').modal('hide')
-    after()
   }
   else{
     this.$.find('#clearance_wait_modal').modal('show')

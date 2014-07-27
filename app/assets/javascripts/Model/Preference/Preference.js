@@ -37,7 +37,6 @@ Preference.prototype.set = function(value, locker, fail_action){
   
   locker.set_wait(locking_key, true)
   var url = '/preferences/get_update?'+this.key+'='+String(this.value);
-  console.log(url)
    $.ajax(
     {
       url: url,
