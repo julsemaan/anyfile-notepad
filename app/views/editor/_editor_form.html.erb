@@ -7,59 +7,60 @@
   <%= render 'shared/skyscraper_ad' %>
 </div>
 
-<div class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
+<div id="editor_menu_container">
+  <div id="editor_menu" class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
 
-  <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
-    
-    <%= f.hidden_field :id %>
-    <%= f.hidden_field :folder_id %>
-    <%= f.hidden_field :content %>
+    <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
       
-      
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      
-  	<%= render 'editor_menu' %>
-   
-    
-
-    </div>
-    
-    <div class="panel-body">
-    
-   	  
-      <div class="file_title input-group">
+      <%= f.hidden_field :id %>
+      <%= f.hidden_field :folder_id %>
+      <%= f.hidden_field :content %>
         
-        <%= f.text_field :title, :onkeydown=>"if(event.keyCode == 13){validate_file_size_and_submit();return false;}" , :class=> "field form-control", :placeholder => "File title" %>
-        <span class="input-group-btn ">
-          <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
-        </span>
+        
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        
+      <%= render 'editor_menu' %>
+     
+      
+
       </div>
-      <div class="input-group ">
-        <%= f.label "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
-        <span class="input-group-addon">
-          <%= f.check_box :new_revision %>
-        </span>
+      
+      <div class="panel-body">
+      
+        
+        <div class="file_title input-group">
+          
+          <%= f.text_field :title, :onkeydown=>"if(event.keyCode == 13){validate_file_size_and_submit();return false;}" , :class=> "field form-control", :placeholder => "File title" %>
+          <span class="input-group-btn ">
+            <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
+          </span>
+        </div>
+        <div class="input-group ">
+          <%= f.label "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
+          <span class="input-group-addon">
+            <%= f.check_box :new_revision %>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="editor_errors">
-    <%= render 'shared/error_messages', :object => f.object %>
-  </div>
-  
-  <% end %>
+    <div id="editor_errors">
+      <%= render 'shared/error_messages', :object => f.object %>
+    </div>
+    
+    <% end %>
 
-  <div id="editor_flash">
-    <%= render 'shared/flash', :flash => flash %>
+    <div id="editor_flash">
+      <%= render 'shared/flash', :flash => flash %>
+    </div>
+    
+    <div class="g_file_editor_file_explorer">
+      <%= render 'shared/file_explorer', :with_dropdown => true %>
+    </div>
+    
+    <%= render 'shared/editor_message' %>
   </div>
-  
-  <div class="g_file_editor_file_explorer">
-    <%= render 'shared/file_explorer', :with_dropdown => true %>
-  </div>
-  
-  <%= render 'shared/editor_message' %>
-
 </div>
 
 <div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>

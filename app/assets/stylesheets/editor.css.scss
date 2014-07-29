@@ -47,10 +47,15 @@ div.file_explorer{
   }
 }
 
-div.g_file_menu{
+div#editor_menu_container{
   display:inline-block;
   width:280px;
+}
+
+div.g_file_menu{
+  display:inline-block;
   height:100%;
+  width:100%;
   padding:0.7em;;
   
   margin-top:0;

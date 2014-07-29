@@ -109,6 +109,9 @@ EditorController.prototype.initialize_html = function(){
   this.set_background_color_from_theme()
   $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
 
+
+  this.activate_menu_resizing()
+
 }
 
 EditorController.prototype.reset_options = function(){
@@ -356,4 +359,28 @@ EditorController.prototype.set_background_color_from_theme = function(){
   $(html_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
   body_element = document.getElementsByTagName("body")[0]
   $(body_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
+}
+
+EditorController.prototype.activate_menu_resizing = function(){
+  var self = this;
+  this.current_menu_width = this.$.find("#editor_menu_container").width()
+  this.$.find("#editor_menu_container").resizable({
+    handles : "e",
+    minWidth : 280,
+    maxWidth : 500,
+  })
+  this.$.find("#editor_menu_container").resize(function(){self.resize_menu()})
+  this.$.find("#editor_menu_container").resize(debouncer(function(){self.save_menu_width_pref()}, 1000))
+}
+
+EditorController.prototype.resize_menu = function(){
+  var self = this;
+  var width_modification = this.$.find("#editor_menu_container").outerWidth() - this.current_menu_width
+  this.$.find('#editor').css("left", parseInt(this.$.find("#editor").css("left")) + width_modification + "px")
+  this.current_menu_width = this.$.find("#editor_menu_container").outerWidth()
+  console.log(this.current_menu_width)
+}
+
+EditorController.prototype.save_menu_width_pref = function(){
+  var self = this;
 }
