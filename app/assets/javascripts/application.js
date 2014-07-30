@@ -33,3 +33,9 @@ function debouncer( func , timeout ) {
    }
 }
 
+function alert_timeout(identifier, wait){
+    setTimeout(function(){
+        $(identifier).slideUp();
+    }, wait);
+}
+ 
