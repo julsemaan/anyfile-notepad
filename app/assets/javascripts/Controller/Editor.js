@@ -122,7 +122,6 @@ EditorController.prototype.reset_options = function(){
 
 EditorController.prototype.save = function(){
   var self = this;
-  console.log(this)
   var length = this.editor_view.getValue().length
   if (length > this.MAX_FILE_SIZE){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
@@ -295,14 +294,15 @@ EditorController.prototype.set_wait = function(key, value){
 
 EditorController.prototype.toggle_word_wrap = function(){
   var self = this;
+
+  this.word_wrap_pref.set(!this.word_wrap_pref.get(), self, function(){self.show_reauth()});
+  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
   if(this.word_wrap_pref.get()){
     this.$.find('#word_wrap_check').show()
   }
   else{
     this.$.find('#word_wrap_check').hide()
   }
-  this.word_wrap_pref.set(!this.word_wrap_pref.get(), self, function(){self.show_reauth()});
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
 }
 
 EditorController.prototype.toggle_cache_file_explorer = function(){
@@ -378,7 +378,6 @@ EditorController.prototype.resize_menu = function(){
   var width_modification = this.$.find("#editor_menu_container").outerWidth() - this.current_menu_width
   this.$.find('#editor').css("left", parseInt(this.$.find("#editor").css("left")) + width_modification + "px")
   this.current_menu_width = this.$.find("#editor_menu_container").outerWidth()
-  console.log(this.current_menu_width)
 }
 
 EditorController.prototype.save_menu_width_pref = function(){
