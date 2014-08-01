@@ -109,9 +109,13 @@ EditorController.prototype.initialize_html = function(){
   this.set_background_color_from_theme()
   $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
 
-
   this.activate_menu_resizing()
 
+  this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
+  this.$.find('#cancel_reauth').click(function(){
+    self.$.find('#reauthenticate_modal').modal('hide')
+  })
+  setInterval(function(){self.keep_alive()}, 300000)
 }
 
 EditorController.prototype.reset_options = function(){
@@ -382,4 +386,24 @@ EditorController.prototype.resize_menu = function(){
 
 EditorController.prototype.save_menu_width_pref = function(){
   var self = this;
+}
+
+EditorController.prototype.show_reauth = function(){
+  var self = this;
+  this.$.find('#reauthenticate_modal').modal('show')
+}
+
+EditorController.prototype.keep_alive = function(){
+  var self = this;
+  $.ajax(
+  {
+    url: '/g_oauth/keep_alive', 
+    statusCode: {
+      403: function(data){
+        self.show_reauth()
+      },
+      200: function(data){
+      }
+    }
+  })
 }

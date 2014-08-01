@@ -1,28 +1,2 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "reauthenticate_modal", :title => "Reauthentification needed", :message => "You are not authenticated with Google anymore. You vill need to reauthenticate (this will discard your changes). Click cancel to continue working.", :buttons => {'cancel_reauth' => 'Cancel', 'go_reauth' => "Reauthenticate"}, :with_bar => false} %>
 
-<script>
-  $('#go_reauth').click(function(){skip_clearance = true;window.location.reload();})
-  $('#cancel_reauth').click(function(){
-    $('#reauthenticate_modal').modal('hide')
-  })
-  
-  function keep_alive(){
-    $.ajax(
-    {
-      url: '/g_oauth/keep_alive', 
-      statusCode: {
-        403: function(data){
-          show_reauth()
-        },
-        200: function(data){
-        }
-      }
-    })
-  }
-  
-  function show_reauth(){
-    $('#reauthenticate_modal').modal('show')
-  }
-  
-  setInterval(keep_alive, 300000)
-</script>
