@@ -10,7 +10,8 @@ class Preferences
     'theme' => nil,
     'word_wrap' => false,
     'cache_file_explorer_enabled' => false,
-    'file_explorer_height' => "300px" 
+    'file_explorer_height' => "300px", 
+    'menu_width' => '280px',
   }
   
   HASH_PREFERENCES = [

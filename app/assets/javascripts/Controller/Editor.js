@@ -27,6 +27,8 @@ function EditorController(view, options){
   this.current_theme = options["current_theme"]
 
   this.file_explorer = options["file_explorer"]
+
+  this.menu_width_pref = options["menu_width_pref"]
   
   this.initialize_html()
 }
@@ -367,7 +369,9 @@ EditorController.prototype.set_background_color_from_theme = function(){
 
 EditorController.prototype.activate_menu_resizing = function(){
   var self = this;
+  this.$.find("#editor_menu_container").width(this.menu_width_pref.get())
   this.current_menu_width = this.$.find("#editor_menu_container").width()
+  this.$.find('#editor').css("left", this.menu_width_pref.get())
   this.$.find("#editor_menu_container").resizable({
     handles : "e",
     minWidth : 280,
@@ -386,6 +390,7 @@ EditorController.prototype.resize_menu = function(){
 
 EditorController.prototype.save_menu_width_pref = function(){
   var self = this;
+  this.menu_width_pref.set(this.$.find('#editor_menu_container').width()+"px", self, self.show_reauth)
 }
 
 EditorController.prototype.show_reauth = function(){
