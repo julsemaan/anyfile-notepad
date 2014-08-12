@@ -1,7 +1,13 @@
 <div id="editor_app">
 <%= render :partial => 'shared/modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render 'file_info' %>
+
+<script>
+   $("#app_load_modal").modal('show');
+</script>
 
 <div style="position:absolute;right:5px;top:5px;">
   <%= render 'shared/skyscraper_ad' %>
@@ -71,7 +77,7 @@
 
 <div class="g_file_editor">
   
-  <div id="editor"><%= @file.content %></div>
+  <div id="editor"></div>
 
 </div>
 
@@ -97,6 +103,15 @@ var editor_controller = new EditorController("editor_app", {
   }),
 })
 editor_controller.file_explorer.parent = editor_controller 
+
+var oauth_controller = new OAuthController({
+  scopes : "<%= @gapi.get_scopes.join(' ') %>" 
+});
+
+editor_controller.oauth_controller = oauth_controller;
+oauth_controller.add_to_queue(function(){editor_controller.load_file_if_needed()})
+
+
 //editor_controller.initialize_html() 
 
 </script>

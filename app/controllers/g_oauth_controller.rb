@@ -82,6 +82,7 @@ class GOauthController < ApplicationController
     session[:issued_at] = api_client.authorization.issued_at
 
     commit_preferences
+
   end
 
   def commit_preferences

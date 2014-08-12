@@ -142,4 +142,8 @@ class GApi
     return @client.discovered_api('drive', 'v2')
   end
 
+  def get_scopes
+    SCOPES
+  end
+
  end

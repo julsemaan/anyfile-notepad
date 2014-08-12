@@ -29,12 +29,13 @@ function EditorController(view, options){
   this.file_explorer = options["file_explorer"]
 
   this.menu_width_pref = options["menu_width_pref"]
-  
+
   this.initialize_html()
 }
 
 EditorController.prototype.initialize_html = function(){
    var self = this;
+
    this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
    this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
@@ -45,9 +46,6 @@ EditorController.prototype.initialize_html = function(){
      self.$.find('#file_info_modal').modal('show')
    })
 
-   this.allow_saving()
-   this.remember_content()
-   setInterval(function(){self.check_content_changed()}, 1000)
 
    if(this.show_minimized){
      this.metrics = this.EDITOR_FULL_METRICS
@@ -64,7 +62,7 @@ EditorController.prototype.initialize_html = function(){
 
 
    $(window).bind('beforeunload',function(){
-     if(!self.safe_to_quit || self.editor_view.getValue() != self.content_saved){
+     if(!self.safe_to_quit || self.file.did_content_change()){
        return "You have unsaved changes or your file is still being saved. You will lose your changes"
      }
      if(!self.is_ready_to_submit() && !self.skip_clearance){
@@ -118,6 +116,39 @@ EditorController.prototype.initialize_html = function(){
     self.$.find('#reauthenticate_modal').modal('hide')
   })
   setInterval(function(){self.keep_alive()}, 300000)
+
+  this.$.find("#app_load_modal").modal('hide');
+}
+
+EditorController.prototype.load_file_if_needed = function(){
+  var self = this
+  if (this.file_id){
+    this.$.find("#file_load_modal").modal('show');
+    this.file = new DriveFile(this.file_id, {
+      loaded : function(){
+        self.install_observers()
+        self.post_file_load()
+        self.$.find("#file_load_modal").modal('hide');
+      }
+    })
+  }
+}
+
+EditorController.prototype.install_observers = function(){
+  var self = this;
+  /*Array.observe(this.editor_view.getSession().doc.$lines, function(){
+    self.file.data = self.editor_view.getValue()
+  });
+  Object.observe(this.file, function(){
+    self.editor_view.setValue(self.file.data, -1)
+  })*/
+}
+
+EditorController.prototype.post_file_load = function(){
+  var self = this;
+  this.editor_view.getSession().setValue(this.file.data, -1)
+  this.allow_saving()
+  setInterval(function(){self.check_content_changed()}, 100)
 }
 
 EditorController.prototype.reset_options = function(){
@@ -133,18 +164,13 @@ EditorController.prototype.save = function(){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
     }
     else{
-      if(this.is_ready_to_submit() || this.skip_clearance){
-        this.block_saving()
-        this.remember_content()
-        this.$.find('#g_file_content').val(this.editor_view.getValue())
-        this.$.find('.editor_form').submit()
-        this.$.find('#file_save_modal').modal('show')
-      }
-      else{
-        var self = this;
-        this.wait_for_clearance(function(){self.save()})
-        clearance_interval = setInterval(function(){self.wait_for_clearance(self.validate_file_size_and_submit)}, 1000)
-      }
+      this.block_saving()
+      this.file.update(function(){
+        self.$.find("#file_save_modal").modal("hide")
+        self.reset_options()
+        self.editor_view.focus()
+      })
+      this.$.find('#file_save_modal').modal('show')
     }
   return false;
 }
@@ -241,14 +267,10 @@ EditorController.prototype.show_file_explorer = function(){
   this.open_explorer()
 }
 
-EditorController.prototype.remember_content = function(){
-  var self = this;
-  this.content_saved = this.editor_view.getValue()
-}
-
 EditorController.prototype.check_content_changed = function(){
   var self = this;
-  if(this.editor_view.getValue() != this.content_saved){
+  this.file.data = this.editor_view.getValue()
+  if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
   }
   else{
@@ -395,7 +417,7 @@ EditorController.prototype.save_menu_width_pref = function(){
 
 EditorController.prototype.show_reauth = function(){
   var self = this;
-  this.$.find('#reauthenticate_modal').modal('show')
+  this.oauth_controller.show_reauth();
 }
 
 EditorController.prototype.keep_alive = function(){
