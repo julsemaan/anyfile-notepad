@@ -13,8 +13,8 @@
   <%= render 'shared/skyscraper_ad' %>
 </div>
 
-<div id="editor_menu_container">
-  <div id="editor_menu" class="g_file_menu" <%= "style=display:none;" if show_minimized?(@file) %>>
+<div id="editor_menu_container" <%= "style=display:none;" if show_minimized?(@file) %>>
+  <div id="editor_menu" class="g_file_menu" >
 
     <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
       

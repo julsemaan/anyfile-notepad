@@ -109,7 +109,9 @@ EditorController.prototype.initialize_html = function(){
   this.set_background_color_from_theme()
   $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
 
-  this.activate_menu_resizing()
+  if(!this.show_minimized){
+    this.activate_menu_resizing()
+  }
 
   this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
   this.$.find('#cancel_reauth').click(function(){
@@ -286,8 +288,8 @@ EditorController.prototype.check_content_changed = function(){
 EditorController.prototype.minimize_menu = function(save_pref){
   var self = this;
   save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
-  this.$.find('.g_file_menu').fadeOut(function(){
-    self.$.find('.g_file_menu').hide(
+  this.$.find('#editor_menu_container').fadeOut(function(){
+    self.$.find('#editor_menu_container').hide(
       function(){self.$.find('#editor').animate(self.EDITOR_FULL_METRICS, function(){
         self.editor_view.resize()   
         self.$.find('.small_g_file_menu').fadeIn(function(){
@@ -306,7 +308,7 @@ EditorController.prototype.maximize_menu = function(save_pref){
   this.$.find('.small_g_file_menu').fadeOut()
   this.$.find('#editor').animate(this.EDITOR_W_MENU_METRICS,function(){
     self.editor_view.resize()  
-    self.$.find('.g_file_menu').fadeIn(function(){
+    self.$.find('#editor_menu_container').fadeIn(function(){
       if(save_pref){
         self.prefers_menu_opened(true)
       }
@@ -396,9 +398,7 @@ EditorController.prototype.set_background_color_from_theme = function(){
 
 EditorController.prototype.activate_menu_resizing = function(){
   var self = this;
-  this.$.find("#editor_menu_container").width(this.menu_width_pref.get())
-  this.current_menu_width = this.$.find("#editor_menu_container").width()
-  this.$.find('#editor').css("left", this.menu_width_pref.get())
+  this.set_menu_width_from_pref()
   this.$.find("#editor_menu_container").resizable({
     handles : "e",
     minWidth : 280,
@@ -408,10 +408,20 @@ EditorController.prototype.activate_menu_resizing = function(){
   this.$.find("#editor_menu_container").resize(debouncer(function(){self.save_menu_width_pref()}, 1000))
 }
 
+EditorController.prototype.set_menu_width_from_pref = function(){
+  var self = this;
+  this.$.find("#editor_menu_container").width(this.menu_width_pref.get())
+  this.current_menu_width = this.$.find("#editor_menu_container").width()
+  this.$.find('#editor').css("left", this.menu_width_pref.get())
+  this.EDITOR_W_MENU_METRICS["left"] = this.menu_width_pref.get() 
+}
+
 EditorController.prototype.resize_menu = function(){
   var self = this;
   var width_modification = this.$.find("#editor_menu_container").outerWidth() - this.current_menu_width
-  this.$.find('#editor').css("left", parseInt(this.$.find("#editor").css("left")) + width_modification + "px")
+  var new_left = parseInt(this.$.find("#editor").css("left")) + width_modification + "px"
+  this.$.find('#editor').css("left", new_left)
+  this.EDITOR_W_MENU_METRICS["left"] = new_left
   this.current_menu_width = this.$.find("#editor_menu_container").outerWidth()
 }
 
