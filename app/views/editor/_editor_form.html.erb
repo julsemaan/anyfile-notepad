@@ -18,11 +18,6 @@
 
     <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
       
-      <%= f.hidden_field :id %>
-      <%= f.hidden_field :folder_id %>
-      <%= f.hidden_field :content %>
-        
-        
     <div class="panel panel-default">
       <div class="panel-heading">
         
@@ -37,7 +32,7 @@
         
         <div class="file_title input-group">
           
-          <%= f.text_field :title, :onkeydown=>"if(event.keyCode == 13){validate_file_size_and_submit();return false;}" , :class=> "field form-control", :placeholder => "File title" %>
+          <input type="text" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
           <span class="input-group-btn ">
             <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
           </span>

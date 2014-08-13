@@ -147,6 +147,7 @@ EditorController.prototype.install_observers = function(){
 EditorController.prototype.post_file_load = function(){
   var self = this;
   this.editor_view.getSession().setValue(this.file.data, -1)
+  this.$.find("#g_file_title").val(this.file.title);
   this.allow_saving()
   setInterval(function(){self.check_content_changed()}, 100)
 }
@@ -164,13 +165,16 @@ EditorController.prototype.save = function(){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
     }
     else{
+      this.file.title = this.$.find("#g_file_title").val()
+      this.file.data = this.editor_view.getValue()
+
       this.block_saving()
-      this.file.update(function(){
+      this.$.find('#file_save_modal').modal('show')
+      this.file.update(this.$.find("#g_file_new_revision").prop('checked'), function(){
         self.$.find("#file_save_modal").modal("hide")
         self.reset_options()
         self.editor_view.focus()
       })
-      this.$.find('#file_save_modal').modal('show')
     }
   return false;
 }
@@ -269,6 +273,7 @@ EditorController.prototype.show_file_explorer = function(){
 
 EditorController.prototype.check_content_changed = function(){
   var self = this;
+  this.file.title = this.$.find("#g_file_title").val()
   this.file.data = this.editor_view.getValue()
   if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
