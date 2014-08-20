@@ -34,84 +34,81 @@ function EditorController(view, options){
 }
 
 EditorController.prototype.initialize_html = function(){
-   var self = this;
+  var self = this;
 
-   this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
+  this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
-   this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
-   this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
-   this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
+  this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
+  this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
+  this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
 
-   this.$.find(".show_file_info").click(function(){
-     self.$.find('#file_info_modal').modal('show')
-   })
+  this.$.find(".show_file_info").click(function(){
+    self.$.find('#file_info_modal').modal('show')
+  })
+
+  if(this.show_minimized){
+    this.minimize_menu()
+    this.metrics = this.EDITOR_FULL_METRICS
+  }
+  else{
+    this.metrics = this.EDITOR_W_MENU_METRICS
+  }
+
+  this.activate_menu_resizing()
+
+  $.each( this.metrics , function( prop, value ) {
+    self.$.find('#editor').css(prop,value)
+  });
 
 
-   if(this.show_minimized){
-     this.metrics = this.EDITOR_FULL_METRICS
-   }
-   else{
-     this.metrics = this.EDITOR_W_MENU_METRICS
-   }
 
-   $.each( this.metrics , function( prop, value ) {
-     self.$.find('#editor').css(prop,value)
-   });
+  $(window).bind('beforeunload',function(){
+    if(!self.safe_to_quit || self.file.did_content_change()){
+      return "You have unsaved changes or your file is still being saved. You will lose your changes"
+    }
+    if(!self.is_ready_to_submit() && !self.skip_clearance){
+      self.clearance_interval = setInterval(function(){self.wait_for_clearance(function(){location.reload()})}, 1000)
+      return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
+    }
+  });
 
-   this.editor_view.getSession().setMode("ace/mode/"+this.syntax_mode);
+  if(this.font_size_pref.getValue() != null){
+    this.editor_view.setFontSize(this.font_size_pref.getValue())
+  
+    this.$.find('#font_check').show()
+    var check = this.$.find('#font_check').detach()
+    //refactor!!
+    $(document.getElementById("font_"+this.font_size_pref.getValue())).prepend(check)
+  }
 
+  if(this.tab_size_pref.getValue() != null){
+    this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
+    this.$.find('#tab_check').show()
+    var check = this.$.find('#tab_check').detach()
+    //refactor!!
+    $(document.getElementById("tab_"+this.tab_size_pref.getValue())).append(check)
+  }
 
-   $(window).bind('beforeunload',function(){
-     if(!self.safe_to_quit || self.file.did_content_change()){
-       return "You have unsaved changes or your file is still being saved. You will lose your changes"
-     }
-     if(!self.is_ready_to_submit() && !self.skip_clearance){
-       self.clearance_interval = setInterval(function(){self.wait_for_clearance(function(){location.reload()})}, 1000)
-       return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
-     }
-   });
+  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
+  if(this.word_wrap_pref.getValue()){
+    this.$.find('#word_wrap_check').show()
+  }
 
-   if(this.font_size_pref.get() != null){
-     this.editor_view.setFontSize(this.font_size_pref.get())
-   
-     this.$.find('#font_check').show()
-     var check = this.$.find('#font_check').detach()
-     //refactor!!
-     $(document.getElementById("font_"+this.font_size_pref.get())).prepend(check)
-   }
+  if(this.file_explorer.cached){
+    this.$.find('#cache_file_explorer_check').show()
+  }
 
-   if(this.tab_size_pref.get() != null){
-     this.editor_view.getSession().setTabSize(this.tab_size_pref.get())
-     this.$.find('#tab_check').show()
-     var check = this.$.find('#tab_check').detach()
-     //refactor!!
-     $(document.getElementById("tab_"+this.tab_size_pref.get())).append(check)
-   }
-
-   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
-   if(this.word_wrap_pref.get()){
-     this.$.find('#word_wrap_check').show()
-   }
-
-   if(this.file_explorer.cached){
-     this.$.find('#cache_file_explorer_check').show()
-   }
-
-   window.addEventListener("keydown",function (e) {
-     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
-       e.preventDefault();
-       editor_view.execCommand("find")
-     }
-   })
+  window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
+      e.preventDefault();
+      editor_view.execCommand("find")
+    }
+  })
 
   setInterval(function(){self.set_background_color_from_theme()}, 500)
   this.editor_view.setTheme(this.current_theme)
   this.set_background_color_from_theme()
   $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
-
-  if(!this.show_minimized){
-    this.activate_menu_resizing()
-  }
 
   this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
   this.$.find('#cancel_reauth').click(function(){
@@ -119,21 +116,52 @@ EditorController.prototype.initialize_html = function(){
   })
   setInterval(function(){self.keep_alive()}, 300000)
 
+}
+
+EditorController.prototype.load_models = function(callback){
+  var self = this
+  var extensions_rest = new RestAdapter({model:Extension, suffix:'.json'})
+  var mime_type_rest = new RestAdapter({model:MimeType, suffix:'.json'})
+  var syntax_rest = new RestAdapter({model:Syntax, suffix:'.json'})
+
+  extensions_rest.load(function(){
+    mime_type_rest.load(function(){
+      syntax_rest.load(function(){
+        self.post_app_load()
+        callback()
+      })
+    })
+  })
+
+} 
+
+EditorController.prototype.post_app_load = function(){
+  var self = this
   this.$.find("#app_load_modal").modal('hide');
 }
 
-EditorController.prototype.load_file_if_needed = function(){
+EditorController.prototype.new = function(){
   var self = this
-  if (this.file_id){
-    this.$.find("#file_load_modal").modal('show');
-    this.file = new DriveFile(this.file_id, {
-      loaded : function(){
-        self.install_observers()
-        self.post_file_load()
-        self.$.find("#file_load_modal").modal('hide');
-      }
-    })
-  }
+  this.file = new DriveFile(undefined, {
+    uid : "file",
+  })
+  self.install_observers()
+  self.post_file_load()
+
+}
+
+EditorController.prototype.edit = function(id){
+  var self = this
+  this.$.find("#file_load_modal").modal('show');
+  this.file_id = id
+  this.file = new DriveFile(id, {
+    uid : "file",
+    loaded : function(){
+      self.install_observers()
+      self.post_file_load()
+      self.$.find("#file_load_modal").modal('hide');
+    }
+  })
 }
 
 EditorController.prototype.install_observers = function(){
@@ -144,12 +172,16 @@ EditorController.prototype.install_observers = function(){
   Object.observe(this.file, function(){
     self.editor_view.setValue(self.file.data, -1)
   })*/
+  //var file_observer = new ModelViewObserver(this.file, $('#file_info_modal'))
+  //file_observer.add_view($("#g_file_title"))
+  //file_observer.observe_both("model")
+
 }
 
 EditorController.prototype.post_file_load = function(){
   var self = this;
   this.editor_view.getSession().setValue(this.file.data, -1)
-  this.$.find("#g_file_title").val(this.file.title);
+  this.editor_view.getSession().setMode("ace/mode/"+this.syntax_mode);
   this.allow_saving()
   setInterval(function(){self.check_content_changed()}, 100)
 }
@@ -167,8 +199,8 @@ EditorController.prototype.save = function(){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
     }
     else{
-      this.file.title = this.$.find("#g_file_title").val()
-      this.file.data = this.editor_view.getValue()
+      //this.file.title = this.$.find("#g_file_title").val()
+      this.file.set("data", this.editor_view.getValue())
 
       this.block_saving()
       this.$.find('#file_save_modal').modal('show')
@@ -176,6 +208,7 @@ EditorController.prototype.save = function(){
         self.$.find("#file_save_modal").modal("hide")
         self.reset_options()
         self.editor_view.focus()
+        window.location.hash="#edit/"+self.file.id
       })
     }
   return false;
@@ -187,7 +220,7 @@ EditorController.prototype.set_syntax_mode = function(syntax){
   this.$.find('#syntax_'+syntax).prepend(check)
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != ""){
-    Preference.find("syntaxes["+self.file_extension+"]", StringPreference).set(syntax, self, self.show_reauth)
+    Preference.find("syntaxes["+self.file_extension+"]", StringPreference).setValue(syntax, self, self.show_reauth)
   }
 }
 
@@ -215,27 +248,27 @@ EditorController.prototype.wait_for_clearance = function(){
 EditorController.prototype.change_font_size = function(font_size){
   var self = this;
 
-  this.font_size_pref.set(font_size, self, function(){self.show_reauth()})
-  this.editor_view.setFontSize(this.font_size_pref.get())
+  this.font_size_pref.setValue(font_size, self, function(){self.show_reauth()})
+  this.editor_view.setFontSize(this.font_size_pref.getValue())
   this.$.find('#font_check').show()
   var check = this.$.find('#font_check').detach()
 
   //refactor
-  $(document.getElementById("font_"+this.font_size_pref.get())).prepend(check)
+  $(document.getElementById("font_"+this.font_size_pref.getValue())).prepend(check)
 
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
   var self = this;
 
-  this.tab_size_pref.set(tab_size, self, self.show_reauth)
+  this.tab_size_pref.setValue(tab_size, self, self.show_reauth)
 
-  this.editor_view.getSession().setTabSize(this.tab_size_pref.get())
+  this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
 
   this.$.find('#tab_check').show()
   var check = this.$.find('#tab_check').detach()
   //refactor
-  $(document.getElementById("tab_"+this.tab_size_pref.get())).append(check)
+  $(document.getElementById("tab_"+this.tab_size_pref.getValue())).append(check)
 
 }
 
@@ -275,8 +308,8 @@ EditorController.prototype.show_file_explorer = function(){
 
 EditorController.prototype.check_content_changed = function(){
   var self = this;
-  this.file.title = this.$.find("#g_file_title").val()
-  this.file.data = this.editor_view.getValue()
+  //this.file.title = this.$.find("#g_file_title").val()
+  this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
   }
@@ -319,7 +352,7 @@ EditorController.prototype.maximize_menu = function(save_pref){
 EditorController.prototype.prefers_menu_opened = function(opened){
   var self = this;
   var prefers_minimized = opened ? "false" : "true"
-  Preference.find('prefers_minimized', StringPreference).set(prefers_minimized, self, self.show_reauth)
+  Preference.find('prefers_minimized', StringPreference).setValue(prefers_minimized, self, self.show_reauth)
 }
 
 EditorController.prototype.set_wait = function(key, value){
@@ -330,9 +363,9 @@ EditorController.prototype.set_wait = function(key, value){
 EditorController.prototype.toggle_word_wrap = function(){
   var self = this;
 
-  this.word_wrap_pref.set(!this.word_wrap_pref.get(), self, function(){self.show_reauth()});
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.get())
-  if(this.word_wrap_pref.get()){
+  this.word_wrap_pref.setValue(!this.word_wrap_pref.getValue(), self, function(){self.show_reauth()});
+  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
+  if(this.word_wrap_pref.getValue()){
     this.$.find('#word_wrap_check').show()
   }
   else{
@@ -350,7 +383,7 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
     this.$.find('#cache_file_explorer_check').hide()
   }
 
-  Preference.find('cache_file_explorer_enabled', BooleanPreference).set(this.file_explorer.cached, self, self.show_reauth)
+  Preference.find('cache_file_explorer_enabled', BooleanPreference).setValue(this.file_explorer.cached, self, self.show_reauth)
 }
 
 EditorController.prototype.open_search = function(){
@@ -410,10 +443,10 @@ EditorController.prototype.activate_menu_resizing = function(){
 
 EditorController.prototype.set_menu_width_from_pref = function(){
   var self = this;
-  this.$.find("#editor_menu_container").width(this.menu_width_pref.get())
+  this.$.find("#editor_menu_container").width(this.menu_width_pref.getValue())
   this.current_menu_width = this.$.find("#editor_menu_container").width()
-  this.$.find('#editor').css("left", this.menu_width_pref.get())
-  this.EDITOR_W_MENU_METRICS["left"] = this.menu_width_pref.get() 
+  this.$.find('#editor').css("left", this.menu_width_pref.getValue())
+  this.EDITOR_W_MENU_METRICS["left"] = this.menu_width_pref.getValue() 
 }
 
 EditorController.prototype.resize_menu = function(){
@@ -427,7 +460,7 @@ EditorController.prototype.resize_menu = function(){
 
 EditorController.prototype.save_menu_width_pref = function(){
   var self = this;
-  this.menu_width_pref.set(this.$.find('#editor_menu_container').width()+"px", self, self.show_reauth)
+  this.menu_width_pref.setValue(this.$.find('#editor_menu_container').width()+"px", self, self.show_reauth)
 }
 
 EditorController.prototype.show_reauth = function(){

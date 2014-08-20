@@ -112,4 +112,8 @@ class EditorController < GOauthController
     end
   end
 
+  def app
+    render 'new'
+  end
+
 end

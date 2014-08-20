@@ -90,7 +90,7 @@ FileExplorerController.prototype.open = function(){
 FileExplorerController.prototype.load = function(){
   var self = this;
   this.$.find('#file_tree_loading_message').fadeIn()
-  this.$.find("#fileTree").height(this.height_pref.get())
+  this.$.find("#fileTree").height(this.height_pref.getValue())
   this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
   setTimeout(function(){self.show_error()}, 10000)
   this.loaded = true
@@ -114,15 +114,15 @@ FileExplorerController.prototype.load_from_cache = function(){
   var cached_data = localStorage.getItem('cached_explorer')
   if(cached_data != ""){
     this.cached = true;
-    this.$.find("#fileTree").height(this.height_pref.get())
+    this.$.find("#fileTree").height(this.height_pref.getValue())
     this.$.find('#fileTree').html(cached_data)
     this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', existing: true});
-    this.$.find('#refresh_file_explorer').show()
-    this.$.find('#refresh_file_explorer').click(function(){self.refresh()})
   }
   else{
     this.load()
   }
+  this.$.find('#refresh_file_explorer').show()
+  this.$.find('#refresh_file_explorer').click(function(){self.refresh()})
   this.loaded = true
 }
 
@@ -150,7 +150,7 @@ FileExplorerController.prototype.resize_explorer = function(){
 
 FileExplorerController.prototype.save_height_pref = function(){
   var self = this;
-  this.height_pref.set(this.$.find('#fileTree').height()+"px", this.parent, this.parent.show_reauth)
+  this.height_pref.setValue(this.$.find('#fileTree').height()+"px", this.parent, this.parent.show_reauth)
 }
 
 FileExplorerController.prototype.activate_resizing = function(){

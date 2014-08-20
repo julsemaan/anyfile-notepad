@@ -1,16 +1,46 @@
 function DriveFile(id, options){
   var self = this;
-  this.id = id
-  this.folder_id = options["folder_id"]
-  this.get_file_data()
-  this.loaded = false
-  this.title
-  this.title_saved
-  this.data
-  this.data_saved
-  this.loaded = options["loaded"]
-  this._post_update_callback
+  this.uid = options["uid"] || "DriveFile"
+  this.install_binder()
+  this.set("id", id)
+  this.set("folder_id", options["folder_id"])
+  this.set("loaded", options["loaded"])
+  this.set("title", "")
+  this.set("title_saved", "")
+  this.set("data", "")
+  this.set("data_saved", "")
+  this.set("_post_update_callback")
+  if(this.id){
+    this.persisted = true
+    this.get_file_data()
+  }
 }
+
+DriveFile.prototype.install_binder = function(){
+  var self = this
+  var binder = new DataBinder( this.uid )
+
+  this._binder = binder
+
+  // Subscribe to the PubSub
+  binder.on( this.uid + ":change", function( evt, attr_name, new_val, initiator ) {
+    if ( initiator !== self ) {
+      self.set( attr_name, new_val );
+    }
+  });
+}
+
+// The attribute setter publish changes using the DataBinder PubSub
+DriveFile.prototype.set = function( attr_name, val ) {
+  this[ attr_name ] = val;
+  this._binder.trigger( this.uid + ":change", [ attr_name, val, this ] );
+}
+
+DriveFile.prototype.get = function( attr_name ) {
+  return this.attributes[ attr_name ];
+}
+
+
 
 DriveFile.prototype.get_file_data = function(){
   var self = this;
@@ -19,16 +49,16 @@ DriveFile.prototype.get_file_data = function(){
     'fileId': this.id
   });
   request.execute(function(resp) {
-    self.mime_type = resp.mimeType
-    self.title = resp.title
-    self.title_saved = self.title
+    self.set("mime_type", resp.mimeType)
+    self.set("title", resp.title)
+    self.set("title_saved", self.title)
 
     $.ajax({
       url : resp.downloadUrl,
       headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
       complete : function(data, status){
-        self.data = data.responseText
-        self.data_saved = self.data
+        self.set("data", data.responseText)
+        self.set("data_saved", self.data)
         self.loaded()
       },
     })
@@ -38,7 +68,6 @@ DriveFile.prototype.get_file_data = function(){
 DriveFile.prototype.update = function(new_revision, callback) {
   var self = this;
   this._post_update_callback = callback
-
   if (this.did_content_change() ){
     self.update_data(new_revision, function(){
       self._post_update_callback()
@@ -59,7 +88,7 @@ DriveFile.prototype.update_metadata = function(callback){
       'resource': body
     });
     request.execute(function(){
-      self.title_saved = self.title
+      self.set("title_saved", self.title)
       callback()
     })
   }
@@ -70,7 +99,7 @@ DriveFile.prototype.update_metadata = function(callback){
 
 DriveFile.prototype.update_data = function(new_revision, callback){
   var self = this
-  console.log(new_revision)
+
   const boundary = '-------314159265358979323846';
   const delimiter = "\r\n--" + boundary + "\r\n";
   const close_delim = "\r\n--" + boundary + "--";
@@ -95,9 +124,12 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         base64Data +
         close_delim;
 
+    var url = this.persisted ? '/upload/drive/v2/files/' + self.id : '/upload/drive/v2/files/'
+    var method = this.persisted ? "PUT" : "POST"
+
     var request = gapi.client.request({
-        'path': '/upload/drive/v2/files/' + self.id,
-        'method': 'PUT',
+        'path': url,
+        'method': method,
         'params': { uploadType : 'multipart', alt : 'json', newRevision : new_revision, fileId : self.id},
         'headers': {
           'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
@@ -108,9 +140,14 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         console.log(file)
       };
     }
-    request.execute(function(){
-      self.title_saved = self.title
-      self.data_saved = self.data
+    request.execute(function(file){
+      //set id if it's not persisted and set persisted
+      if(!self.persisted){
+        self.set("persisted", true)
+        self.set("id", file.id)
+      }
+      self.set("title_saved", self.title)
+      self.set("data_saved", self.data)
       callback()
     });
   }

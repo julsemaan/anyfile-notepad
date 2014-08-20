@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require bootstrap
+//= require DataBinder
+//= require Model/Model
 //= require_tree .
 
 function getCookie(name) {
@@ -38,4 +40,16 @@ function alert_timeout(identifier, wait){
         $(identifier).slideUp();
     }, wait);
 }
+
+String.prototype.toUnderscore = function(){
+  return this.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+};
+
+String.prototype.toDash = function(){
+  return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+};
+
+String.prototype.toCamel = function(){
+  return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+};
  

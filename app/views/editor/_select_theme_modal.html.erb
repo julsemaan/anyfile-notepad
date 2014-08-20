@@ -8,7 +8,7 @@
               <div class="theme_choice_column btn-group-vertical">
                 
                 <% theme_array.each do |theme| %>
-                  <a href="#" class="btn btn-default" id='theme_<%=theme_name(theme)%>' onclick="javascript:editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
+                  <a href="javascript:void(0);" class="btn btn-default" id='theme_<%=theme_name(theme)%>' onclick="javascript:editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
                 <% end %>
               </div>
             </div>

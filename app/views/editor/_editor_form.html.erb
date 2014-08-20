@@ -13,7 +13,7 @@
   <%= render 'shared/skyscraper_ad' %>
 </div>
 
-<div id="editor_menu_container" <%= "style=display:none;" if show_minimized?(@file) %>>
+<div id="editor_menu_container" >
   <div id="editor_menu" class="g_file_menu" >
 
     <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
@@ -32,9 +32,9 @@
         
         <div class="file_title input-group">
           
-          <input type="text" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
+          <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
           <span class="input-group-btn ">
-            <%= link_to "Save", "#", :class => "editor_save_button btn btn-primary"%>
+            <%= link_to "Save", "javascript:void(0)", :class => "editor_save_button btn btn-primary"%>
           </span>
         </div>
         <div class="input-group ">
@@ -64,7 +64,7 @@
   </div>
 </div>
 
-<div class="small_g_file_menu" <%= "style=display:none;" if not show_minimized?(@file) %>>
+<div class="small_g_file_menu" >
   <span class="glyphicon glyphicon-floppy-save" onclick="javascript:editor_controller.save()" title="Save"></span>
   <span class="glyphicon glyphicon-folder-open" onclick="javascript:editor_controller.file_explorer.open()" title="Open file"></span>
   <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
@@ -82,18 +82,17 @@
 </div>
 <script type="text/javascript">
 var editor_controller = new EditorController("editor_app", {
-  'file_id':'<%= @file.id %>',
   'syntax_mode':'<%= @file.syntax.ace_js_mode %>',
   'file_extension':'<%= @file.extension %>',
   'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
-  'show_minimized':<%= show_minimized?(@file) %>,
+  'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
   'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
   'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
   'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
   'current_theme':'<%= current_theme %>',
   'menu_width_pref' : Preference.find('menu_width', StringPreference),
   'file_explorer': new FileExplorerController("file_explorer_container", {
-    'cached' : <%= @preferences.get_preference('cache_file_explorer_enabled') %>,
+    'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
     'height_pref' : Preference.find('file_explorer_height', StringPreference),
   }),
 })
@@ -104,7 +103,7 @@ var oauth_controller = new OAuthController({
 });
 
 editor_controller.oauth_controller = oauth_controller;
-oauth_controller.add_to_queue(function(){editor_controller.load_file_if_needed()})
+oauth_controller.add_to_queue(function(){new EditorRouter(editor_controller)})
 
 
 //editor_controller.initialize_html() 

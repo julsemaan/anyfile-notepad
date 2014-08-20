@@ -8,11 +8,11 @@
         <% unless @file.persisted? %>
           <p class="alert alert-info">This file hasn't been save to Google Drive yet. Information will change once it's saved.</p>
         <% end %>
-        <p><b>File name : </b><%= @file.title %></p>
-        <p><b>Google Drive file id : </b><%= @file.id %></p>
-        <p><b>Mime type : </b><%= @file.type %></p>
-        <p><b>Extension : </b><%= @file.extension %></p>
-        <p><b>Syntax mode (on load) : </b><%= @file.syntax.display_name %></p>
+        <p><b>File name : </b><span data-bind-file="title"></span></p>
+        <p><b>Google Drive file id : </b><span data-bind-file="id"></span></p>
+        <p><b>Mime type : </b><span data-bind-file="mime_type"></span></p>
+        <p><b>Extension : </b><span data-bind-file="extension"></span></p>
+        <p><b>Syntax mode (on load) : </b><span data-bind-file="syntax"></span></p>
       </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -20,6 +20,7 @@ AnyfileNotepad::Application.routes.draw do
   match 'editor/new/:folder_id' => 'editor#new'
   match '/editor/edit' => 'editor#new'
   match 'editor/edit/:id' => 'editor#edit'
+  match 'app' => 'editor#app'
   
   namespace :admin do
     get 'login'
