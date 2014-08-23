@@ -5,9 +5,6 @@
         <h4 class="modal-title">File info</h4>
       </div>
       <div class="modal-body">
-        <% unless @file.persisted? %>
-          <p class="alert alert-info">This file hasn't been save to Google Drive yet. Information will change once it's saved.</p>
-        <% end %>
         <p><b>File name : </b><span data-bind-file="title"></span></p>
         <p><b>Google Drive file id : </b><span data-bind-file="id"></span></p>
         <p><b>Mime type : </b><span data-bind-file="mime_type"></span></p>

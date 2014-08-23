@@ -16,8 +16,8 @@
 <div id="editor_menu_container" >
   <div id="editor_menu" class="g_file_menu" >
 
-    <%= form_for @file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
-      
+    <%# form_tag :g_file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
+    <form accept-charset="UTF-8" action="" data-remote="true" html="{:class=>:editor_form, :multipart=>true}" method="post"> 
     <div class="panel panel-default">
       <div class="panel-heading">
         
@@ -38,19 +38,19 @@
           </span>
         </div>
         <div class="input-group ">
-          <%= f.label "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
+          <%= label_tag :new_revision, "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
           <span class="input-group-addon">
-            <%= f.check_box :new_revision %>
+            <%= check_box_tag :g_file_new_revision %>
           </span>
         </div>
       </div>
     </div>
 
     <div id="editor_errors">
-      <%= render 'shared/error_messages', :object => f.object %>
+      <%# render 'shared/error_messages', :object => f.object %>
     </div>
     
-    <% end %>
+    </form>
 
     <div id="editor_flash">
       <%= render 'shared/flash', :flash => flash %>
@@ -82,13 +82,11 @@
 </div>
 <script type="text/javascript">
 var editor_controller = new EditorController("editor_app", {
-  'syntax_mode':'<%= @file.syntax.ace_js_mode %>',
-  'file_extension':'<%= @file.extension %>',
   'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
   'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
   'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
   'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
-  'MAX_FILE_SIZE':<%= @file.MAX_FILE_SIZE %>, 
+  'MAX_FILE_SIZE': 1048576, 
   'current_theme':'<%= current_theme %>',
   'menu_width_pref' : Preference.find('menu_width', StringPreference),
   'file_explorer': new FileExplorerController("file_explorer_container", {

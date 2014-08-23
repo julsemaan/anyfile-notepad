@@ -14,6 +14,9 @@ function DriveFile(id, options){
     this.persisted = true
     this.get_file_data()
   }
+  else{
+    this.compute_syntax() 
+  }
 }
 
 DriveFile.prototype.install_binder = function(){
@@ -37,10 +40,30 @@ DriveFile.prototype.set = function( attr_name, val ) {
 }
 
 DriveFile.prototype.get = function( attr_name ) {
-  return this.attributes[ attr_name ];
+  return this[ attr_name ];
 }
 
+DriveFile.prototype.extension = function(){
+  return "."+this.title.split('.').pop();
+}
 
+DriveFile.prototype.compute_syntax = function(){
+  var self = this
+  syntax_pref = Preference.find('syntaxes['+this.extension()+']', StringPreference)
+  if(!syntax_pref.is_empty()){
+    self.set('syntax', syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()}))
+    return self.get('syntax')
+  }
+  else{
+    extension = extensions.find({key:'name', value:this.extension()})
+    if(extension){
+      self.set('syntax', syntaxes.find({value:extension.syntax_id}))
+      return self.get('syntax')
+    }
+  }
+  self.set('syntax', syntaxes.find({key:'ace_js_mode', value:'plain_text'}))
+  return self.get('syntax')
+}
 
 DriveFile.prototype.get_file_data = function(){
   var self = this;
@@ -59,6 +82,7 @@ DriveFile.prototype.get_file_data = function(){
       complete : function(data, status){
         self.set("data", data.responseText)
         self.set("data_saved", self.data)
+        self.compute_syntax()
         self.loaded()
       },
     })
@@ -124,8 +148,8 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         base64Data +
         close_delim;
 
-    var url = this.persisted ? '/upload/drive/v2/files/' + self.id : '/upload/drive/v2/files/'
-    var method = this.persisted ? "PUT" : "POST"
+    var url = self.persisted ? '/upload/drive/v2/files/' + self.id : '/upload/drive/v2/files/'
+    var method = self.persisted ? "PUT" : "POST"
 
     var request = gapi.client.request({
         'path': url,

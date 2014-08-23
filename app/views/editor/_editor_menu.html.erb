@@ -12,9 +12,6 @@
 
         <li><a href="javascript:void(0);" class="editor_save_button" >Save</a></li>
        
-        <% if @file.persisted %>
-          <li><a href="<%= g_file_path(@file)%>" target="_blank">Print</a></li>
-        <% end %>
         
         <li>
           <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search()">
@@ -56,6 +53,7 @@
         </li>
       
       
+        <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
         <li class="dropdown-submenu">
           <a href="javascript:void(0);" >Syntax</a>
           <ul class="dropdown-menu">
@@ -66,9 +64,6 @@
                   <% syntaxes.each do |syntax| %>
                     <li>
                       <a href="javascript:void(0);" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
-                        <% if syntax == @file.syntax %>
-                          <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
-                        <% end %>
                         <%= syntax.display_name %>
                         
                       </a>                  

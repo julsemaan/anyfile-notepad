@@ -16,8 +16,6 @@ function EditorController(view, options){
   this.EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"130px"}
   this.metrics = null;
 
-  this.syntax_mode = options["syntax_mode"]
-  this.file_extension = options["file_extension"]
   this.word_wrap_pref = options["word_wrap_pref"]
   this.show_minimized = options["show_minimized"]
   this.font_size_pref = options["font_size_pref"]
@@ -29,6 +27,12 @@ function EditorController(view, options){
   this.file_explorer = options["file_explorer"]
 
   this.menu_width_pref = options["menu_width_pref"]
+
+  this.models = {
+    'extensions':new RestAdapter({model:Extension, suffix:'.json'}),
+    'mime_types':new RestAdapter({model:MimeType, suffix:'.json'}),
+    'syntaxes':new RestAdapter({model:Syntax, suffix:'.json'}),
+  }
 
   this.initialize_html()
 }
@@ -118,22 +122,7 @@ EditorController.prototype.initialize_html = function(){
 
 }
 
-EditorController.prototype.load_models = function(callback){
-  var self = this
-  var extensions_rest = new RestAdapter({model:Extension, suffix:'.json'})
-  var mime_type_rest = new RestAdapter({model:MimeType, suffix:'.json'})
-  var syntax_rest = new RestAdapter({model:Syntax, suffix:'.json'})
 
-  extensions_rest.load(function(){
-    mime_type_rest.load(function(){
-      syntax_rest.load(function(){
-        self.post_app_load()
-        callback()
-      })
-    })
-  })
-
-} 
 
 EditorController.prototype.post_app_load = function(){
   var self = this
@@ -145,9 +134,9 @@ EditorController.prototype.new = function(){
   this.file = new DriveFile(undefined, {
     uid : "file",
   })
-  self.install_observers()
   self.post_file_load()
 
+  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
 }
 
 EditorController.prototype.edit = function(id){
@@ -164,24 +153,10 @@ EditorController.prototype.edit = function(id){
   })
 }
 
-EditorController.prototype.install_observers = function(){
-  var self = this;
-  /*Array.observe(this.editor_view.getSession().doc.$lines, function(){
-    self.file.data = self.editor_view.getValue()
-  });
-  Object.observe(this.file, function(){
-    self.editor_view.setValue(self.file.data, -1)
-  })*/
-  //var file_observer = new ModelViewObserver(this.file, $('#file_info_modal'))
-  //file_observer.add_view($("#g_file_title"))
-  //file_observer.observe_both("model")
-
-}
-
 EditorController.prototype.post_file_load = function(){
   var self = this;
   this.editor_view.getSession().setValue(this.file.data, -1)
-  this.editor_view.getSession().setMode("ace/mode/"+this.syntax_mode);
+  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
   this.allow_saving()
   setInterval(function(){self.check_content_changed()}, 100)
 }
@@ -214,13 +189,15 @@ EditorController.prototype.save = function(){
   return false;
 }
 
-EditorController.prototype.set_syntax_mode = function(syntax){
+EditorController.prototype.set_syntax_mode = function(syntax,save){
   var self = this;
+  save = save || false
   var check = this.$.find('#syntax_check').detach();
   this.$.find('#syntax_'+syntax).prepend(check)
+  this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
-  if(this.file_id != ""){
-    Preference.find("syntaxes["+self.file_extension+"]", StringPreference).setValue(syntax, self, self.show_reauth)
+  if(this.file_id != "" && save){
+    Preference.find("syntaxes["+self.file.extension()+"]", StringPreference).setValue(syntax, self, self.show_reauth)
   }
 }
 

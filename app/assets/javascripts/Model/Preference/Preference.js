@@ -31,6 +31,10 @@ Preference.find = function(key, valueType){
   }
 }
 
+Preference.prototype.is_empty = function(){
+  return (!this.value.value)
+}
+
 Preference.prototype.getValue = function(){
   var self = this;
   return this.value.valueOf()
