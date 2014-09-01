@@ -32,10 +32,9 @@ OAuthController.prototype.do_auth = function(){
 
 OAuthController.prototype.post_auth = function(auth_result){
   var self = this;
-  console.log(auth_result)
-  setCookie('access_token', auth_result['access_token'], 1)
   if (auth_result && !auth_result.error) {
     gapi.client.load('drive', 'v2', function(){
+      setCookie('access_token', auth_result['access_token'], 1)
       self.ready()
     })
     

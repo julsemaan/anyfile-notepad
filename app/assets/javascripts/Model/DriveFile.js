@@ -200,10 +200,11 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         }
         self.set("title_saved", self.title)
         self.set("data_saved", self.data)
-        callback()
+        callback(true)
       }
       else{
         alert("There was an error sending the document to Google's servers.\n"+file.error.message+"\nTry again in a few minutes and write on the community if it happens often.");
+        callback(false)
       }
     });
   }
