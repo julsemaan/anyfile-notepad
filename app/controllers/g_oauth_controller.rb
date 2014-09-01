@@ -3,12 +3,12 @@ class GOauthController < ApplicationController
   after_filter :execute_after
   
   def execute_default
-    # if it's an ajax request
-    if request.xhr?
-      smooth_flow
-    else
-      enforced_flow
-    end
+    ## if it's an ajax request
+    #if request.xhr?
+    #  smooth_flow
+    #else
+    #  enforced_flow
+    #end
         
     begin
       @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))

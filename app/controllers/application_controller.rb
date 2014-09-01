@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     @gapi = GApi.new
 
     capture_auth_code
-    capture_drive_commands
+    #capture_drive_commands
 
     unless session[:afn_redirect_to].nil?
       begin

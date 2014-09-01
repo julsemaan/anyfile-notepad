@@ -3,6 +3,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
 <%= render 'file_info' %>
 
 <script>

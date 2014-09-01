@@ -113,6 +113,7 @@ class EditorController < GOauthController
   end
 
   def app
+    #response.headers['X-Frame-Options'] = 'IDONTGIVEACRAP'
     render 'new'
   end
 
