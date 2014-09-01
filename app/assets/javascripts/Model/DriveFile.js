@@ -85,7 +85,7 @@ DriveFile.prototype.get_file_data = function(){
   var request = gapi.client.drive.files.get({
     'fileId': this.id
   });
-  request.execute(function(resp) {
+  callback = function(resp) {
     self.set("mime_type", resp.mimeType)
     self.set("title", resp.title)
     self.set("title_saved", self.title)
@@ -107,16 +107,15 @@ DriveFile.prototype.get_file_data = function(){
         }
       },
     })
-  });
+  };
+  oauth_controller.execute_request(request, callback)
 }
 
 DriveFile.prototype.update = function(new_revision, callback) {
   var self = this;
   this._post_update_callback = callback
   if (this.did_content_change() ){
-    self.update_data(new_revision, function(){
-      self._post_update_callback()
-    })
+    self.update_data(new_revision, callback)
   }
   else{
     callback()
@@ -191,7 +190,7 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         console.log(file)
       };
     }
-    request.execute(function(file){
+    oauth_controller.execute_request(request, function(file){
       if(!file.error){
         //set id if it's not persisted and set persisted
         if(!self.persisted){
@@ -200,12 +199,8 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         }
         self.set("title_saved", self.title)
         self.set("data_saved", self.data)
-        callback(true)
       }
-      else{
-        alert("There was an error sending the document to Google's servers.\n"+file.error.message+"\nTry again in a few minutes and write on the community if it happens often.");
-        callback(false)
-      }
+      callback(file)
     });
   }
 }

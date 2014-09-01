@@ -187,10 +187,10 @@ EditorController.prototype.save = function(){
     this.$.find('#file_save_modal').modal('show')
     // give a small time for everything to show.
     setTimeout(function(){
-        self.file.update(true, function(success){
+        self.file.update(true, function(response){
           self.$.find("#file_save_modal").modal("hide")
           self.reset_options()
-          if(success) window.location.hash="#edit/"+self.file.id
+          if(response && !response.error) window.location.hash="#edit/"+self.file.id
         })
     }, 500)
   }

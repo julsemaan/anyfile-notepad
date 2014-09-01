@@ -74,3 +74,21 @@ OAuthController.prototype.check_authed = function(){
     this.auth_failed()
   }
 }
+
+OAuthController.prototype.execute_request = function(request, callback){
+  var self = this
+  request.execute(function(response){
+    if(!response.error){
+      callback(response)
+    }
+    else if(response.error.code == 401){
+      self.queue.push(function(){self.execute_request(request, callback)})
+      self.authed = false
+      self.do_auth()
+    }
+    else{
+      alert("There was an error sending the document to Google's servers.\n"+response.error.message+"\nTry again in a few minutes and write on the community if it happens often.");
+      callback(response)
+    }
+  });
+}
