@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
       @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
     rescue 
       @preferences = Preferences.new
+      commit_preferences
     end
 
 
