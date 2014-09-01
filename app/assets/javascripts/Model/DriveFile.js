@@ -67,6 +67,18 @@ DriveFile.prototype.compute_syntax = function(){
   return self.get('syntax')
 }
 
+DriveFile.prototype.mime_type_from_extension = function (){
+  var self = this
+  try{
+    extension = extensions.find({key:'name', value:self.extension()})
+    mime_type = mime_types.find({key:'id', value:extension.mime_type_id})
+    return mime_type.type_name
+  } 
+  catch(e){
+    return "text/plain"
+  }
+}
+
 DriveFile.prototype.get_file_data = function(){
   var self = this;
   var fields = "downloadUrl,id,mimeType,title,fileSize"
@@ -143,7 +155,7 @@ DriveFile.prototype.update_data = function(new_revision, callback){
   reader.readAsBinaryString(data_blob);
   reader.onload = function(e) {
     // after the || should compute mime type automagically
-    var contentType = self.mime_type || 'application/octet-stream';
+    var contentType = self.mime_type || self.mime_type_from_extension();
 
     var metadata = {fileId : self.id, title : self.title}
     if(self.folder_id){
@@ -180,14 +192,19 @@ DriveFile.prototype.update_data = function(new_revision, callback){
       };
     }
     request.execute(function(file){
-      //set id if it's not persisted and set persisted
-      if(!self.persisted){
-        self.set("persisted", true)
-        self.set("id", file.id)
+      if(!file.error){
+        //set id if it's not persisted and set persisted
+        if(!self.persisted){
+          self.set("persisted", true)
+          self.set("id", file.id)
+        }
+        self.set("title_saved", self.title)
+        self.set("data_saved", self.data)
+        callback()
       }
-      self.set("title_saved", self.title)
-      self.set("data_saved", self.data)
-      callback()
+      else{
+        alert("There was an error sending the document to Google's servers.\n"+file.error.message+"\nTry again in a few minutes and write on the community if it happens often.");
+      }
     });
   }
 }
