@@ -44,7 +44,9 @@ DriveFile.prototype.get = function( attr_name ) {
 }
 
 DriveFile.prototype.extension = function(){
-  return "."+this.title.split('.').pop();
+  try{
+    return "."+this.title.split('.').pop();
+  }catch(e){return ""}
 }
 
 DriveFile.prototype.compute_syntax = function(){
@@ -136,11 +138,17 @@ DriveFile.prototype.update_data = function(new_revision, callback){
     // after the || should compute mime type automagically
     var contentType = self.mime_type || 'application/octet-stream';
 
+    var metadata = {fileId : self.id, title : self.title}
+    if(self.folder_id){
+      metadata['parents'] = [{id:self.folder_id}]
+    }
+    //console.log(metadata)
+
     var base64Data = btoa(reader.result);
     var multipartRequestBody =
         delimiter +
         'Content-Type: application/json\r\n\r\n' +
-        JSON.stringify({fileId : self.id, title : self.title}) +
+        JSON.stringify(metadata) +
         delimiter +
         'Content-Type: ' + contentType + '\r\n' +
         'Content-Transfer-Encoding: base64\r\n' +

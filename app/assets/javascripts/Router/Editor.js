@@ -48,6 +48,17 @@ EditorRouter.prototype.params_to_hash = function( prmstr ) {
 EditorRouter.prototype.route = function(){
   this.parse_parameters()
   this.parse_hash_url()
+  if(this.params['state']){
+    state = JSON.parse(decodeURI(this.params['state']))
+    console.log(state)
+    if(state['action'] == 'open'){
+      window.location = "app#edit/"+state['ids'][0]
+      return
+    }
+    else if(state['action'] == 'create'){
+      window.location = "app#new/"+state['folderId']
+    }
+  }
   try{
     if(this.hash_paths[0] == "edit"){
       if(this.hash_paths[1]){
@@ -58,6 +69,10 @@ EditorRouter.prototype.route = function(){
   } catch(e){}
   
   if(this.hash_paths[0] == "new"){
+    try{
+      this.controller.new(this.hash_paths[1])
+      return
+    }catch(e){}
     this.controller.new()
     return
   }

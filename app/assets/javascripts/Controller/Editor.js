@@ -129,10 +129,11 @@ EditorController.prototype.post_app_load = function(){
   this.$.find("#app_load_modal").modal('hide');
 }
 
-EditorController.prototype.new = function(){
+EditorController.prototype.new = function(folder_id){
   var self = this
   this.file = new DriveFile(undefined, {
     uid : "file",
+    folder_id : folder_id,
   })
   self.post_file_load()
 
@@ -146,7 +147,6 @@ EditorController.prototype.edit = function(id){
   this.file = new DriveFile(id, {
     uid : "file",
     loaded : function(){
-      self.install_observers()
       self.post_file_load()
       self.$.find("#file_load_modal").modal('hide');
     }
