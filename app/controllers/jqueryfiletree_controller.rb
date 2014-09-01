@@ -1,4 +1,4 @@
-class JqueryfiletreeController < GOauthController
+class JqueryfiletreeController < ApplicationController 
   protect_from_forgery :only => []
     
   def content
@@ -9,7 +9,7 @@ class JqueryfiletreeController < GOauthController
       @root_id.slice! '/'
     end
     
-    @dir = Jqueryfiletree.new(@root_id, @gapi).get_content
+    @dir = Jqueryfiletree.new(@root_id, cookies[:access_token]).get_content
     render :layout => false
   end
 end

@@ -82,10 +82,17 @@ DriveFile.prototype.get_file_data = function(){
       url : resp.downloadUrl,
       headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
       complete : function(data, status){
-        self.set("data", data.responseText)
-        self.set("data_saved", self.data)
-        self.compute_syntax()
-        self.loaded()
+        if(status == "success"){
+          self.set("data", data.responseText)
+          self.set("data_saved", self.data)
+          self.compute_syntax()
+          self.loaded()
+        }
+        else{
+          alert("Major fuckup. The file couldn't load. If this happens again, file a bug on the community.");
+          window.location = "app#new"
+          location.reload()
+        }
       },
     })
   });

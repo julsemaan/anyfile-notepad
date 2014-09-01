@@ -118,7 +118,7 @@ EditorController.prototype.initialize_html = function(){
   this.$.find('#cancel_reauth').click(function(){
     self.$.find('#reauthenticate_modal').modal('hide')
   })
-  setInterval(function(){self.keep_alive()}, 300000)
+  //setInterval(function(){self.keep_alive()}, 300000)
 
 }
 
@@ -170,23 +170,33 @@ EditorController.prototype.reset_options = function(){
 EditorController.prototype.save = function(){
   var self = this;
   var length = this.editor_view.getValue().length
+  self.editor_view.focus()
   if (length > this.MAX_FILE_SIZE){
       alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
-    }
-    else{
-      //this.file.title = this.$.find("#g_file_title").val()
-      this.file.set("data", this.editor_view.getValue())
+      return false
+  }
+  else if(this.file.title == ""){
+      alert("File title can't be empty");
+      return false
+  }
+  else{
+    //this.file.title = this.$.find("#g_file_title").val()
+    this.file.set("data", this.editor_view.getValue())
 
-      this.block_saving()
-      this.$.find('#file_save_modal').modal('show')
-      this.file.update(this.$.find("#g_file_new_revision").prop('checked'), function(){
-        self.$.find("#file_save_modal").modal("hide")
-        self.reset_options()
-        self.editor_view.focus()
-        window.location.hash="#edit/"+self.file.id
-      })
-    }
+    this.block_saving()
+    this.$.find('#file_save_modal').modal('show')
+    // give a small time for everything to show.
+    setTimeout(function(){
+        self.file.update(true, function(){
+          self.$.find("#file_save_modal").modal("hide")
+          self.reset_options()
+          window.location.hash="#edit/"+self.file.id
+        })
+    }, 500)
+  }
   return false;
+
+
 }
 
 EditorController.prototype.set_syntax_mode = function(syntax,save){
@@ -355,9 +365,11 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
   this.file_explorer.cached = !this.file_explorer.cached;
   if(this.file_explorer.cached && this.file_explorer.cache()){
     this.$.find('#cache_file_explorer_check').show()
+    alert("This option will take effect once you reload the app.")
   }
   else{
     this.$.find('#cache_file_explorer_check').hide()
+    alert("This option will take effect once you reload the app.")
   }
 
   Preference.find('cache_file_explorer_enabled', BooleanPreference).setValue(this.file_explorer.cached, self, self.show_reauth)

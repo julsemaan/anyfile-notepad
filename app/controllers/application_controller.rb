@@ -23,6 +23,13 @@ class ApplicationController < ActionController::Base
       session[:afn_lost_changes]=nil
     end
     
+    begin
+      @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
+    rescue 
+      @preferences = Preferences.new
+    end
+
+
   end
   
   def register_redirect_to
@@ -73,6 +80,10 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+ 
+  def commit_preferences
+    cookies[:preferences] = {:value => ActiveSupport::JSON.encode(@preferences.hash), :expires => 1.year.from_now}
+  end  
+ 
 
 end

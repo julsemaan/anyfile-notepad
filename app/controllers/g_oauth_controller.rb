@@ -3,18 +3,13 @@ class GOauthController < ApplicationController
   after_filter :execute_after
   
   def execute_default
-    ## if it's an ajax request
-    #if request.xhr?
-    #  smooth_flow
-    #else
-    #  enforced_flow
-    #end
-        
-    begin
-      @preferences = Preferences.new(ActiveSupport::JSON.decode(cookies[:preferences]))
-    rescue 
-      @preferences = Preferences.new
+    # if it's an ajax request
+    if request.xhr?
+      smooth_flow
+    else
+     enforced_flow
     end
+        
   end
   
   def smooth_flow
@@ -85,7 +80,4 @@ class GOauthController < ApplicationController
 
   end
 
-  def commit_preferences
-    cookies[:preferences] = {:value => ActiveSupport::JSON.encode(@preferences.hash), :expires => 1.year.from_now}
-  end  
 end

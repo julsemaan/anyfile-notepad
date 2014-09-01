@@ -58,7 +58,7 @@ FileExplorerController.prototype.watch_tree = function(){
     this.$.find('#file_tree_loading_message').fadeOut("slow", function(){
       self.activate_resizing()
     })
-    clearInterval(self.watch_tree_job);
+    //self.cache()
   }  
 }
 
@@ -99,7 +99,7 @@ FileExplorerController.prototype.load = function(){
 FileExplorerController.prototype.cache = function(){
   var self = this;
   if(typeof(Storage)!=="undefined"){
-    localStorage.setItem('cached_explorer', this.$.find('#fileTree').html())
+    localStorage.setItem('cached_explorer_2', this.$.find('#fileTree').html())
     this.cached = true;
     return true;
   }
@@ -111,8 +111,8 @@ FileExplorerController.prototype.cache = function(){
 
 FileExplorerController.prototype.load_from_cache = function(){
   var self = this;
-  var cached_data = localStorage.getItem('cached_explorer')
-  if(cached_data != ""){
+  var cached_data = localStorage.getItem('cached_explorer_2')
+  if(cached_data && cached_data != ""){
     this.cached = true;
     this.$.find("#fileTree").height(this.height_pref.getValue())
     this.$.find('#fileTree').html(cached_data)

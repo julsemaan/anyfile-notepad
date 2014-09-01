@@ -85,7 +85,7 @@ if(jQuery) (function($){
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
-							h($(this).attr('rel'));
+							//h($(this).attr('rel'));
 						}
 						return false;
 					});

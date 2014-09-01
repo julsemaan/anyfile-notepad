@@ -1,4 +1,4 @@
-class PreferencesController < GOauthController
+class PreferencesController < ApplicationController 
   def get_update
     @preferences.set_preferences(params)
     commit_preferences

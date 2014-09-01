@@ -35,13 +35,7 @@
           
           <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
           <span class="input-group-btn ">
-            <%= link_to "Save", "javascript:void(0)", :class => "editor_save_button btn btn-primary"%>
-          </span>
-        </div>
-        <div class="input-group ">
-          <%= label_tag :new_revision, "Save as new revision", :class => "form-control", :for => "g_file_new_revision" %>
-          <span class="input-group-addon">
-            <%= check_box_tag :g_file_new_revision %>
+            <%= link_to "Save", "javascript:void(0)", :id => 'editor_save_button', :class => "editor_save_button btn btn-primary"%>
           </span>
         </div>
       </div>
