@@ -9,12 +9,16 @@
           <%= render 'shared/loading_bar' %>
         <% end %>
         <%= message %>
+        <div class="additionnal_message" ></div>
       </div>
       <div class="modal-footer">
       <% if defined?(buttons) %>
         <% buttons.each do |id, value| %>
-            <button id="<%= id %>" type="button" class="btn btn-primary"><Save changes><%= value%></button>
+            <button id="<%= id %>" type="button" class="<%= id %> btn btn-primary"><%= value%></button>
         <% end %>
+      <% end %>
+      <% if defined?(dismiss) && dismiss %>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
       <% end %>
       </div>
     </div>

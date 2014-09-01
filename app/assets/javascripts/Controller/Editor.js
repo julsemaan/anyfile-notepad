@@ -120,6 +120,9 @@ EditorController.prototype.initialize_html = function(){
   })
   //setInterval(function(){self.keep_alive()}, 300000)
 
+  this.$.find('.restart_app').click(function(){
+    window.location.reload()
+  })
 }
 
 
@@ -195,8 +198,6 @@ EditorController.prototype.save = function(){
     }, 500)
   }
   return false;
-
-
 }
 
 EditorController.prototype.set_syntax_mode = function(syntax,save){

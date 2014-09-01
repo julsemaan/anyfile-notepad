@@ -64,9 +64,7 @@ OAuthController.prototype.show_reauth = function(){
 
 OAuthController.prototype.auth_failed = function(){
   $('#auth_failed_modal').modal('show')
-  $('#restart_app').click(function(){
-    window.location.reload()
-  })
+
 }
 
 OAuthController.prototype.check_authed = function(){
@@ -87,7 +85,8 @@ OAuthController.prototype.execute_request = function(request, callback){
       self.do_auth()
     }
     else{
-      alert("There was an error sending the document to Google's servers.\n"+response.error.message+"\nTry again in a few minutes and write on the community if it happens often.");
+      $('#error_modal .add_message').html("We got this message from Google : "+ response.error.message)
+      $('#error_modal').modal('show')
       callback(response)
     }
   });
