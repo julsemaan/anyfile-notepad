@@ -114,7 +114,7 @@ DriveFile.prototype.get_file_data = function(){
 DriveFile.prototype.update = function(new_revision, callback) {
   var self = this;
   this._post_update_callback = callback
-  if (this.did_content_change() ){
+  if (this.did_content_change() || new_revision){
     self.update_data(new_revision, callback)
   }
   else{

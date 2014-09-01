@@ -20,7 +20,6 @@ function EditorController(view, options){
   this.show_minimized = options["show_minimized"]
   this.font_size_pref = options["font_size_pref"]
   this.tab_size_pref = options["tab_size_pref"]
-  this.MAX_FILE_SIZE = options["MAX_FILE_SIZE"]
 
   this.current_theme = options["current_theme"]
 
@@ -105,7 +104,7 @@ EditorController.prototype.initialize_html = function(){
   window.addEventListener("keydown",function (e) {
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
       e.preventDefault();
-      editor_view.execCommand("find")
+      self.open_search()
     }
   })
 
@@ -121,7 +120,7 @@ EditorController.prototype.initialize_html = function(){
   //setInterval(function(){self.keep_alive()}, 300000)
 
   this.$.find('.restart_app').click(function(){
-    window.location.reload()
+    if(confirm("Are you sure ?")) window.location.reload()
   })
 }
 
@@ -162,6 +161,7 @@ EditorController.prototype.post_file_load = function(){
   this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
   this.allow_saving()
   setInterval(function(){self.check_content_changed()}, 100)
+  setInterval(function(){self.auto_save()}, 5000)
 }
 
 EditorController.prototype.reset_options = function(){
@@ -174,11 +174,7 @@ EditorController.prototype.save = function(){
   var self = this;
   var length = this.editor_view.getValue().length
   self.editor_view.focus()
-  if (length > this.MAX_FILE_SIZE){
-      alert("File won't be saved. Sorry :( our infrastructure is not badass enough for files that big.")
-      return false
-  }
-  else if(this.file.title == ""){
+  if(this.file.title == ""){
       alert("File title can't be empty");
       return false
   }
@@ -198,6 +194,22 @@ EditorController.prototype.save = function(){
     }, 500)
   }
   return false;
+}
+
+EditorController.prototype.auto_save = function(){
+  var self = this;
+  if(!this.file.title == "" && this.file.persisted){
+    this.file.set("data", this.editor_view.getValue())
+
+    this.block_saving()
+
+    self.file.update(false, function(response){
+      self.$.find("#file_save_modal").modal("hide")
+      self.reset_options()
+      if(response && !response.error) window.location.hash="#edit/"+self.file.id
+    })
+
+  }
 }
 
 EditorController.prototype.set_syntax_mode = function(syntax,save){
@@ -276,7 +288,7 @@ EditorController.prototype.block_saving = function(){
 
 EditorController.prototype.allow_saving = function(){
   var self = this;
-  this.$.find('.editor_save_button').html("Save")
+  this.$.find('.editor_save_button').html("Saved")
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
   $(window).off('keydown.stop_save')
@@ -300,9 +312,13 @@ EditorController.prototype.check_content_changed = function(){
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
+    if(!this.$.find('.editor_save_button').html() == "Saving..."){
+      this.$.find('.editor_save_button').html("Save")
+    }
   }
   else{
     this.$.find('.editor_save_button').removeClass('btn-warning')
+    this.$.find('.editor_save_button').html("Saved")
   }
 }
 

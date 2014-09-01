@@ -82,7 +82,6 @@ var editor_controller = new EditorController("editor_app", {
   'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
   'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
   'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
-  'MAX_FILE_SIZE': 1048576, 
   'current_theme':'<%= current_theme %>',
   'menu_width_pref' : Preference.find('menu_width', StringPreference),
   'file_explorer': new FileExplorerController("file_explorer_container", {
