@@ -325,7 +325,7 @@ EditorController.prototype.check_content_changed = function(){
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
-    if(!this.$.find('.editor_save_button').html() == "Saving..."){
+    if(!(this.$.find('.editor_save_button').html() == "Saving...")){
       this.$.find('.editor_save_button').html("Save")
     }
   }
