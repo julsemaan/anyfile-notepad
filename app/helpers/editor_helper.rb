@@ -47,7 +47,7 @@ module EditorHelper
   
   def current_theme
     if @preferences.get_preference('theme').nil?
-      return "ace/theme/dawn"
+      return "ace/theme/clouds_midnight"
     else
       return @preferences.get_preference('theme')
     end
