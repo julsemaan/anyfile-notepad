@@ -20,6 +20,7 @@ function EditorController(view, options){
   this.show_minimized = options["show_minimized"]
   this.font_size_pref = options["font_size_pref"]
   this.tab_size_pref = options["tab_size_pref"]
+  this.saw_v2_notice_pref = options["saw_v2_notice_pref"]
 
   this.current_theme = options["current_theme"]
 
@@ -122,6 +123,18 @@ EditorController.prototype.initialize_html = function(){
   this.$.find('.restart_app').click(function(){
     if(confirm("Are you sure ?")) window.location.reload()
   })
+
+  if(!this.saw_v2_notice_pref.getValue()){
+    this.$.find('#v2_notice_modal').modal('show')
+    this.$.find('#agree_v2_notice').click(function(){
+      self.saw_v2_notice_pref.setValue(true, self, self.show_reauth)
+      self.$.find('#v2_notice_modal').modal('hide')
+    })
+    this.$.find('#disagree_v2_notice').click(function(){
+      window.location = "https://anyfile-notepad.herokuapp.com"
+    })
+  }
+
 }
 
 

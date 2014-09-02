@@ -6,6 +6,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}, :dismiss => true} %>
 <%= render 'file_info' %>
+<%= render :partial => 'v2_notice_modal' %>
 
 <script>
    $("#app_load_modal").modal('show');
@@ -82,6 +83,7 @@ var editor_controller = new EditorController("editor_app", {
   'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
   'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
   'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
+  'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
   'current_theme':'<%= current_theme %>',
   'menu_width_pref' : Preference.find('menu_width', StringPreference),
   'file_explorer': new FileExplorerController("file_explorer_container", {
