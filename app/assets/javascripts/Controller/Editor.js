@@ -34,6 +34,8 @@ function EditorController(view, options){
     'syntaxes':new RestAdapter({model:Syntax, suffix:'.json'}),
   }
 
+  this.auto_save_interval;
+
   this.initialize_html()
 }
 
@@ -170,11 +172,18 @@ EditorController.prototype.edit = function(id){
 
 EditorController.prototype.post_file_load = function(){
   var self = this;
+  if(unescape(encodeURIComponent(self.file.data)) != this.file.data){
+    alert("This file has an unknown encoding to this app.\nSome characters may be corrupted and the file may lose parts of it's encoding when saved.\nUntil you change something your file is safe.")
+  }
   this.editor_view.getSession().setValue(this.file.data, -1)
+  this.file.data = this.editor_view.getSession().getValue()
+  this.file.data_saved = this.editor_view.getSession().getValue()
+
   this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
   this.allow_saving()
-  setInterval(function(){self.check_content_changed()}, 100)
-  setInterval(function(){self.auto_save()}, 5000)
+  clearInterval(this.check_content_changed_interval)
+  this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
+  this.activate_auto_save()
 }
 
 EditorController.prototype.reset_options = function(){
@@ -207,6 +216,17 @@ EditorController.prototype.save = function(){
     }, 500)
   }
   return false;
+}
+
+EditorController.prototype.activate_auto_save = function(){
+  var self = this
+  this.deactivate_auto_save()
+  self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+}
+
+EditorController.prototype.deactivate_auto_save = function(){
+  var self = this
+  clearInterval(this.auto_save_interval)
 }
 
 EditorController.prototype.auto_save = function(){

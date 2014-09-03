@@ -5,6 +5,7 @@ function EditorRouter(controller){
   this.load_models(function(){
     if(self.controller.post_app_load) self.controller.post_app_load()
     $(window).bind('hashchange', function() {
+      self.controller.deactivate_auto_save()
       self.route()
     });
     self.route()
