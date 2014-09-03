@@ -69,7 +69,7 @@ EditorController.prototype.initialize_html = function(){
 
 
   $(window).bind('beforeunload',function(){
-    if(!self.safe_to_quit || self.file.did_content_change()){
+    if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return "You have unsaved changes or your file is still being saved. You will lose your changes"
     }
     if(!self.is_ready_to_submit() && !self.skip_clearance){
