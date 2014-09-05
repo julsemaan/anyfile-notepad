@@ -22,7 +22,7 @@ function EditorController(view, options){
   this.tab_size_pref = options["tab_size_pref"]
   this.saw_v2_notice_pref = options["saw_v2_notice_pref"]
 
-  this.current_theme = options["current_theme"]
+  this.theme_pref = options["theme_pref"]
 
   this.file_explorer = options["file_explorer"]
 
@@ -111,10 +111,14 @@ EditorController.prototype.initialize_html = function(){
     }
   })
 
+  this.initial_theme = "ace/theme/clouds_midnight"
+  if(this.theme_pref.getValue()){
+    this.initial_theme = this.theme_pref.getValue()
+  }
   setInterval(function(){self.set_background_color_from_theme()}, 500)
-  this.editor_view.setTheme(this.current_theme)
+  this.editor_view.setTheme(this.initial_theme)
   this.set_background_color_from_theme()
-  $(document.getElementById("theme_"+this.current_theme)).addClass("btn-primary")
+  $(document.getElementById("theme_"+this.initial_theme)).addClass("btn-primary")
 
   this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
   this.$.find('#cancel_reauth').click(function(){
@@ -437,27 +441,20 @@ EditorController.prototype.open_replace = function(){
 
 EditorController.prototype.select_theme = function(name){
   var self = this;
-  this.ajax_defered_waiting["select_theme"] = true
-  $(document.getElementById("theme_"+this.current_theme)).removeClass("btn-primary")
-  this.current_theme = name
-  this.editor_view.setTheme(this.current_theme)
+  var current_theme = this.theme_pref.getValue()
+  if(!this.theme_pref.getValue()){
+    current_theme = this.initial_theme
+  }
+  console.log(current_theme)
+  $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
+
+  this.theme_pref.setValue(name, self, self.show_reauth)
+
+  this.editor_view.setTheme(this.theme_pref.getValue())
   this.set_background_color_from_theme()
   var check = this.$.find('#theme_check').detach()
   $(document.getElementById("theme_"+name)).addClass("btn-primary")
   
-  $.ajax(
-  {
-    url: '/preferences/get_update?theme='+name, 
-    statusCode: {
-      403: function(data){
-        self.ajax_defered_waiting['select_theme'] = false
-        self.show_reauth()
-      },
-      200: function(data){
-        self.ajax_defered_waiting['select_theme'] = false
-      }
-    }
-  })
 }
    
 EditorController.prototype.set_background_color_from_theme = function(){
