@@ -28,6 +28,8 @@ function EditorController(view, options){
 
   this.menu_width_pref = options["menu_width_pref"]
 
+  this.flash = options["flash"]
+
   this.models = {
     'extensions':new RestAdapter({model:Extension, suffix:'.json'}),
     'mime_types':new RestAdapter({model:MimeType, suffix:'.json'}),
@@ -152,6 +154,7 @@ EditorController.prototype.post_app_load = function(){
 
 EditorController.prototype.new = function(folder_id){
   var self = this
+  this.flash.empty()
   this.file = new DriveFile(undefined, {
     uid : "file",
     folder_id : folder_id,
@@ -163,13 +166,20 @@ EditorController.prototype.new = function(folder_id){
 
 EditorController.prototype.edit = function(id){
   var self = this
+  this.flash.empty()
   this.$.find("#file_load_modal").modal('show');
   this.file_id = id
   this.file = new DriveFile(id, {
     uid : "file",
-    loaded : function(){
-      self.post_file_load()
+    loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
+      if(!error){
+        self.post_file_load()
+      }
+      else{
+        self.new("root")
+        self.flash.error(error)
+      }
     }
   })
 }
@@ -177,7 +187,7 @@ EditorController.prototype.edit = function(id){
 EditorController.prototype.post_file_load = function(){
   var self = this;
   if(unescape(encodeURIComponent(self.file.data)) != this.file.data){
-    alert("This file has an unknown encoding to this app.\nSome characters may be corrupted and the file may lose parts of it's encoding when saved.\nUntil you change something your file is safe.")
+    this.flash.warning("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe.")
   }
   this.editor_view.getSession().setValue(this.file.data, -1)
   this.file.data = this.editor_view.getSession().getValue()
@@ -188,6 +198,13 @@ EditorController.prototype.post_file_load = function(){
   clearInterval(this.check_content_changed_interval)
   this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
   this.activate_auto_save()
+
+  if(this.file.persisted){
+    this.flash.success("File loaded", 3)
+  }
+  else{
+    this.flash.success("Creating new file")
+  }
 }
 
 EditorController.prototype.reset_options = function(){
@@ -201,7 +218,7 @@ EditorController.prototype.save = function(){
   var length = this.editor_view.getValue().length
   self.editor_view.focus()
   if(this.file.title == ""){
-      alert("File title can't be empty");
+      this.flash.error("File title can't be empty", 5);
       return false
   }
   else{
@@ -317,7 +334,7 @@ EditorController.prototype.block_saving = function(){
   $(window).off('keydown.save')
   $(window).on('keydown.stop_save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-    //alert("This file is already being saved. Calm down.")
+    this.flash.warning("This file is already being saved. Calm down.")
     event.preventDefault();
     return false;
   });  
@@ -419,11 +436,11 @@ EditorController.prototype.toggle_cache_file_explorer = function(){
   this.file_explorer.cached = !this.file_explorer.cached;
   if(this.file_explorer.cached && this.file_explorer.cache()){
     this.$.find('#cache_file_explorer_check').show()
-    alert("This option will take effect once you reload the app.")
+    this.flash.warning("This option will take effect once you reload the app.", 5)
   }
   else{
     this.$.find('#cache_file_explorer_check').hide()
-    alert("This option will take effect once you reload the app.")
+    this.flash.warning("This option will take effect once you reload the app.", 5)
   }
 
   Preference.find('cache_file_explorer_enabled', BooleanPreference).setValue(this.file_explorer.cached, self, self.show_reauth)

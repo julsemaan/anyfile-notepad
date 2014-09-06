@@ -8,6 +8,8 @@ function FileExplorerController(view, options){
   this.reload_url = window.location.href;
   this.$ = $("#"+view)
   this.current_height;
+
+  this.flash = options["flash"]
   
   this.watch_tree_job = setInterval(function(){self.watch_tree()},1000)
 
@@ -104,7 +106,7 @@ FileExplorerController.prototype.cache = function(){
     return true;
   }
   else{
-    alert("localStorage is not supported in this browser. This functionnality cannot work.")
+    this.flash.error("localStorage is not supported in this browser. This functionnality cannot work.")
     return false;
   }
 }

@@ -7,6 +7,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}, :dismiss => true} %>
 <%= render 'file_info' %>
 <%= render :partial => 'v2_notice_modal' %>
+<%= render :partial => 'flash' %>
 
 <script>
    $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static'});
@@ -101,12 +102,14 @@ oauth_controller.add_to_queue(function(){
         'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
         'theme_pref': Preference.find('theme', StringPreference),
         'menu_width_pref' : Preference.find('menu_width', StringPreference),
+        'flash' : new FlashController('editor_flash'),
         'file_explorer': new FileExplorerController("file_explorer_container", {
           'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
           'height_pref' : Preference.find('file_explorer_height', StringPreference),
           }),
         })
       editor_controller.file_explorer.parent = editor_controller 
+      editor_controller.file_explorer.flash = editor_controller.flash
       editor_controller.oauth_controller = oauth_controller;
 
       new EditorRouter(editor_controller)

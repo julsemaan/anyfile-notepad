@@ -94,8 +94,8 @@ DriveFile.prototype.get_file_data = function(){
     self.set("title_saved", self.title)
 
     if(!resp.downloadUrl){
-      alert("Can't find your file. This is probably a Google document or another unsupported file.")
-      window.location = "app#new"
+      self.loaded("Can't find your file. This is probably a Google document or another unsupported file.")
+      return
     }
 
     $.ajax({
@@ -109,9 +109,8 @@ DriveFile.prototype.get_file_data = function(){
           self.loaded()
         }
         else{
-          alert("Major fuckup. The file couldn't load. If this happens again, file a bug on the community.");
-          window.location = "app#new"
-          location.reload()
+          self.loaded("Major fuckup. The file couldn't load. If this happens again, file a bug on the community.");
+          return
         }
       },
     })
