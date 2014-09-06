@@ -84,7 +84,6 @@ Preferences.prototype.set_hash = function(hash){
 Preferences.prototype.validate_defaults = function(){
   for(var key in this.PREFERENCES){
     if(!this.preferences.hasOwnProperty(key) ){
-      console.log("adding"+key)
       this.preferences[key] = this.PREFERENCES[key]
     }
   }

@@ -13,9 +13,7 @@ Preference.getBackend = function(){
 
 Preference.find = function(key, valueType){
   var data = key.split("[")
-  console.log(Preference.getBackend())
   if(data.length == 1){
-    console.log(key+" "+Preference.getBackend()[key])
     return new Preference({
       key: key, 
       value: new valueType(Preference.getBackend()[key])

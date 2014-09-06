@@ -22,12 +22,20 @@ OAuthController.prototype.do_auth = function(){
       self.post_auth(auth_result)
     }
     else{
-      //Do it without the immediate
-      gapi.auth.authorize({client_id: self.client_id, scope: self.scopes}, function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
+      $('#auth_modal').modal('show')
+      $('#start_g_oauth').click(function(){
+        self.auth_popup()
+      })
     }
   
   });
 
+}
+
+OAuthController.prototype.auth_popup = function(){
+  var self = this
+  //Do it without the immediate
+  gapi.auth.authorize({client_id: self.client_id, scope: self.scopes}, function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
 }
 
 OAuthController.prototype.post_auth = function(auth_result){
@@ -38,6 +46,7 @@ OAuthController.prototype.post_auth = function(auth_result){
       self.ready()
     })
     
+    $('#auth_modal').modal('hide')
     //cool it worked
   }
   else{
@@ -63,7 +72,7 @@ OAuthController.prototype.show_reauth = function(){
 }
 
 OAuthController.prototype.auth_failed = function(){
-  $('#auth_failed_modal').modal('show')
+  //$('#auth_failed_modal').modal('show')
 
 }
 

@@ -26,6 +26,7 @@
       oauth_controller.init()
     }
   </script>
+  <%= render :partial => 'shared/modal', :locals => {:id => "auth_modal", :title => "You need to authorize this app to access your Google Drive", :message => "Without this the app is useless to you.", :with_bar => false, :buttons => {'start_g_oauth' => 'Authorize!'} } %>
 
   <%= javascript_include_tag    "//apis.google.com/js/client.js?onload=oauth_loaded" %>
 
