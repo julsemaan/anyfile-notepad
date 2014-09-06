@@ -75,6 +75,10 @@ class Jqueryfiletree
     folders = []
     files = []
 
+    if children['items'].nil?
+      return {:folders => folders, :files => files}
+    end
+
     children['items'].each do |child|
       if child['mimeType'] == FOLDER_MIME_TYPE
         folders << GFolder.new(:id => child['id'], :title => child['title'], :persisted => true)
