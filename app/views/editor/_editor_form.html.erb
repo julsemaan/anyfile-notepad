@@ -9,7 +9,8 @@
 <%= render :partial => 'v2_notice_modal' %>
 
 <script>
-   $("#app_load_modal").modal('show');
+   $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static'});
+   $('.modal-backdrop.fade.in').css('opacity', '1.0')
 </script>
 
 <div style="position:absolute;right:5px;top:5px;">
@@ -81,27 +82,38 @@
 
 </div>
 <script type="text/javascript">
-var editor_controller = new EditorController("editor_app", {
-  'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
-  'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
-  'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
-  'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
-  'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
-  'theme_pref': Preference.find('theme', StringPreference),
-  'menu_width_pref' : Preference.find('menu_width', StringPreference),
-  'file_explorer': new FileExplorerController("file_explorer_container", {
-    'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
-    'height_pref' : Preference.find('file_explorer_height', StringPreference),
-  }),
-})
-editor_controller.file_explorer.parent = editor_controller 
+
 
 var oauth_controller = new OAuthController({
   scopes : "<%= @gapi.get_scopes.join(' ') %>" 
 });
 
-editor_controller.oauth_controller = oauth_controller;
-oauth_controller.add_to_queue(function(){new EditorRouter(editor_controller)})
+var user_preferences
+var editor_controller
+oauth_controller.add_to_queue(function(){
+  user_preferences = new Preferences(
+    function(){
+      editor_controller = new EditorController("editor_app", {
+        'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
+        'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
+        'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
+        'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
+        'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
+        'theme_pref': Preference.find('theme', StringPreference),
+        'menu_width_pref' : Preference.find('menu_width', StringPreference),
+        'file_explorer': new FileExplorerController("file_explorer_container", {
+          'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
+          'height_pref' : Preference.find('file_explorer_height', StringPreference),
+          }),
+        })
+      editor_controller.file_explorer.parent = editor_controller 
+      editor_controller.oauth_controller = oauth_controller;
+
+      new EditorRouter(editor_controller)
+
+    }
+  )
+})
 
 
 //editor_controller.initialize_html() 

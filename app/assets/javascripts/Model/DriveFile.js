@@ -5,6 +5,7 @@ function DriveFile(id, options){
   this.set("id", id)
   this.set("folder_id", options["folder_id"])
   this.set("loaded", options["loaded"])
+  this.set("fuck_syntax", options["fuck_syntax"])
   this.set("title", "")
   this.set("title_saved", "")
   this.set("data", "")
@@ -51,6 +52,8 @@ DriveFile.prototype.extension = function(){
 
 DriveFile.prototype.compute_syntax = function(){
   var self = this
+  if(this.fuck_syntax) return
+
   syntax_pref = Preference.find('syntaxes['+this.extension()+']', StringPreference)
   if(!syntax_pref.is_empty()){
     self.set('syntax', syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()}))
@@ -90,6 +93,11 @@ DriveFile.prototype.get_file_data = function(){
     self.set("title", resp.title)
     self.set("title_saved", self.title)
 
+    if(!resp.downloadUrl){
+      alert("Can't find your file. This is probably a Google document or another unsupported file.")
+      window.location = "app#new"
+    }
+
     $.ajax({
       url : resp.downloadUrl,
       headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
@@ -107,6 +115,7 @@ DriveFile.prototype.get_file_data = function(){
         }
       },
     })
+
   };
   oauth_controller.execute_request(request, callback)
 }

@@ -3,13 +3,19 @@ function Preference(ledata){
 }
 Preference.prototype = new Model()
 
-Preference.getBackend = function(){
+/*Preference.getBackend = function(){
   return JSON.parse(unescape(getCookie("preferences")));
+}*/
+
+Preference.getBackend = function(){
+  return user_preferences.get_hash()
 }
 
 Preference.find = function(key, valueType){
   var data = key.split("[")
+  console.log(Preference.getBackend())
   if(data.length == 1){
+    console.log(key+" "+Preference.getBackend()[key])
     return new Preference({
       key: key, 
       value: new valueType(Preference.getBackend()[key])
@@ -40,7 +46,7 @@ Preference.prototype.getValue = function(){
   return this.value.valueOf()
 }
 
-Preference.prototype.setValue = function(value, locker, fail_action){
+/*Preference.prototype.setValue = function(value, locker, fail_action){
   var self = this;
   var locking_key = 'setting_'+value
   this.set("value", value)
@@ -60,4 +66,21 @@ Preference.prototype.setValue = function(value, locker, fail_action){
         }
       }
     }) 
+}*/
+
+Preference.prototype.setValue = function(value, locker, fail_action){
+  var self = this;
+  var locking_key = 'setting_'+value
+  this.set("value", value)
+  
+  locker.set_wait(locking_key, true)
+
+  var prefs = Preference.getBackend()
+  prefs[this.key] = this.value.toString()
+  user_preferences.set_hash(prefs)
+  user_preferences.commit(function(){
+    locker.set_wait(locking_key, false)
+  })
+  
+
 }

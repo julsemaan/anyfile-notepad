@@ -5,3 +5,7 @@ function BooleanPreference(value){
 BooleanPreference.prototype.valueOf = function(){
   return this.value
 }
+
+BooleanPreference.prototype.toString = function(){
+  return this.value ? "true" : "false"
+}
