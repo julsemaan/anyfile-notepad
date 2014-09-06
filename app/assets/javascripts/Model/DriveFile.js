@@ -1,11 +1,7 @@
 function DriveFile(id, options){
   var self = this;
-  this.uid = options["uid"] || "DriveFile"
-  this.install_binder()
+  Model.call(this, options) 
   this.set("id", id)
-  this.set("folder_id", options["folder_id"])
-  this.set("loaded", options["loaded"])
-  this.set("fuck_syntax", options["fuck_syntax"])
   this.set("title", "")
   this.set("title_saved", "")
   this.set("data", "")
@@ -18,30 +14,12 @@ function DriveFile(id, options){
   else{
     this.compute_syntax() 
   }
+
 }
 
-DriveFile.prototype.install_binder = function(){
-  var self = this
-  var binder = new DataBinder( this.uid )
+DriveFile.prototype = new Model()
 
-  this._binder = binder
-
-  // Subscribe to the PubSub
-  binder.on( this.uid + ":change", function( evt, attr_name, new_val, initiator ) {
-    if ( initiator !== self ) {
-      self.set( attr_name, new_val );
-    }
-  });
-}
-
-// The attribute setter publish changes using the DataBinder PubSub
-DriveFile.prototype.set = function( attr_name, val ) {
-  this[ attr_name ] = val;
-  this._binder.trigger( this.uid + ":change", [ attr_name, val, this ] );
-}
-
-DriveFile.prototype.get = function( attr_name ) {
-  return this[ attr_name ];
+DriveFile.prototype.init = function(){
 }
 
 DriveFile.prototype.extension = function(){

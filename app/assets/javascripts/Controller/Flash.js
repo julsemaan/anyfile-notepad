@@ -9,15 +9,6 @@ FlashController.prototype.get_alert_id = function(){
   return "flash_"+this.id+"_"+this.count;
 }
 
-FlashController.prototype.adjust_height = function(){
-  total_height = 0
-  this.view.children().each(function(child){
-    console.log(child)
-    total_height += child.outerHeight()
-  })
-  console.log(total_height)
-}
-
 FlashController.prototype.add = function(text, type, timeout){
   var alert_id = this.get_alert_id()
   var html = "<div style='text-align:left' class='alert alert-"+type+"' data-flash-id="+alert_id+"><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button><p>"+text+"</p></div>"
