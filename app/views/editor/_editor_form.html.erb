@@ -59,9 +59,9 @@
       <%= render 'shared/file_explorer', :with_dropdown => true %>
     </div>
     
-    <%= render 'shared/editor_message' %>
     <div class="alert alert-warning" style="text-align:center">
-      <a href="https://anyfile-notepad.herokuapp.com"> You're using the ALPHA version of Anyfile Notepad. Click here to go back to the normal version </a>
+      <div style="border-bottom:1px dotted black"><a href="https://anyfile-notepad.herokuapp.com"  > You're using the BETA version of Anyfile Notepad. Click here to go back to the normal version </a></div>
+      <h4 style="padding-top:5px">This will be the final version before bug fixes. It is really important that you report any bugs you find by <a href="">clicking here</a></h4>
     </div>
   </div>
 </div>
@@ -112,11 +112,18 @@ oauth_controller.add_to_queue(function(){
       editor_controller.file_explorer.flash = editor_controller.flash
       editor_controller.oauth_controller = oauth_controller;
 
+      <% unless browser.chrome? %>
+      $(document).ready(function(){
+        editor_controller.flash.sticky_warning("The browser you're using is not officially supported. <br/> Issues you may experience with the app may be caused by it. <br/> For the best experience use Chrome")
+      })
+      <% end %>
+
       new EditorRouter(editor_controller)
 
     }
   )
 })
+
 
 
 //editor_controller.initialize_html() 

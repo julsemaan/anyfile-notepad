@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :capture_auth_and_commands
   
   def capture_auth_and_commands
+
     @gapi = GApi.new
 
     capture_auth_code
@@ -38,6 +39,8 @@ class ApplicationController < ActionController::Base
     end
   end
   
+
+
   def capture_auth_code
     if params[:code]
       begin
