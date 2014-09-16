@@ -3,10 +3,6 @@ function Preference(ledata){
 }
 Preference.prototype = new Model()
 
-/*Preference.getBackend = function(){
-  return JSON.parse(unescape(getCookie("preferences")));
-}*/
-
 Preference.getBackend = function(){
   return user_preferences.get_hash()
 }
@@ -44,28 +40,6 @@ Preference.prototype.getValue = function(){
   return this.value.valueOf()
 }
 
-/*Preference.prototype.setValue = function(value, locker, fail_action){
-  var self = this;
-  var locking_key = 'setting_'+value
-  this.set("value", value)
-  
-  locker.set_wait(locking_key, true)
-  var url = '/preferences/get_update?'+this.key+'='+String(this.value);
-   $.ajax(
-    {
-      url: url,
-      statusCode: {
-        403: function(data){
-          locker.set_wait(locking_key, false)
-          fail_action()
-        },
-        200: function(data){
-          locker.set_wait(locking_key, false)
-        }
-      }
-    }) 
-}*/
-
 Preference.prototype.setValue = function(value, locker, fail_action){
   var self = this;
   var locking_key = 'setting_'+value
@@ -79,6 +53,4 @@ Preference.prototype.setValue = function(value, locker, fail_action){
   user_preferences.commit(function(){
     locker.set_wait(locking_key, false)
   })
-  
-
 }

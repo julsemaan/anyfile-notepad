@@ -21,34 +21,21 @@
 <div id="editor_menu_container" >
   <div id="editor_menu" class="g_file_menu" >
 
-    <%# form_tag :g_file, :remote=> true, :html => {:class => :editor_form, :multipart => true} do |f| %>
     <form accept-charset="UTF-8" action="" data-remote="true" html="{:class=>:editor_form, :multipart=>true}" method="post"> 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <%= render 'editor_menu' %>
+        </div>
         
-      <%= render 'editor_menu' %>
-     
-      
-
-      </div>
-      
-      <div class="panel-body">
-      
-        
-        <div class="file_title input-group">
-          
-          <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
-          <span class="input-group-btn ">
-            <%= link_to "Save", "javascript:void(0)", :id => 'editor_save_button', :class => "editor_save_button btn btn-primary"%>
-          </span>
+        <div class="panel-body">
+          <div class="file_title input-group">
+            <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
+            <span class="input-group-btn ">
+              <%= link_to "Save", "javascript:void(0)", :id => 'editor_save_button', :class => "editor_save_button btn btn-primary"%>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div id="editor_errors">
-      <%# render 'shared/error_messages', :object => f.object %>
-    </div>
-    
     </form>
 
     <div id="editor_flash">
@@ -73,9 +60,7 @@
 </div>
 
 <div class="g_file_editor">
-  
   <div id="editor"></div>
-
 </div>
 
 <%= render 'shared/g_reauth'%>
@@ -83,7 +68,6 @@
 
 </div>
 <script type="text/javascript">
-
 
 var oauth_controller = new OAuthController({
   scopes : "<%= @gapi.get_scopes.join(' ') %>" 
