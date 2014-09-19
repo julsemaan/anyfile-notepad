@@ -68,7 +68,6 @@ class Jqueryfiletree
     request = Net::HTTP::Get.new(uri.request_uri)
     request.add_field 'Authorization', "Bearer #{@access_token}"
     response = http.request(request)
-    puts response.body
 
     children = ActiveSupport::JSON.decode(response.body)
 
