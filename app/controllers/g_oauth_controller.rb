@@ -76,8 +76,6 @@ class GOauthController < ApplicationController
     session[:expires_in] = api_client.authorization.expires_in
     session[:issued_at] = api_client.authorization.issued_at
 
-    commit_preferences
-
   end
 
 end
