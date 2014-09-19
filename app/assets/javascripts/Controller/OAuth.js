@@ -1,7 +1,7 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "249464630588-o75jk2pev47r0q08kmo8ebfluid5ednf.apps.googleusercontent.com"
-  this.api_key = "AIzaSyATcBRP-XTVBvGSKstwqUg1x23CEufr310"
+  this.client_id = "449833954230-k0jhblecv85a48vc4e81pf1pf3sk25fe.apps.googleusercontent.com"
+  this.api_key = "AIzaSyDYsvQPvcYLI8RzIW28XSFZHD0HUjDX5YE"
   this.scopes = options["scopes"]
   this.authed = false
   //this.init()
