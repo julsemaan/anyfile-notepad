@@ -53,11 +53,14 @@ EditorRouter.prototype.route = function(){
     state = JSON.parse(decodeURI(this.params['state']))
     console.log(state)
     if(state['action'] == 'open'){
-      window.location = "app#edit/"+state['ids'][0]
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#edit/"+state['ids'][0]);
+      this.controller.edit(state['ids'][0])
       return
     }
     else if(state['action'] == 'create'){
-      window.location = "app#new/"+state['folderId']
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#new/"+state['folderId']);
+      this.controller.new(state['folderId'])
+      return
     }
   }
   try{
