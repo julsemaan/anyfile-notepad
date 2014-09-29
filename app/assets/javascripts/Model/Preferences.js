@@ -70,7 +70,13 @@ Preferences.prototype.get_hash = function(){
   if(!this.ready){
     throw "Preferences not loaded yet"
   }
+  try{
   this.preferences = JSON.parse(this.prefs_file.data)
+  }catch(e){
+    alert("Your preferences were detected as corrupted.\nWe'll reset them to default.\nPlease file a bug report explaning how it happened on our community")
+    this.set_hash({})
+    this.commit()
+  }
   this.validate_defaults()
   this.prefs_file.data = JSON.stringify(this.preferences)
   return this.preferences
