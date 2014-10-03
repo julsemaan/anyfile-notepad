@@ -87,7 +87,8 @@ DriveFile.prototype.get_file_data = function(){
           self.loaded()
         }
         else{
-          self.loaded("Major fuckup. The file couldn't load. If this happens again, file a bug on the community.");
+          console.log(data)
+          self.loaded("Major fuckup. The file couldn't load. Response was : "+status+". If this happens again, file a bug on the community.");
           return
         }
       },
