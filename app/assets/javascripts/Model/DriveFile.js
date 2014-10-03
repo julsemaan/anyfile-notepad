@@ -80,7 +80,7 @@ DriveFile.prototype.get_file_data = function(){
       url : resp.downloadUrl,
       headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
       complete : function(data, status){
-        if(status == "success"){
+        if(data.status == 200){
           self.set("data", data.responseText)
           self.set("data_saved", self.data)
           self.compute_syntax()
