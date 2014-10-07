@@ -1,6 +1,7 @@
 function EditorRouter(controller){
   var self = this
   this.controller = controller
+  
 
   this.load_models(function(){
     if(self.controller.post_app_load) self.controller.post_app_load()
@@ -15,15 +16,32 @@ function EditorRouter(controller){
 EditorRouter.prototype.load_models = function(callback){
   var self = this
   for(var model in this.controller.models){
+    //this is why programmers hate javascript
+    (function(){
+      var m2 = model
+      if(!self.controller.models[model].loaded){
+        self.controller.models[model].load(function(){self.post_model_load(m2, callback)})
+      }
+    })()
+  }
+}
+
+EditorRouter.prototype.post_model_load = function(model, callback){
+  var self = this
+  window[model] = self.controller.models[model]
+  if(this.check_models_loaded()){
+    callback()
+  }
+}
+
+EditorRouter.prototype.check_models_loaded = function(){
+  var self = this
+  for(var model in this.controller.models){
     if(!self.controller.models[model].loaded){
-      self.controller.models[model].load(function(){
-        window[model] = self.controller.models[model]
-        self.load_models(callback)
-      })
-      return
+      return false;
     }
   }
-  callback()
+  return true;
 }
 
 EditorRouter.prototype.parse_hash_url = function(){
