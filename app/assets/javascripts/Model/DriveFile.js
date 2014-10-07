@@ -6,6 +6,8 @@ function DriveFile(id, options){
   this.set("title_saved", "")
   this.set("data", "")
   this.set("data_saved", "")
+  this.set("_tmp_title_saved", "")
+  this.set("_tmp_data_saved", "")
   this.set("_post_update_callback")
   if(this.id){
     this.persisted = true
@@ -135,6 +137,9 @@ DriveFile.prototype.update_data = function(new_revision, callback){
   const delimiter = "\r\n--" + boundary + "\r\n";
   const close_delim = "\r\n--" + boundary + "--";
 
+  this.set("_tmp_title_saved", this.title)
+  this.set("_tmp_data_saved", this.data)
+
   var data_blob = new Blob([this.data])
 
   var reader = new FileReader();
@@ -184,8 +189,8 @@ DriveFile.prototype.update_data = function(new_revision, callback){
           self.set("persisted", true)
           self.set("id", file.id)
         }
-        self.set("title_saved", self.title)
-        self.set("data_saved", self.data)
+        self.set("title_saved", self._tmp_title_saved)
+        self.set("data_saved", self._tmp_data_saved)
       }
       callback(file)
     });
