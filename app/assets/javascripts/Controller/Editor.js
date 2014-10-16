@@ -132,17 +132,6 @@ EditorController.prototype.initialize_html = function(){
     if(confirm("Are you sure ?")) window.location.reload()
   })
 
-  if(!this.saw_v2_notice_pref.getValue()){
-    this.$.find('#v2_notice_modal').modal('show')
-    this.$.find('#agree_v2_notice').click(function(){
-      self.saw_v2_notice_pref.setValue(true, self, self.show_reauth)
-      self.$.find('#v2_notice_modal').modal('hide')
-    })
-    this.$.find('#disagree_v2_notice').click(function(){
-      window.location = "https://anyfile-notepad.herokuapp.com"
-    })
-  }
-
 }
 
 
