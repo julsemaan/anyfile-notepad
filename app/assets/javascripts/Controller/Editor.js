@@ -132,6 +132,18 @@ EditorController.prototype.initialize_html = function(){
     if(confirm("Are you sure ?")) window.location.reload()
   })
 
+  if(!Preference.find('agree_terms', BooleanPreference).getValue()){
+    $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
+    $('.modal-backdrop.fade.in').css('opacity', '1.0')
+    $('#agree_terms').click(function(){
+      $("#terms_modal").modal('hide')
+      Preference.find("agree_terms", BooleanPreference).setValue(true, self, self.show_reauth)
+    })
+    $('#disagree_terms').click(function(){
+      window.location.href = "http://www.google.com"
+    })
+  }
+
 }
 
 

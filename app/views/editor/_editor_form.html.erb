@@ -7,6 +7,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}, :dismiss => true} %>
 <%= render 'file_info' %>
 <%= render :partial => 'v2_notice_modal' %>
+<%= render :partial => 'terms' %>
 <%= render :partial => 'flash' %>
 
 <script>

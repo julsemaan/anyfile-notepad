@@ -9,6 +9,7 @@ function Preferences(loaded){
     'file_explorer_height' : "300px", 
     'menu_width' : '280px',
     'saw_v2_notice' : 'false',
+    'agree_terms' : 'false',
   }
   
   this.HASH_PREFERENCES = [
