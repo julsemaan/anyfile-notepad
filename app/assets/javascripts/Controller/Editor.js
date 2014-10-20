@@ -12,8 +12,8 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"130px"}
-  this.EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"130px"}
+  this.EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"0px"}
+  this.EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"0px"}
   this.metrics = null;
 
   this.word_wrap_pref = options["word_wrap_pref"]
