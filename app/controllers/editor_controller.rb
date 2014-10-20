@@ -3,7 +3,7 @@ class EditorController < ApplicationController
   before_filter :check_browser
 
   def check_browser
-    if browser.ie? || !browser.modern?
+    if !browser.modern?
       redirect_to '/upgrade.html'      
     elsif browser.safari? && browser.version < '6'
       redirect_to '/upgrade.html'
