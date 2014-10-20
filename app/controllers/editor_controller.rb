@@ -15,4 +15,10 @@ class EditorController < ApplicationController
     render 'new'
   end
 
+  def print 
+    @title = params[:title]
+    @content = params[:content]    
+    render 'show'
+  end
+
 end

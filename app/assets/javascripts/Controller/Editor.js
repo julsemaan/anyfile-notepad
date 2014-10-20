@@ -214,6 +214,32 @@ EditorController.prototype.reset_options = function(){
   this.allow_saving();
 }
 
+EditorController.prototype.print = function(){
+  var form = document.createElement("form");
+  form.setAttribute("method", "post");
+  form.setAttribute("action", "/app/print");
+
+  form.setAttribute("target", "view");
+
+  var hiddenField = document.createElement("input"); 
+  hiddenField.setAttribute("type", "hidden");
+  hiddenField.setAttribute("name", "content");
+  hiddenField.setAttribute("value", this.file.data);
+  form.appendChild(hiddenField);
+
+  hiddenField = document.createElement("input"); 
+  hiddenField.setAttribute("type", "hidden");
+  hiddenField.setAttribute("name", "title");
+  hiddenField.setAttribute("value", this.file.title);
+  form.appendChild(hiddenField);
+
+  document.body.appendChild(form);
+
+  window.open('', 'view');
+
+  form.submit();
+}
+
 EditorController.prototype.save = function(){
   var self = this;
   var length = this.editor_view.getValue().length
