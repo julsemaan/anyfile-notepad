@@ -18,10 +18,10 @@ AnyfileNotepad::Application.routes.draw do
   match 'g_api/welcome' => 'g_api#welcome'
   match 'g_oauth/keep_alive' => 'g_oauth#keep_alive'
   
-  match 'editor/new/' => 'editor#new'
-  match 'editor/new/:folder_id' => 'editor#new'
-  match '/editor/edit' => 'editor#new'
-  match 'editor/edit/:id' => 'editor#edit'
+  match 'editor/new/' => 'editor#app'
+  match 'editor/new/:folder_id' => 'editor#app'
+  match '/editor/edit' => 'editor#app'
+  match 'editor/edit/:id' => 'editor#app'
   match '/app' => 'editor#app'
   match '/app/print' => 'editor#print'
   
