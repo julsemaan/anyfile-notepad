@@ -359,9 +359,9 @@ EditorController.prototype.block_saving = function(){
   this.$.find('.editor_save_button').unbind('click')
   this.safe_to_quit = false
   $(window).off('keydown.save')
-  $(window).on('keydown.stop_save', function(event) {
+  $(window).on('keydown.save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-    this.flash.warning("This file is already being saved. Calm down.")
+    self.flash.warning("This file is already being saved. Calm down.", 3)
     event.preventDefault();
     return false;
   });  
@@ -372,7 +372,7 @@ EditorController.prototype.allow_saving = function(){
   this.$.find('.editor_save_button').html("Saved")
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
-  $(window).off('keydown.stop_save')
+  $(window).off('keydown.save')
   $(window).on('keydown.save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
     self.save()
