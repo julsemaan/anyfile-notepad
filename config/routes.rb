@@ -1,6 +1,8 @@
 AnyfileNotepad::Application.routes.draw do
   resources :extensions
   resources :syntaxes
+
+  match '/mime_types/submit_unknown' => 'mime_types#submit_unknown'
   resources :mime_types do
     member do
       post 'mark_integrated'

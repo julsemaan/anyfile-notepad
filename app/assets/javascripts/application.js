@@ -60,3 +60,10 @@ String.prototype.toCamel = function(){
   return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
 };
  
+function notify_unknown_mime_type(mime_type){
+  $.ajax({
+    url : "/mime_types/submit_unknown",
+    data: {mime_type:mime_type},
+  })
+
+}

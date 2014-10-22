@@ -87,6 +87,11 @@ class MimeTypesController < AdminController
       format.json { head :no_content }
     end
   end
+
+  def submit_unknown
+    MimeType.add_if_not_known params[:mime_type] 
+    render text: 'ok'
+  end
   
   def mark_integrated
     @mime_type = MimeType.find(params[:id])

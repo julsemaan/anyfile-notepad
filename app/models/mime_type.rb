@@ -6,7 +6,7 @@ class MimeType < ActiveRecord::Base
   validates_presence_of :type_name
   validates :type_name, :uniqueness => true
    
-  def self.add_if_not_known(type_name, discovered_by)
+  def self.add_if_not_known(type_name, discovered_by="John Doe")
     if self.find_by_type_name type_name
       return
     else

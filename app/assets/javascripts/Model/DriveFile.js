@@ -50,6 +50,14 @@ DriveFile.prototype.compute_syntax = function(){
   return self.get('syntax')
 }
 
+DriveFile.prototype.check_for_unknown_mime_type = function(mime_type){
+  var self = this
+  var mime_type_obj = mime_types.find({key:'type_name', value:mime_type})
+  if(!mime_type_obj){
+    notify_unknown_mime_type(mime_type)
+  }
+}
+
 DriveFile.prototype.mime_type_from_extension = function (){
   var self = this
   try{
@@ -145,8 +153,8 @@ DriveFile.prototype.update_data = function(new_revision, callback){
   var reader = new FileReader();
   reader.readAsBinaryString(data_blob);
   reader.onload = function(e) {
-    // after the || should compute mime type automagically
     var contentType = self.mime_type || self.mime_type_from_extension();
+    self.check_for_unknown_mime_type(contentType)
 
     var metadata = {fileId : self.id, title : self.title}
     if(self.folder_id){
