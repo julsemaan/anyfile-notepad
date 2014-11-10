@@ -81,6 +81,7 @@ oauth_controller.add_to_queue(function(){
         'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
         'theme_pref': Preference.find('theme', StringPreference),
         'menu_width_pref' : Preference.find('menu_width', StringPreference),
+        'keybinding_pref' : Preference.find('keybinding', StringPreference),
         'flash' : new FlashController('editor_flash'),
         'file_explorer': new FileExplorerController("file_explorer_container", {
           'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),

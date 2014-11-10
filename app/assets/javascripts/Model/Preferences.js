@@ -10,6 +10,7 @@ function Preferences(loaded){
     'menu_width' : '280px',
     'saw_v2_notice' : 'false',
     'agree_terms' : 'false',
+    'keybinding' : 'normal',
   }
   
   this.HASH_PREFERENCES = [

@@ -28,6 +28,8 @@ function EditorController(view, options){
 
   this.menu_width_pref = options["menu_width_pref"]
 
+  this.keybinding_pref = options["keybinding_pref"]
+
   this.flash = options["flash"]
 
   this.models = {
@@ -49,6 +51,7 @@ EditorController.prototype.initialize_html = function(){
   this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
   this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
   this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
+  this.$.find(".keybinding_button").click(function(){self.change_keybinding($(this).attr('value'))})
 
   this.$.find(".show_file_info").click(function(){
     self.$.find('#file_info_modal').modal('show')
@@ -97,6 +100,8 @@ EditorController.prototype.initialize_html = function(){
     $(document.getElementById("tab_"+this.tab_size_pref.getValue())).append(check)
   }
 
+  this.change_keybinding(this.keybinding_pref.getValue())
+
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
   if(this.word_wrap_pref.getValue()){
     this.$.find('#word_wrap_check').show()
@@ -106,12 +111,23 @@ EditorController.prototype.initialize_html = function(){
     this.$.find('#cache_file_explorer_check').show()
   }
 
+/*
   window.addEventListener("keydown",function (e) {
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
       e.preventDefault();
       self.open_search()
     }
   })
+*/
+
+  $(window).on('keydown.search', function(event) {
+    if (!( String.fromCharCode(event.which).toLowerCase() == 'f' && event.shiftKey && event.ctrlKey) && !(event.which == 19)) return true;
+    self.open_search()
+    event.preventDefault();
+    return false;
+  });  
+
+
 
   this.initial_theme = "ace/theme/clouds_midnight"
   if(this.theme_pref.getValue()){
@@ -562,3 +578,35 @@ EditorController.prototype.keep_alive = function(){
     }
   })
 }
+
+EditorController.prototype.vim_command_handler = function(command){
+  var self = this;
+  if(command == "/"){
+    this.open_search()
+  }
+}
+
+EditorController.prototype.change_keybinding = function(keybinding){
+  var self = this;
+  if(keybinding == "vim"){
+    this.editor_view.setKeyboardHandler("ace/keyboard/vim");
+    if(!this.editor_view.showCommandLine){
+      this.editor_view.showCommandLine = function(command){self.vim_command_handler(command)}
+    }
+  }
+  else if(keybinding == "emacs"){
+    this.editor_view.setKeyboardHandler("ace/keyboard/emacs");
+  }
+  else{
+    this.editor_view.setKeyboardHandler();
+  }
+
+  this.handle_keybinding_view(keybinding);
+}
+
+EditorController.prototype.handle_keybinding_view = function(keybinding){
+  var self = this;
+  var check = this.$.find('#keybinding_check').detach();
+  this.$.find('#keybinding_'+keybinding).prepend(check) 
+}
+
