@@ -1,0 +1,20 @@
+<div id="current_user" class="alert alert-success">
+  <div style="display:inline-block">
+  <span id="user_details" style="display:none">
+    <span>Logged in as </span>
+    <span data-bind-current_user="name"></span>
+  </span>
+  </div>
+  <img data-bind-current_user="picture_url" src="" height="32" width="32">
+</div>
+
+<script>
+$("#current_user").hover(
+  function(){
+    $(this).find("#user_details").show();
+  },
+  function(){
+    $(this).find("#user_details").hide();
+  }
+)
+</script>

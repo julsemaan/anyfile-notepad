@@ -23,7 +23,11 @@ function DataBinder( object_id ) {
 
       if ( $bound.is("input, textarea, select") ) {
         $bound.val( new_val );
-      } else {
+      } 
+      else if($bound.is("img")){
+        $bound.attr("src", new_val);
+      }
+      else {
         $bound.html( new_val );
       }
     });

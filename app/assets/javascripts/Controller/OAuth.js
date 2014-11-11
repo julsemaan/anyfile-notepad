@@ -4,6 +4,7 @@ function OAuthController(options){
   this.api_key = "AIzaSyDYsvQPvcYLI8RzIW28XSFZHD0HUjDX5YE"
   this.scopes = options["scopes"]
   this.authed = false
+  this.current_user = undefined
   //this.init()
   this.queue = [];
 }
@@ -12,6 +13,9 @@ OAuthController.prototype.init = function(){
   var self = this;
   gapi.client.setApiKey(this.api_key)
   setTimeout(function(){self.check_authed()}, 15000)
+  this.add_to_queue(function(){
+    User.current_user(function(user){self.current_user = user})
+  })
   this.do_auth();
 }
 
