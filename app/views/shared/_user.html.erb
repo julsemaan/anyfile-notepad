@@ -1,20 +1,37 @@
 <div id="current_user" class="alert alert-success">
   <div style="display:inline-block">
-  <span id="user_details" style="display:none">
-    <span>Logged in as </span>
-    <span data-bind-current_user="name"></span>
+  <span id="user_details" style="display:none;">
+      Logged in as
+      <span data-bind-current_user="name"></span>
+      <br>
+      Space used on <%= image_tag "gdrive.png", :width => "15px", :height => "15px" %> <span data-bind-current_user="total_space_used"></span> / <span data-bind-current_user="total_space_available"></span>
   </span>
   </div>
-  <img data-bind-current_user="picture_url" src="" height="32" width="32">
+  <img data-bind-current_user="picture_url" style="float:right;margin:3px;width:35px;height:35px;" src="">
 </div>
 
 <script>
-$("#current_user").hover(
-  function(){
-    $(this).find("#user_details").show();
-  },
-  function(){
-    $(this).find("#user_details").hide();
-  }
-)
+$("#current_user").hover(user_hover_in, user_hover_out)
+
+function user_hover_in(){
+  //$(this).find("#user_details").show();
+  var orig = $.data(this, 'dimensions');
+  if(!orig) $.data(this, 'dimensions', { width: $(this).outerWidth(), height: $(this).outerHeight() });
+  // clear the other things to do and open it
+  $("#current_user").stop()
+  $("#current_user").animate({width:"500px"}, function(){
+    $("#user_details").show()
+    $("#current_user").animateAuto('width')
+  });
+}
+
+function user_hover_out(){
+  //$(this).find("#user_details").hide();
+  var orig = $.data(this, 'dimensions')
+  $("#current_user").stop()
+  $("#user_details").hide()
+  $("#current_user").animate({width:orig.width+"px", height:orig.height+"px"});
+  
+}
+
 </script>

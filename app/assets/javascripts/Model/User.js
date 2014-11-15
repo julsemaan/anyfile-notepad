@@ -18,6 +18,8 @@ User.current_user = function(callback){
       name : response.user.displayName,
       email : response.user.emailAddress,
       picture_url : response.user.picture.url,
+      total_space_used : ( response.quotaBytesUsed / 1024 / 1024 / 1024 ).toFixed(2) + " GB",
+      total_space_available : ( response.quotaBytesTotal / 1024 / 1024 / 1024 ).toFixed(2) + " GB",
     }))
   }) 
 }
