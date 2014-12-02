@@ -18,9 +18,8 @@ color: #66FF33\
 .ace-ibm .ace_cursor {\
 color: #66FF33\
 }\
-.ace-ibm .ace_marker-layer .ace_active-line,\
 .ace-ibm .ace_marker-layer .ace_selection {\
-background: #191919\
+background: #333333\
 }\
 .ace-ibm.ace_multiselect .ace_selection.ace_start {\
 box-shadow: 0 0 3px 0px white;\
@@ -33,7 +32,7 @@ background: black\
 margin: -1px 0 0 -1px;\
 border: 1px solid #66FF33\
 }\
-.ace-ibm .ace_gutter-active-line {\
+.ace-ibm .ace_gutter-active-line .ace_active-line {\
 background-color: #191919\
 }\
 .ace-ibm .ace_marker-layer .ace_selected-word {\
