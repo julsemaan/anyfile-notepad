@@ -1,6 +1,28 @@
+<div class="print_menu print_hide">
+  <a id="print" href="#print" class="btn btn-primary">Print</a>
+  <label for="line_numbers_checkbox">Line numbers : </label>
+  <input id="line_numbers_checkbox" type="checkbox" value="checked">
+
+</div>
 <% line_number = 1 %>
-<pre><% @content.split(/\n/).each do |line| %><%= "#{line_number}. #{line}" %><% line_number += 1 %><% end %></pre>
+<pre class="with_line_numbers"><% @content.split(/\n/).each do |line| %><%= "#{line_number}. #{line}" %><% line_number += 1 %><% end %></pre>
+<pre class="without_line_numbers hide"><% @content.split(/\n/).each do |line| %><%= "#{line}" %><% end %></pre>
 
 <script>
-  window.print()
+  $('#print').click(function(){
+    window.print()
+  });
+
+  var line_numbers_on = true;
+  $('#line_numbers_checkbox').change( function(){
+    line_numbers_on = !line_numbers_on;
+    if(line_numbers_on) {
+      $('.without_line_numbers').addClass('hide')
+      $('.with_line_numbers').removeClass('hide')
+    }
+    else { 
+      $('.without_line_numbers').removeClass('hide')
+      $('.with_line_numbers').addClass('hide')
+    }
+  });
 </script>
