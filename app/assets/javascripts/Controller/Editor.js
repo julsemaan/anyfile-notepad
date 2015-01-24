@@ -276,6 +276,7 @@ EditorController.prototype.save = function(){
           self.$.find("#file_save_modal").modal("hide")
           self.reset_options()
           if(response && !response.error) window.location.hash="#edit/"+self.file.id
+          self.editor_view.focus();
         })
     }, 500)
   }
