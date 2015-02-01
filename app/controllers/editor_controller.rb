@@ -5,8 +5,6 @@ class EditorController < ApplicationController
   def check_browser
     if !browser.modern?
       redirect_to '/upgrade.html'      
-    elsif browser.safari? && browser.version < '6'
-      redirect_to '/upgrade.html'
     end
   end
 
