@@ -52,9 +52,13 @@ DriveFile.prototype.compute_syntax = function(){
 
 DriveFile.prototype.check_for_unknown_mime_type = function(mime_type){
   var self = this
-  var mime_type_obj = mime_types.find({key:'type_name', value:mime_type})
-  if(!mime_type_obj){
-    notify_unknown_mime_type(mime_type)
+  try {
+    var mime_type_obj = mime_types.find({key:'type_name', value:mime_type})
+    if(!mime_type_obj){
+      notify_unknown_mime_type(mime_type)
+    }
+  } catch(e){
+    // do nothing. It's not the end of the world
   }
 }
 
