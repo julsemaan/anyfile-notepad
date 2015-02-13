@@ -218,9 +218,11 @@ EditorController.prototype.post_file_load = function(){
 
   if(this.file.persisted){
     this.flash.success("File loaded", 3)
+    document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
     this.flash.success("Creating new file")
+    document.title = "New file | Anyfile Notepad";
   }
 }
 
