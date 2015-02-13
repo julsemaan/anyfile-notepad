@@ -40,10 +40,18 @@ DriveFile.prototype.compute_syntax = function(){
     return self.get('syntax')
   }
   else{
-    extension = extensions.find({key:'name', value:this.extension()})
+    var extension = extensions.find({key:'name', value:this.extension()})
     if(extension){
       self.set('syntax', syntaxes.find({value:extension.syntax_id}))
       return self.get('syntax')
+    }
+    else{
+      mime_type = mime_types.find({key:'type_name', value:self.get('mime_type')});
+      extension = extensions.find({key:'mime_type_id', value:mime_type.id});
+      if(extension){
+        self.set('syntax', syntaxes.find({value:extension.syntax_id}));
+        return self.get('syntax'); 
+      }
     }
   }
   self.set('syntax', syntaxes.find({key:'ace_js_mode', value:'plain_text'}))
