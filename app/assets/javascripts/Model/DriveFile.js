@@ -35,7 +35,7 @@ DriveFile.prototype.compute_syntax = function(){
   if(this.fuck_syntax) return
 
   syntax_pref = Preference.find('syntaxes['+this.extension()+']', StringPreference)
-  if(!syntax_pref.is_empty()){
+  find_syntax: if(!syntax_pref.is_empty()){
     self.set('syntax', syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()}))
     return self.get('syntax')
   }
@@ -47,6 +47,7 @@ DriveFile.prototype.compute_syntax = function(){
     }
     else{
       mime_type = mime_types.find({key:'type_name', value:self.get('mime_type')});
+      if(!mime_type) break find_syntax;
       extension = extensions.find({key:'mime_type_id', value:mime_type.id});
       if(extension){
         self.set('syntax', syntaxes.find({value:extension.syntax_id}));
