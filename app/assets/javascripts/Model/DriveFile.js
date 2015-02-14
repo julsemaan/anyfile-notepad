@@ -46,6 +46,7 @@ DriveFile.prototype.compute_syntax = function(){
       return self.get('syntax')
     }
     else{
+      if(self.get('mime_type') == "text/plain") break find_syntax;
       mime_type = mime_types.find({key:'type_name', value:self.get('mime_type')});
       if(!mime_type) break find_syntax;
       extension = extensions.find({key:'mime_type_id', value:mime_type.id});
