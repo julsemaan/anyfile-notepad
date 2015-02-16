@@ -112,7 +112,7 @@ DriveFile.prototype.get_file_data = function(){
         }
         else{
           console.log(data)
-          self.loaded("Major fuckup. The file couldn't load. Response was : "+status+". If this happens again, file a bug on the community.");
+          self.loaded("Fatal error! The file couldn't load from Google's server. Response was : "+status+". If this happens again, file a bug on the community.");
           return
         }
       },
