@@ -16,7 +16,11 @@ class EditorController < ApplicationController
   def print 
     @title = params[:title]
     @content = params[:content]    
-    render 'show'
+    if @content.nil?
+      render :text => "This request is invalid (no content parameter), you are probably lost or the developper is doing a poor job. Most likely the first one.",:status => 400
+    else
+      render 'show'
+    end
   end
 
 end
