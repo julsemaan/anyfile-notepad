@@ -7,6 +7,8 @@ gem 'browser'
 gem 'unicorn'
 gem 'unicorn-worker-killer'
 
+gem 'fingerbank_client', :git => 'git://github.com/julsemaan/fingerbank_client', :branch => 'master'
+
 group :development do
   gem 'sqlite3'
 end

@@ -3,12 +3,13 @@ class EditorController < ApplicationController
   before_filter :check_browser
 
   def check_browser
-    if !browser.modern?
-      redirect_to '/upgrade.html'      
-    end
+#    if !browser.modern?
+#      redirect_to '/upgrade.html'      
+#    end
   end
 
   def app
+    @device = current_device
     response.headers['X-Frame-Options'] = 'IDONTGIVEACRAP'
     render 'new'
   end

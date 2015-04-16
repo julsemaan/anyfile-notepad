@@ -9,6 +9,7 @@
         <p><b>Google Drive file id : </b><span data-bind-file="id"></span></p>
         <p><b>Google Drive folder id : </b><span data-bind-file="folder_id"></span></p>
         <p><b>Mime type : </b><span data-bind-file="mime_type"></span></p>
+        <p><b>Device : </b><span><%= @device ? @device.name : 'Unknown' %></span></p>
       </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
