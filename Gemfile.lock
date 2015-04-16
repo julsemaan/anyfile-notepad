@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/julsemaan/fingerbank_client
-  revision: b1108d70b6e409d49b4b619f483029a42c99e6d0
+  revision: 2f0ac26905eb6fff4cb57a3274629d55058f5975
   branch: master
   specs:
     fingerbank_client (0.0.1)
