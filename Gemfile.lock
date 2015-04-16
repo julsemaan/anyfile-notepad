@@ -1,11 +1,10 @@
 GIT
   remote: git://github.com/julsemaan/fingerbank_client
-  revision: 6ccf0401ce7826652849c953e93a8e95fa62da2d
+  revision: 187d2b314465230d2105bc5272b4fa26f550dec1
   branch: master
   specs:
     fingerbank_client (0.0.1)
       rails (> 3.0.0)
-      sqlite3
 
 GEM
   remote: https://rubygems.org/
