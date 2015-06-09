@@ -24,10 +24,14 @@ DriveFile.prototype = new Model()
 DriveFile.prototype.init = function(){
 }
 
-DriveFile.prototype.extension = function(){
+DriveFile.file_extension = function(filename){
   try{
-    return "."+this.title.split('.').pop();
+    return "."+filename.split('.').pop();
   }catch(e){return ""}
+}
+
+DriveFile.prototype.extension = function(){
+  return DriveFile.file_extension(this.title)
 }
 
 DriveFile.prototype.compute_syntax = function(){

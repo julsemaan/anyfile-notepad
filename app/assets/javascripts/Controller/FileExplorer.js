@@ -89,11 +89,55 @@ FileExplorerController.prototype.open = function(){
   }
 }
 
+FileExplorerController.prototype.fetch_directory = function(options, callback){
+  var directory_id = options['dir']
+  directory_id = directory_id.replace('/', '')
+  console.log(directory_id)
+  var request = gapi.client.drive.files.list({
+    'q': "'"+directory_id+"' in parents and trashed=false",
+    'fields' : 'items(id,mimeType,title)',
+  });
+  request.execute(function(response){
+    var folders = []
+    var files = []
+    for(var i in response.items){
+      var item = response.items[i]
+      if(item.mimeType == "application/vnd.google-apps.folder"){
+        folders.push(item)
+      }
+      else{
+        files.push(item)
+      } 
+    }
+
+    var container = $("<ul class='jqueryFileTree' style='display: none;'></ul>")
+    for(var i in folders){
+      var folder = folders[i];
+      var folder_element = $("<li class='directory collapsed'><a href='#' rel='"+folder.id+"/'>"+folder.title+"</a></li>")      ;
+      container.append(folder_element);
+    }
+
+    for(var i in files){
+      var file = files[i];
+      var file_element = $("<li></li>");
+      var file_link = $("<a href='#edit/"+file.id+"'>"+file.title+"</a>");
+      file_element.addClass("file ext_"+DriveFile.file_extension(file.title).substr(1))
+      file_element.append(file_link);
+      file_link.attr('onclick', "javascript:window.location='#edit/"+file.id+"'")
+      container.append(file_element);
+    }
+
+    callback(container)
+
+  })
+
+}
+
 FileExplorerController.prototype.load = function(){
   var self = this;
   this.$.find('#file_tree_loading_message').fadeIn()
   this.$.find("#fileTree").height(this.height_pref.getValue())
-  this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content'});
+  this.$.find('#fileTree').fileTree({ root: 'root', script: self.fetch_directory});
   setTimeout(function(){self.show_error()}, 10000)
   this.loaded = true
 }
@@ -118,7 +162,7 @@ FileExplorerController.prototype.load_from_cache = function(){
     this.cached = true;
     this.$.find("#fileTree").height(this.height_pref.getValue())
     this.$.find('#fileTree').html(cached_data)
-    this.$.find('#fileTree').fileTree({ root: 'root', script: '/jqueryfiletree/content', existing: true});
+    this.$.find('#fileTree').fileTree({ root: 'root', script: self.fetch_directory, existing: true});
   }
   else{
     this.load()

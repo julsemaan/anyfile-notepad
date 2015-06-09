@@ -57,15 +57,26 @@ if(jQuery) (function($){
           else{
             $(c).addClass('wait');
 					  $(".jqueryFileTree.start").remove();
-            $.post(o.script, { dir: t }, function(data) {
-              $(c).find('.start').html('');
-              $(c).removeClass('wait').append(data);
-              if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
-              bindTree(c);
-            });
+            if(typeof o.script === "string"){
+              $.post(o.script, { dir: t }, function(data) {
+                scriptCallback(c,t,data)
+              });
+            }
+            else{
+              o.script({dir:t}, function(data){
+                scriptCallback(c,t,data)
+              });
+            }
           }
           
 				}
+
+        function scriptCallback(c,t,data){
+          $(c).find('.start').html('');
+          $(c).removeClass('wait').append(data);
+          if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
+          bindTree(c);
+        }
 				
 				function bindTree(t) {
 					$(t).find('LI A').bind(o.folderEvent, function() {
