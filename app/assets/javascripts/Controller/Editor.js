@@ -623,7 +623,14 @@ EditorController.prototype.make_collaborative = function(){
       self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, function(evt){self.file_content_deleted(evt)});
 
       }catch(e){console.log(e)}
-  }, function(model) {self.init_collaboration(model)});
+  }, 
+  function(model) {self.init_collaboration(model)},
+  function(error) {
+    if(error.type == "token_refresh_required"){
+      oauth_controller.do_auth();
+    }
+  }
+  );
 }
 
 EditorController.prototype.file_content_added = function(evt){
@@ -642,7 +649,6 @@ EditorController.prototype.file_content_deleted = function(evt){
     var end = self.editor_view.getSession().getDocument().indexToPosition(evt.index+evt.text.length)
     var range = new Range(begin.row, begin.column, end.row, end.column)
     self.editor_view.getSession().remove({start:begin, end:end})
-    self.editor_view.getSession().getDocument().createAnchor(begin.row, begin.column)
   }
   
 }
