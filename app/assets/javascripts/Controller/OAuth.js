@@ -67,6 +67,7 @@ OAuthController.prototype.ready = function(){
   for(var i=0; i < this.queue.length; i++){
     this.queue[i]()
   } 
+  this.queue = []
 }
 
 OAuthController.prototype.add_to_queue = function(to_do){
