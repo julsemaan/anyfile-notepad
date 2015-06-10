@@ -34,6 +34,7 @@ OAuthController.prototype.do_auth = function(){
   
   });
 
+
 }
 
 OAuthController.prototype.auth_popup = function(){
@@ -45,10 +46,12 @@ OAuthController.prototype.auth_popup = function(){
 OAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
-    gapi.client.load('drive', 'v2', function(){
-      setCookie('access_token', auth_result['access_token'], 1)
-      self.ready()
-    })
+    gapi.load('auth:client,drive-realtime,drive-share', function(){
+      gapi.client.load('drive', 'v2', function(){
+        setCookie('access_token', auth_result['access_token'], 1)
+        self.ready()
+      })
+    });
     
     $('#auth_modal').modal('hide')
     //cool it worked

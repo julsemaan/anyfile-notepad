@@ -190,6 +190,7 @@ EditorController.prototype.edit = function(id){
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
       if(!error){
+        self.make_collaborative()
         self.post_file_load()
       }
       else{
@@ -410,6 +411,7 @@ EditorController.prototype.check_content_changed = function(){
   //this.file.title = this.$.find("#g_file_title").val()
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
+    this.realtime_content.setText(this.editor_view.getValue()); 
     this.$.find('.editor_save_button').addClass('btn-warning')
     if(!(this.$.find('.editor_save_button').html() == "Saving...")){
       this.$.find('.editor_save_button').html("Save")
@@ -597,4 +599,53 @@ EditorController.prototype.handle_keybinding_view = function(keybinding){
   var check = this.$.find('#keybinding_check').detach();
   this.$.find('#keybinding_'+keybinding).prepend(check) 
 }
+
+EditorController.prototype.init_collaboration = function(model){
+  var self = this;
+  console.log(self)
+  try{
+  var content = model.createString(self.file.data);
+  model.getRoot().set("content", content);
+  console.log("finished init of collaboration")
+  }catch(e){console.log(e)}
+}
+
+EditorController.prototype.make_collaborative = function(){
+  var self = this;
+  gapi.drive.realtime.load(self.file.id, function(doc){
+      self.realtime_document = doc;
+      try{
+      self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
+      console.log(self.realtime_content)
+
+      self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, function(evt){self.file_content_added(evt)});
+      
+      self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, function(evt){self.file_content_deleted(evt)});
+
+      }catch(e){console.log(e)}
+  }, function(model) {self.init_collaboration(model)});
+}
+
+EditorController.prototype.file_content_added = function(evt){
+  var self = this;
+  if(!evt.isLocal){
+    var position = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
+    self.editor_view.getSession().insert(position, evt.text)
+  }
+  
+}
+
+EditorController.prototype.file_content_deleted = function(evt){
+  var self = this;
+  if(!evt.isLocal){
+    var begin = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
+    var end = self.editor_view.getSession().getDocument().indexToPosition(evt.index+evt.text.length)
+    var range = new Range(begin.row, begin.column, end.row, end.column)
+    self.editor_view.getSession().remove({start:begin, end:end})
+    self.editor_view.getSession().getDocument().createAnchor(begin.row, begin.column)
+  }
+  
+}
+
+
 
