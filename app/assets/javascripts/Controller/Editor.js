@@ -142,7 +142,6 @@ EditorController.prototype.initialize_html = function(){
   this.$.find('#cancel_reauth').click(function(){
     self.$.find('#reauthenticate_modal').modal('hide')
   })
-  //setInterval(function(){self.keep_alive()}, 300000)
 
   this.$.find('.restart_app').click(function(){
     if(confirm("Are you sure ?")) window.location.reload()
@@ -565,21 +564,6 @@ EditorController.prototype.save_menu_width_pref = function(){
 EditorController.prototype.show_reauth = function(){
   var self = this;
   this.oauth_controller.show_reauth();
-}
-
-EditorController.prototype.keep_alive = function(){
-  var self = this;
-  $.ajax(
-  {
-    url: '/g_oauth/keep_alive', 
-    statusCode: {
-      403: function(data){
-        self.show_reauth()
-      },
-      200: function(data){
-      }
-    }
-  })
 }
 
 EditorController.prototype.vim_command_handler = function(command){

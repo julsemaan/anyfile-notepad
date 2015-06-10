@@ -64,10 +64,6 @@ class GOauthController < ApplicationController
     register_redirect_to
   end
   
-  def keep_alive
-    render :text => "Success #{@user['name']} is still authentificated."
-  end
-  
   def execute_after
     api_client = @gapi.client
     
