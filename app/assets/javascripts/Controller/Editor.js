@@ -510,7 +510,6 @@ EditorController.prototype.select_theme = function(name){
   if(!this.theme_pref.getValue()){
     current_theme = this.initial_theme
   }
-  console.log(current_theme)
   $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
 
   this.theme_pref.setValue(name, self, self.show_reauth)
@@ -603,11 +602,9 @@ EditorController.prototype.handle_keybinding_view = function(keybinding){
 
 EditorController.prototype.init_collaboration = function(model){
   var self = this;
-  console.log(self)
   try{
   var content = model.createString(self.file.data);
   model.getRoot().set("content", content);
-  console.log("finished init of collaboration")
   }catch(e){console.log(e)}
 }
 
@@ -620,13 +617,31 @@ EditorController.prototype.make_collaborative = function(){
     self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
 
 
-    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, function(evt){self.file_content_added(evt)});
+    self.realtime_content.addEventListener(
+      gapi.drive.realtime.EventType.TEXT_INSERTED, 
+      function(evt){
+        self.file_content_added(evt)
+      });
     
-    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, function(evt){self.file_content_deleted(evt)});
+    self.realtime_content.addEventListener(
+      gapi.drive.realtime.EventType.TEXT_DELETED, 
+      function(evt){
+        self.file_content_deleted(evt)
+      });
 
-    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.COLLABORATOR_JOINED, function(evt){self.collaborator_joined(evt)});
+    self.realtime_document.addEventListener(
+      gapi.drive.realtime.EventType.COLLABORATOR_JOINED, 
+      function(evt){
+        self.add_collaborator(evt.collaborator);
+      });
+
+    self.realtime_document.addEventListener(
+      gapi.drive.realtime.EventType.COLLABORATOR_LEFT, 
+      function(evt){
+        self.remove_collaborator(evt.collaborator);
+      });
     
-    setTimeout(function(){self.display_collaborators()}, 2000);
+    self.display_collaborators()
 
     }catch(e){console.log(e)}
   }, 
@@ -639,17 +654,28 @@ EditorController.prototype.make_collaborative = function(){
   );
 }
 
+EditorController.prototype.remove_collaborator = function(collaborator){
+  var self = this;
+  self.clear_realtime_user(collaborator.userId);
+  $('#collaborator-'+collaborator.userId).remove();
+}
+
+EditorController.prototype.add_collaborator = function(collaborator) {
+  var self = this;
+  if(collaborator.isMe) return;
+  var element = $("<span id='collaborator-"+collaborator.userId+"' class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
+  self.collaborators_colors[collaborator.userId] = collaborator.color;
+  $('.collaborators').append(element);
+
+}
+
 EditorController.prototype.display_collaborators = function(){
   var self = this;
   var collaborators = self.realtime_document.getCollaborators();
   self.collaborators_colors = {}
   for(var i in collaborators) {
     var collaborator = collaborators[i];
-    if(collaborator.isMe) continue;
-    console.log(collaborator)
-    var element = $("<span class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
-    self.collaborators_colors[collaborator.userId] = collaborator.color;
-    $('.collaborators').append(element);
+    self.add_collaborator(collaborator);
   }
 }
 
@@ -684,15 +710,19 @@ EditorController.prototype.file_content_deleted = function(evt){
 
 EditorController.prototype.move_realtime_user = function(userId, position){
   var self = this;
-  $('.'+userId+'-active').css('background-color', '');
-  for(var i=0; i<self.editor_view.getSession().getDocument().getLength();i++){
-      self.editor_view.getSession().removeGutterDecoration(i, userId+'-active');
-  }
-
+  self.clear_realtime_user(userId);
   self.editor_view.getSession().addGutterDecoration(position.row, userId+'-active')
   setTimeout(function(){
   $('.'+userId+'-active').css('background-color', self.collaborators_colors[userId]);
   }, 100);
+}
+
+EditorController.prototype.clear_realtime_user = function(userId){
+  var self = this;
+  $('.'+userId+'-active').css('background-color', '');
+  for(var i=0; i<self.editor_view.getSession().getDocument().getLength();i++){
+      self.editor_view.getSession().removeGutterDecoration(i, userId+'-active');
+  }
 }
 
 
