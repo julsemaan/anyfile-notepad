@@ -207,6 +207,7 @@ EditorController.prototype.post_file_load = function(){
     this.flash.warning("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe.")
   }
   this.editor_view.getSession().setValue(this.file.data, -1)
+
   this.file.data = this.editor_view.getSession().getValue()
   this.file.data_saved = this.editor_view.getSession().getValue()
 
@@ -409,9 +410,9 @@ EditorController.prototype.show_file_explorer = function(){
 EditorController.prototype.check_content_changed = function(){
   var self = this;
   //this.file.title = this.$.find("#g_file_title").val()
+  this.realtime_content.setText(this.editor_view.getValue());
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
-    this.realtime_content.setText(this.editor_view.getValue()); 
     this.$.find('.editor_save_button').addClass('btn-warning')
     if(!(this.$.find('.editor_save_button').html() == "Saving...")){
       this.$.find('.editor_save_button').html("Save")
@@ -612,17 +613,22 @@ EditorController.prototype.init_collaboration = function(model){
 
 EditorController.prototype.make_collaborative = function(){
   var self = this;
+
   gapi.drive.realtime.load(self.file.id, function(doc){
-      self.realtime_document = doc;
-      try{
-      self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
-      console.log(self.realtime_content)
+    self.realtime_document = doc;
+    try{
+    self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
 
-      self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, function(evt){self.file_content_added(evt)});
-      
-      self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, function(evt){self.file_content_deleted(evt)});
 
-      }catch(e){console.log(e)}
+    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, function(evt){self.file_content_added(evt)});
+    
+    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, function(evt){self.file_content_deleted(evt)});
+
+    self.realtime_content.addEventListener(gapi.drive.realtime.EventType.COLLABORATOR_JOINED, function(evt){self.collaborator_joined(evt)});
+    
+    setTimeout(function(){self.display_collaborators()}, 2000);
+
+    }catch(e){console.log(e)}
   }, 
   function(model) {self.init_collaboration(model)},
   function(error) {
@@ -633,12 +639,30 @@ EditorController.prototype.make_collaborative = function(){
   );
 }
 
+EditorController.prototype.display_collaborators = function(){
+  var self = this;
+  var collaborators = self.realtime_document.getCollaborators();
+  self.collaborators_colors = {}
+  for(var i in collaborators) {
+    var collaborator = collaborators[i];
+    if(collaborator.isMe) continue;
+    console.log(collaborator)
+    var element = $("<span class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
+    self.collaborators_colors[collaborator.userId] = collaborator.color;
+    $('.collaborators').append(element);
+  }
+}
+
 EditorController.prototype.file_content_added = function(evt){
   var self = this;
   if(!evt.isLocal){
-    var position = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
-    self.editor_view.getSession().insert(position, evt.text)
-  }
+    var start = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
+    self.editor_view.getSession().insert(start, evt.text)
+    var nl_stripped = evt.text.replace('\n', '')
+    if(nl_stripped !== "") {
+      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index+1));
+    }
+ }
   
 }
 
@@ -649,8 +673,26 @@ EditorController.prototype.file_content_deleted = function(evt){
     var end = self.editor_view.getSession().getDocument().indexToPosition(evt.index+evt.text.length)
     var range = new Range(begin.row, begin.column, end.row, end.column)
     self.editor_view.getSession().remove({start:begin, end:end})
+
+    var nl_stripped = evt.text.replace('\n', '')
+    if(nl_stripped !== "") {
+      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index));
+    }
   }
   
+}
+
+EditorController.prototype.move_realtime_user = function(userId, position){
+  var self = this;
+  $('.'+userId+'-active').css('background-color', '');
+  for(var i=0; i<self.editor_view.getSession().getDocument().getLength();i++){
+      self.editor_view.getSession().removeGutterDecoration(i, userId+'-active');
+  }
+
+  self.editor_view.getSession().addGutterDecoration(position.row, userId+'-active')
+  setTimeout(function(){
+  $('.'+userId+'-active').css('background-color', self.collaborators_colors[userId]);
+  }, 100);
 }
 
 
