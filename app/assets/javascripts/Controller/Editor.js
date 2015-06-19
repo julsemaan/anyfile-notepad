@@ -410,7 +410,9 @@ EditorController.prototype.show_file_explorer = function(){
 EditorController.prototype.check_content_changed = function(){
   var self = this;
   //this.file.title = this.$.find("#g_file_title").val()
-  this.realtime_content.setText(this.editor_view.getValue());
+  if(this.file.persisted){
+    this.realtime_content.setText(this.editor_view.getValue());
+  }
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
     this.$.find('.editor_save_button').addClass('btn-warning')
