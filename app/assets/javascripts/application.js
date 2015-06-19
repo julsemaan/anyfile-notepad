@@ -18,6 +18,8 @@
 //= require Model/Model
 //= require_tree .
 
+$.material.init()
+
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
