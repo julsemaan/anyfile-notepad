@@ -18,7 +18,9 @@
 //= require Model/Model
 //= require_tree .
 
-$.material.init()
+//$(document).bind("DOMSubtreeModified", function() {
+//  $.material.init()
+//});
 
 function getCookie(name) {
   var value = "; " + document.cookie;
@@ -85,6 +87,13 @@ jQuery.fn.animateAuto = function(prop, speed, callback){
         else if(prop === "both")
             el.animate({"width":width,"height":height}, speed, callback);
     });  
+}
+
+function escape_jquery_selector(str) {
+    if (str)
+        return str.replace(/([ #;?%&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1');      
+
+    return str;
 }
 
 function createCSSSelector(selector, style) {

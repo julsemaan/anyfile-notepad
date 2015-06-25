@@ -1,144 +1,167 @@
-<nav class="editor_nav_bar navbar navbar-default" role="navigation">
-  <ul class="editor_nav_bar nav navbar-nav">
-    <li>
-      <a id="file_drop_btn" data-toggle="dropdown" class="dropdown dropdown-toggle" href="javascript:void(0);">
-        File
-        <b class="caret"></b>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
-        <li><a href="#new" target="_blank">New</a></li>
+<div class="navbar navbar-default" id="menu">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="javascript:void(0)">Brand<div class="ripple-wrapper"><div class="ripple ripple-on" style="left: 63.5px; top: 23px; -webkit-transform: scale(9.625); transform: scale(9.625); background-color: rgba(255, 255, 255, 0.843137);"></div></div></a>
+  </div>
+  <div class="navbar-collapse collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav">
+      <!-- FILE/* -->
+      <li>
+        <a href="javascript:void(0)" class="menu_item">File</a>
 
-        <li><a href="javascript:void(0);" onclick="javascript:editor_controller.file_explorer.open()">Open</a></li>
+        <div class="menu_content">
+          <ul class="menu_list">
+            <li><a href="#new" target="_blank">New</a></li>
 
-        <li><a href="javascript:void(0);" class="editor_save_button" >Save</a></li>
+            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.file_explorer.open()">Open</a></li>
 
-        <li><a href="javascript:void(0);" onclick="javascript:editor_controller.print()" >Print</a></li>
-        
-        <li>
-          <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search()">
-            Search (Ctrl-F)
-          </a>
-        </li>
-        
-        <li>
-          <a href="javascript:void(0);" onclick="javascript:editor_controller.open_replace()">
-            Search & replace
-          </a>
-        </li>
-        
-        <li><a href="<%= root_path %>">App home page</a></li>
+            <li><a href="javascript:void(0);" class="editor_save_button" >Save</a></li>
 
-        <li><a href="javascript:void(0);" class="show_file_info" >Show file info</a></li>
-
-        <li><a href="javascript:void(0);" class="restart_app">Restart app</a></li>
-      </ul>
-      
-    </li>
-    
-    <li>
-      <a id="file_drop_btn" data-toggle="dropdown" class="dropdown dropdown-toggle" href="javascript:void(0);">
-        Options
-        <b class="caret"></b>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="file_drop_btn" role="menu">
-        <li>
-          <a href="javascript:void(0);" onclick="javascript:editor_controller.minimize_menu(true)">
-            Minimize the menu 
-            <span class="icon-rotated glyphicon glyphicon-log-in"  title="Minimize menu"></span>
-          </a>
-        </li>
-        
-        <li>
-          <a href="#" data-toggle="modal" data-target="#select_theme_modal">
-            Select theme
-          </a>
-        </li>
-      
-      
-        <span id="syntax_check" class="glyphicon glyphicon-ok"></span>
-        <li class="dropdown-submenu">
-          <a href="javascript:void(0);" >Syntax</a>
-          <ul class="dropdown-menu">
-            <% build_syntax_menus.each do |letters, syntaxes| %>
-              <li class="dropdown-submenu">
-                <a href="javascript:void(0);" ><%=letters%></a>
-                <ul class="dropdown-menu">
-                  <% syntaxes.each do |syntax| %>
-                    <li>
-                      <a href="javascript:void(0);" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
-                        <%= syntax.display_name %>
-                        
-                      </a>                  
-                    </li>
-                  <% end %>
-                </ul>
-              </li>
-            <% end %>
-          </ul>
-        </li>
-        
-        <li class="dropdown-submenu">
-          <a href="javascript:void(0);" >Font size</a>
-          <ul class="dropdown-menu">
-            <li class="dropdown">
-              <span id="font_check" class="glyphicon glyphicon-ok"></span>
-              <a href="javascript:void(0);" value="0.5em" id="font_0.5em" class="font_size_button"> Small</a>
-              <a href="javascript:void(0);" value="1em" id="font_1em" class="font_size_button"> Normal</a>
-              <a href="javascript:void(0);" value="1.5em" id="font_1.5em" class="font_size_button"> Large</a>
-              <a href="javascript:void(0);" value="2em" id="font_2em" class="font_size_button"> X-Large</a>
+            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.print()" >Print</a></li>
+            
+            <li>
+              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search()">
+                Search (Ctrl-F)
+              </a>
             </li>
-          </ul>
-        </li>
-        
-        <li class="dropdown-submenu">
-          <a href="javascript:void(0);" >Tab size</a>
-          <ul class="dropdown-menu">
-            <li class="dropdown">
-              <span id="tab_check" class="glyphicon glyphicon-ok"></span>
-              <a href="javascript:void(0);" value="2" id="tab_2" class="tab_size_button"> 2 </a>
-              <a href="javascript:void(0);" value="3" id="tab_3" class="tab_size_button"> 3 </a>
-              <a href="javascript:void(0);" value="4" id="tab_4" class="tab_size_button"> 4 </a>
-              <a href="javascript:void(0);" value="5" id="tab_5" class="tab_size_button"> 5 </a>
+            
+            <li>
+              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_replace()">
+                Search & replace
+              </a>
             </li>
+            
+            <li><a href="<%= root_path %>">App home page</a></li>
+
+            <li><a href="javascript:void(0);" class="show_file_info" >Show file info</a></li>
+
+            <li><a href="javascript:void(0);" class="restart_app">Restart app</a></li>
           </ul>
-        </li>
+        </div>
+      </li>
+      <!-- */FILE -->
 
-        <li class="dropdown-submenu">
-          <a href="javascript:void(0);" >Edtior mode</a>
-          <ul class="dropdown-menu">
-            <li class="dropdown">
-              <span id="keybinding_check" class="glyphicon glyphicon-ok"></span>
-              <a href="javascript:void(0);" value="normal" id="keybinding_normal" class="keybinding_button"> Normal </a>
-              <a href="javascript:void(0);" value="vim" id="keybinding_vim" class="keybinding_button"> VIM </a>
-              <a href="javascript:void(0);" value="emacs" id="keybinding_emacs" class="keybinding_button"> Emacs </a>
-            </li>
-          </ul>
-        </li>
+      <!-- OPTIONS/* -->
+      <li>
+        <a href="javascript:void(0)" class="menu_item">Options</a>
+        <div class="menu_content">
+          <div class="options">
 
-        
-        <li>
-          <a href="javascript:void(0);" onclick="javascript:editor_controller.toggle_word_wrap()">
-            Word wrap
-            <span id="word_wrap_check" class="glyphicon glyphicon-ok" style="display:none"></span>
-          </a>
-        </li>
-        
-        <li>
-          <a href="javascript:void(0);" onclick="javascript:editor_controller.toggle_cache_file_explorer()">
-            Keep file explorer opened
-            <span id="cache_file_explorer_check" class="glyphicon glyphicon-ok" style="display:none"></span>
-          </a>
-        </li>
-        
-      </ul>
-    </li>
-    
-    
-  </ul>
-  
-  <ul id="minimize_menu_nav" class="nav navbar-nav navbar-right">
-    <li><a href="javascript:void(0);" class="close_menu_button icon-rotated glyphicon glyphicon-log-in" onclick="javascript:editor_controller.minimize_menu(true)" title="Minimize menu"></a></li>
-  </ul>
-</nav>
+            <div class="row">
+
+              <div class="col-xs-3">
+                Editor mode :
+                <select class="form-control">
+                  <option>Normal</option>
+                  <option>vim</option>
+                  <option>Emacs</option>
+                </select>
+              </div>
+
+              <div class="col-xs-3">
+                Tab size :
+                <select class="form-control">
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+
+              <div class="col-xs-3">
+                Font size :
+                <select class="form-control">
+                  <option>Small</option>
+                  <option>Normal</option>
+                  <option>Large</option>
+                  <option>X-large</option>
+                </select>
+              </div>
+
+              <div class="col-xs-3 checkbox">
+                <label>
+                  <input type="checkbox"><span class="checkbox-material"><span class="check"></span></span> Word wrapping
+                </label>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-xs-offset-2 col-xs-4">
+                <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">Select syntax</a>
+                  <div class="menu_content">
+                      <div class="syntaxes">
+                        <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                        <ul class="menu_list">
+                          <% build_syntax_menus.each do |letters, syntaxes| %>
+                              <li>
+                              <a href="javascript:void(0);" class="sub_menu_item" ><%=letters%></a>
+                              <div class="menu_content">
+                                <div class="syntaxes">
+                                  <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                                   <ul class="menu_list">
+                                      <% syntaxes.each do |syntax| %>
+                                        <li>
+                                          <a href="javascript:void(0);" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
+                                            <%= syntax.display_name %>
+                                          </a>                  
+                                        </li>
+                                      <% end %>
+                                  </ul>
+                                </div>
+                               
+                              </div>
+                            </li>
+                          <% end %>
+                        </ul>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-xs-4">
+                <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">Select theme</a>
+                <div class="menu_content">
+                  <div class="row themes">
+                  <a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                    <% 
+                    themes = themes_list 
+                    themes.prepend("dummy")
+                    themes.prepend("dummy")
+                    themes.prepend("dummy")
+                    %>
+                    <% themes.each_slice(12).to_a.each do |theme_array| %>
+                      <div class="col-md-4">
+                        <div class="theme_choice_column btn-group-vertical"> 
+                          <% theme_array.each do |theme| %>
+                            <% if theme == "dummy" %>
+                              <a href="javascript:void(0);" class="btn-dummy"><%= theme_display_name(theme) %></a>
+                            <% else %>
+                              <a href="javascript:void(0);" class="btn btn-default btn_theme theme_<%=theme_name(theme)%>" onclick="javascript:editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
 
 
+            </div>
+
+          </div><!-- */OPTIONS CONTENT -->
+        </div>
+      </li><!-- */OPTIONS -->
+
+    </ul>
+    <form class="navbar-form navbar-left">
+      <input type="text" data-bind-file="title" class="form-control col-lg-8" placeholder="Filename">
+    </form>
+  </div>
+  <div id="expanded_menu">
+  </div>
+</div>

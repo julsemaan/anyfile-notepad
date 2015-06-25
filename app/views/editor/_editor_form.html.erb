@@ -18,22 +18,7 @@
 <div id="editor_menu_container" >
   <div id="editor_menu" class="g_file_menu" >
 
-    <form accept-charset="UTF-8" action="" data-remote="true" html="{:class=>:editor_form, :multipart=>true}" method="post"> 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <%= render 'editor_menu' %>
-        </div>
-        
-        <div class="panel-body">
-          <div class="file_title input-group">
-            <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
-            <span class="input-group-btn ">
-              <%= link_to "Save", "javascript:void(0)", :id => 'editor_save_button', :class => "editor_save_button btn btn-primary"%>
-            </span>
-          </div>
-        </div>
-      </div>
-    </form>
+    <%= render 'editor_menu' %>
 
     <div id="editor_flash">
       <%= render 'shared/flash', :flash => flash %>
@@ -68,8 +53,6 @@
 </div>
     
 <%= render 'shared/user' %>
-
-<%= render 'select_theme_modal' %>
 
 </div>
 <script type="text/javascript">
@@ -113,6 +96,8 @@ oauth_controller.add_to_queue(function(){
     }
   )
 })
+
+var menu_controller = new MenuController("menu");
 
 
 

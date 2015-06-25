@@ -21,7 +21,7 @@ module SyntaxesHelper
       g.each do |l|
         letters = letters + ' ' + l.to_s
         Syntax.all.each do |s|
-          if s.display_name[0] == l.to_s
+          if s.display_name[0].downcase == l.to_s.downcase
             tmp << s
           end
         end

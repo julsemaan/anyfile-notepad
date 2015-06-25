@@ -12,8 +12,8 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"0px"}
-  this.EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"0px"}
+  this.EDITOR_W_MENU_METRICS = {top:"60px", bottom:"0", left:"0px", right:"0px"}
+  this.EDITOR_FULL_METRICS = {top:"60px", bottom:"0", left:"30px", right:"0px"}
   this.metrics = null;
 
   this.word_wrap_pref = options["word_wrap_pref"]
@@ -64,8 +64,6 @@ EditorController.prototype.initialize_html = function(){
   else{
     this.metrics = this.EDITOR_W_MENU_METRICS
   }
-
-  this.activate_menu_resizing()
 
   $.each( this.metrics , function( prop, value ) {
     self.$.find('#editor').css(prop,value)
@@ -136,7 +134,7 @@ EditorController.prototype.initialize_html = function(){
   setInterval(function(){self.set_background_color_from_theme()}, 500)
   this.editor_view.setTheme(this.initial_theme)
   this.set_background_color_from_theme()
-  $(document.getElementById("theme_"+this.initial_theme)).addClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
   this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
   this.$.find('#cancel_reauth').click(function(){
@@ -512,14 +510,14 @@ EditorController.prototype.select_theme = function(name){
   if(!this.theme_pref.getValue()){
     current_theme = this.initial_theme
   }
-  $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+current_theme)).removeClass("btn-primary")
 
   this.theme_pref.setValue(name, self, self.show_reauth)
 
   this.editor_view.setTheme(this.theme_pref.getValue())
   this.set_background_color_from_theme()
   var check = this.$.find('#theme_check').detach()
-  $(document.getElementById("theme_"+name)).addClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
   
 }
    
@@ -529,45 +527,6 @@ EditorController.prototype.set_background_color_from_theme = function(){
   $(html_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
   body_element = document.getElementsByTagName("body")[0]
   $(body_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
-}
-
-EditorController.prototype.activate_menu_resizing = function(){
-  var self = this;
-  this.set_menu_width_from_pref()
-  this.$.find("#editor_menu_container").resizable({
-    handles : "e",
-    minWidth : 280,
-    maxWidth : 500,
-  })
-  this.$.find("#editor_menu_container").resize(function(){self.resize_menu()})
-  this.$.find("#editor_menu_container").resize(debouncer(function(){self.save_menu_width_pref()}, 1000))
-}
-
-EditorController.prototype.set_menu_width_from_pref = function(){
-  var self = this;
-  this.$.find("#editor_menu_container").width(this.menu_width_pref.getValue())
-  this.current_menu_width = this.$.find("#editor_menu_container").width()
-  this.$.find('#editor').css("left", this.menu_width_pref.getValue())
-  this.EDITOR_W_MENU_METRICS["left"] = this.menu_width_pref.getValue() 
-}
-
-EditorController.prototype.resize_menu = function(){
-  var self = this;
-  var width_modification = this.$.find("#editor_menu_container").outerWidth() - this.current_menu_width
-  var new_left = parseInt(this.$.find("#editor").css("left")) + width_modification + "px"
-  this.$.find('#editor').css("left", new_left)
-  this.EDITOR_W_MENU_METRICS["left"] = new_left
-  this.current_menu_width = this.$.find("#editor_menu_container").outerWidth()
-}
-
-EditorController.prototype.save_menu_width_pref = function(){
-  var self = this;
-  this.menu_width_pref.setValue(this.$.find('#editor_menu_container').width()+"px", self, self.show_reauth)
-}
-
-EditorController.prototype.show_reauth = function(){
-  var self = this;
-  this.oauth_controller.show_reauth();
 }
 
 EditorController.prototype.vim_command_handler = function(command){

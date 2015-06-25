@@ -7,7 +7,6 @@ function Preferences(loaded){
     'word_wrap' : 'false',
     'cache_file_explorer_enabled' : 'false',
     'file_explorer_height' : "300px", 
-    'menu_width' : '280px',
     'saw_v2_notice' : 'false',
     'agree_terms' : 'false',
     'keybinding' : 'normal',

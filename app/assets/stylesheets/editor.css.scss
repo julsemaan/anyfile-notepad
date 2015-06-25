@@ -1,5 +1,4 @@
-@import "bootstrap";
-@import "common.css.scss";
+@import "libs/material.min.css.scss";
 
 html{
   background-color:#EBEBEB;
@@ -21,7 +20,7 @@ div.error_panel_body{
 }
 
 .field_with_errors {
-  @extend .has-error;
+/*  @extend .has-error; */
   
   
 }
@@ -29,6 +28,12 @@ div.error_panel_body{
 .editor_nav_bar{
   margin:0;
 }
+
+a.menu_button {
+  padding:5px;
+  margin:0;
+}
+
 
 #minimize_menu_nav{
   margin:0;
@@ -48,15 +53,14 @@ div.file_explorer{
 }
 
 div#editor_menu_container{
-  display:inline-block;
-  width:280px;
+  display:inline;
+  /*width:280px;*/
 }
 
 div.g_file_menu{
   display:inline-block;
   height:100%;
   width:100%;
-  padding:0.7em;;
   
   margin-top:0;
   
@@ -95,7 +99,6 @@ div.g_file_menu{
     }
     
     #open_file_explorer_title{
-      @include border-radius(5px);
       color:white;
     }
   }
@@ -110,7 +113,6 @@ div.small_g_file_menu{
   text-align:center;
   border-right:2px solid black;
   border-bottom:2px solid black;
-  @include border-radius(5px);
   span{
     margin-top:2px;
     padding:3px;
@@ -164,7 +166,7 @@ div#editor_flash{
   position:fixed; 
   width:300px; 
   right:10px; 
-  top:10px; 
+  top:65px; 
   background-color:transparent; 
   z-index:1000;
 }
@@ -187,3 +189,86 @@ div.collaborators_container {
   }
 }
 
+#menu {
+  #expanded_menu {
+    display:none;
+    position:fixed;
+    left:5px;
+/*    background:#4db6ac;
+    color:rgba(255,255,255,.84);*/
+    min-width:200px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    background-color:white;
+
+    .options {
+      color:black;
+      padding:1em;
+      width:700px;
+    }
+
+    ul.menu_list {
+      @extend .list-group;
+      margin:0;
+      padding:0;
+
+      li {
+        @extend .list-group-item;
+        padding:0 0;
+        a {
+          display:block;
+          @extend .btn;
+          @extend .btn-default;
+          color:rgba(255, 255, 255, 0.84);
+          text-align:left;
+          margin:1px;;
+        }
+        /*
+        a:hover:not(.btn-link):not(.btn-flat){
+          color:rgba(255, 255, 255, 0.84);
+        }
+        */
+      }
+    }
+
+    .themes {
+      .btn_theme {
+        padding:8px 10px;
+        min-width:250px;
+      }
+      .btn-dummy {
+        display:block;
+        height:36px;
+        padding:0;
+        margin:0;
+        color:white; 
+        cursor:default;
+      }
+      .themes_back {
+        position:absolute;
+        top:30px;
+        left:100px;
+        z-index:100;
+      }
+    } 
+
+    .syntaxes {
+      ul {
+        min-width:250px;
+        min-height:250px;
+      }
+      a.menu_back {
+        position:absolute;
+        top:10px;
+        right:10px;
+        z-index:100;
+
+      }
+    }
+
+  }
+  .menu_content {
+    display:none;
+  }
+
+
+}
