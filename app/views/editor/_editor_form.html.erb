@@ -42,12 +42,6 @@
 
 </div>
 
-<div class="small_g_file_menu" >
-  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:editor_controller.save()" title="Save"></span>
-  <span class="glyphicon glyphicon-folder-open" onclick="javascript:editor_controller.file_explorer.open()" title="Open file"></span>
-  <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
-</div>
-
 <div class="g_file_editor">
   <div id="editor"></div>
 </div>
@@ -68,7 +62,6 @@ oauth_controller.add_to_queue(function(){
     function(){
       editor_controller = new EditorController("editor_app", {
         'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
-        'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
         'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
         'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
         'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
@@ -77,7 +70,6 @@ oauth_controller.add_to_queue(function(){
         'keybinding_pref' : Preference.find('keybinding', StringPreference),
         'flash' : new FlashController('editor_flash'),
         'file_explorer': new FileExplorerController("file_explorer_container", {
-          'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
           'height_pref' : Preference.find('file_explorer_height', StringPreference),
           }),
         })

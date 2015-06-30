@@ -45,47 +45,56 @@
       </li>
       <!-- */FILE -->
 
+      <li>
+        <a href="javascript:void(0)" class="menu_item">Open</a>
+        <div class="menu_content">
+          <%= render 'shared/file_explorer', :with_dropdown => true %>
+        </div>
+      </li>
+
       <!-- OPTIONS/* -->
       <li>
-        <a href="javascript:void(0)" class="menu_item">Options</a>
-        <div class="menu_content">
+        <a href="javascript:void(0)" class="menu_item" >Options</a>
+        <div class="menu_content" data-show-callback="editor_controller.options_show_callback()">
           <div class="options">
 
             <div class="row">
 
               <div class="col-xs-3">
                 Editor mode :
-                <select class="form-control">
-                  <option>Normal</option>
-                  <option>vim</option>
-                  <option>Emacs</option>
+                <select class="keybinding_select form-control">
+                  <option value="normal">Normal</option>
+                  <option value="vim">vim</option>
+                  <option value="emacs">Emacs</option>
                 </select>
               </div>
 
               <div class="col-xs-3">
                 Tab size :
-                <select class="form-control">
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <select class="tab_size_select form-control">
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </select>
               </div>
 
               <div class="col-xs-3">
                 Font size :
-                <select class="form-control">
-                  <option>Small</option>
-                  <option>Normal</option>
-                  <option>Large</option>
-                  <option>X-large</option>
+                <select class="font_size_select form-control">
+                  <option value="0.5em">Small</option>
+                  <option value="1em">Normal</option>
+                  <option value="1.5em">Large</option>
+                  <option value="2em">X-large</option>
                 </select>
               </div>
 
-              <div class="col-xs-3 checkbox">
-                <label>
-                  <input type="checkbox"><span class="checkbox-material"><span class="check"></span></span> Word wrapping
-                </label>
+              <div class="col-xs-3">
+                <div class="togglebutton">
+                  <label>
+                    Word wrapping : <input type="checkbox" class="word_wrap_checkbox">
+                  </label>
+                </div>
               </div>
 
             </div>

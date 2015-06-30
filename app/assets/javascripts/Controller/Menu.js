@@ -65,7 +65,8 @@ MenuController.prototype.show_menu = function(){
   //self.expanded_menu.css('bottom', "5px");
   
 
-  self.expanded_menu.html(self.active_link.parent().find('.menu_content').html());
+  var element = self.active_link.parent().find('.menu_content').first().clone(true,true);
+  self.set_content(element);
 
   self.setup_sub_menus();
 
@@ -75,15 +76,14 @@ MenuController.prototype.show_menu = function(){
 
 MenuController.prototype.setup_sub_menus = function() {
   var self = this;
-  self.$.find('.sub_menu_item').click(function(){
+  self.expanded_menu.find('.sub_menu_item').click(function(){
     var link = $(this);
-    self.previous_contents.push(self.expanded_menu.html());
+    self.previous_contents.push(self.expanded_menu.children().first().clone(true,true));
     self.expanded_menu.slideUp(function(){
-      self.expanded_menu.html(link.parent().find('.menu_content').html());
+      var element = link.parent().find('.menu_content').first().clone(true,true);
+      self.set_content(element);
 
-
-
-      self.setup_sub_menus();
+      //self.setup_sub_menus();
       self.expanded_menu.slideDown();
 
     });
@@ -92,8 +92,8 @@ MenuController.prototype.setup_sub_menus = function() {
   self.expanded_menu.find('.menu_back').click(function(){
     var previous_content = self.previous_contents.pop();
     self.expanded_menu.slideUp(function(){
-      self.expanded_menu.html(previous_content);
-      self.setup_sub_menus();
+      self.set_content(previous_content);
+      //self.setup_sub_menus();
       self.expanded_menu.slideDown();
     });
   });
@@ -101,10 +101,20 @@ MenuController.prototype.setup_sub_menus = function() {
  
 }
 
+MenuController.prototype.set_content = function(content){
+  var self = this;
+  self.expanded_menu.html(content);
+  if(content.attr('data-show-callback')) eval(content.attr('data-show-callback'))
+  content.show();
+}
+
 MenuController.prototype.hide_menu = function(){
   var self = this;
-  self.expanded_menu.fadeOut();
-  self.background.hide();
-  self.active_link.parent().removeClass('active');
-  self.active_link = undefined;
+  self.expanded_menu.fadeOut(function(){
+    self.expanded_menu.empty();
+    self.previous_contents = [];
+    self.background.hide();
+    self.active_link.parent().removeClass('active');
+    self.active_link = undefined;
+  });
 }
