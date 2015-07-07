@@ -19,11 +19,11 @@ FlashController.prototype.add = function(text, type, timeout, where){
   var element = $($.parseHTML(html));
   element.hide()
   where.prepend(element)
-  element.fadeIn()
+  element.slideDown()
   if(timeout){
     setTimeout(function(){
       //$('*[data-flash-id="'+alert_id+'"]').remove();
-      element.fadeOut()
+      element.slideUp()
     }, timeout*1000)
   }
 }
