@@ -76,6 +76,7 @@ oauth_controller.add_to_queue(function(){
       editor_controller.file_explorer.parent = editor_controller 
       editor_controller.file_explorer.flash = editor_controller.flash
       editor_controller.oauth_controller = oauth_controller;
+      editor_controller.file_explorer.load();
 
       <% unless browser.chrome? %>
       $(document).ready(function(){
