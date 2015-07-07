@@ -12,4 +12,6 @@
  *= require jquery-ui
  *= require bootstrap
  *= require_tree .
+ *= stub libs/bundled-material.min
+ *= stub editor
 */
