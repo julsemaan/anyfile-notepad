@@ -454,6 +454,13 @@ EditorController.prototype.change_keybinding = function(keybinding){
     this.editor_view.setKeyboardHandler("ace/keyboard/vim");
     if(!this.editor_view.showCommandLine){
       this.editor_view.showCommandLine = function(command){self.vim_command_handler(command)}
+      // we bind the vim write event to this controller
+      ace.config.loadModule("ace/keyboard/vim", function(m) {
+          var VimApi = require("ace/keyboard/vim").CodeMirror.Vim
+          VimApi.defineEx("write", "w", function(cm, input) {
+              self.save()
+          })
+      })
     }
   }
   else if(keybinding == "emacs"){
