@@ -43,7 +43,6 @@ EditorController.prototype.initialize_html = function(){
 
   this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
-  this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
 //  this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
 //  this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
 //  this.$.find(".keybinding_button").click(function(){self.change_keybinding($(this).attr('value'))})
@@ -289,8 +288,9 @@ EditorController.prototype.auto_save = function(){
 EditorController.prototype.set_syntax_mode = function(syntax,save){
   var self = this;
   save = save || false
-  var check = this.$.find('#syntax_check').detach();
-  this.$.find('#syntax_'+syntax).prepend(check)
+  this.$.find('.syntax_button').css("background-color", "initial")
+  this.$.find('.syntax_'+syntax).css("background-color", "#009688")
+  console.log('.syntax_'+syntax)
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){

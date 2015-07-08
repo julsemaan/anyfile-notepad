@@ -113,7 +113,7 @@
                                    <ul class="menu_list">
                                       <% syntaxes.each do |syntax| %>
                                         <li>
-                                          <a href="javascript:void(0);" class="syntax_button" id="syntax_<%= syntax.ace_js_mode %>" mode="<%= syntax.ace_js_mode %>">
+                                          <a href="javascript:void(0);" class="syntax_button syntax_<%= syntax.ace_js_mode %>" onclick="menu_controller.hide_menu();editor_controller.set_syntax_mode('<%= syntax.ace_js_mode %>',true);">
                                             <%= syntax.display_name %>
                                           </a>                  
                                         </li>
