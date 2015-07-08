@@ -122,9 +122,6 @@ EditorController.prototype.initialize_html = function(){
     self.$.find('#reauthenticate_modal').modal('hide')
   })
 
-  this.$.find('.restart_app').click(function(){
-    if(confirm("Are you sure ?")) window.location.reload()
-  })
 
   if(!Preference.find('agree_terms', BooleanPreference).getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
@@ -251,11 +248,9 @@ EditorController.prototype.save = function(){
     this.file.set("data", this.editor_view.getValue())
 
     this.block_saving()
-    this.$.find('#file_save_modal').modal('show')
     // give a small time for everything to show.
     setTimeout(function(){
         self.file.update(true, function(response){
-          self.$.find("#file_save_modal").modal("hide")
           self.reset_options()
           if(response && !response.error) window.location.hash="#edit/"+self.file.id
           self.editor_view.focus();
@@ -284,7 +279,6 @@ EditorController.prototype.auto_save = function(){
     this.block_saving()
 
     self.file.update(false, function(response){
-      self.$.find("#file_save_modal").modal("hide")
       self.reset_options()
       if(response && !response.error) window.location.hash="#edit/"+self.file.id
     })
@@ -382,13 +376,11 @@ EditorController.prototype.check_content_changed = function(){
   }
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
-    this.$.find('.editor_save_button').addClass('btn-warning')
     if(!(this.$.find('.editor_save_button').html() == "Saving...")){
       this.$.find('.editor_save_button').html("Save")
     }
   }
   else{
-    this.$.find('.editor_save_button').removeClass('btn-warning')
     this.$.find('.editor_save_button').html("Saved")
   }
 }
@@ -627,4 +619,12 @@ EditorController.prototype.options_show_callback = function() {
 
 }
 
+EditorController.prototype.show_file_info = function() {
+  var self = this;
+  self.$.find('#file_info_modal').modal('show')
+}
 
+EditorController.prototype.restart_app = function() {
+  var self = this;
+  if(confirm("Are you sure ?")) window.location.reload()
+}

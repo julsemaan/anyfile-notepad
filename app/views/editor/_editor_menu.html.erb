@@ -15,31 +15,29 @@
 
         <div class="menu_content">
           <ul class="menu_list">
-            <li><a href="#new" target="_blank">New</a></li>
-
-            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.file_explorer.open()">Open</a></li>
+            <li><a href="#new" target="_blank" onclick="javascript:menu_controller.hide_menu();">New</a></li>
 
             <li><a href="javascript:void(0);" class="editor_save_button" >Save</a></li>
 
-            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.print()" >Print</a></li>
+            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.print();menu_controller.hide_menu()" >Print</a></li>
             
             <li>
-              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search()">
+              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search();menu_controller.hide_menu()">
                 Search (Ctrl-F)
               </a>
             </li>
             
             <li>
-              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_replace()">
+              <a href="javascript:void(0);" onclick="javascript:editor_controller.open_replace();menu_controller.hide_menu()">
                 Search & replace
               </a>
             </li>
             
             <li><a href="<%= root_path %>">App home page</a></li>
 
-            <li><a href="javascript:void(0);" class="show_file_info" >Show file info</a></li>
+            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.show_file_info();menu_controller.hide_menu()" >Show file info</a></li>
 
-            <li><a href="javascript:void(0);" class="restart_app">Restart app</a></li>
+            <li><a href="javascript:void(0);" onclick="javascript:editor_controller.restart_app()">Restart app</a></li>
           </ul>
         </div>
       </li>
@@ -167,8 +165,9 @@
       </li><!-- */OPTIONS -->
 
     </ul>
-    <form class="navbar-form navbar-left">
+    <form id="file_title_form" class="navbar-form navbar-left" onsubmit="javascript:editor_controller.save();return false;">
       <input type="text" data-bind-file="title" class="form-control col-lg-8" placeholder="Filename">
+      <a href="javascript:void(0);" class="editor_save_button" >Save</a>
     </form>
   </div>
   <div id="expanded_menu">

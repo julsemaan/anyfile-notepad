@@ -54,6 +54,10 @@ div.file_explorer{
 
 div#editor_menu_container{
   display:inline;
+  form a {
+    color:white;
+    font-style:italic;
+  }
   /*width:280px;*/
 }
 
@@ -87,10 +91,6 @@ div.g_file_menu{
   }
   
   
-  div.file_title{
-    padding-bottom:5px;
-  }
-  
   div.g_file_editor_file_explorer{
     
     #fileTree{
@@ -106,22 +106,6 @@ div.g_file_menu{
 
 }
 
-div.small_g_file_menu{
-  width:30px;
-  padding:7px 0;
-  display:inline-block;
-  text-align:center;
-  border-right:2px solid black;
-  border-bottom:2px solid black;
-  span{
-    margin-top:2px;
-    padding:3px;
-    @extend .btn;
-    @extend .btn-default;
-    cursor:pointer;
-  }
-}
-
 div.g_file_editor{
   height:100%;
   display:inline-block;
@@ -130,35 +114,12 @@ div.g_file_editor{
     position:absolute;
     display:inline-block;
     font-size:1em;
+    .ace_search.right {
+      bottom:0;
+      top:auto;
+      border-radius:5px 0 0 0;
+    }
   }
-}
-
-div#select_theme_modal{
-  .modal-dialog{
-    //width:650px;
-    text-align:center;
-    position:fixed;
-    left:0;
-    bottom:0;
-  }
-  .modal-body{
-    padding:0;
-  }
-  .modal-footer{
-    padding:0;
-  }
-  
-  .row{
-    margin:0;
-  }
-  
-  .col-md-4{
-    padding:0;
-  }
-}
-
-div.theme_choice_column{
-  width:100%;
 }
 
 
@@ -190,6 +151,12 @@ div.collaborators_container {
 }
 
 #menu {
+  #file_title_form a {
+    vertical-align:bottom;
+    padding-bottom:8px;
+    padding-left:5px;
+    font-size:110%;
+  }
   #expanded_menu {
     display:none;
     position:fixed;
