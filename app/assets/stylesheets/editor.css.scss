@@ -151,11 +151,17 @@ div.collaborators_container {
 }
 
 #menu {
-  #file_title_form a {
-    vertical-align:bottom;
-    padding-bottom:8px;
-    padding-left:5px;
-    font-size:110%;
+  #file_title_form {
+    input {
+      height:28px;
+    }
+
+    a {
+      vertical-align:bottom;
+      padding-bottom:8px;
+      padding-left:5px;
+      font-size:110%;
+    }
   }
   #expanded_menu {
     display:none;
