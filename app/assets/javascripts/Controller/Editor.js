@@ -141,6 +141,7 @@ EditorController.prototype.initialize_html = function(){
 EditorController.prototype.post_app_load = function(){
   var self = this
   this.$.find("#app_load_modal").modal('hide');
+  this.$.find("#loading_overlay").fadeOut();
 }
 
 EditorController.prototype.new = function(folder_id){

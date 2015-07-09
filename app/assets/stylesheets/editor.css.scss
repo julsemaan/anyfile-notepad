@@ -150,7 +150,20 @@ div.collaborators_container {
   }
 }
 
+#loading_overlay {
+  background-color:black;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  position:fixed;
+  z-index:1040;
+}
+
 #menu {
+  .navbar-brand {
+    padding:5px 5px;
+  }
   #file_title_form {
     input {
       height:28px;
