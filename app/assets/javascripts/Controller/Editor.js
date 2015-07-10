@@ -167,6 +167,8 @@ EditorController.prototype.edit = function(id){
   this.flash.empty()
   this.$.find("#file_load_modal").modal('show');
   this.file_id = id
+  // we stop the collaboration if it's there
+  this.stop_collaboration();
   this.file = new DriveFile(id, {
     uid : "file",
     loaded : function(error){
@@ -481,13 +483,21 @@ EditorController.prototype.init_collaboration = function(model){
   }catch(e){console.log(e)}
 }
 
-EditorController.prototype.make_collaborative = function(){
+EditorController.prototype.stop_collaboration = function(){
   var self = this;
-
   // remove any previous event listeners, if any
   if(self.realtime_content){
     self.realtime_content.removeAllEventListeners();
+    self.realtime_content = undefined;
   }
+  if(self.realtime_document) self.realtime_document.close();
+  self.realtime_document = undefined;
+}
+
+EditorController.prototype.make_collaborative = function(){
+  var self = this;
+
+  self.stop_collaboration();
 
   gapi.drive.realtime.load(self.file.id, function(doc){
     self.realtime_document = doc;
@@ -540,10 +550,15 @@ EditorController.prototype.remove_collaborator = function(collaborator){
 
 EditorController.prototype.add_collaborator = function(collaborator) {
   var self = this;
+  console.log("Collaborator has joined")
+  console.log(collaborator)
   if(collaborator.isMe) return;
   var element = $("<span id='collaborator-"+collaborator.userId+"' class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
   self.collaborators_colors[collaborator.userId] = collaborator.color;
-  $('.collaborators').append(element);
+  if(! $('.collaborators').has('#collaborator-'+collaborator.userId).length )
+    $('.collaborators').append(element) ;
+  else
+    console.log("Collaborator is already displayed")
 
 }
 

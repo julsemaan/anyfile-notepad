@@ -136,17 +136,12 @@ div.print_menu {
   padding:10px;
 }
 
-div.collaborators_container {
-  .panel-heading {
-    text-align:center;
-  }
-
-  .panel-body {
-    padding:0.3em;
-  }
-
-  .panel-body * {
-    margin:0.5em;
+span.collaborators {
+  height:60px;
+  display:inline-block;
+  padding:20px 10px;
+  * {
+    margin-left:5px;
   }
 }
 
