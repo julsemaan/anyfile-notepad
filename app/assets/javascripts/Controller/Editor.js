@@ -1,7 +1,7 @@
 function EditorController(view, options){
   this.editor_view = ace.edit("editor");
   this.$ = $('#'+view);
-  this.$editor = $.find('#editor')
+  this.$editor = this.$.find('#editor')
   this.file_id = options["file_id"];
   
   this.ajax_defered_waiting = {}
@@ -46,6 +46,12 @@ EditorController.prototype.initialize_html = function(){
 //  this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
 //  this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
 //  this.$.find(".keybinding_button").click(function(){self.change_keybinding($(this).attr('value'))})
+
+  
+  self.$editor.css('top', self.$.find('#menu').height() + "px");
+  $(window).resize(function(){
+    self.$editor.css('top', self.$.find('#menu').height() + "px");
+  })
 
   $('.word_wrap_checkbox').on('change', function(){
     self.change_word_wrap($(this).prop('checked'))
