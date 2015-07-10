@@ -618,6 +618,12 @@ EditorController.prototype.clear_realtime_user = function(userId){
   }
 }
 
+EditorController.prototype.open_share_modal = function() {
+  var self = this;
+  oauth_controller.share_client.setItemIds([self.file.id]);
+  oauth_controller.share_client.showSettingsDialog();
+}
+
 EditorController.prototype.options_show_callback = function() {
   var self = this;
   $("select").each(function(){

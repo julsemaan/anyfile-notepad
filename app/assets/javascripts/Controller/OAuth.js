@@ -1,7 +1,7 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com"
-  this.api_key = "AIzaSyBxYkmTLod4Js9yR9hcD9puRUHRl2gQDXU"
+  this.client_id = "754762389602-l8ddeqmabdtin93qv50gfmtpmr7kvf62.apps.googleusercontent.com"
+  this.api_key = "vLHF5dsoUzPZqTOA2cxQ0z5X"
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
@@ -11,7 +11,6 @@ function OAuthController(options){
 
 OAuthController.prototype.init = function(){
   var self = this;
-  gapi.client.setApiKey(this.api_key)
   setTimeout(function(){self.check_authed()}, 15000)
   this.add_to_queue(function(){
     User.current_user(function(user){self.current_user = user})
@@ -49,7 +48,10 @@ OAuthController.prototype.post_auth = function(auth_result){
     gapi.load('auth:client,drive-realtime,drive-share', function(){
       gapi.client.load('drive', 'v2', function(){
         setCookie('access_token', auth_result['access_token'], 1)
-        self.ready()
+        gapi.load('drive-share', function(){
+          self.share_client = new gapi.drive.share.ShareClient(self.client_id);
+          self.ready()
+        });
       })
     });
     
