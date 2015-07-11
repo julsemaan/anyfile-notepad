@@ -1,7 +1,6 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "754762389602-l8ddeqmabdtin93qv50gfmtpmr7kvf62.apps.googleusercontent.com"
-  this.api_key = "vLHF5dsoUzPZqTOA2cxQ0z5X"
+  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com"
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
@@ -45,13 +44,11 @@ OAuthController.prototype.auth_popup = function(){
 OAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
+    setCookie('access_token', auth_result['access_token'], 1)
     gapi.load('auth:client,drive-realtime,drive-share', function(){
       gapi.client.load('drive', 'v2', function(){
-        setCookie('access_token', auth_result['access_token'], 1)
-        gapi.load('drive-share', function(){
-          self.share_client = new gapi.drive.share.ShareClient(self.client_id);
-          self.ready()
-        });
+        self.share_client = new gapi.drive.share.ShareClient(self.client_id);
+        self.ready()
       })
     });
     
@@ -103,8 +100,12 @@ OAuthController.prototype.execute_request = function(request, callback){
       self.authed = false
       self.do_auth()
     }
+    else if(response.error.code == 409){
+      console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
+      callback(response);
+    }
     else{
-      $('#error_modal .add_message').html("We got this message from Google : "+ response.error.message)
+      $('#error_modal .additionnal_message').html("We got this message from Google : "+ response.error.message)
       $('#error_modal').modal('show')
       callback(response)
     }
