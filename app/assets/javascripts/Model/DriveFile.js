@@ -228,6 +228,16 @@ DriveFile.prototype.did_content_change = function(){
   return (this.data != this.data_saved || this.title != this.title_saved)
 }
 
+DriveFile.prototype.delete = function(){
+  var self = this;
+  var request = gapi.client.drive.files.delete({
+    'fileId': this.id
+  });
+  oauth_controller.execute_request(request, function(response){
+    console.log(response)
+  })
+}
+
 function ab2str(buf) {
   return String.fromCharCode.apply(null, new Uint16Array(buf));
 }
