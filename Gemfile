@@ -18,17 +18,19 @@ group :production do
   gem 'newrelic_rpm'
 end
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'bootstrap-sass', '= 3.1.1.0'
-
-  gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
+group :build do
+  gem 'activerecord-postgresql-adapter'
 end
+
+
+gem 'sass-rails',   '~> 3.2.3'
+gem 'coffee-rails', '~> 3.2.1'
+gem 'bootstrap-sass', '= 3.1.1.0'
+
+gem 'therubyracer', :platforms => :ruby
+
+gem 'uglifier', '>= 1.0.3'
+
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
