@@ -70,12 +70,6 @@ oauth_controller.add_to_queue(function(){
       editor_controller.oauth_controller = oauth_controller;
       editor_controller.file_explorer.load();
 
-      <% unless browser.chrome? %>
-      $(document).ready(function(){
-        editor_controller.flash.sticky_warning("The browser you're using is not officially supported. <br/> Issues you may experience with the app may be caused by it. <br/> For the best experience use Chrome")
-      })
-      <% end %>
-
       new EditorRouter(editor_controller)
 
     }
