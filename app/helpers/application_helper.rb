@@ -7,10 +7,6 @@ module ApplicationHelper
     end
   end
   
-  def is_admin
-    session[:logged_in]
-  end
-  
   def g_plus_url
     "https://plus.google.com/communities/109168786116242892967"
   end

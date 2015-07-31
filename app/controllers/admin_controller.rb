@@ -1,10 +1,10 @@
-class AdminController < GOauthController
+class AdminController < ApplicationController
   
   layout 'common_website'
-  #http_basic_authenticate_with :name => "super", :password => "man", :except => :index
+  http_basic_authenticate_with :name => "super", :password => "man", :except => :index
   skip_before_filter :execute_default, :only => :index
   skip_after_filter :execute_after, :only => :index
-  before_filter :authenticate_admin, :except => [:index, :logout]
+#  before_filter :authenticate_admin, :except => [:index, :logout]
   
   def authenticate_admin 
     if Administrator.is_admin(@user["id"])
