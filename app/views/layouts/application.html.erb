@@ -30,5 +30,10 @@
 
   <%= javascript_include_tag    "//apis.google.com/js/client.js?onload=oauth_loaded" %>
 
+    <script>
+      $(document).ready(function() {
+          $.material.init();
+      });
+    </script>
 </body>
 </html>

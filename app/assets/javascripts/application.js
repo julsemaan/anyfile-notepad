@@ -18,9 +18,9 @@
 //= require Model/Model
 //= require_tree .
 
-$(document).bind("DOMSubtreeModified", function() {
-  $.material.init()
-});
+//$(document).bind("DOMSubtreeModified", function() {
+//  $.material.init()
+//});
 
 function getCookie(name) {
   var value = "; " + document.cookie;
