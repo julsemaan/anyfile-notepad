@@ -380,7 +380,7 @@ EditorController.prototype.show_file_explorer = function(){
 EditorController.prototype.check_content_changed = function(){
   var self = this;
   //this.file.title = this.$.find("#g_file_title").val()
-  if(this.file.persisted){
+  if(this.file.persisted && this.realtime_content){
     this.realtime_content.setText(this.editor_view.getValue());
   }
   this.file.set("data", this.editor_view.getValue())
