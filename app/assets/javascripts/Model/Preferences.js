@@ -29,7 +29,6 @@ Preferences.prototype.create_initial = function(){
   })
   this.prefs_file.set('title', 'preferences');
   this.prefs_file.set('data', '{}');
-  this.prefs_file.update_data();
   this.post_load()
 }
 
