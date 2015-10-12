@@ -111,9 +111,7 @@ EditorController.prototype.initialize_html = function(){
     return false;
   });  
 
-
-
-  this.initial_theme = "ace/theme/clouds_midnight"
+  this.initial_theme = "ace/theme/chrome"
   if(this.theme_pref.getValue()){
     this.initial_theme = this.theme_pref.getValue()
   }
