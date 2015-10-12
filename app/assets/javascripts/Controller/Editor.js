@@ -43,11 +43,6 @@ EditorController.prototype.initialize_html = function(){
 
   this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
-//  this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
-//  this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
-//  this.$.find(".keybinding_button").click(function(){self.change_keybinding($(this).attr('value'))})
-
-  
   self.$editor.css('top', self.$.find('#menu').height() + "px");
   $(window).resize(function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
@@ -94,15 +89,6 @@ EditorController.prototype.initialize_html = function(){
   this.change_keybinding(this.keybinding_pref.getValue())
 
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
-
-/*
-  window.addEventListener("keydown",function (e) {
-    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
-      e.preventDefault();
-      self.open_search()
-    }
-  })
-*/
 
   $(window).on('keydown.search', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 'f' && event.shiftKey && event.ctrlKey) && !(event.which == 19)) return true;
@@ -258,7 +244,6 @@ EditorController.prototype.save = function(){
       return false
   }
   else{
-    //this.file.title = this.$.find("#g_file_title").val()
     this.file.set("data", this.editor_view.getValue())
 
     this.block_saving()
@@ -385,7 +370,6 @@ EditorController.prototype.show_file_explorer = function(){
 
 EditorController.prototype.check_content_changed = function(){
   var self = this;
-  //this.file.title = this.$.find("#g_file_title").val()
   if(this.file.persisted && this.realtime_content){
     this.realtime_content.setText(this.editor_view.getValue());
   }
