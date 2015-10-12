@@ -350,7 +350,7 @@ EditorController.prototype.block_saving = function(){
 
 EditorController.prototype.allow_saving = function(){
   var self = this;
-  this.$.find('.editor_save_button').html("Saved")
+  this.$.find('.editor_save_button').html("Save")
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
   $(window).off('keydown.save')
@@ -370,6 +370,12 @@ EditorController.prototype.show_file_explorer = function(){
 
 EditorController.prototype.check_content_changed = function(){
   var self = this;
+
+  if(!this.file.persisted){
+    this.$.find('.editor_save_button').html("Save")
+    return
+  }
+
   if(this.file.persisted && this.realtime_content){
     this.realtime_content.setText(this.editor_view.getValue());
   }
