@@ -620,8 +620,13 @@ EditorController.prototype.clear_realtime_user = function(userId){
 
 EditorController.prototype.open_share_modal = function() {
   var self = this;
-  oauth_controller.share_client.setItemIds([self.file.id]);
-  oauth_controller.share_client.showSettingsDialog();
+  if(self.file.persisted){
+    oauth_controller.share_client.setItemIds([self.file.id]);
+    oauth_controller.share_client.showSettingsDialog();
+  }
+  else {
+    alert("You must save the file before you can share it.");
+  }
 }
 
 EditorController.prototype.options_show_callback = function() {
