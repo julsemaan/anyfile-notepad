@@ -15,7 +15,7 @@ function EditorController(view, options){
   this.word_wrap_pref = options["word_wrap_pref"]
   this.font_size_pref = options["font_size_pref"]
   this.tab_size_pref = options["tab_size_pref"]
-  this.saw_v2_notice_pref = options["saw_v2_notice_pref"]
+  this.major_notice_pref = options["major_notice_pref"]
 
   this.theme_pref = options["theme_pref"]
 
@@ -137,6 +137,14 @@ EditorController.prototype.initialize_html = function(){
     })
     $('#disagree_terms').click(function(){
       window.location.href = "http://www.google.com"
+    })
+  }
+
+  if(!self.major_notice_pref.getValue() >= parseInt($('#major_notice_modal').attr('data-version')) ){
+    $('#major_notice_modal').modal('show');
+    $('#agree_major_notice').click(function(){
+      $('#major_notice_modal').modal('hide'); 
+      self.major_notice_pref.setValue(parseInt($('#major_notice_modal').attr('data-version')), self, self.show_reauth)
     })
   }
 

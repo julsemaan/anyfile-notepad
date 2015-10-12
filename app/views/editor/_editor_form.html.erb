@@ -6,7 +6,7 @@
 <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}, :dismiss => true} %>
 <%= render 'file_info' %>
-<%= render :partial => 'v2_notice_modal' %>
+<%= render :partial => 'major_notice_modal' %>
 <%= render :partial => 'terms' %>
 <%= render :partial => 'flash' %>
 
@@ -56,7 +56,7 @@ oauth_controller.add_to_queue(function(){
         'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
         'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
         'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
-        'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
+        'major_notice_pref' : Preference.find('major_notice', IntPreference),
         'theme_pref': Preference.find('theme', StringPreference),
         'menu_width_pref' : Preference.find('menu_width', StringPreference),
         'keybinding_pref' : Preference.find('keybinding', StringPreference),
