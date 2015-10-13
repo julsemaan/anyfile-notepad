@@ -4,7 +4,7 @@ class PagesController < ApplicationController
     @title = "Home"
     @key = 'home'
     @content = SiteContent.find_by_key(@key).value
-    render :template => 'site_content/show'
+    render :template => 'site_content/home'
   end
   
   def news
