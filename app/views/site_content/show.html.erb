@@ -1,7 +1,7 @@
 <script>
   $(function(){
       var m = new MDRenderer({
-        url : '/pages/<%= @key %>.markdown', 
+        url : getQueryParam("test") ? '/pages/<%= @key %>.test.markdown' : '/pages/<%= @key %>.markdown', 
         columns : <%= @columns || 1 %>,
         destination : '.home_content',
       });

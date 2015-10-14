@@ -210,29 +210,16 @@ EditorController.prototype.reset_options = function(){
 }
 
 EditorController.prototype.print = function(){
-  var form = document.createElement("form");
-  form.setAttribute("method", "post");
-  form.setAttribute("action", "/app/print");
-
-  form.setAttribute("target", "view");
-
-  var hiddenField = document.createElement("input"); 
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "content");
-  hiddenField.setAttribute("value", this.file.data);
-  form.appendChild(hiddenField);
-
-  hiddenField = document.createElement("input"); 
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "title");
-  hiddenField.setAttribute("value", this.file.title);
-  form.appendChild(hiddenField);
-
-  document.body.appendChild(form);
-
-  window.open('', 'view');
-
-  form.submit();
+  var myWindow = window.open("", "MsgWindow", "width=800, height=600");
+  var lines = this.editor_view.getValue().split('\n');
+  for(var i in lines){
+    lines[i] = (parseInt(i)+1)+". "+lines[i];
+  }
+  var numbered_text = lines.join('\n');
+  $('#print_content .with_line_numbers').text(numbered_text);
+  $('#print_content .without_line_numbers').text(this.editor_view.getValue());
+  myWindow.document.write("<script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>");
+  myWindow.document.write($('#print_content').html());
 }
 
 EditorController.prototype.save = function(){

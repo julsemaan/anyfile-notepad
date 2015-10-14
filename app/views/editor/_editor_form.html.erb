@@ -10,6 +10,10 @@
 <%= render :partial => 'terms' %>
 <%= render :partial => 'flash' %>
 
+<div id="print_content" style="display:none">
+  <%= render :partial => 'print' %>
+</div>
+
 <script>
    $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
    $('.modal-backdrop.fade.in').css('opacity', '1.0')
