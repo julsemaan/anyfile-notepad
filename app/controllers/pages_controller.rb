@@ -16,7 +16,6 @@ class PagesController < ApplicationController
   def faq
     @title = "FAQ"
     @key = 'faq'
-    @content = SiteContent.find_by_key(@key).value
     render :template => 'site_content/show'
   end
   
