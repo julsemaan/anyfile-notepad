@@ -79,7 +79,13 @@ MDRenderer.prototype.createPanels = function() {
   for(var i in self.elements){
     var element = self.elements[i];
     if(element.type == "heading"){
-      title = element.text;
+      // Just a random info header
+      if (element.depth == 1){
+        panels.push($("<h3 class='alert alert-success'></h3>").html(element.text));
+      }
+      else if(element.depth == 2){
+        title = element.text;
+      }
     }
     else if(element.type == "paragraph"){
       panel_items.push(element)
