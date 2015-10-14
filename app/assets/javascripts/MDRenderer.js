@@ -107,7 +107,7 @@ MDRenderer.prototype.createPanels = function() {
 MDRenderer.prototype.createPanel = function(title, panel_items){
   var self = this; 
   var panel = $('<div class="panel"></div>')
-  var panel_header = $('<h3 class="panel-heading"></h3>');
+  var panel_header = $('<h4 class="panel-heading"></h3>');
   var panel_body = $('<div class="panel-body"></div>');
   panel.append(panel_header);
   panel.append(panel_body);
