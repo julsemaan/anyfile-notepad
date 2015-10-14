@@ -1,7 +1,7 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "259153612051-9pj88j979u2cc1n6ln3tc6h5rfh6atkr.apps.googleusercontent.com";
-  this.drive_app_id = "259153612051";
+  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com";
+  this.drive_app_id = "249464630588";
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
