@@ -1,7 +1,7 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "754762389602-l8ddeqmabdtin93qv50gfmtpmr7kvf62.apps.googleusercontent.com"
-  this.api_key = "vLHF5dsoUzPZqTOA2cxQ0z5X"
+  this.client_id = "259153612051-9pj88j979u2cc1n6ln3tc6h5rfh6atkr.apps.googleusercontent.com";
+  this.drive_app_id = "259153612051";
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
@@ -48,7 +48,8 @@ OAuthController.prototype.post_auth = function(auth_result){
     setCookie('access_token', auth_result['access_token'], 1)
     gapi.load('auth:client,drive-realtime,drive-share', function(){
       gapi.client.load('drive', 'v2', function(){
-        self.share_client = new gapi.drive.share.ShareClient(self.client_id);
+        self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
+        self.share_client.setOAuthToken(auth_result['access_token']);
         self.ready()
       })
     });
