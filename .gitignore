@@ -26,3 +26,4 @@ pickle-email-*.html
 /config/client_secret*.json
 /cstore/*
 /config/development.yml
+/public/pages/*.markdown
