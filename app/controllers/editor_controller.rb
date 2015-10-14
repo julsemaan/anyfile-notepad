@@ -1,6 +1,5 @@
 class EditorController < ApplicationController  
   require 'json'
-  before_filter :check_browser
 
   def app
     @device = current_device
