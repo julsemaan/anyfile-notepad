@@ -1,1 +1,9 @@
-<%= @content.html_safe %>
+<script>
+  $(function(){
+      var m = new MDRenderer({
+        url : getQueryParam("test") ? '/pages/<%= @key %>.test.markdown' : '/pages/<%= @key %>.markdown', 
+        columns : <%= @columns || 1 %>,
+        destination : '.home_content',
+      });
+  });
+</script>

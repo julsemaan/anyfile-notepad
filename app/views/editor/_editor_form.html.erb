@@ -1,14 +1,18 @@
 <div id="editor_app">
-<%= render :partial => 'shared/modal', :locals => {:id => "file_save_modal", :title => "Your file is being saved", :message => "Press escape to close this window. (Your file will still be saved)"} %>
+<div id="loading_overlay"></div>
 <%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
 <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
-<%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}, :dismiss => true} %>
+<%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :dismiss => true} %>
 <%= render 'file_info' %>
-<%= render :partial => 'v2_notice_modal' %>
+<%= render :partial => 'major_notice_modal' %>
 <%= render :partial => 'terms' %>
 <%= render :partial => 'flash' %>
+
+<div id="print_content" style="display:none">
+  <%= render :partial => 'print' %>
+</div>
 
 <script>
    $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
@@ -18,22 +22,7 @@
 <div id="editor_menu_container" >
   <div id="editor_menu" class="g_file_menu" >
 
-    <form accept-charset="UTF-8" action="" data-remote="true" html="{:class=>:editor_form, :multipart=>true}" method="post"> 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <%= render 'editor_menu' %>
-        </div>
-        
-        <div class="panel-body">
-          <div class="file_title input-group">
-            <input type="text" data-bind-file="title" onkeydown="if(event.keyCode == 13){editor_controller.save();return false;}" class="field form-control" placeholder="File title" id="g_file_title"/>
-            <span class="input-group-btn ">
-              <%= link_to "Save", "javascript:void(0)", :id => 'editor_save_button', :class => "editor_save_button btn btn-primary"%>
-            </span>
-          </div>
-        </div>
-      </div>
-    </form>
+    <%= render 'editor_menu' %>
 
     <div id="editor_flash">
       <%= render 'shared/flash', :flash => flash %>
@@ -42,17 +31,11 @@
     <div class="g_file_editor_file_explorer">
       <%= render 'shared/file_explorer', :with_dropdown => true %>
     </div>
-    
+
     <%= render 'shared/editor_message' %>
 
   </div>
 
-</div>
-
-<div class="small_g_file_menu" >
-  <span class="glyphicon glyphicon-floppy-save" onclick="javascript:editor_controller.save()" title="Save"></span>
-  <span class="glyphicon glyphicon-folder-open" onclick="javascript:editor_controller.file_explorer.open()" title="Open file"></span>
-  <span class="glyphicon glyphicon-log-in" onclick="javascript:editor_controller.maximize_menu(true)" title="Maximize menu"></span>
 </div>
 
 <div class="g_file_editor">
@@ -60,8 +43,6 @@
 </div>
     
 <%= render 'shared/user' %>
-
-<%= render 'select_theme_modal' %>
 
 </div>
 <script type="text/javascript">
@@ -77,34 +58,29 @@ oauth_controller.add_to_queue(function(){
     function(){
       editor_controller = new EditorController("editor_app", {
         'word_wrap_pref':Preference.find('word_wrap', BooleanPreference),
-        'show_minimized': Preference.find('prefers_minimized', BooleanPreference).getValue(),
         'font_size_pref': Preference.find('ace_js_font_size', StringPreference),
         'tab_size_pref' : Preference.find('ace_js_tab_size', StringPreference),
-        'saw_v2_notice_pref' : Preference.find('saw_v2_notice', BooleanPreference),
+        'major_notice_pref' : Preference.find('major_notice', IntPreference),
         'theme_pref': Preference.find('theme', StringPreference),
         'menu_width_pref' : Preference.find('menu_width', StringPreference),
         'keybinding_pref' : Preference.find('keybinding', StringPreference),
         'flash' : new FlashController('editor_flash'),
         'file_explorer': new FileExplorerController("file_explorer_container", {
-          'cached' : Preference.find('cache_file_explorer_enabled', BooleanPreference).getValue(),
           'height_pref' : Preference.find('file_explorer_height', StringPreference),
           }),
         })
       editor_controller.file_explorer.parent = editor_controller 
       editor_controller.file_explorer.flash = editor_controller.flash
       editor_controller.oauth_controller = oauth_controller;
-
-      <% unless browser.chrome? %>
-      $(document).ready(function(){
-        editor_controller.flash.sticky_warning("The browser you're using is not officially supported. <br/> Issues you may experience with the app may be caused by it. <br/> For the best experience use Chrome")
-      })
-      <% end %>
+      editor_controller.file_explorer.load();
 
       new EditorRouter(editor_controller)
 
     }
   )
 })
+
+var menu_controller = new MenuController("menu");
 
 
 

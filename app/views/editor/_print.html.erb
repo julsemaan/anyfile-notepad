@@ -1,0 +1,31 @@
+<%= stylesheet_link_tag    "application", :media => "all" %>
+<%= stylesheet_link_tag    "editor", :media => "all" %>
+
+<div class="print_menu print_hide">
+  <a id="print" href="#print" class="btn btn-primary">Print</a>
+  <label for="line_numbers_checkbox">Line numbers : </label>
+  <input id="line_numbers_checkbox" type="checkbox" value="checked">
+
+</div>
+<% line_number = 1 %>
+<pre class="with_line_numbers hide"></pre>
+<pre class="without_line_numbers"></pre>
+
+<script>
+  $('#print').click(function(){
+    window.print()
+  });
+
+  var line_numbers_on = false;
+  $('#line_numbers_checkbox').change( function(){
+    line_numbers_on = !line_numbers_on;
+    if(line_numbers_on) {
+      $('.without_line_numbers').addClass('hide')
+      $('.with_line_numbers').removeClass('hide')
+    }
+    else { 
+      $('.without_line_numbers').removeClass('hide')
+      $('.with_line_numbers').addClass('hide')
+    }
+  });
+</script>

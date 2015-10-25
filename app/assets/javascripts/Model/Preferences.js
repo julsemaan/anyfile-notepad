@@ -7,8 +7,7 @@ function Preferences(loaded){
     'word_wrap' : 'false',
     'cache_file_explorer_enabled' : 'false',
     'file_explorer_height' : "300px", 
-    'menu_width' : '280px',
-    'saw_v2_notice' : 'false',
+    'major_notice' : '0',
     'agree_terms' : 'false',
     'keybinding' : 'normal',
   }
@@ -30,7 +29,6 @@ Preferences.prototype.create_initial = function(){
   })
   this.prefs_file.set('title', 'preferences');
   this.prefs_file.set('data', '{}');
-  this.prefs_file.update_data();
   this.post_load()
 }
 

@@ -1,7 +1,7 @@
 function EditorController(view, options){
   this.editor_view = ace.edit("editor");
   this.$ = $('#'+view);
-  this.$editor = $.find('#editor')
+  this.$editor = this.$.find('#editor')
   this.file_id = options["file_id"];
   
   this.ajax_defered_waiting = {}
@@ -12,15 +12,10 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.EDITOR_W_MENU_METRICS = {top:"0", bottom:"0", left:"280px", right:"0px"}
-  this.EDITOR_FULL_METRICS = {top:"0", bottom:"0", left:"30px", right:"0px"}
-  this.metrics = null;
-
   this.word_wrap_pref = options["word_wrap_pref"]
-  this.show_minimized = options["show_minimized"]
   this.font_size_pref = options["font_size_pref"]
   this.tab_size_pref = options["tab_size_pref"]
-  this.saw_v2_notice_pref = options["saw_v2_notice_pref"]
+  this.major_notice_pref = options["major_notice_pref"]
 
   this.theme_pref = options["theme_pref"]
 
@@ -48,30 +43,30 @@ EditorController.prototype.initialize_html = function(){
 
   this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
 
-  this.$.find(".syntax_button").click(function(){self.set_syntax_mode($(this).attr('mode'))})
-  this.$.find(".font_size_button").click(function(){self.change_font_size($(this).attr('value'))})
-  this.$.find(".tab_size_button").click(function(){self.change_tab_size($(this).attr('value'))})
-  this.$.find(".keybinding_button").click(function(){self.change_keybinding($(this).attr('value'))})
+  self.$editor.css('top', self.$.find('#menu').height() + "px");
+  $(window).resize(function(){
+    self.$editor.css('top', self.$.find('#menu').height() + "px");
+  })
+
+  $('.word_wrap_checkbox').on('change', function(){
+    self.change_word_wrap($(this).prop('checked'))
+  });
+
+  $('select').on('change', function() {
+    if($(this).hasClass('keybinding_select')){
+      self.change_keybinding(this.value);
+    }
+    else if($(this).hasClass('tab_size_select')){
+      self.change_tab_size(this.value);
+    }
+    else if($(this).hasClass('font_size_select')){
+      self.change_font_size(this.value);
+    }
+  });
 
   this.$.find(".show_file_info").click(function(){
     self.$.find('#file_info_modal').modal('show')
   })
-
-  if(this.show_minimized){
-    this.minimize_menu()
-    this.metrics = this.EDITOR_FULL_METRICS
-  }
-  else{
-    this.metrics = this.EDITOR_W_MENU_METRICS
-  }
-
-  this.activate_menu_resizing()
-
-  $.each( this.metrics , function( prop, value ) {
-    self.$.find('#editor').css(prop,value)
-  });
-
-
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
@@ -85,40 +80,15 @@ EditorController.prototype.initialize_html = function(){
 
   if(this.font_size_pref.getValue() != null){
     this.editor_view.setFontSize(this.font_size_pref.getValue())
-  
-    this.$.find('#font_check').show()
-    var check = this.$.find('#font_check').detach()
-    //refactor!!
-    $(document.getElementById("font_"+this.font_size_pref.getValue())).prepend(check)
   }
 
   if(this.tab_size_pref.getValue() != null){
     this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
-    this.$.find('#tab_check').show()
-    var check = this.$.find('#tab_check').detach()
-    //refactor!!
-    $(document.getElementById("tab_"+this.tab_size_pref.getValue())).append(check)
   }
 
   this.change_keybinding(this.keybinding_pref.getValue())
 
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
-  if(this.word_wrap_pref.getValue()){
-    this.$.find('#word_wrap_check').show()
-  }
-
-  if(this.file_explorer.cached){
-    this.$.find('#cache_file_explorer_check').show()
-  }
-
-/*
-  window.addEventListener("keydown",function (e) {
-    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
-      e.preventDefault();
-      self.open_search()
-    }
-  })
-*/
 
   $(window).on('keydown.search', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 'f' && event.shiftKey && event.ctrlKey) && !(event.which == 19)) return true;
@@ -127,26 +97,20 @@ EditorController.prototype.initialize_html = function(){
     return false;
   });  
 
-
-
-  this.initial_theme = "ace/theme/clouds_midnight"
+  this.initial_theme = "ace/theme/chrome"
   if(this.theme_pref.getValue()){
     this.initial_theme = this.theme_pref.getValue()
   }
   setInterval(function(){self.set_background_color_from_theme()}, 500)
   this.editor_view.setTheme(this.initial_theme)
   this.set_background_color_from_theme()
-  $(document.getElementById("theme_"+this.initial_theme)).addClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
   this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
   this.$.find('#cancel_reauth').click(function(){
     self.$.find('#reauthenticate_modal').modal('hide')
   })
-  //setInterval(function(){self.keep_alive()}, 300000)
 
-  this.$.find('.restart_app').click(function(){
-    if(confirm("Are you sure ?")) window.location.reload()
-  })
 
   if(!Preference.find('agree_terms', BooleanPreference).getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
@@ -160,6 +124,14 @@ EditorController.prototype.initialize_html = function(){
     })
   }
 
+  if(!self.major_notice_pref.getValue() >= parseInt($('#major_notice_modal').attr('data-version')) ){
+    $('#major_notice_modal').modal('show');
+    $('#agree_major_notice').click(function(){
+      $('#major_notice_modal').modal('hide'); 
+      self.major_notice_pref.setValue(parseInt($('#major_notice_modal').attr('data-version')), self, self.show_reauth)
+    })
+  }
+
 }
 
 
@@ -167,6 +139,7 @@ EditorController.prototype.initialize_html = function(){
 EditorController.prototype.post_app_load = function(){
   var self = this
   this.$.find("#app_load_modal").modal('hide');
+  this.$.find("#loading_overlay").fadeOut();
 }
 
 EditorController.prototype.new = function(folder_id){
@@ -186,11 +159,14 @@ EditorController.prototype.edit = function(id){
   this.flash.empty()
   this.$.find("#file_load_modal").modal('show');
   this.file_id = id
+  // we stop the collaboration if it's there
+  this.stop_collaboration();
   this.file = new DriveFile(id, {
     uid : "file",
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
       if(!error){
+        self.make_collaborative()
         self.post_file_load()
       }
       else{
@@ -207,6 +183,7 @@ EditorController.prototype.post_file_load = function(){
     this.flash.warning("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe.")
   }
   this.editor_view.getSession().setValue(this.file.data, -1)
+
   this.file.data = this.editor_view.getSession().getValue()
   this.file.data_saved = this.editor_view.getSession().getValue()
 
@@ -233,29 +210,16 @@ EditorController.prototype.reset_options = function(){
 }
 
 EditorController.prototype.print = function(){
-  var form = document.createElement("form");
-  form.setAttribute("method", "post");
-  form.setAttribute("action", "/app/print");
-
-  form.setAttribute("target", "view");
-
-  var hiddenField = document.createElement("input"); 
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "content");
-  hiddenField.setAttribute("value", this.file.data);
-  form.appendChild(hiddenField);
-
-  hiddenField = document.createElement("input"); 
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "title");
-  hiddenField.setAttribute("value", this.file.title);
-  form.appendChild(hiddenField);
-
-  document.body.appendChild(form);
-
-  window.open('', 'view');
-
-  form.submit();
+  var myWindow = window.open("", "MsgWindow", "width=800, height=600");
+  var lines = this.editor_view.getValue().split('\n');
+  for(var i in lines){
+    lines[i] = (parseInt(i)+1)+". "+lines[i];
+  }
+  var numbered_text = lines.join('\n');
+  $('#print_content .with_line_numbers').text(numbered_text);
+  $('#print_content .without_line_numbers').text(this.editor_view.getValue());
+  myWindow.document.write("<script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>");
+  myWindow.document.write($('#print_content').html());
 }
 
 EditorController.prototype.save = function(){
@@ -267,15 +231,12 @@ EditorController.prototype.save = function(){
       return false
   }
   else{
-    //this.file.title = this.$.find("#g_file_title").val()
     this.file.set("data", this.editor_view.getValue())
 
     this.block_saving()
-    this.$.find('#file_save_modal').modal('show')
     // give a small time for everything to show.
     setTimeout(function(){
         self.file.update(true, function(response){
-          self.$.find("#file_save_modal").modal("hide")
           self.reset_options()
           if(response && !response.error) window.location.hash="#edit/"+self.file.id
           self.editor_view.focus();
@@ -304,7 +265,6 @@ EditorController.prototype.auto_save = function(){
     this.block_saving()
 
     self.file.update(false, function(response){
-      self.$.find("#file_save_modal").modal("hide")
       self.reset_options()
       if(response && !response.error) window.location.hash="#edit/"+self.file.id
     })
@@ -315,8 +275,9 @@ EditorController.prototype.auto_save = function(){
 EditorController.prototype.set_syntax_mode = function(syntax,save){
   var self = this;
   save = save || false
-  var check = this.$.find('#syntax_check').detach();
-  this.$.find('#syntax_'+syntax).prepend(check)
+  this.$.find('.syntax_button').css("background-color", "initial")
+  this.$.find('.syntax_'+syntax).css("background-color", "#009688")
+  console.log('.syntax_'+syntax)
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
@@ -350,12 +311,6 @@ EditorController.prototype.change_font_size = function(font_size){
 
   this.font_size_pref.setValue(font_size, self, function(){self.show_reauth()})
   this.editor_view.setFontSize(this.font_size_pref.getValue())
-  this.$.find('#font_check').show()
-  var check = this.$.find('#font_check').detach()
-
-  //refactor
-  $(document.getElementById("font_"+this.font_size_pref.getValue())).prepend(check)
-
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
@@ -364,12 +319,6 @@ EditorController.prototype.change_tab_size = function(tab_size){
   this.tab_size_pref.setValue(tab_size, self, self.show_reauth)
 
   this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
-
-  this.$.find('#tab_check').show()
-  var check = this.$.find('#tab_check').detach()
-  //refactor
-  $(document.getElementById("tab_"+this.tab_size_pref.getValue())).append(check)
-
 }
 
 EditorController.prototype.block_saving = function(){
@@ -388,7 +337,7 @@ EditorController.prototype.block_saving = function(){
 
 EditorController.prototype.allow_saving = function(){
   var self = this;
-  this.$.find('.editor_save_button').html("Saved")
+  this.$.find('.editor_save_button').html("Save")
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
   $(window).off('keydown.save')
@@ -408,55 +357,24 @@ EditorController.prototype.show_file_explorer = function(){
 
 EditorController.prototype.check_content_changed = function(){
   var self = this;
-  //this.file.title = this.$.find("#g_file_title").val()
+
+  if(!this.file.persisted){
+    this.$.find('.editor_save_button').html("Save")
+    return
+  }
+
+  if(this.file.persisted && this.realtime_content){
+    this.realtime_content.setText(this.editor_view.getValue());
+  }
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
-    this.$.find('.editor_save_button').addClass('btn-warning')
     if(!(this.$.find('.editor_save_button').html() == "Saving...")){
       this.$.find('.editor_save_button').html("Save")
     }
   }
   else{
-    this.$.find('.editor_save_button').removeClass('btn-warning')
     this.$.find('.editor_save_button').html("Saved")
   }
-}
-
-EditorController.prototype.minimize_menu = function(save_pref){
-  var self = this;
-  save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
-  this.$.find('#editor_menu_container').fadeOut(function(){
-    self.$.find('#editor_menu_container').hide(
-      function(){self.$.find('#editor').animate(self.EDITOR_FULL_METRICS, function(){
-        self.editor_view.resize()   
-        self.$.find('.small_g_file_menu').fadeIn(function(){
-        if(save_pref){
-          self.prefers_menu_opened(false)
-        }
-        })
-      })
-      })  
-    });
-}
-
-EditorController.prototype.maximize_menu = function(save_pref){
-  var self = this;
-  save_pref = typeof save_pref !== 'undefined' ? save_pref : false;
-  this.$.find('.small_g_file_menu').fadeOut()
-  this.$.find('#editor').animate(this.EDITOR_W_MENU_METRICS,function(){
-    self.editor_view.resize()  
-    self.$.find('#editor_menu_container').fadeIn(function(){
-      if(save_pref){
-        self.prefers_menu_opened(true)
-      }
-    })
-  })
-}
-
-EditorController.prototype.prefers_menu_opened = function(opened){
-  var self = this;
-  var prefers_minimized = opened ? "false" : "true"
-  Preference.find('prefers_minimized', StringPreference).setValue(prefers_minimized, self, self.show_reauth)
 }
 
 EditorController.prototype.set_wait = function(key, value){
@@ -464,33 +382,13 @@ EditorController.prototype.set_wait = function(key, value){
   this.ajax_defered_waiting[key] = value
 }
 
-EditorController.prototype.toggle_word_wrap = function(){
+EditorController.prototype.change_word_wrap = function(value){
   var self = this;
 
-  this.word_wrap_pref.setValue(!this.word_wrap_pref.getValue(), self, function(){self.show_reauth()});
+  this.word_wrap_pref.setValue(value, self, function(){self.show_reauth()});
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
-  if(this.word_wrap_pref.getValue()){
-    this.$.find('#word_wrap_check').show()
-  }
-  else{
-    this.$.find('#word_wrap_check').hide()
-  }
 }
 
-EditorController.prototype.toggle_cache_file_explorer = function(){
-  var self = this;
-  this.file_explorer.cached = !this.file_explorer.cached;
-  if(this.file_explorer.cached && this.file_explorer.cache()){
-    this.$.find('#cache_file_explorer_check').show()
-    this.flash.warning("This option will take effect once you reload the app.", 5)
-  }
-  else{
-    this.$.find('#cache_file_explorer_check').hide()
-    this.flash.warning("This option will take effect once you reload the app.", 5)
-  }
-
-  Preference.find('cache_file_explorer_enabled', BooleanPreference).setValue(this.file_explorer.cached, self, self.show_reauth)
-}
 
 EditorController.prototype.open_search = function(){
   var self = this;
@@ -508,15 +406,14 @@ EditorController.prototype.select_theme = function(name){
   if(!this.theme_pref.getValue()){
     current_theme = this.initial_theme
   }
-  console.log(current_theme)
-  $(document.getElementById("theme_"+current_theme)).removeClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+current_theme)).removeClass("btn-primary")
 
   this.theme_pref.setValue(name, self, self.show_reauth)
 
   this.editor_view.setTheme(this.theme_pref.getValue())
   this.set_background_color_from_theme()
   var check = this.$.find('#theme_check').detach()
-  $(document.getElementById("theme_"+name)).addClass("btn-primary")
+  $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
   
 }
    
@@ -526,60 +423,6 @@ EditorController.prototype.set_background_color_from_theme = function(){
   $(html_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
   body_element = document.getElementsByTagName("body")[0]
   $(body_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
-}
-
-EditorController.prototype.activate_menu_resizing = function(){
-  var self = this;
-  this.set_menu_width_from_pref()
-  this.$.find("#editor_menu_container").resizable({
-    handles : "e",
-    minWidth : 280,
-    maxWidth : 500,
-  })
-  this.$.find("#editor_menu_container").resize(function(){self.resize_menu()})
-  this.$.find("#editor_menu_container").resize(debouncer(function(){self.save_menu_width_pref()}, 1000))
-}
-
-EditorController.prototype.set_menu_width_from_pref = function(){
-  var self = this;
-  this.$.find("#editor_menu_container").width(this.menu_width_pref.getValue())
-  this.current_menu_width = this.$.find("#editor_menu_container").width()
-  this.$.find('#editor').css("left", this.menu_width_pref.getValue())
-  this.EDITOR_W_MENU_METRICS["left"] = this.menu_width_pref.getValue() 
-}
-
-EditorController.prototype.resize_menu = function(){
-  var self = this;
-  var width_modification = this.$.find("#editor_menu_container").outerWidth() - this.current_menu_width
-  var new_left = parseInt(this.$.find("#editor").css("left")) + width_modification + "px"
-  this.$.find('#editor').css("left", new_left)
-  this.EDITOR_W_MENU_METRICS["left"] = new_left
-  this.current_menu_width = this.$.find("#editor_menu_container").outerWidth()
-}
-
-EditorController.prototype.save_menu_width_pref = function(){
-  var self = this;
-  this.menu_width_pref.setValue(this.$.find('#editor_menu_container').width()+"px", self, self.show_reauth)
-}
-
-EditorController.prototype.show_reauth = function(){
-  var self = this;
-  this.oauth_controller.show_reauth();
-}
-
-EditorController.prototype.keep_alive = function(){
-  var self = this;
-  $.ajax(
-  {
-    url: '/g_oauth/keep_alive', 
-    statusCode: {
-      403: function(data){
-        self.show_reauth()
-      },
-      200: function(data){
-      }
-    }
-  })
 }
 
 EditorController.prototype.vim_command_handler = function(command){
@@ -595,6 +438,13 @@ EditorController.prototype.change_keybinding = function(keybinding){
     this.editor_view.setKeyboardHandler("ace/keyboard/vim");
     if(!this.editor_view.showCommandLine){
       this.editor_view.showCommandLine = function(command){self.vim_command_handler(command)}
+      // we bind the vim write event to this controller
+      ace.config.loadModule("ace/keyboard/vim", function(m) {
+          var VimApi = require("ace/keyboard/vim").CodeMirror.Vim
+          VimApi.defineEx("write", "w", function(cm, input) {
+              self.save()
+          })
+      })
     }
   }
   else if(keybinding == "emacs"){
@@ -605,12 +455,192 @@ EditorController.prototype.change_keybinding = function(keybinding){
   }
 
   Preference.find("keybinding", BooleanPreference).setValue(keybinding, self, self.show_reauth)
-  this.handle_keybinding_view(keybinding);
 }
 
-EditorController.prototype.handle_keybinding_view = function(keybinding){
+
+EditorController.prototype.init_collaboration = function(model){
   var self = this;
-  var check = this.$.find('#keybinding_check').detach();
-  this.$.find('#keybinding_'+keybinding).prepend(check) 
+  try{
+  var content = model.createString(self.file.data);
+  model.getRoot().set("content", content);
+  }catch(e){console.log(e)}
 }
 
+EditorController.prototype.stop_collaboration = function(){
+  var self = this;
+  // remove any previous event listeners, if any
+  if(self.realtime_content){
+    self.realtime_content.removeAllEventListeners();
+    self.realtime_content = undefined;
+  }
+  if(self.realtime_document) self.realtime_document.close();
+  self.realtime_document = undefined;
+}
+
+EditorController.prototype.make_collaborative = function(){
+  var self = this;
+
+  self.stop_collaboration();
+
+  gapi.drive.realtime.load(self.file.id, function(doc){
+    self.realtime_document = doc;
+    try{
+    self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
+
+
+    self.realtime_content.addEventListener(
+      gapi.drive.realtime.EventType.TEXT_INSERTED, 
+      function(evt){
+        self.file_content_added(evt)
+      });
+    
+    self.realtime_content.addEventListener(
+      gapi.drive.realtime.EventType.TEXT_DELETED, 
+      function(evt){
+        self.file_content_deleted(evt)
+      });
+
+    self.realtime_document.addEventListener(
+      gapi.drive.realtime.EventType.COLLABORATOR_JOINED, 
+      function(evt){
+        self.add_collaborator(evt.collaborator);
+      });
+
+    self.realtime_document.addEventListener(
+      gapi.drive.realtime.EventType.COLLABORATOR_LEFT, 
+      function(evt){
+        self.remove_collaborator(evt.collaborator);
+      });
+    
+    self.display_collaborators()
+
+    }catch(e){console.log(e)}
+  }, 
+  function(model) {self.init_collaboration(model)},
+  function(error) {
+    if(error.type == "token_refresh_required"){
+      oauth_controller.do_auth();
+    }
+  }
+  );
+}
+
+EditorController.prototype.remove_collaborator = function(collaborator){
+  var self = this;
+  self.clear_realtime_user(collaborator.userId);
+  $('#collaborator-'+collaborator.userId).remove();
+}
+
+EditorController.prototype.add_collaborator = function(collaborator) {
+  var self = this;
+  console.log("Collaborator has joined")
+  console.log(collaborator)
+  if(collaborator.isMe) return;
+  var element = $("<span id='collaborator-"+collaborator.userId+"' class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
+  self.collaborators_colors[collaborator.userId] = collaborator.color;
+  if(! $('.collaborators').has('#collaborator-'+collaborator.userId).length )
+    $('.collaborators').append(element) ;
+  else
+    console.log("Collaborator is already displayed")
+
+}
+
+EditorController.prototype.display_collaborators = function(){
+  var self = this;
+  var collaborators = self.realtime_document.getCollaborators();
+  self.collaborators_colors = {}
+  for(var i in collaborators) {
+    var collaborator = collaborators[i];
+    self.add_collaborator(collaborator);
+  }
+}
+
+EditorController.prototype.file_content_added = function(evt){
+  var self = this;
+  if(!evt.isLocal){
+    var start = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
+    self.editor_view.getSession().insert(start, evt.text)
+    var nl_stripped = evt.text.replace('\n', '')
+    if(nl_stripped !== "") {
+      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index+1));
+    }
+ }
+  
+}
+
+EditorController.prototype.file_content_deleted = function(evt){
+  var self = this;
+  if(!evt.isLocal){
+    var begin = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
+    var end = self.editor_view.getSession().getDocument().indexToPosition(evt.index+evt.text.length)
+    var range = new Range(begin.row, begin.column, end.row, end.column)
+    self.editor_view.getSession().remove({start:begin, end:end})
+
+    var nl_stripped = evt.text.replace('\n', '')
+    if(nl_stripped !== "") {
+      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index));
+    }
+  }
+  
+}
+
+EditorController.prototype.move_realtime_user = function(userId, position){
+  var self = this;
+  self.clear_realtime_user(userId);
+  self.editor_view.getSession().addGutterDecoration(position.row, userId+'-active')
+  setTimeout(function(){
+  $('.'+userId+'-active').css('background-color', self.collaborators_colors[userId]);
+  }, 100);
+}
+
+EditorController.prototype.clear_realtime_user = function(userId){
+  var self = this;
+  $('.'+userId+'-active').css('background-color', '');
+  for(var i=0; i<self.editor_view.getSession().getDocument().getLength();i++){
+      self.editor_view.getSession().removeGutterDecoration(i, userId+'-active');
+  }
+}
+
+EditorController.prototype.open_share_modal = function() {
+  var self = this;
+  if(self.file.persisted){
+    oauth_controller.share_client.setItemIds([self.file.id]);
+    oauth_controller.share_client.showSettingsDialog();
+  }
+  else {
+    alert("You must save the file before you can share it.");
+  }
+}
+
+EditorController.prototype.options_show_callback = function() {
+  var self = this;
+  $("select").each(function(){
+    if($(this).hasClass('keybinding_select')) {
+      $(this).val(Preference.find("keybinding", StringPreference).getValue())
+    }
+    else if($(this).hasClass('tab_size_select')){
+      $(this).val(Preference.find("ace_js_tab_size", StringPreference).getValue())
+    }
+    else if($(this).hasClass('font_size_select')){
+      $(this).val(Preference.find("ace_js_font_size", StringPreference).getValue())
+    }
+  });
+  
+  if(Preference.find("word_wrap", BooleanPreference).getValue()){
+    $('.word_wrap_checkbox').attr('checked', 'checked');
+  }
+  else{
+    $('.word_wrap_checkbox').removeAttr('checked');
+  }
+
+}
+
+EditorController.prototype.show_file_info = function() {
+  var self = this;
+  self.$.find('#file_info_modal').modal('show')
+}
+
+EditorController.prototype.restart_app = function() {
+  var self = this;
+  if(confirm("Are you sure ?")) window.location.reload()
+}

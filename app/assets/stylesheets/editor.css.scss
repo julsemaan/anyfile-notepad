@@ -1,5 +1,4 @@
-@import "bootstrap";
-@import "common.css.scss";
+@import "libs/bundled-material.min.css.scss";
 
 html{
   background-color:#EBEBEB;
@@ -21,7 +20,7 @@ div.error_panel_body{
 }
 
 .field_with_errors {
-  @extend .has-error;
+/*  @extend .has-error; */
   
   
 }
@@ -29,6 +28,12 @@ div.error_panel_body{
 .editor_nav_bar{
   margin:0;
 }
+
+a.menu_button {
+  padding:5px;
+  margin:0;
+}
+
 
 #minimize_menu_nav{
   margin:0;
@@ -48,15 +53,18 @@ div.file_explorer{
 }
 
 div#editor_menu_container{
-  display:inline-block;
-  width:280px;
+  display:inline;
+  form a {
+    color:white;
+    font-style:italic;
+  }
+  /*width:280px;*/
 }
 
 div.g_file_menu{
   display:inline-block;
   height:100%;
   width:100%;
-  padding:0.7em;;
   
   margin-top:0;
   
@@ -83,10 +91,6 @@ div.g_file_menu{
   }
   
   
-  div.file_title{
-    padding-bottom:5px;
-  }
-  
   div.g_file_editor_file_explorer{
     
     #fileTree{
@@ -95,29 +99,11 @@ div.g_file_menu{
     }
     
     #open_file_explorer_title{
-      @include border-radius(5px);
       color:white;
     }
   }
   
 
-}
-
-div.small_g_file_menu{
-  width:30px;
-  padding:7px 0;
-  display:inline-block;
-  text-align:center;
-  border-right:2px solid black;
-  border-bottom:2px solid black;
-  @include border-radius(5px);
-  span{
-    margin-top:2px;
-    padding:3px;
-    @extend .btn;
-    @extend .btn-default;
-    cursor:pointer;
-  }
 }
 
 div.g_file_editor{
@@ -128,35 +114,12 @@ div.g_file_editor{
     position:absolute;
     display:inline-block;
     font-size:1em;
+    .ace_search.right {
+      bottom:0;
+      top:auto;
+      border-radius:5px 0 0 0;
+    }
   }
-}
-
-div#select_theme_modal{
-  .modal-dialog{
-    //width:650px;
-    text-align:center;
-    position:fixed;
-    left:0;
-    bottom:0;
-  }
-  .modal-body{
-    padding:0;
-  }
-  .modal-footer{
-    padding:0;
-  }
-  
-  .row{
-    margin:0;
-  }
-  
-  .col-md-4{
-    padding:0;
-  }
-}
-
-div.theme_choice_column{
-  width:100%;
 }
 
 
@@ -164,11 +127,136 @@ div#editor_flash{
   position:fixed; 
   width:300px; 
   right:10px; 
-  top:10px; 
+  top:65px; 
   background-color:transparent; 
   z-index:1000;
 }
 
 div.print_menu {
   padding:10px;
+}
+
+span.collaborators {
+  display:inline-block;
+  padding:20px 10px;
+  * {
+    margin-left:5px;
+  }
+}
+
+#loading_overlay {
+  background-color:black;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  position:fixed;
+  z-index:1040;
+}
+
+#menu {
+  min-height:60px;
+  .navbar-brand {
+    padding:5px 5px;
+  }
+  #file_title_form {
+    input {
+      height:28px;
+    }
+
+    a {
+      vertical-align:bottom;
+      padding-bottom:8px;
+      padding-left:5px;
+      font-size:110%;
+    }
+  }
+  #expanded_menu {
+    display:none;
+    position:fixed;
+    left:5px;
+/*    background:#4db6ac;
+    color:rgba(255,255,255,.84);*/
+    min-width:200px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    background-color:white;
+
+    .options {
+      color:black;
+      padding:1em;
+      width:700px;
+    }
+
+    ul.menu_list {
+      @extend .list-group;
+      margin:0;
+      padding:0;
+
+      li {
+        @extend .list-group-item;
+        padding:0 0;
+        a {
+          display:block;
+          @extend .btn;
+          @extend .btn-default;
+          color:rgba(255, 255, 255, 0.84);
+          text-align:left;
+          margin:1px;;
+        }
+        /*
+        a:hover:not(.btn-link):not(.btn-flat){
+          color:rgba(255, 255, 255, 0.84);
+        }
+        */
+      }
+    }
+
+    .themes {
+      .btn_theme {
+        padding:8px 10px;
+        min-width:250px;
+      }
+      .btn-dummy {
+        display:block;
+        height:36px;
+        padding:0;
+        margin:0;
+        color:white; 
+        cursor:default;
+      }
+      .themes_back {
+        position:absolute;
+        top:30px;
+        left:100px;
+        z-index:100;
+      }
+    } 
+
+    .syntaxes {
+      ul {
+        min-width:250px;
+        min-height:250px;
+      }
+      a.menu_back {
+        position:absolute;
+        top:10px;
+        right:10px;
+        z-index:100;
+
+      }
+    }
+
+  }
+  .menu_content {
+    display:none;
+  }
+
+
+}
+
+#editor {
+  top:60px;
+  left:0;
+  right:0;
+  bottom:0;
 }

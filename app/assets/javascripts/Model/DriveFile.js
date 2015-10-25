@@ -24,10 +24,14 @@ DriveFile.prototype = new Model()
 DriveFile.prototype.init = function(){
 }
 
-DriveFile.prototype.extension = function(){
+DriveFile.file_extension = function(filename){
   try{
-    return "."+this.title.split('.').pop();
+    return "."+filename.split('.').pop();
   }catch(e){return ""}
+}
+
+DriveFile.prototype.extension = function(){
+  return DriveFile.file_extension(this.title)
 }
 
 DriveFile.prototype.compute_syntax = function(){
@@ -65,7 +69,7 @@ DriveFile.prototype.check_for_unknown_mime_type = function(mime_type){
   try {
     var mime_type_obj = mime_types.find({key:'type_name', value:mime_type})
     if(!mime_type_obj){
-      notify_unknown_mime_type(mime_type)
+      //notify_unknown_mime_type(mime_type)
     }
   } catch(e){
     // do nothing. It's not the end of the world
@@ -222,6 +226,16 @@ DriveFile.prototype.update_data = function(new_revision, callback){
 DriveFile.prototype.did_content_change = function(){
   var self = this;
   return (this.data != this.data_saved || this.title != this.title_saved)
+}
+
+DriveFile.prototype.delete = function(){
+  var self = this;
+  var request = gapi.client.drive.files.delete({
+    'fileId': this.id
+  });
+  oauth_controller.execute_request(request, function(response){
+    console.log(response)
+  })
 }
 
 function ab2str(buf) {

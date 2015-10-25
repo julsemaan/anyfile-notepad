@@ -6,13 +6,13 @@
   <%= csrf_meta_tags %>
   
   <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag    "editor", :media => "all" %>
   <%= stylesheet_link_tag    "/jqueryFileTree/jqueryFileTree.css", :media => "all" %>
 
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag    "/jqueryFileTree/jqueryFileTree.js"%>
   <%= javascript_include_tag    "/ace.js/ace.js" %>
   <%= javascript_include_tag    "//cdn.jsdelivr.net/jquery.cookie/1.4.0/jquery.cookie.min.js" %>
-  <%= javascript_include_tag    "//cdn.rawgit.com/meetselva/attrchange/master/attrchange.js" %>
 
   <%= render 'layouts/analytics' %>
   
@@ -30,5 +30,10 @@
 
   <%= javascript_include_tag    "//apis.google.com/js/client.js?onload=oauth_loaded" %>
 
+    <script>
+      $(document).ready(function() {
+          $.material.init();
+      });
+    </script>
 </body>
 </html>

@@ -6,11 +6,13 @@
   <%= csrf_meta_tags %>
   
   <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag    "pages", :media => "all" %>
   <%= stylesheet_link_tag    "/jqueryFileTree/jqueryFileTree.css", :media => "all" %>
 
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag    "/jqueryFileTree/jqueryFileTree.js"%>
   <%= javascript_include_tag    "/ace.js/ace.js" %>
+  <%= javascript_include_tag    "/marked.js" %>
 
   <%= render 'layouts/analytics' %>
   
@@ -19,32 +21,10 @@
 
 <div class="container">
 
-  <div class="home_header row alert alert-info ">
-    <div class="col-md-4 ">
-    <!--<h1 class="">Anyfile Notepad </h1>-->
-    <a href="<%= root_path %>">
-      <%= image_tag "promo_small.jpg" , :width => 300, :class => "round"%>
-    </a>
-    </div>
-    <div class="col-md-8">
-      <!--<div class="row">
-        <a class="btn btn-primary" href="https://chrome.google.com/webstore/detail/anyfile-notepad/ghlichmdnegmcpafgmmlpkegmcndlndi">Download in Chrome Store <%= image_tag "chrome_store.jpg", :width => 30, :height => 30 %></a>
-        <a class="btn btn-primary" href="https://plus.google.com/communities/109168786116242892967">Find us on <%= image_tag "gplus.jpg", :width => 30, :height => 30 %></a>
-      </div>-->
-      <div class="row">
-        <%= render 'layouts/header_menu' %>
-      </div>
-      <div class="row launch_app_container">
-        <a class="btn btn-primary" href="/app">Launch Anyfile Notepad <%= image_tag "logo.png", :width => 30, :height => 30 %></a>
-      </div>
-    </div>  
-    
-  </div>
-  <div>
-    
-  </div>
-  
+
   <div class="home_content">
+
+    <%= render 'layouts/header_menu' %>
     <%= render 'shared/flash', :flash => flash %>
     
     <%= yield %>

@@ -18,6 +18,10 @@
 //= require Model/Model
 //= require_tree .
 
+//$(document).bind("DOMSubtreeModified", function() {
+//  $.material.init()
+//});
+
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
@@ -83,4 +87,96 @@ jQuery.fn.animateAuto = function(prop, speed, callback){
         else if(prop === "both")
             el.animate({"width":width,"height":height}, speed, callback);
     });  
+}
+
+function escape_jquery_selector(str) {
+    if (str)
+        return str.replace(/([ #;?%&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1');      
+
+    return str;
+}
+
+function createCSSSelector(selector, style) {
+    if(!document.styleSheets) {
+        return;
+    }
+
+    if(document.getElementsByTagName("head").length == 0) {
+        return;
+    }
+
+    var stylesheet;
+    var mediaType;
+    if(document.styleSheets.length > 0) {
+        for( i = 0; i < document.styleSheets.length; i++) {
+            if(document.styleSheets[i].disabled) {
+                continue;
+            }
+            var media = document.styleSheets[i].media;
+            mediaType = typeof media;
+
+            if(mediaType == "string") {
+                if(media == "" || (media.indexOf("screen") != -1)) {
+                    styleSheet = document.styleSheets[i];
+                }
+            } else if(mediaType == "object") {
+                if(media.mediaText == "" || (media.mediaText.indexOf("screen") != -1)) {
+                    styleSheet = document.styleSheets[i];
+                }
+            }
+
+            if( typeof styleSheet != "undefined") {
+                break;
+            }
+        }
+    }
+
+    if( typeof styleSheet == "undefined") {
+        var styleSheetElement = document.createElement("style");
+        styleSheetElement.type = "text/css";
+
+        document.getElementsByTagName("head")[0].appendChild(styleSheetElement);
+
+        for( i = 0; i < document.styleSheets.length; i++) {
+            if(document.styleSheets[i].disabled) {
+                continue;
+            }
+            styleSheet = document.styleSheets[i];
+        }
+
+        var media = styleSheet.media;
+        mediaType = typeof media;
+    }
+
+    if(mediaType == "string") {
+        for( i = 0; i < styleSheet.rules.length; i++) {
+            if(styleSheet.rules[i].selectorText && styleSheet.rules[i].selectorText.toLowerCase() == selector.toLowerCase()) {
+                styleSheet.rules[i].style.cssText = style;
+                return;
+            }
+        }
+
+        styleSheet.addRule(selector, style);
+    } else if(mediaType == "object") {
+        var styleSheetLength = (styleSheet.cssRules) ? styleSheet.cssRules.length : 0;
+        for( i = 0; i < styleSheetLength; i++) {
+            if(styleSheet.cssRules[i].selectorText && styleSheet.cssRules[i].selectorText.toLowerCase() == selector.toLowerCase()) {
+                styleSheet.cssRules[i].style.cssText = style;
+                return;
+            }
+        }
+
+        styleSheet.insertRule(selector + "{" + style + "}", styleSheetLength);
+    }
+}
+
+function getQueryParam(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  } 
 }

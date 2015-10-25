@@ -1,6 +1,7 @@
 function OAuthController(options){
   var self = this;
-  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com"
+  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com";
+  this.drive_app_id = "249464630588";
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
@@ -32,6 +33,7 @@ OAuthController.prototype.do_auth = function(){
   
   });
 
+
 }
 
 OAuthController.prototype.auth_popup = function(){
@@ -43,10 +45,14 @@ OAuthController.prototype.auth_popup = function(){
 OAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
-    gapi.client.load('drive', 'v2', function(){
-      setCookie('access_token', auth_result['access_token'], 1)
-      self.ready()
-    })
+    setCookie('access_token', auth_result['access_token'], 1)
+    gapi.load('auth:client,drive-realtime,drive-share', function(){
+      gapi.client.load('drive', 'v2', function(){
+        self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
+        self.share_client.setOAuthToken(auth_result['access_token']);
+        self.ready()
+      })
+    });
     
     $('#auth_modal').modal('hide')
     //cool it worked
@@ -62,6 +68,7 @@ OAuthController.prototype.ready = function(){
   for(var i=0; i < this.queue.length; i++){
     this.queue[i]()
   } 
+  this.queue = []
 }
 
 OAuthController.prototype.add_to_queue = function(to_do){
@@ -95,8 +102,12 @@ OAuthController.prototype.execute_request = function(request, callback){
       self.authed = false
       self.do_auth()
     }
+    else if(response.error.code == 409){
+      console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
+      callback(response);
+    }
     else{
-      $('#error_modal .add_message').html("We got this message from Google : "+ response.error.message)
+      $('#error_modal .additionnal_message').html("We got this message from Google : "+ response.error.message)
       $('#error_modal').modal('show')
       callback(response)
     }

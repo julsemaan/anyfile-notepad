@@ -1,3 +1,4 @@
+@import "libs/bundled-material.min.css.scss";
 
 .container{
   max-width:1000px;
@@ -43,3 +44,24 @@ div#site_content_preview_value{
   padding:0;
   margin:1em;
 }
+
+h4.panel-heading{
+  margin-top:0;
+}
+ul.panel-body{
+  padding-left:25px;
+}
+.panel-body{
+  text-align:justify;
+  text-justify:inter-word;
+}
+.top_notice{
+  text-align:center;
+}
+.col-centered{
+  float: none;
+  margin: 0 auto;
+}
+.col-centered .btn {
+  width:100%;
+}  
