@@ -73,6 +73,7 @@ oauth_controller.add_to_queue(function(){
       editor_controller.file_explorer.flash = editor_controller.flash
       editor_controller.oauth_controller = oauth_controller;
       editor_controller.file_explorer.load();
+      editor_controller.flash.sticky_success("<a target='_blank' href='http://goo.gl/forms/0QMBjBK3y6'>Click here to fill out the 6 questions survey about the new version</a>")
 
       new EditorRouter(editor_controller)
 
@@ -81,7 +82,6 @@ oauth_controller.add_to_queue(function(){
 })
 
 var menu_controller = new MenuController("menu");
-
 
 
 //editor_controller.initialize_html() 
