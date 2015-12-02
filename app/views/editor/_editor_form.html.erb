@@ -24,10 +24,6 @@
 
     <%= render 'editor_menu' %>
 
-    <div id="editor_flash">
-      <%= render 'shared/flash', :flash => flash %>
-    </div>
-    
     <div class="g_file_editor_file_explorer">
       <%= render 'shared/file_explorer', :with_dropdown => true %>
     </div>
@@ -51,8 +47,9 @@ var oauth_controller = new OAuthController({
   scopes : "<%= @gapi.get_scopes.join(' ') %>" 
 });
 
-var user_preferences
-var editor_controller
+var user_preferences;
+var editor_controller;
+var top_menu_controller;
 oauth_controller.add_to_queue(function(){
   user_preferences = new Preferences(
     function(){
@@ -76,6 +73,7 @@ oauth_controller.add_to_queue(function(){
       editor_controller.flash.sticky_success("<a target='_blank' href='http://goo.gl/forms/0QMBjBK3y6'>Click here to fill out the 6 questions survey about the new version</a>")
 
       new EditorRouter(editor_controller)
+      top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
 
     }
   )

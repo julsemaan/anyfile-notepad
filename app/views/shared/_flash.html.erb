@@ -1,9 +1,0 @@
-<% flash.each do |key, value| %>
-  <div class="flash_<%= key %>"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> <%= value %></div>
-<% end %>
-
-<script>
- $(document).ready(function(){
-    alert_timeout('.flash_notice', 3000)
-  });
-</script>

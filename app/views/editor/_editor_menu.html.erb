@@ -1,13 +1,13 @@
 <div class="navbar navbar-default" id="menu">
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+    <button type="button" class="navbar-toggle" onclick="javascript:top_menu_controller.toggle_mobile_menu()">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
     <a class="navbar-brand" href="/"><%= image_tag "logo.png", :width => 50, :height => 50 %><div class="ripple-wrapper"><div class="ripple ripple-on" style="left: 63.5px; top: 23px; -webkit-transform: scale(9.625); transform: scale(9.625); background-color: rgba(255, 255, 255, 0.843137);"></div></div></a>
   </div>
-  <div>
+  <div class="extended_menu">
     <ul class="nav navbar-nav">
       <!-- FILE/* -->
       <li>
@@ -60,7 +60,7 @@
 
             <div class="row">
 
-              <div class="col-xs-3">
+              <div class="col-md-3">
                 Editor mode :
                 <select class="keybinding_select form-control">
                   <option value="normal">Normal</option>
@@ -69,7 +69,7 @@
                 </select>
               </div>
 
-              <div class="col-xs-3">
+              <div class="col-md-3">
                 Tab size :
                 <select class="tab_size_select form-control">
                   <option value="2">2</option>
@@ -79,7 +79,7 @@
                 </select>
               </div>
 
-              <div class="col-xs-3">
+              <div class="col-md-3">
                 Font size :
                 <select class="font_size_select form-control">
                   <option value="0.5em">Small</option>
@@ -89,7 +89,7 @@
                 </select>
               </div>
 
-              <div class="col-xs-3">
+              <div class="col-md-3">
                 <div class="togglebutton">
                   <label>
                     Word wrapping : <input type="checkbox" class="word_wrap_checkbox">
@@ -100,7 +100,7 @@
             </div>
 
             <div class="row">
-              <div class="col-xs-offset-2 col-xs-4">
+              <div class="col-md-offset-2 col-md-4">
                 <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">Select syntax</a>
                   <div class="menu_content">
                       <div class="syntaxes">
@@ -131,7 +131,7 @@
                   </div>
               </div>
 
-              <div class="col-xs-4">
+              <div class="col-md-4">
                 <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">Select theme</a>
                 <div class="menu_content">
                   <div class="row themes">
