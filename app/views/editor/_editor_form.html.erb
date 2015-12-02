@@ -75,6 +75,10 @@ oauth_controller.add_to_queue(function(){
       new EditorRouter(editor_controller)
       top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
 
+      // check for browser compat
+      setTimeout(function(){
+        editor_controller.browser_check();
+      }, 5000);
     }
   )
 })

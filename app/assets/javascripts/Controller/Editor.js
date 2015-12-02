@@ -644,3 +644,27 @@ EditorController.prototype.restart_app = function() {
   var self = this;
   if(confirm("Are you sure ?")) window.location.reload()
 }
+
+EditorController.prototype.browser_check = function() {
+  var self = this;
+  var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+      // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+  var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+  var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+      // At least Safari 3+: "[object HTMLElementConstructor]"
+  var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+  var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
+
+  if(isIE || isOpera) {
+    self.flash.error("The browser you are using is completely untested with this app. Consider using another browser.");
+  }
+  else if(isFirefox || isSafari){
+    self.flash.warning("The browser you are using is not officialy tested. The app should work but your milleage may vary.");
+  }
+  else if(isChrome){
+    // All good :)
+  }
+  else {
+    self.flash.error("Couldn't detect which browser you are using. The app should work but your milleage may vary.")
+  }
+}
