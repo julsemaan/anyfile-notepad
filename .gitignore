@@ -27,3 +27,7 @@ pickle-email-*.html
 /cstore/*
 /config/development.yml
 /public/pages/*.markdown
+
+/build/
+/dist/
+/afn.tgz
