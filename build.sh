@@ -1,15 +1,5 @@
 #!/bin/bash
 
-rm -fr build
-rm -fr dist
-mkdir -p build
-cd build
-
-PROTO=http
-HOST=localhost:3000
-APP=$PROTO://$HOST
-BRANCH=master
-
 function sed_hrefs {
   echo $1
   echo $2
@@ -22,13 +12,22 @@ function sed_hrefs {
   done < <(find . -type f -name "*.html" -print0)
 }
 
-rm -fr $HOST
+ROOT=$(pwd)
+BUILDDIR=$(pwd)"/build"
 
-# Get repo for future usage
-#git clone ssh://git@bitbucket.org/julsemaan/anyfile-notepad.git
-#cd anyfile-notepad
-#git checkout $BRANCH
-#cd ..
+PROTO=http
+HOST=localhost:3000
+APP=$PROTO://$HOST
+
+APP_DOWNLOAD_DIR=$BUILDDIR"/"$HOST
+
+echo $ROOT
+echo $APP_DOWNLOAD_DIR
+
+read pause
+
+mkdir -p $BUILDDIR
+cd build
 
 # Download the app and website around it
 wget -mk $APP/app
@@ -56,16 +55,14 @@ wget $APP/googlef0ce5fbdc9b3a89f.html
 # Delete the admin section as it's useless
 rm -fr admin
 
+cd $ROOT
+
 # Get ace.js and the fonts
-cp -fr ../../public/ace.js .
-cp -fr ../../public/fonts .
+cp -fr $ROOT/public/ace.js $APP_DOWNLOAD_DIR
+cp -fr $ROOT/public/fonts $APP_DOWNLOAD_DIR
 
 # copy to dist
-cd ..
-cp -fr $HOST ../dist
-
-cd ..
-rm -fr app/static/*
-cp -fr dist/* app/static/
+cp -fr $APP_DOWNLOAD_DIR $ROOT/dist
 
 tar cvf afn.tgz dist/
+
