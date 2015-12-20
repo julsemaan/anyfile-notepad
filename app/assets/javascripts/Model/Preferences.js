@@ -107,6 +107,11 @@ Preferences.prototype.validate_defaults = function(){
   }
 }
 
+Preferences.prototype.reset = function(){
+  this.set_hash({});
+  this.commit();
+}
+
 Preferences.prototype.commit = function(callback){
   this.prefs_file.update(true, callback);
 }
