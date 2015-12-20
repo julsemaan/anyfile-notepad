@@ -71,11 +71,17 @@ Preferences.prototype.get_hash = function(){
     throw "Preferences not loaded yet"
   }
   try{
-  this.preferences = JSON.parse(this.prefs_file.data)
+    this.preferences = JSON.parse(this.prefs_file.data)
   }catch(e){
-    alert("Your preferences were detected as corrupted.\nWe'll reset them to default.\nPlease file a bug report explaning how it happened on our community")
+    if(!this.warned){
+      alert("Your preferences could not be loaded.\nThis is likely due to a Google server error.\nPlease try restarting the app and file a bug if it persists.");
+      this.warned = true;
+    }
+    // we replace the commit method by a warning
+    this.commit = function(){
+      alert("Can't commit your preferences because they weren't loaded properly.\n Please restart the app.")
+    }
     this.set_hash({})
-    this.commit()
   }
   this.validate_defaults()
   this.prefs_file.data = JSON.stringify(this.preferences)
