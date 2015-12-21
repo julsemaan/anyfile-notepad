@@ -60,3 +60,7 @@ Preference.prototype.setValue = function(value, locker, fail_action){
     locker.set_wait(locking_key, false)
   })
 }
+
+Preference.prototype.toString = function(){
+  return this.value.toString();
+}
