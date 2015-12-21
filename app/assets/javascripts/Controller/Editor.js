@@ -112,12 +112,12 @@ EditorController.prototype.initialize_html = function(){
   })
 
 
-  if(!Preference.find('agree_terms', BooleanPreference).getValue()){
+  if(!BooleanPreference.find('agree_terms').getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
     $('.modal-backdrop.fade.in').css('opacity', '1.0')
     $('#agree_terms').click(function(){
       $("#terms_modal").modal('hide')
-      Preference.find("agree_terms", BooleanPreference).setValue(true, self, self.show_reauth)
+      BooleanPreference.find("agree_terms").setValue(true, self, self.show_reauth)
     })
     $('#disagree_terms').click(function(){
       window.location.href = "http://www.google.com"
@@ -281,7 +281,7 @@ EditorController.prototype.set_syntax_mode = function(syntax,save){
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
-    Preference.find("syntaxes["+self.file.extension()+"]", StringPreference).setValue(syntax, self, self.show_reauth)
+    StringPreference.find("syntaxes["+self.file.extension()+"]").setValue(syntax, self, self.show_reauth)
   }
 }
 
@@ -454,7 +454,7 @@ EditorController.prototype.change_keybinding = function(keybinding){
     this.editor_view.setKeyboardHandler();
   }
 
-  Preference.find("keybinding", BooleanPreference).setValue(keybinding, self, self.show_reauth)
+  BooleanPreference.find("keybinding").setValue(keybinding, self, self.show_reauth)
 }
 
 
@@ -616,17 +616,17 @@ EditorController.prototype.options_show_callback = function() {
   var self = this;
   $("select").each(function(){
     if($(this).hasClass('keybinding_select')) {
-      $(this).val(Preference.find("keybinding", StringPreference).getValue())
+      $(this).val(StringPreference.find("keybinding").getValue())
     }
     else if($(this).hasClass('tab_size_select')){
-      $(this).val(Preference.find("ace_js_tab_size", StringPreference).getValue())
+      $(this).val(StringPreference.find("ace_js_tab_size").getValue())
     }
     else if($(this).hasClass('font_size_select')){
-      $(this).val(Preference.find("ace_js_font_size", StringPreference).getValue())
+      $(this).val(StringPreference.find("ace_js_font_size").getValue())
     }
   });
   
-  if(Preference.find("word_wrap", BooleanPreference).getValue()){
+  if(BooleanPreference.find("word_wrap").getValue()){
     $('.word_wrap_checkbox').attr('checked', 'checked');
   }
   else{

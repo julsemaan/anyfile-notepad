@@ -1,6 +1,6 @@
-function StringPreference(value){
-  this.value = value 
-}
+Class("StringPreference", ["Preference"]);
+
+StringPreference.find = Preference.find;
 
 StringPreference.prototype.valueOf = function(){
   return this.value

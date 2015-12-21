@@ -1,18 +1,24 @@
-function Preference(ledata){
-  Model.call(this, ledata)
+Class("Preference", ["Model"]);
+
+Preference.prototype.init = function(args){
+  Model.call(this, args);
+  if(args){
+    this.init_child(args);
+  }
 }
-Preference.prototype = new Model()
+
+Preference.prototype.init_child = function(args){}
 
 Preference.getBackend = function(){
   return user_preferences.get_hash()
 }
 
-Preference.find = function(key, valueType){
+Preference.find = function(key){
   var data = key.split("[")
   if(data.length == 1){
-    return new Preference({
+    return new this({
       key: key, 
-      value: new valueType(Preference.getBackend()[key])
+      value: Preference.getBackend()[key],
     })
   }
   // we're dealing with an hash or array access
@@ -21,9 +27,9 @@ Preference.find = function(key, valueType){
       var array = data[0]
       data = data[1].split("]")
       var array_key = data[0]
-      return new Preference({ 
+      return new this({ 
         key: key, 
-        value: new valueType(Preference.getBackend()[array][array_key]) 
+        value: Preference.getBackend()[array][array_key] 
       })
     } catch(err) {
       return;
@@ -32,12 +38,12 @@ Preference.find = function(key, valueType){
 }
 
 Preference.prototype.is_empty = function(){
-  return (!this.value.value)
+  return (!this.value)
 }
 
 Preference.prototype.getValue = function(){
   var self = this;
-  return this.value.valueOf()
+  return this.valueOf()
 }
 
 Preference.prototype.setValue = function(value, locker, fail_action){
@@ -48,7 +54,7 @@ Preference.prototype.setValue = function(value, locker, fail_action){
   locker.set_wait(locking_key, true)
 
   var prefs = Preference.getBackend()
-  prefs[this.key] = this.value.toString()
+  prefs[this.key] = this.toString()
   user_preferences.set_hash(prefs)
   user_preferences.commit(function(){
     locker.set_wait(locking_key, false)

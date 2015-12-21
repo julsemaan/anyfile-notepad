@@ -1,6 +1,6 @@
-function BooleanPreference(value){
-  this.value = value == "true" ? true : false
-}
+Class("BooleanPreference", ["Preference"]);
+
+BooleanPreference.find = Preference.find;
 
 BooleanPreference.prototype.valueOf = function(){
   return this.value

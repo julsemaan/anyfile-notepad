@@ -16,7 +16,9 @@
 //= require bootstrap
 //= require DataBinder
 //= require Model/Model
+//= require Model/Preference/Preference
 //= require_tree .
+
 
 //$(document).bind("DOMSubtreeModified", function() {
 //  $.material.init()

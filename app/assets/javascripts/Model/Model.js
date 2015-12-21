@@ -139,3 +139,36 @@ RestAdapter.prototype.all = function(){
     return objects
   }
 }
+
+function Class(name, inherits) {
+  var inherits_str = "";
+  var first_inherit;
+  if(inherits){
+    first_inherit = inherits[0];
+  }
+  else{
+    first_inherit = "Object";
+  }
+  for(var i in inherits){
+    inherits_str += inherits[i] + ",";
+  }
+  inherits_str += "Model";
+  var creator = [
+    "window."+name+" = function "+name+"(args){",
+    "this.init(args);",
+    "}",
+    "window."+name+".super_class = "+first_inherit+";",
+    "if(!window.classes) window.classes = {};",
+    "window.classes[window."+name+"] = '"+name+"';",
+    "Inherit("+name+", "+inherits_str+");",
+  ].join("\n");
+  eval(creator);
+}
+
+function Inherit() {
+    var c = [].shift.call(arguments),
+        len = arguments.length
+    while(len--) {
+        $.extend(c.prototype, new arguments[len]());
+    }
+}

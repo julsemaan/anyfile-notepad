@@ -10,6 +10,7 @@ function Preferences(loaded){
     'major_notice' : '0',
     'agree_terms' : 'false',
     'keybinding' : 'normal',
+    'favorites' : "[]",
   }
   
   this.HASH_PREFERENCES = [
