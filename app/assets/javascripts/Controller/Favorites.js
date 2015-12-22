@@ -49,6 +49,7 @@ FavoritesController.prototype.refresh = function(){
     var add_favorite = $('<li><a href="javascript:void(0)">Favorite this file</a></li>');
     add_favorite.click(function(e){
       e.preventDefault();
+      self.menu_controller.hide_menu();
       self.add_favorite(self.parent.file.id);
     })
     $("ul.favorites").append(add_favorite);
@@ -59,6 +60,7 @@ FavoritesController.prototype.refresh = function(){
       delete_button.click(function(e){
         e.preventDefault();
         self.remove_favorite(element.alias);
+        self.menu_controller.hide_menu();
       });
       var link = $('<a href="#edit/'+element.file_id+'">'+element.alias+'</a>');
       var li = $('<li></li>');
