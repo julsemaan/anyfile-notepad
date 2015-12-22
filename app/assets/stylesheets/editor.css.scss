@@ -331,6 +331,10 @@ span.collaborators {
 }
 
 ul.favorites {
+  li:first-child {
+    border-bottom:2px solid black !important;
+  }
+
   li button {
     margin-left:7px;
   }
