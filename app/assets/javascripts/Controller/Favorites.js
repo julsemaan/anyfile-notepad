@@ -23,6 +23,7 @@ FavoritesController.prototype.add_favorite = function(file_id) {
       }
     }
     self.favorites_pref.array.push({ file_id:file_id, alias:alias });
+    self.favorites_pref.array.sort(self.sort_favorites);
     self.favorites_pref.commit(self.parent, self.parent.show_reauth);
     self.refresh();
   }
@@ -39,6 +40,13 @@ FavoritesController.prototype.remove_favorite = function(alias){
     }
   }
   return false;
+}
+
+FavoritesController.prototype.sort_favorites = function(a,b){
+  var self = this;
+  if(a.alias < b.alias) return -1;
+  if(a.alias > b.alias) return 1;
+  return 0;
 }
 
 FavoritesController.prototype.refresh = function(){
