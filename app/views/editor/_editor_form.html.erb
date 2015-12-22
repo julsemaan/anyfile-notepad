@@ -50,6 +50,8 @@ var oauth_controller = new OAuthController({
 var user_preferences;
 var editor_controller;
 var top_menu_controller;
+var menu_controller;
+
 oauth_controller.add_to_queue(function(){
   user_preferences = new Preferences(
     function(){
@@ -65,9 +67,15 @@ oauth_controller.add_to_queue(function(){
         'file_explorer': new FileExplorerController("file_explorer_container", {
           'height_pref' : StringPreference.find('file_explorer_height'),
           }),
-        })
-      editor_controller.file_explorer.parent = editor_controller 
-      editor_controller.file_explorer.flash = editor_controller.flash
+        'favorites_controller': new FavoritesController({
+          favorites_pref:ArrayPreference.find("favorites"),
+          menu_controller:menu_controller,
+        }),
+      })
+      editor_controller.favorites_controller.parent = editor_controller;
+
+      editor_controller.file_explorer.parent = editor_controller;
+      editor_controller.file_explorer.flash = editor_controller.flash;
       editor_controller.oauth_controller = oauth_controller;
       editor_controller.file_explorer.load();
       editor_controller.flash.sticky_success("<a target='_blank' href='http://goo.gl/forms/0QMBjBK3y6'>Click here to fill out the 6 questions survey about the new version</a>")
@@ -83,7 +91,7 @@ oauth_controller.add_to_queue(function(){
   )
 })
 
-var menu_controller = new MenuController("menu");
+menu_controller = new MenuController("menu");
 
 
 //editor_controller.initialize_html() 

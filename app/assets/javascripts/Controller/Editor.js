@@ -20,6 +20,7 @@ function EditorController(view, options){
   this.theme_pref = options["theme_pref"]
 
   this.file_explorer = options["file_explorer"]
+  this.favorites_controller = options["favorites_controller"]
 
   this.menu_width_pref = options["menu_width_pref"]
 
