@@ -58,7 +58,12 @@ FavoritesController.prototype.refresh = function(){
     add_favorite.click(function(e){
       e.preventDefault();
       self.menu_controller.hide_menu();
-      self.add_favorite(self.parent.file.id);
+      if(self.parent.file.id){
+        self.add_favorite(self.parent.file.id);
+      }
+      else {
+        alert("Can't favorite file as it is not saved yet...");
+      }
     })
     $("ul.favorites").append(add_favorite);
     
