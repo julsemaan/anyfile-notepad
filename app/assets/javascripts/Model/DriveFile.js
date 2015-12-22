@@ -38,7 +38,7 @@ DriveFile.prototype.compute_syntax = function(){
   var self = this
   if(this.fuck_syntax) return
 
-  syntax_pref = Preference.find('syntaxes['+this.extension()+']', StringPreference)
+  syntax_pref = StringPreference.find('syntaxes['+this.extension()+']')
   find_syntax: if(!syntax_pref.is_empty()){
     self.set('syntax', syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()}))
     return self.get('syntax')
