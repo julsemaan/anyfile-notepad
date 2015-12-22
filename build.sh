@@ -24,8 +24,6 @@ APP_DOWNLOAD_DIR=$BUILDDIR"/"$HOST
 echo $ROOT
 echo $APP_DOWNLOAD_DIR
 
-read pause
-
 mkdir -p $BUILDDIR
 cd build
 
