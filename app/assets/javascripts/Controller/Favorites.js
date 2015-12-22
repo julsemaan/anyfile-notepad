@@ -61,8 +61,12 @@ FavoritesController.prototype.refresh = function(){
         e.preventDefault();
         self.remove_favorite(element.alias);
         self.menu_controller.hide_menu();
+        return false;
       });
       var link = $('<a href="#edit/'+element.file_id+'">'+element.alias+'</a>');
+      link.click(function(){
+        self.menu_controller.hide_menu();
+      });
       var li = $('<li></li>');
       li.append(link);
       link.append(delete_button);
