@@ -107,7 +107,7 @@ OAuthController.prototype.execute_request = function(request, callback){
       callback(response);
     }
     else{
-      $('#error_modal .additionnal_message').html("We got this message from Google : "+ response.error.message)
+      $('#error_modal .additionnal_message').html(i18n("We got this message from Google")+" : "+ response.error.message)
       $('#error_modal').modal('show')
       callback(response)
     }

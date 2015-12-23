@@ -71,11 +71,11 @@ EditorController.prototype.initialize_html = function(){
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
-      return "You have unsaved changes or your file is still being saved. You will lose your changes"
+      return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
     if(!self.is_ready_to_submit() && !self.skip_clearance){
       self.clearance_interval = setInterval(function(){self.wait_for_clearance(function(){location.reload()})}, 1000)
-      return "Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.";
+        return i18n("Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.");
     }
   });
 
@@ -181,7 +181,7 @@ EditorController.prototype.edit = function(id){
 EditorController.prototype.post_file_load = function(){
   var self = this;
   if(unescape(encodeURIComponent(self.file.data)) != this.file.data){
-    this.flash.warning("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe.")
+    this.flash.warning(i18n("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe."))
   }
   this.editor_view.getSession().setValue(this.file.data, -1)
 
@@ -195,11 +195,11 @@ EditorController.prototype.post_file_load = function(){
   this.activate_auto_save()
 
   if(this.file.persisted){
-    this.flash.success("File loaded", 3)
+    this.flash.success(i18n("File loaded"), 3)
     document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
-    this.flash.success("Creating new file")
+    this.flash.success(i18n("Creating new file"))
     document.title = "New file | Anyfile Notepad";
   }
 }
@@ -228,7 +228,7 @@ EditorController.prototype.save = function(){
   var length = this.editor_view.getValue().length
   self.editor_view.focus()
   if(this.file.title == ""){
-      this.flash.error("File title can't be empty", 5);
+      this.flash.error(i18n("File title can't be empty"), 5);
       return false
   }
   else{
@@ -323,13 +323,13 @@ EditorController.prototype.change_tab_size = function(tab_size){
 
 EditorController.prototype.block_saving = function(){
   var self = this;
-  this.$.find('.editor_save_button').html("Saving...")
+  this.$.find('.editor_save_button').html(i18n("Saving")+"...")
   this.$.find('.editor_save_button').unbind('click')
   this.safe_to_quit = false
   $(window).off('keydown.save')
   $(window).on('keydown.save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-    self.flash.warning("This file is already being saved. Calm down.", 3)
+    self.flash.warning(i18n("This file is already being saved. Calm down."), 3)
     event.preventDefault();
     return false;
   });  
@@ -604,7 +604,7 @@ EditorController.prototype.open_share_modal = function() {
     oauth_controller.share_client.showSettingsDialog();
   }
   else {
-    alert("You must save the file before you can share it.");
+    alert(i18n("You must save the file before you can share it."));
   }
 }
 
@@ -638,7 +638,7 @@ EditorController.prototype.show_file_info = function() {
 
 EditorController.prototype.restart_app = function() {
   var self = this;
-  if(confirm("Are you sure ?")) window.location.reload()
+  if(confirm(i18n("Are you sure ?"))) window.location.reload()
 }
 
 EditorController.prototype.browser_check = function() {
@@ -652,15 +652,15 @@ EditorController.prototype.browser_check = function() {
   var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
 
   if(isIE || isOpera) {
-    self.flash.error("The browser you are using is completely untested with this app. Consider using another browser.");
+    self.flash.error(i18n("The browser you are using is completely untested with this app. Consider using another browser."));
   }
   else if(isFirefox || isSafari){
-    self.flash.warning("The browser you are using is not officialy tested. The app should work but your milleage may vary.");
+    self.flash.warning(i18n("The browser you are using is not officialy tested. The app should work but your milleage may vary."));
   }
   else if(isChrome){
     // All good :)
   }
   else {
-    self.flash.error("Couldn't detect which browser you are using. The app should work but your milleage may vary.")
+    self.flash.error(i18n("Couldn't detect which browser you are using. The app should work but your milleage may vary."));
   }
 }
