@@ -1,97 +1,118 @@
 <div id="editor_app">
-<div id="loading_overlay"></div>
-<%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
-<%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
-<%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
-<%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
-<%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :dismiss => true} %>
-<%= render 'file_info' %>
-<%= render :partial => 'major_notice_modal' %>
-<%= render :partial => 'terms' %>
-<%= render :partial => 'flash' %>
+  <div id="loading_overlay"></div>
+  <%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :dismiss => true} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded.", :message => "Press escape to cancel"} %>
+  <%= render 'file_info' %>
+  <%= render :partial => 'major_notice_modal' %>
+  <%= render :partial => 'terms' %>
+  <%= render :partial => 'flash' %>
 
-<div id="print_content" style="display:none">
-  <%= render :partial => 'print' %>
-</div>
-
-<script>
-   $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
-   $('.modal-backdrop.fade.in').css('opacity', '1.0')
-</script>
-
-<div id="editor_menu_container" >
-  <div id="editor_menu" class="g_file_menu" >
-
-    <%= render 'editor_menu' %>
-
-    <div class="g_file_editor_file_explorer">
-      <%= render 'shared/file_explorer', :with_dropdown => true %>
-    </div>
-
-    <%= render 'shared/editor_message' %>
-
+  <div id="print_content" style="display:none">
+    <%= render :partial => 'print' %>
   </div>
 
+  <script id="editor-template" class="template" type="text/x-handlebars-template">
+    <div id="editor_menu_container" >
+      <div id="editor_menu" class="g_file_menu" >
+
+        <%= render 'editor_menu' %>
+
+        <div class="g_file_editor_file_explorer">
+          <%= render 'shared/file_explorer', :with_dropdown => true %>
+        </div>
+
+        <%= render 'shared/editor_message' %>
+
+      </div>
+
+    </div>
+
+    <div class="g_file_editor">
+      <div id="editor"></div>
+    </div>
+        
+    <%= render 'shared/user' %>
+
+  </script>
 </div>
 
-<div class="g_file_editor">
-  <div id="editor"></div>
-</div>
-    
-<%= render 'shared/user' %>
 
-</div>
 <script type="text/javascript">
+  String.toLocaleString({
+    "en": <%= render 'locales/en.json' %>,
+    "fr": <%= render 'locales/fr.json' %>,
+  });
+  String.locale = "fr-CA";
+  function i18n(string) {
+    return string.toLocaleString();
+  }
 
-var oauth_controller = new OAuthController({
-  scopes : "<%= @gapi.get_scopes.join(' ') %>" 
-});
+  var templates = $('.template');
 
-var user_preferences;
-var editor_controller;
-var top_menu_controller;
-var menu_controller;
+  Handlebars.registerHelper('i18n', i18n);
+  templates.each( function() {
+    var $source = $(this);
+    var source = $source.html();
+    var template = Handlebars.compile(source);
+    $(template()).insertAfter($source);
+  });
 
-oauth_controller.add_to_queue(function(){
-  user_preferences = new Preferences(
-    function(){
-      editor_controller = new EditorController("editor_app", {
-        'word_wrap_pref':BooleanPreference.find('word_wrap'),
-        'font_size_pref': StringPreference.find('ace_js_font_size'),
-        'tab_size_pref' : StringPreference.find('ace_js_tab_size'),
-        'major_notice_pref' : IntPreference.find('major_notice'),
-        'theme_pref': StringPreference.find('theme'),
-        'menu_width_pref' : StringPreference.find('menu_width'),
-        'keybinding_pref' : StringPreference.find('keybinding'),
-        'flash' : new FlashController('editor_flash'),
-        'file_explorer': new FileExplorerController("file_explorer_container", {
-          'height_pref' : StringPreference.find('file_explorer_height'),
+ $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
+ $('.modal-backdrop.fade.in').css('opacity', '1.0')
+
+  var oauth_controller = new OAuthController({
+    scopes : "<%= @gapi.get_scopes.join(' ') %>" 
+  });
+
+  var user_preferences;
+  var editor_controller;
+  var top_menu_controller;
+  var menu_controller;
+
+  oauth_controller.add_to_queue(function(){
+    user_preferences = new Preferences(
+      function(){
+        editor_controller = new EditorController("editor_app", {
+          'word_wrap_pref':BooleanPreference.find('word_wrap'),
+          'font_size_pref': StringPreference.find('ace_js_font_size'),
+          'tab_size_pref' : StringPreference.find('ace_js_tab_size'),
+          'major_notice_pref' : IntPreference.find('major_notice'),
+          'theme_pref': StringPreference.find('theme'),
+          'menu_width_pref' : StringPreference.find('menu_width'),
+          'keybinding_pref' : StringPreference.find('keybinding'),
+          'flash' : new FlashController('editor_flash'),
+          'file_explorer': new FileExplorerController("file_explorer_container", {
+            'height_pref' : StringPreference.find('file_explorer_height'),
+            }),
+          'favorites_controller': new FavoritesController({
+            favorites_pref:ArrayPreference.find("favorites"),
+            menu_controller:menu_controller,
           }),
-        'favorites_controller': new FavoritesController({
-          favorites_pref:ArrayPreference.find("favorites"),
-          menu_controller:menu_controller,
-        }),
-      })
-      editor_controller.favorites_controller.parent = editor_controller;
+        })
+        editor_controller.favorites_controller.parent = editor_controller;
 
-      editor_controller.file_explorer.parent = editor_controller;
-      editor_controller.file_explorer.flash = editor_controller.flash;
-      editor_controller.oauth_controller = oauth_controller;
-      editor_controller.file_explorer.load();
-      editor_controller.flash.sticky_success("<a target='_blank' href='http://goo.gl/forms/0QMBjBK3y6'>Click here to fill out the 6 questions survey about the new version</a>")
+        editor_controller.file_explorer.parent = editor_controller;
+        editor_controller.file_explorer.flash = editor_controller.flash;
+        editor_controller.oauth_controller = oauth_controller;
+        editor_controller.file_explorer.load();
+        editor_controller.flash.sticky_success("<a target='_blank' href='http://goo.gl/forms/0QMBjBK3y6'>Click here to fill out the 6 questions survey about the new version</a>")
 
-      new EditorRouter(editor_controller)
-      top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
+        new EditorRouter(editor_controller)
+        top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
 
-      // check for browser compat
-      setTimeout(function(){
-        editor_controller.browser_check();
-      }, 5000);
-    }
-  )
-})
+        // check for browser compat
+        setTimeout(function(){
+          editor_controller.browser_check();
+        }, 5000);
+      }
+    )
+  })
 
-menu_controller = new MenuController("menu");
+  menu_controller = new MenuController("menu");
 
 
 //editor_controller.initialize_html() 

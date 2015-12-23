@@ -1,26 +1,28 @@
-<div class="modal fade" id="<%= defined?(id) ? id : "modal" %>" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title"><%= title %></h4>
-      </div>
-      <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "modal_body" %>">
-        <% if not defined?(with_bar) or with_bar%>
-          <%= render 'shared/loading_bar' %>
+<script class="template" type="text/x-handlebars-template">
+  <div class="modal fade" id="<%= defined?(id) ? id : "modal" %>" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ i18n "<%= title %>" }}</h4>
+        </div>
+        <div class="modal-body" id="<%= defined?(id) ? "#{id}_body" : "modal_body" %>">
+          <% if not defined?(with_bar) or with_bar%>
+            <%= render 'shared/loading_bar' %>
+          <% end %>
+          <%= message %>
+          <div class="additionnal_message" ></div>
+        </div>
+        <div class="modal-footer">
+        <% if defined?(buttons) %>
+          <% buttons.each do |id, value| %>
+              <button id="<%= id %>" type="button" class="<%= id %> btn btn-primary">{{ i18n "<%= value %>" }}</button>
+          <% end %>
         <% end %>
-        <%= message %>
-        <div class="additionnal_message" ></div>
-      </div>
-      <div class="modal-footer">
-      <% if defined?(buttons) %>
-        <% buttons.each do |id, value| %>
-            <button id="<%= id %>" type="button" class="<%= id %> btn btn-primary"><%= value%></button>
+        <% if defined?(dismiss) && dismiss %>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">{{ i18n "Close" }}</button>
         <% end %>
-      <% end %>
-      <% if defined?(dismiss) && dismiss %>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</script>

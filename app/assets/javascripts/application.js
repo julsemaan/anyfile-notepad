@@ -182,3 +182,4 @@ function getQueryParam(variable) {
     }
   } 
 }
+

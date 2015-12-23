@@ -337,7 +337,7 @@ EditorController.prototype.block_saving = function(){
 
 EditorController.prototype.allow_saving = function(){
   var self = this;
-  this.$.find('.editor_save_button').html("Save")
+  this.$.find('.editor_save_button').html(i18n("Save"))
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
   $(window).off('keydown.save')
@@ -359,7 +359,7 @@ EditorController.prototype.check_content_changed = function(){
   var self = this;
 
   if(!this.file.persisted){
-    this.$.find('.editor_save_button').html("Save")
+    this.$.find('.editor_save_button').html(i18n("Save"))
     return
   }
 
@@ -368,12 +368,12 @@ EditorController.prototype.check_content_changed = function(){
   }
   this.file.set("data", this.editor_view.getValue())
   if(this.file.did_content_change()){
-    if(!(this.$.find('.editor_save_button').html() == "Saving...")){
-      this.$.find('.editor_save_button').html("Save")
+    if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
+      this.$.find('.editor_save_button').html(i18n("Save"))
     }
   }
   else{
-    this.$.find('.editor_save_button').html("Saved")
+    this.$.find('.editor_save_button').html(i18n("Saved"))
   }
 }
 
