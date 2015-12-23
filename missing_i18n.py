@@ -41,4 +41,4 @@ for string in strings_array:
     if not skip and not stripped in locale:
         missing[stripped] = ""
 
-print json.dumps(missing, sort_keys=True, indent=4, separators=(',', ': '))
+print json.dumps(missing, sort_keys=True, indent=2, separators=(',', ': '))
