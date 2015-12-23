@@ -200,7 +200,7 @@ EditorController.prototype.post_file_load = function(){
   }
   else{
     this.flash.success(i18n("Creating new file"))
-    document.title = "New file | Anyfile Notepad";
+    document.title = i18n("New file")+" | Anyfile Notepad";
   }
 }
 

@@ -71,6 +71,6 @@
   "You must save the file before you can share it.": "Vous devez sauvegarder le fichier avant de le partager",
   "You need to authorize this app to access your Google Drive": "Vous devez authoriser l'app pour qu'elle accède à votre Google Drive",
   "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.": "Vous devez authoriser les popups dans votre navigateur, puis vous connecter à votre compte Google et accepter les requêtes d'authorisation de l'app.",
-  "Your file is being loaded": "Votre fichier est en cours de chargement."
-
+  "Your file is being loaded": "Votre fichier est en cours de chargement.",
+  "New file": "Nouveau fichier"
 }
