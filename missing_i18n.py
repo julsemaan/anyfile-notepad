@@ -18,8 +18,17 @@ del strings_array[0]
 missing = {}
 
 skip_patterns = [
-    re.compile("\<\%.*%\>")
+    re.compile("\<\%.*%\>"),
+    re.compile("^rep -r")
 ]
+
+non_extractable_strings = [
+    "\"Skip\"",
+    "\"Restart app\"",
+    "\"Authorize!\"",
+]
+
+strings_array += non_extractable_strings
 
 for string in strings_array:
     stripped = string[1:-1]
