@@ -69,7 +69,6 @@ EditorRouter.prototype.route = function(){
   this.parse_hash_url()
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
-    console.log(state)
     if(state['action'] == 'open'){
       window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#edit/"+state['ids'][0]);
       this.controller.edit(state['ids'][0])

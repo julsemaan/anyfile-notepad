@@ -14,7 +14,6 @@ function FileExplorerController(view, options){
 FileExplorerController.prototype.fetch_directory = function(options, callback){
   var directory_id = options['dir']
   directory_id = directory_id.replace('/', '')
-  console.log(directory_id)
   var request = gapi.client.drive.files.list({
     'q': "'"+directory_id+"' in parents and trashed=false",
     'fields' : 'items(id,mimeType,title)',

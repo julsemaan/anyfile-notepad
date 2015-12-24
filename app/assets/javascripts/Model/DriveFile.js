@@ -178,7 +178,6 @@ DriveFile.prototype.update_data = function(new_revision, callback){
     if(self.folder_id){
       metadata['parents'] = [{id:self.folder_id}]
     }
-    //console.log(metadata)
 
     var base64Data = btoa(reader.result);
     var multipartRequestBody =
@@ -234,7 +233,6 @@ DriveFile.prototype.delete = function(){
     'fileId': this.id
   });
   oauth_controller.execute_request(request, function(response){
-    console.log(response)
   })
 }
 

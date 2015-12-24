@@ -278,7 +278,6 @@ EditorController.prototype.set_syntax_mode = function(syntax,save){
   save = save || false
   this.$.find('.syntax_button').css("background-color", "initial")
   this.$.find('.syntax_'+syntax).css("background-color", "#009688")
-  console.log('.syntax_'+syntax)
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
@@ -534,15 +533,11 @@ EditorController.prototype.remove_collaborator = function(collaborator){
 
 EditorController.prototype.add_collaborator = function(collaborator) {
   var self = this;
-  console.log("Collaborator has joined")
-  console.log(collaborator)
   if(collaborator.isMe) return;
   var element = $("<span id='collaborator-"+collaborator.userId+"' class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
   self.collaborators_colors[collaborator.userId] = collaborator.color;
   if(! $('.collaborators').has('#collaborator-'+collaborator.userId).length )
     $('.collaborators').append(element) ;
-  else
-    console.log("Collaborator is already displayed")
 
 }
 
