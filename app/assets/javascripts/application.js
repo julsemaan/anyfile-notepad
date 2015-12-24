@@ -15,8 +15,8 @@
 //= require jquery-ui
 //= require bootstrap
 //= require DataBinder
-//= require Model/Model
-//= require Model/Preference/Preference
+//= require Model
+//= require Model/Preference
 //= require_tree .
 
 
