@@ -455,7 +455,7 @@ EditorController.prototype.change_keybinding = function(keybinding){
     this.editor_view.setKeyboardHandler();
   }
 
-  BooleanPreference.find("keybinding").setValue(keybinding, self, self.show_reauth)
+  StringPreference.find("keybinding").setValue(keybinding, self, self.show_reauth)
 }
 
 
