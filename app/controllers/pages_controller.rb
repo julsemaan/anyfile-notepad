@@ -19,4 +19,10 @@ class PagesController < ApplicationController
     render :template => 'site_content/show'
   end
   
+  def help_translate
+    @title = "Help in the translation"
+    @key = 'help_translate'
+    render :template => 'site_content/show'
+  end
+  
 end

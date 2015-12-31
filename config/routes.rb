@@ -41,5 +41,6 @@ AnyfileNotepad::Application.routes.draw do
   
   match 'faq' => 'pages#faq'
   match 'news' => 'pages#news'
+  match 'help_translate' => 'pages#help_translate'
   root :to => 'pages#home'
 end
