@@ -99,7 +99,7 @@
         editor_controller.file_explorer.flash = editor_controller.flash;
         editor_controller.oauth_controller = oauth_controller;
         editor_controller.file_explorer.load();
-        editor_controller.flash.sticky_success("<a target='_blank' href='/help_translate'>Interested in translating the app in your language ? Click here</a>")
+        editor_controller.flash.sticky_success("<a target='_blank' href='/help_translate.html'>Interested in translating the app in your language ? Click here</a>")
 
         new EditorRouter(editor_controller)
         top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
