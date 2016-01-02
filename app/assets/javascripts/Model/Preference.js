@@ -46,6 +46,13 @@ Preference.prototype.getValue = function(){
   return this.valueOf()
 }
 
+Preference.prototype.refreshAndSet = function(value, locker, fail_action) {
+  var self = this;
+  user_preferences.refresh(function(){
+    self.setValue(value, locker, fail_action);
+  });
+}
+
 Preference.prototype.setValue = function(value, locker, fail_action){
   var self = this;
   var locking_key = 'setting_'+value

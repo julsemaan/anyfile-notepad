@@ -47,7 +47,7 @@ Preferences.prototype.get_from_drive = function(){
     }
     for(var i=0; i<files.length;i++){
       if(files[i].title == "preferences"){
-        self.prefs_file = new DriveFile(files[i].id, {
+        self.new_prefs_file = new DriveFile(files[i].id, {
           uid:"preferences",
           loaded: function(){
             self.post_load()
@@ -62,9 +62,10 @@ Preferences.prototype.get_from_drive = function(){
 }
 
 Preferences.prototype.post_load = function(){
-  this.ready = true
-  this.get_hash()
-  this.loaded()
+  this.ready = true;
+  this.prefs_file = this.new_prefs_file;
+  this.get_hash();
+  this.loaded();
 }
 
 Preferences.prototype.get_hash = function(){
@@ -74,6 +75,7 @@ Preferences.prototype.get_hash = function(){
   try{
     this.preferences = JSON.parse(this.prefs_file.data)
   }catch(e){
+    console.log(e)
     if(!this.warned){
       alert("Your preferences could not be loaded.\nThis is likely due to a Google server error.\nPlease try restarting the app and file a bug if it persists.");
       this.warned = true;
@@ -106,6 +108,11 @@ Preferences.prototype.validate_defaults = function(){
       this.preferences[this.HASH_PREFERENCES[i]] = {}
     } 
   }
+}
+
+Preferences.prototype.refresh = function(callback){
+  this.loaded = callback;
+  this.get_from_drive();
 }
 
 Preferences.prototype.reset = function(){

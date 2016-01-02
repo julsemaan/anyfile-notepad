@@ -118,7 +118,7 @@ EditorController.prototype.initialize_html = function(){
     $('.modal-backdrop.fade.in').css('opacity', '1.0')
     $('#agree_terms').click(function(){
       $("#terms_modal").modal('hide')
-      BooleanPreference.find("agree_terms").setValue(true, self, self.show_reauth)
+      BooleanPreference.find("agree_terms").refreshAndSet(true, self, self.show_reauth)
     })
     $('#disagree_terms').click(function(){
       window.location.href = "http://www.google.com"
@@ -129,7 +129,7 @@ EditorController.prototype.initialize_html = function(){
     $('#major_notice_modal').modal('show');
     $('#agree_major_notice').click(function(){
       $('#major_notice_modal').modal('hide'); 
-      self.major_notice_pref.setValue(parseInt($('#major_notice_modal').attr('data-version')), self, self.show_reauth)
+      self.major_notice_pref.refreshAndSet(parseInt($('#major_notice_modal').attr('data-version')), self, self.show_reauth)
     })
   }
 
@@ -281,7 +281,7 @@ EditorController.prototype.set_syntax_mode = function(syntax,save){
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
-    StringPreference.find("syntaxes["+self.file.extension()+"]").setValue(syntax, self, self.show_reauth)
+    StringPreference.find("syntaxes["+self.file.extension()+"]").refreshAndSet(syntax, self, self.show_reauth)
   }
 }
 
@@ -309,14 +309,14 @@ EditorController.prototype.wait_for_clearance = function(){
 EditorController.prototype.change_font_size = function(font_size){
   var self = this;
 
-  this.font_size_pref.setValue(font_size, self, function(){self.show_reauth()})
+  this.font_size_pref.refreshAndSet(font_size, self, function(){self.show_reauth()})
   this.editor_view.setFontSize(this.font_size_pref.getValue())
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
   var self = this;
 
-  this.tab_size_pref.setValue(tab_size, self, self.show_reauth)
+  this.tab_size_pref.refreshAndSet(tab_size, self, self.show_reauth)
 
   this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
 }
@@ -385,7 +385,7 @@ EditorController.prototype.set_wait = function(key, value){
 EditorController.prototype.change_word_wrap = function(value){
   var self = this;
 
-  this.word_wrap_pref.setValue(value, self, function(){self.show_reauth()});
+  this.word_wrap_pref.refreshAndSet(value, self, function(){self.show_reauth()});
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
 }
 
@@ -408,7 +408,7 @@ EditorController.prototype.select_theme = function(name){
   }
   $("."+escape_jquery_selector("theme_"+current_theme)).removeClass("btn-primary")
 
-  this.theme_pref.setValue(name, self, self.show_reauth)
+  this.theme_pref.refreshAndSet(name, self, self.show_reauth)
 
   this.editor_view.setTheme(this.theme_pref.getValue())
   this.set_background_color_from_theme()
@@ -454,7 +454,7 @@ EditorController.prototype.change_keybinding = function(keybinding){
     this.editor_view.setKeyboardHandler();
   }
 
-  StringPreference.find("keybinding").setValue(keybinding, self, self.show_reauth)
+  StringPreference.find("keybinding").refreshAndSet(keybinding, self, self.show_reauth)
 }
 
 
