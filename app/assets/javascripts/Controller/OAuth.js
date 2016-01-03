@@ -1,4 +1,4 @@
-function OAuthController(options){
+function GoogleOAuthController(options){
   var self = this;
   this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com";
   this.drive_app_id = "249464630588";
@@ -9,7 +9,7 @@ function OAuthController(options){
   this.queue = [];
 }
 
-OAuthController.prototype.init = function(){
+GoogleOAuthController.prototype.init = function(){
   var self = this;
   setTimeout(function(){self.check_authed()}, 15000)
   this.add_to_queue(function(){
@@ -18,7 +18,7 @@ OAuthController.prototype.init = function(){
   this.do_auth();
 }
 
-OAuthController.prototype.do_auth = function(){
+GoogleOAuthController.prototype.do_auth = function(){
   var self = this
   gapi.auth.authorize({client_id: this.client_id, scope: this.scopes, immediate : true}, function(auth_result){
     if(auth_result["error"] != "immediate_failed"){
@@ -36,13 +36,13 @@ OAuthController.prototype.do_auth = function(){
 
 }
 
-OAuthController.prototype.auth_popup = function(){
+GoogleOAuthController.prototype.auth_popup = function(){
   var self = this
   //Do it without the immediate
   gapi.auth.authorize({client_id: self.client_id, scope: self.scopes}, function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
 }
 
-OAuthController.prototype.post_auth = function(auth_result){
+GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
     setCookie('access_token', auth_result['access_token'], 1)
@@ -62,7 +62,7 @@ OAuthController.prototype.post_auth = function(auth_result){
   }
 }
 
-OAuthController.prototype.ready = function(){
+GoogleOAuthController.prototype.ready = function(){
   var self = this;
   this.authed = true
   for(var i=0; i < this.queue.length; i++){
@@ -71,27 +71,27 @@ OAuthController.prototype.ready = function(){
   this.queue = []
 }
 
-OAuthController.prototype.add_to_queue = function(to_do){
+GoogleOAuthController.prototype.add_to_queue = function(to_do){
   var self = this;
   this.queue.push(to_do)
 }
 
-OAuthController.prototype.show_reauth = function(){
+GoogleOAuthController.prototype.show_reauth = function(){
   $('#reauthenticate_modal').modal('show')
 }
 
-OAuthController.prototype.auth_failed = function(){
+GoogleOAuthController.prototype.auth_failed = function(){
   //$('#auth_failed_modal').modal('show')
 
 }
 
-OAuthController.prototype.check_authed = function(){
+GoogleOAuthController.prototype.check_authed = function(){
   if(!this.authed){
     this.auth_failed()
   }
 }
 
-OAuthController.prototype.execute_request = function(request, callback){
+GoogleOAuthController.prototype.execute_request = function(request, callback){
   var self = this
   request.execute(function(response){
     if(!response.error){
@@ -113,3 +113,38 @@ OAuthController.prototype.execute_request = function(request, callback){
     }
   });
 }
+
+Class("DropboxOAuthController", ["Model"]);
+
+DropboxOAuthController.prototype.init = function(options){
+  Model.call(this, options);
+  this.client = new Dropbox.Client({ key: "ps6cmsgenf8ypox" });
+}
+
+DropboxOAuthController.prototype.do_auth = function(callback){
+  this.client.authenticate(function(error, client){
+    callback(error,client);
+  });
+}
+
+Class("DropboxRequest", ["Model"]);
+
+DropboxRequest.prototype.init = function(options){
+  Model.call(this, options);
+}
+
+DropboxRequest.prototype.handle_response = function(error, response){
+  var self = this;
+  if(error){
+    if(error.status == 401){
+      self.auth_handler.do_auth(function(){self.request()});
+    }
+    else {
+      $('#error_modal .additionnal_message').html(i18n("We got this message from Dropbox")+" : "+ JSON.stringify(error.response.error))
+      $('#error_modal').modal('show')
+    }
+  }
+
+  self.success(response);
+}
+

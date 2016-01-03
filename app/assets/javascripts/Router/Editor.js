@@ -71,13 +71,16 @@ EditorRouter.prototype.route = function(){
   router.getHandler = function(name){return function(name){alert(name)}}
 
   router.map(function(match){
-    match("#edit/:provider/:id").to("edit");
-    match("#new/:provider").to("new");
-    match("#new/:provider/:folder_id").to("new");
 
     match("#edit/:id").to("edit");
     match("#new/:folder_id").to("new");
     match("#new").to("new");
+
+    match("#edit/:provider/:id").to("edit");
+    match("#new/:provider").to("new");
+    match("#new/:provider/:folder_id").to("new");
+
+    match("/").to("new");
   });
 
   var transition = router.handleURL(window.location.hash);
@@ -90,7 +93,7 @@ EditorRouter.prototype.route = function(){
       self.controller.edit(transition.params.edit.id);
     },
     new: function(transition){
-      self.controller.provider = transition.params.edit.provider || DEFAULT_PROVIDER;
+      self.controller.provider = transition.params.new.provider || DEFAULT_PROVIDER;
       self.controller.new(transition.params.new.folder_id);
     },
   };
@@ -101,6 +104,8 @@ EditorRouter.prototype.route = function(){
     return;
   }
   
+  this.parse_hash_url();
+  this.parse_parameters();
   // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
@@ -115,4 +120,5 @@ EditorRouter.prototype.route = function(){
       return
     }
   }
+
 } 
