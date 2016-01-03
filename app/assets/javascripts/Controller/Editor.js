@@ -180,6 +180,18 @@ EditorController.prototype.edit = function(id){
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
       if(!error){
+        if(this.provider == "GoogleDrive") {
+          self.make_collaborative()
+        }
+
+        // Can't change filename with Dropbox
+        if(this.provider == "Dropbox"){
+          $('input[data-bind-file="title"]').attr('disabled', 'disabled');
+        }
+        else {
+          $('input[data-bind-file="title"]').removeAttr('disabled');
+        }
+
         self.post_file_load()
       }
       else{
