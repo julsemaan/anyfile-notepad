@@ -16,7 +16,7 @@ ROOT=$(pwd)
 BUILDDIR=$(pwd)"/build"
 
 PROTO=http
-HOST=localhost:3000
+HOST=localhost:3001
 APP=$PROTO://$HOST
 
 APP_DOWNLOAD_DIR=$BUILDDIR"/"$HOST

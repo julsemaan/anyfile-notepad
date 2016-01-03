@@ -1,5 +1,8 @@
 build:
+	rails s -e build -p 3001 -P tmp/pids/build-server.pid &
+	sleep 15
 	bash build.sh
+	bash -c 'kill `cat tmp/pids/build-server.pid`'
 
 clean:
 	rm -fr build
