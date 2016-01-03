@@ -127,6 +127,24 @@ DropboxOAuthController.prototype.do_auth = function(callback){
   });
 }
 
+DropboxOAuthController.prototype.test = function(callback){
+  var self = this;
+  self.do_auth(function(){
+    var r = new DropboxRequest({
+      auth_handler:self,
+      client:self.client,
+      request : function(){
+        var request = this;
+        this.client.getAccountInfo(function(e,r){request.handle_response(e,r)})
+      },
+      success : function(response){
+        callback(true);
+      },
+    })
+    r.request();
+  })
+}
+
 Class("DropboxRequest", ["Model"]);
 
 DropboxRequest.prototype.init = function(options){
@@ -137,6 +155,7 @@ DropboxRequest.prototype.handle_response = function(error, response){
   var self = this;
   if(error){
     if(error.status == 401){
+      self.client.reset();
       self.auth_handler.do_auth(function(){self.request()});
     }
     else {

@@ -41,6 +41,8 @@
 
             <li><a href="javascript:void(0);" onclick="javascript:user_preferences.reset();menu_controller.hide_menu();alert('{{ i18n "You should now restart the app to fully flush your preferences." }}')">{{ i18n "Reset preferences" }}</a></li>
 
+            <li><a href="javascript:void(0);" onclick="javascript:dropbox_oauth_controller.test(function(){alert('Already connected !')})">{{ i18n "Connect Dropbox" }}</a></li>
+
             <li><a href="javascript:void(0);" onclick="javascript:editor_controller.restart_app()">{{ i18n "Restart app" }}</a></li>
           </ul>
         </div>
