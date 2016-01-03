@@ -12,6 +12,8 @@ function FileExplorerController(view, options){
 }
 
 FileExplorerController.prototype.fetch_directory = function(options, callback){
+  var self = this;
+  var provider = "GoogleDrive";
   var directory_id = options['dir']
   directory_id = directory_id.replace('/', '')
   var request = gapi.client.drive.files.list({
@@ -41,10 +43,10 @@ FileExplorerController.prototype.fetch_directory = function(options, callback){
     for(var i in files){
       var file = files[i];
       var file_element = $("<li></li>");
-      var file_link = $("<a href='#edit/"+file.id+"'>"+file.title+"</a>");
-      file_element.addClass("file ext_"+DriveFile.file_extension(file.title).substr(1))
+      var file_link = $("<a href='#edit/"+provider+"/"+file.id+"'>"+file.title+"</a>");
+      file_element.addClass("file ext_"+CloudFile.file_extension(file.title).substr(1))
       file_element.append(file_link);
-      file_link.attr('onclick', "javascript:menu_controller.hide_menu();window.location='#edit/"+file.id+"'")
+      file_link.attr('onclick', "javascript:menu_controller.hide_menu();window.location='#edit/"+provider+"/"+file.id+"'")
       container.append(file_element);
     }
 

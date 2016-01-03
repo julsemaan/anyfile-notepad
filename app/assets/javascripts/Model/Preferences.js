@@ -48,7 +48,8 @@ Preferences.prototype.get_from_drive = function(){
     }
     for(var i=0; i<files.length;i++){
       if(files[i].title == "preferences"){
-        self.new_prefs_file = new DriveFile(files[i].id, {
+        self.new_prefs_file = new DriveFile({
+          id:files[i].id, 
           uid:"preferences",
           loaded: function(){
             self.post_load()

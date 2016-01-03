@@ -6,7 +6,7 @@ FavoritesController.prototype.init = function(args){
   self.refresh();
 }
 
-FavoritesController.prototype.add_favorite = function(file_id) {
+FavoritesController.prototype.add_favorite = function(provider, file_id) {
   var self = this;
   for(var i in self.favorites_pref.array){
     if(self.favorites_pref.array[i].file_id == file_id){
@@ -22,7 +22,7 @@ FavoritesController.prototype.add_favorite = function(file_id) {
         return;
       }
     }
-    self.favorites_pref.array.push({ file_id:file_id, alias:alias });
+    self.favorites_pref.array.push({ file_id:file_id, alias:alias, provider: provider });
     self.favorites_pref.array.sort(self.sort_favorites);
     self.favorites_pref.commit(self.parent, self.parent.show_reauth);
     self.refresh();
@@ -76,7 +76,8 @@ FavoritesController.prototype.refresh = function(){
         self.menu_controller.hide_menu();
         return false;
       });
-      var link = $('<a href="#edit/'+element.file_id+'">'+element.alias+'</a>');
+      var provider = element.provider || DEFAULT_PROVIDER;
+      var link = $('<a href="#edit/'+provider+"/"+element.file_id+'">'+element.alias+'</a>');
       link.click(function(){
         self.menu_controller.hide_menu();
       });

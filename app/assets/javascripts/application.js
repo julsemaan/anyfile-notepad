@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require bootstrap
+//= require libs/rsvp.min
+//= require libs/route-recognizer
 //= require DataBinder
 //= require Model
 //= require Model/Preference
@@ -23,6 +25,8 @@
 //$(document).bind("DOMSubtreeModified", function() {
 //  $.material.init()
 //});
+
+var DEFAULT_PROVIDER = "GoogleDrive";
 
 function getCookie(name) {
   var value = "; " + document.cookie;

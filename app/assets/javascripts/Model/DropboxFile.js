@@ -1,0 +1,1 @@
+Class("DropboxFile", ["CloudFile"]);

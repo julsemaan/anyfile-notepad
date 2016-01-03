@@ -143,10 +143,22 @@ EditorController.prototype.post_app_load = function(){
   this.$.find("#loading_overlay").fadeOut();
 }
 
+EditorController.prototype.file_object_from_provider = function(args){
+  var self = this;
+  switch(this.provider) {
+    case "GoogleDrive":
+      return new DriveFile(args);
+      break;
+    case "Dropbox":
+      return new DropboxFile(args);
+      break;
+  }
+}
+
 EditorController.prototype.new = function(folder_id){
   var self = this
   this.flash.empty()
-  this.file = new DriveFile(undefined, {
+  this.file = self.file_object_from_provider({
     uid : "file",
     folder_id : folder_id,
   })
@@ -162,7 +174,8 @@ EditorController.prototype.edit = function(id){
   this.file_id = id
   // we stop the collaboration if it's there
   this.stop_collaboration();
-  this.file = new DriveFile(id, {
+  this.file = self.file_object_from_provider({
+    id:id,
     uid : "file",
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
@@ -241,7 +254,7 @@ EditorController.prototype.save = function(){
     setTimeout(function(){
         self.file.update(true, function(response){
           self.reset_options()
-          if(response && !response.error) window.location.hash="#edit/"+self.file.id
+          if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
           self.editor_view.focus();
         })
     }, 500)
@@ -274,7 +287,7 @@ EditorController.prototype.auto_save = function(){
 
     self.file.update(false, function(response){
       self.reset_options()
-      if(response && !response.error) window.location.hash="#edit/"+self.file.id
+      if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
     })
 
   }

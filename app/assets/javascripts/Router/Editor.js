@@ -65,37 +65,54 @@ EditorRouter.prototype.params_to_hash = function( prmstr ) {
 }
 
 EditorRouter.prototype.route = function(){
-  this.parse_parameters()
-  this.parse_hash_url()
+  var self = this;
+  var router = new Router.default();
+
+  router.getHandler = function(name){return function(name){alert(name)}}
+
+  router.map(function(match){
+    match("#edit/:provider/:id").to("edit");
+    match("#new/:provider").to("new");
+    match("#new/:provider/:folder_id").to("new");
+
+    match("#edit/:id").to("edit");
+    match("#new/:folder_id").to("new");
+    match("#new").to("new");
+  });
+
+  var transition = router.handleURL(window.location.hash);
+
+  console.log(transition);
+
+  var actions = {
+    edit: function(transition){
+      self.controller.provider = transition.params.edit.provider || DEFAULT_PROVIDER;
+      self.controller.edit(transition.params.edit.id);
+    },
+    new: function(transition){
+      self.controller.provider = transition.params.edit.provider || DEFAULT_PROVIDER;
+      self.controller.new(transition.params.new.folder_id);
+    },
+  };
+
+  var action = actions[transition.targetName];
+  if(action){
+    action(transition);
+    return;
+  }
+  
+  // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
     if(state['action'] == 'open'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#edit/"+state['ids'][0]);
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#edit/GoogleDrive/"+state['ids'][0]);
       this.controller.edit(state['ids'][0])
       return
     }
     else if(state['action'] == 'create'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#new/"+state['folderId']);
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#new/GoogleDrive/"+state['folderId']);
       this.controller.new(state['folderId'])
       return
     }
   }
-  try{
-    if(this.hash_paths[0] == "edit"){
-      if(this.hash_paths[1]){
-        this.controller.edit(this.hash_paths[1])
-        return
-      }
-    } 
-  } catch(e){}
-  
-  if(this.hash_paths[0] == "new"){
-    try{
-      this.controller.new(this.hash_paths[1])
-      return
-    }catch(e){}
-    this.controller.new()
-    return
-  }
-  window.location = "#new"
 } 
