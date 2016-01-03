@@ -40,8 +40,11 @@ DriveFile.prototype.compute_syntax = function(){
 
   syntax_pref = StringPreference.find('syntaxes['+this.extension()+']')
   find_syntax: if(!syntax_pref.is_empty()){
-    self.set('syntax', syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()}))
-    return self.get('syntax')
+    var syntax = syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()});
+    if(syntax){
+      self.set('syntax', syntax)
+      return self.get('syntax')
+    }
   }
   else{
     var extension = extensions.find({key:'name', value:this.extension()})

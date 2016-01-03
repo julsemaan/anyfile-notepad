@@ -14,27 +14,11 @@ Preference.getBackend = function(){
 }
 
 Preference.find = function(key){
-  var data = key.split("[")
-  if(data.length == 1){
-    return new this({
-      key: key, 
-      value: Preference.getBackend()[key],
-    })
-  }
-  // we're dealing with an hash or array access
-  else{
-    try{
-      var array = data[0]
-      data = data[1].split("]")
-      var array_key = data[0]
-      return new this({ 
-        key: key, 
-        value: Preference.getBackend()[array][array_key] 
-      })
-    } catch(err) {
-      return;
-    }
-  }
+  if(!Preference.getBackend().hasOwnProperty(key)) return;
+  return new this({
+    key: key, 
+    value: Preference.getBackend()[key],
+  })
 }
 
 Preference.prototype.is_empty = function(){
