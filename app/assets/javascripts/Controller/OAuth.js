@@ -151,7 +151,7 @@ DropboxRequest.prototype.init = function(options){
   Model.call(this, options);
 }
 
-DropboxRequest.prototype.handle_response = function(error, response){
+DropboxRequest.prototype.handle_response = function(error, response, additionnal_info){
   var self = this;
   if(error){
     if(error.status == 401){
@@ -164,6 +164,6 @@ DropboxRequest.prototype.handle_response = function(error, response){
     }
   }
 
-  self.success(response);
+  self.success(response, additionnal_info);
 }
 
