@@ -2,6 +2,7 @@ Class("DropboxFile", ["CloudFile"]);
 
 DropboxFile.prototype.init = function(options) {
   CloudFile.prototype.init.call(this, options);
+  this.set("provider", "Dropbox");
   this.oauth_controller = dropbox_oauth_controller;
   this.client = this.oauth_controller.client;
 }
@@ -26,8 +27,9 @@ DropboxFile.prototype.get_file_data = function(){
 
 DropboxFile.prototype.handle_metadata_response = function(response) {
   var self = this;
-  self.set("mimeType", response.mimeType);
+  self.set("mime_type", response.mimeType);
   self.set("title", self.id);
+  self.set("folder_id", self.id.split("/").slice(0,-1).join("/"));
   self.set("title_saved", response.name);
 
   this.oauth_controller.do_auth(function(){

@@ -1,5 +1,10 @@
 Class("DriveFile", ["CloudFile"]);
 
+DriveFile.prototype.init = function(options) {
+  CloudFile.prototype.init.call(this, options);
+  this.set("provider", "Google Drive");
+}
+
 DriveFile.prototype.get_file_data = function(){
   var self = this;
   var fields = "downloadUrl,id,mimeType,title,fileSize"

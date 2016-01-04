@@ -6,9 +6,10 @@
           <h4 class="modal-title">File info</h4>
         </div>
         <div class="modal-body">
+          <p><b>{{ i18n "File provider" }} : </b><span data-bind-file="provider"></span></p>
           <p><b>{{ i18n "File name" }} : </b><span data-bind-file="title"></span></p>
-          <p><b>{{ i18n "Google Drive file id" }} : </b><span data-bind-file="id"></span></p>
-          <p><b>{{ i18n "Google Drive folder id" }} : </b><span data-bind-file="folder_id"></span></p>
+          <p><b>{{ i18n "File id" }} : </b><span data-bind-file="id"></span></p>
+          <p><b>{{ i18n "Folder id" }} : </b><span data-bind-file="folder_id"></span></p>
           <p><b>{{ i18n "Mime type" }} : </b><span data-bind-file="mime_type"></span></p>
           <% if @device %>
           <p><b>{{ i18n "Device" }} : </b><span><%= @device.name %>, version : <%= @device.version ? @device.version : 'Unknown'%></span></p>
