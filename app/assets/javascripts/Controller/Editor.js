@@ -185,6 +185,7 @@ EditorController.prototype.post_file_load = function(){
   var new_data = this.editor_view.getSession().getValue();
   if(this.file.data != new_data){
     this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
+    this.deactivate_auto_save();
   }
   else {
     this.activate_auto_save()
