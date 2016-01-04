@@ -66,7 +66,7 @@ EditorRouter.prototype.params_to_hash = function( prmstr ) {
 
 EditorRouter.prototype.route = function(){
   var self = this;
-  var router = new Router.default();
+  var router = new Router();
 
   router.getHandler = function(name){return function(name){alert(name)}}
 
@@ -89,12 +89,12 @@ EditorRouter.prototype.route = function(){
 
   var actions = {
     edit: function(transition){
-      self.controller.provider = transition.params.edit.provider || DEFAULT_PROVIDER;
-      self.controller.edit(transition.params.edit.id);
+      self.controller.provider = transition.params.provider || DEFAULT_PROVIDER;
+      self.controller.edit(transition.params.id);
     },
     new: function(transition){
-      self.controller.provider = transition.params.new.provider || DEFAULT_PROVIDER;
-      self.controller.new(transition.params.new.folder_id);
+      self.controller.provider = transition.params.provider || DEFAULT_PROVIDER;
+      self.controller.new(transition.params.folder_id);
     },
   };
 
