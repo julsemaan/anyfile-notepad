@@ -180,19 +180,20 @@ EditorController.prototype.edit = function(id){
 
 EditorController.prototype.post_file_load = function(){
   var self = this;
-  if(unescape(encodeURIComponent(self.file.data)) != this.file.data){
-    this.flash.warning(i18n("This file has an unknown encoding to this app.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Until you change something your file is safe."))
-  }
   this.editor_view.getSession().setValue(this.file.data, -1)
 
-  this.file.data = this.editor_view.getSession().getValue()
-  this.file.data_saved = this.editor_view.getSession().getValue()
+  var new_data = this.editor_view.getSession().getValue();
+  if(this.file.data != new_data){
+    this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
+  }
+  else {
+    this.activate_auto_save()
+  }
 
-  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
-  this.allow_saving()
   clearInterval(this.check_content_changed_interval)
   this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
-  this.activate_auto_save()
+  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
+  this.allow_saving()
 
   if(this.file.persisted){
     this.flash.success(i18n("File loaded"), 3)
