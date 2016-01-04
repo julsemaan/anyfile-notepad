@@ -27,7 +27,7 @@ DropboxFile.prototype.get_file_data = function(){
 DropboxFile.prototype.handle_metadata_response = function(response) {
   var self = this;
   self.set("mimeType", response.mimeType);
-  self.set("title", response.name);
+  self.set("title", self.id);
   self.set("title_saved", response.name);
 
   this.oauth_controller.do_auth(function(){

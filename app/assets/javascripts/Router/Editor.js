@@ -76,9 +76,9 @@ EditorRouter.prototype.route = function(){
     match("#new/:folder_id").to("new");
     match("#new").to("new");
 
-    match("#edit/:provider/:id").to("edit");
+    match("#edit/:provider/*id").to("edit");
     match("#new/:provider").to("new");
-    match("#new/:provider/:folder_id").to("new");
+    match("#new/:provider/*folder_id").to("new");
 
     match("/").to("new");
   });
