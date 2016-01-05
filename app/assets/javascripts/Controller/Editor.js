@@ -156,15 +156,26 @@ EditorController.prototype.file_object_from_provider = function(args){
 }
 
 EditorController.prototype.new = function(folder_id){
-  var self = this
-  this.flash.empty()
-  this.file = self.file_object_from_provider({
-    uid : "file",
-    folder_id : folder_id,
-  })
-  self.post_file_load()
+  var self = this;
 
-  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
+
+  var create_new = function() {
+    self.flash.empty()
+    self.file = self.file_object_from_provider({
+      uid : "file",
+      folder_id : folder_id,
+    })
+    self.post_file_load()
+    self.set_syntax_mode(self.file.syntax.ace_js_mode, false);
+  }
+
+  if(this.provider == "Dropbox"){
+    dropbox_oauth_controller.test(create_new)
+  }
+  else {
+    create_new();
+  }
+
 }
 
 EditorController.prototype.edit = function(id){
@@ -215,18 +226,6 @@ EditorController.prototype.post_file_load = function(){
     this.activate_auto_save()
   }
 
-  if(this.provider == "GoogleDrive") {
-    self.make_collaborative()
-  }
-
-  // Can't change filename with Dropbox
-  if(this.provider == "Dropbox"){
-    $('input[data-bind-file="title"]').attr('disabled', 'disabled');
-  }
-  else {
-    $('input[data-bind-file="title"]').removeAttr('disabled');
-  }
-
   clearInterval(this.check_content_changed_interval)
   this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
   this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
@@ -237,7 +236,7 @@ EditorController.prototype.post_file_load = function(){
     document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
-    this.flash.success(i18n("Creating new file"))
+    this.flash.success(i18n("Creating new file in : "+this.file.provider))
     document.title = i18n("New file")+" | Anyfile Notepad";
   }
 }

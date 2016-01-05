@@ -15,7 +15,16 @@
 
         <div class="menu_content">
           <ul class="menu_list">
-            <li><a href="#new" target="_blank" onclick="javascript:menu_controller.hide_menu();">{{ i18n "New" }}</a></li>
+            <li>
+              <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "New" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+              <div class="menu_content">
+                <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                <ul class="menu_list">
+                  <li><a href="#new/GoogleDrive" onclick="menu_controller.hide_menu();">Google Drive</a></li>
+                  <li><a href="#new/Dropbox" onclick="menu_controller.hide_menu();">Dropbox</a></li>
+                </ul>
+              </div>
+            </li>
 
             <li><a href="javascript:void(0);" onclick="javascript:editor_controller.save();menu_controller.hide_menu();" >{{ i18n "Save" }}</a></li>
 

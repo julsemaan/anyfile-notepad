@@ -175,6 +175,13 @@ span.collaborators {
     }
   }
   #expanded_menu {
+    a.menu_back {
+      position:absolute;
+      top:10px;
+      right:10px;
+      z-index:100;
+    }
+
     display:none;
     position:fixed;
     left:5px;
@@ -238,13 +245,6 @@ span.collaborators {
       ul {
         min-width:250px;
         min-height:250px;
-      }
-      a.menu_back {
-        position:absolute;
-        top:10px;
-        right:10px;
-        z-index:100;
-
       }
     }
 

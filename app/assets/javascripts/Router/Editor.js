@@ -80,7 +80,7 @@ EditorRouter.prototype.route = function(){
     match("#new/:provider").to("new");
     match("#new/:provider/*folder_id").to("new");
 
-    match("/").to("new");
+    match("/").to("redirect_new");
   });
 
   var transition = router.handleURL(window.location.hash);
@@ -95,6 +95,9 @@ EditorRouter.prototype.route = function(){
     new: function(transition){
       self.controller.provider = transition.params.provider || DEFAULT_PROVIDER;
       self.controller.new(transition.params.folder_id);
+    },
+    redirect_new: function(transition){
+      window.location.hash = "#new/"+DEFAULT_PROVIDER
     },
   };
 
@@ -121,4 +124,5 @@ EditorRouter.prototype.route = function(){
     }
   }
 
+  actions.redirect_new();
 } 
