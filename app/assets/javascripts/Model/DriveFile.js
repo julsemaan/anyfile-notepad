@@ -2,7 +2,7 @@ Class("DriveFile", ["CloudFile"]);
 
 DriveFile.prototype.init = function(options) {
   CloudFile.prototype.init.call(this, options);
-  this.set("provider", "Google Drive");
+  this.set("provider", "GoogleDrive");
 }
 
 DriveFile.prototype.get_file_data = function(){
