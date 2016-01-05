@@ -82,6 +82,8 @@
  $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
  $('.modal-backdrop.fade.in').css('opacity', '1.0')
 
+  var dropbox_oauth_controller = new DropboxOAuthController({});
+
   var oauth_controller = new GoogleOAuthController({
     scopes : "<%= @gapi.get_scopes.join(' ') %>" 
   });
@@ -147,5 +149,4 @@
   menu_controller = new MenuController("menu");
 
 //editor_controller.initialize_html() 
- var dropbox_oauth_controller = new DropboxOAuthController({});
 </script>

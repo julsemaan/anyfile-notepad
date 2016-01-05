@@ -6,6 +6,7 @@ function EditorRouter(controller){
   this.load_models(function(){
     if(self.controller.post_app_load) self.controller.post_app_load()
     $(window).bind('hashchange', function() {
+      setCookie("last_hash_url", window.location.hash, 1);
       self.controller.deactivate_auto_save()
       self.route()
     });
@@ -99,12 +100,22 @@ EditorRouter.prototype.route = function(){
     redirect_new: function(transition){
       window.location.hash = "#new/"+DEFAULT_PROVIDER
     },
+    handle_dropbox_token: function(transition){
+      console.log("checking token...")
+      dropbox_oauth_controller.test(function(){
+        window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
+      });
+    },
   };
 
   var action = actions[transition.targetName];
   if(action){
     action(transition);
     return;
+  }
+
+  if(window.location.hash.match("^#access_token=")){
+    actions.handle_dropbox_token();
   }
   
   this.parse_hash_url();
@@ -124,5 +135,5 @@ EditorRouter.prototype.route = function(){
     }
   }
 
-  actions.redirect_new();
+// actions.redirect_new();
 } 
