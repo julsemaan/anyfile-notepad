@@ -6,6 +6,7 @@
   <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :dismiss => true} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded", :message => "Press escape to cancel"} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "auth_modal", :title => "You need to authorize this app to access your Google Drive", :message => "Without this the app is useless to you.", :with_bar => false, :buttons => {'start_g_oauth' => 'Authorize!'} } %>
   <%= render 'file_info' %>
   <%= render :partial => 'major_notice_modal' %>
   <%= render :partial => 'terms' %>
