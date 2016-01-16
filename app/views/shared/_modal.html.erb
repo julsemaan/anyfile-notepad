@@ -9,7 +9,7 @@
           <% if not defined?(with_bar) or with_bar%>
             <%= render 'shared/loading_bar' %>
           <% end %>
-          <%= message %>
+          {{ i18n "<%= message %>" }}
           <div class="additionnal_message" ></div>
         </div>
         <div class="modal-footer">
