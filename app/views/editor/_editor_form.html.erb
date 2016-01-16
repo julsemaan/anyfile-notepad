@@ -2,7 +2,7 @@
   <div id="loading_overlay"></div>
   <%= render :partial => 'shared/modal', :locals => {:id => "file_load_modal", :title => "Your file is being loaded", :message => "Depending on the file size, this can be long."} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "app_load_modal", :title => "The application is being loaded", :message => ""} %>
-  <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if you're too impatient.", :buttons => {'skip_clearance' => "Skip"}} %>
+  <%= render :partial => 'shared/modal', :locals => {:id => "clearance_wait_modal", :title => "Waiting for your preferences to be saved.", :message => "This should take a few seconds. You can skip this step if it is too long.", :buttons => {'skip_clearance' => "Skip"}} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "auth_failed_modal", :title => "The authentication failed with Google", :message => "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.", :with_bar => false, :buttons => {'restart_app' => 'Restart app'}} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "error_modal", :title => "An unexpected error occured with Google's server", :message => "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.", :with_bar => false, :dismiss => true} %>
   <%= render :partial => 'shared/modal', :locals => {:id => "file_explorer_progress_modal", :title => "Your file is being loaded", :message => "Press escape to cancel"} %>
@@ -46,8 +46,9 @@
   String.toLocaleString({
     "en": <%= render 'locales/en.json' %>,
     "fr": <%= render 'locales/fr.json' %>,
+    "de": <%= render 'locales/de.json' %>,
   });
-//  String.locale = "fr-CA";
+//  String.locale = "de";
   function i18n(string) {
     return string.toLocaleString();
   }
