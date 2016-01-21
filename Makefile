@@ -7,6 +7,7 @@ build:
 clean:
 	rm -fr build
 	rm -fr dist
+	rm -f afn.tgz
 
 .PHONY : extract-i18n-strings
 
