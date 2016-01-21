@@ -43,24 +43,36 @@
 
 
 <script type="text/javascript">
-  String.toLocaleString({
+  var locales = {
+    "en" : "English",
+    "fr" : "French",
+    "de" : "Dutch",
+  }
+  var locales_definition = {
     "en": <%= render 'locales/en.json' %>,
     "fr": <%= render 'locales/fr.json' %>,
     "de": <%= render 'locales/de.json' %>,
-  });
-//  String.locale = "de";
+  }
+  String.toLocaleString(locales_definition);
+  var desired_locale = getCookie("locale");
+  if(desired_locale && desired_locale != "auto"){
+    String.locale = desired_locale;
+  }
   function i18n(string) {
     return string.toLocaleString();
   }
 
   var templates = $('.template');
+  var context = {
+    locales : locales,
+  };
 
   Handlebars.registerHelper('i18n', i18n);
   templates.each( function() {
     var $source = $(this);
     var source = $source.html();
     var template = Handlebars.compile(source);
-    $(template()).insertAfter($source);
+    $(template(context)).insertAfter($source);
   });
 
  $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});

@@ -666,3 +666,11 @@ EditorController.prototype.browser_check = function() {
     self.flash.error(i18n("Couldn't detect which browser you are using. The app should work but your milleage may vary."));
   }
 }
+
+EditorController.prototype.select_locale = function(locale){
+  var self = this;
+  setCookie("locale", locale, 365)
+  if(confirm("Requires to restart the application to be effective. Proceed with restart ?")){
+    window.location.reload();
+  }
+}
