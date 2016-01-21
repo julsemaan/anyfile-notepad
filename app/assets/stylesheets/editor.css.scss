@@ -274,14 +274,14 @@ span.collaborators {
   }
 }
 
-@media (max-height:768px){
+@media (max-height:768px) and (max-width:768px) {
   #menu #expanded_menu .options, .syntaxes, .themes {
     height:350px;
     overflow-y:scroll;
   }
 }
 
-@media (max-height:600px){
+@media (max-height:600px) and (max-width:768px) {
   #menu #expanded_menu .options, .syntaxes, .themes {
     height:250px;
     overflow-y:scroll;
