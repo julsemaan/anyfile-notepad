@@ -48,12 +48,14 @@
     "fr" : "French",
     "de" : "German",
     "es" : "Spanish",
+    "it" : "Italian",
   }
   var locales_definition = {
     "en": <%= render 'locales/en.json' %>,
     "fr": <%= render 'locales/fr.json' %>,
     "de": <%= render 'locales/de.json' %>,
     "es": <%= render 'locales/es.json' %>,
+    "it": <%= render 'locales/it.json' %>,
   }
   String.toLocaleString(locales_definition);
   var desired_locale = getCookie("locale");
