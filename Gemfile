@@ -4,8 +4,7 @@ gem 'rails', '3.2.17'
 
 gem 'browser'
 
-gem 'unicorn'
-gem 'unicorn-worker-killer'
+gem 'thin'
 
 gem 'fingerbank_client'
 
