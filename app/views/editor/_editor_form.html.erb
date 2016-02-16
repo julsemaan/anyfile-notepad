@@ -44,20 +44,22 @@
 
 <script type="text/javascript">
   var locales = {
-    "nl" : "Dutch",
-    "en" : "English",
-    "fr" : "French",
-    "de" : "German",
-    "it" : "Italian",
-    "es" : "Spanish",
+    "nl"    : "Dutch",
+    "en"    : "English",
+    "fr"    : "French",
+    "de"    : "German",
+    "it"    : "Italian",
+    "pt-BR" : "Portuguese (BR)",
+    "es"    : "Spanish",
   }
   var locales_definition = {
-    "nl": <%= render 'locales/nl.json' %>,
-    "en": <%= render 'locales/en.json' %>,
-    "fr": <%= render 'locales/fr.json' %>,
-    "de": <%= render 'locales/de.json' %>,
-    "it": <%= render 'locales/it.json' %>,
-    "es": <%= render 'locales/es.json' %>,
+    "nl"    : <%= render 'locales/nl.json' %>,
+    "en"    : <%= render 'locales/en.json' %>,
+    "fr"    : <%= render 'locales/fr.json' %>,
+    "de"    : <%= render 'locales/de.json' %>,
+    "it"    : <%= render 'locales/it.json' %>,
+    "es"    : <%= render 'locales/es.json' %>,
+    "pt-BR" : <%= render 'locales/pt_BR.json' %>,
   }
   String.toLocaleString(locales_definition);
   var desired_locale = getCookie("locale");
