@@ -265,7 +265,12 @@ EditorController.prototype.auto_save = function(){
   if(!this.file.title == "" && this.file.persisted){
     this.file.set("data", this.editor_view.getValue())
 
-    this.block_saving()
+    //this.block_saving()
+    if(!self.auto_save_count) self.auto_save_count = 0;
+    self.auto_save_count += 1;
+
+    this.$.find('.editor_save_button').html(i18n("Saving")+"...")
+    var new_revision = (self.auto_save_count % 3 == 0) ? true : false;
 
     self.file.update(false, function(response){
       self.reset_options()
@@ -368,14 +373,15 @@ EditorController.prototype.check_content_changed = function(){
   if(this.file.persisted && this.realtime_content){
     this.realtime_content.setText(this.editor_view.getValue());
   }
-  this.file.set("data", this.editor_view.getValue())
-  if(this.file.did_content_change()){
-    if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
+  this.file.set("data", this.editor_view.getValue());
+  
+  if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
+    if(this.file.did_content_change()){
       this.$.find('.editor_save_button').html(i18n("Save"))
     }
-  }
-  else{
-    this.$.find('.editor_save_button').html(i18n("Saved"))
+    else{
+      this.$.find('.editor_save_button').html(i18n("Saved"))
+    }
   }
 }
 
