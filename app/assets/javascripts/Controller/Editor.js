@@ -262,7 +262,7 @@ EditorController.prototype.deactivate_auto_save = function(){
 
 EditorController.prototype.auto_save = function(){
   var self = this;
-  if(!this.file.title == "" && this.file.persisted){
+  if(!this.file.title == "" && this.file.persisted && this.file.did_content_change()){
     this.file.set("data", this.editor_view.getValue())
 
     //this.block_saving()
