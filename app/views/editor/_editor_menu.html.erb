@@ -159,7 +159,7 @@
                             <% if theme == "dummy" %>
                               <a href="javascript:void(0);" class="btn-dummy"><%= theme_display_name(theme) %></a>
                             <% else %>
-                              <a href="javascript:void(0);" class="btn btn-default btn_theme theme_<%=theme_name(theme)%>" onclick="javascript:editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
+                              <a href="javascript:void(0);" class="btn btn-default btn_theme theme_<%=theme_name(theme)%>" onclick="javascript:menu_controller.hide_menu();editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
                             <% end %>
                           <% end %>
                         </div>
