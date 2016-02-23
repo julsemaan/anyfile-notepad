@@ -14,7 +14,6 @@ Preference.getBackend = function(){
 }
 
 Preference.find = function(key){
-  if(!Preference.getBackend().hasOwnProperty(key)) return;
   return new this({
     key: key, 
     value: Preference.getBackend()[key],
