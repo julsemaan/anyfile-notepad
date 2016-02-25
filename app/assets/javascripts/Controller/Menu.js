@@ -111,10 +111,14 @@ MenuController.prototype.set_content = function(content){
 MenuController.prototype.hide_menu = function(){
   var self = this;
   self.expanded_menu.fadeOut(function(){
-    self.expanded_menu.empty();
-    self.previous_contents = [];
-    self.background.hide();
-    self.active_link.parent().removeClass('active');
-    self.active_link = undefined;
+    // if a user abuse click the button, we may come here more than once
+    // we handle that by checking we still have an active link
+    if(self.active_link){
+      self.expanded_menu.empty();
+      self.previous_contents = [];
+      self.background.hide();
+      self.active_link.parent().removeClass('active');
+      self.active_link = undefined;
+    }
   });
 }
