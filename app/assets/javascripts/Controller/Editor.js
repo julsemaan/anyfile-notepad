@@ -158,6 +158,8 @@ EditorController.prototype.file_object_from_provider = function(args){
 EditorController.prototype.new = function(folder_id){
   var self = this;
 
+  // we stop the collaboration if it's there
+  this.stop_collaboration();
 
   var create_new = function() {
     // Should always be able to edit the title of a new file
@@ -514,6 +516,9 @@ EditorController.prototype.init_collaboration = function(model){
 
 EditorController.prototype.stop_collaboration = function(){
   var self = this;
+  //Clear out the collaborators area      
+  self.clear_collaborators();
+
   // remove any previous event listeners, if any
   if(self.realtime_content){
     self.realtime_content.removeAllEventListeners();
@@ -569,6 +574,11 @@ EditorController.prototype.make_collaborative = function(){
     }
   }
   );
+}
+
+EditorController.prototype.clear_collaborators = function(collaborator){
+  var self = this;
+  $('.collaborators').html('');
 }
 
 EditorController.prototype.remove_collaborator = function(collaborator){
