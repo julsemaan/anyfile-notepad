@@ -160,6 +160,9 @@ EditorController.prototype.new = function(folder_id){
 
 
   var create_new = function() {
+    // Should always be able to edit the title of a new file
+    $('input[data-bind-file="title"]').removeAttr('disabled');
+
     self.flash.empty()
     self.file = self.file_object_from_provider({
       uid : "file",
