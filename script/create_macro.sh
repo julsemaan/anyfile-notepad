@@ -1,4 +1,7 @@
 #!/bin/bash
+# Creates a macro script for xmacro
+# To execute : 
+# cat tmp/drive_inject | xmacroplay $DISPLAY
 
 echo "Delay 3 # Always add this!!" > script/drive_inject
 
