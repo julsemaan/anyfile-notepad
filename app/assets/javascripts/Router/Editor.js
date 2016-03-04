@@ -6,7 +6,10 @@ function EditorRouter(controller){
   this.load_models(function(){
     if(self.controller.post_app_load) self.controller.post_app_load()
     $(window).bind('hashchange', function() {
-      setCookie("last_hash_url", window.location.hash, 1);
+      // we don't want to record the access token hash
+      if(!window.location.hash.match('^#access_token')){
+        setCookie("last_hash_url", window.location.hash, 1);
+      }
       self.controller.deactivate_auto_save()
       self.route()
     });
