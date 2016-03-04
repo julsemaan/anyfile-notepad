@@ -119,6 +119,7 @@ Class("DropboxOAuthController", ["Model"]);
 DropboxOAuthController.prototype.init = function(options){
   Model.call(this, options);
   this.client = new Dropbox.Client({ key: "ps6cmsgenf8ypox" });
+  this.client.authDriver(new Dropbox.AuthDriver.Redirect);
 }
 
 DropboxOAuthController.prototype.do_auth = function(callback){
