@@ -38,7 +38,6 @@ FlashController.prototype.show_notification = function(notification){
   // No notifications are being shown so we do it
   // Detected by seeing we're alone in the queue
   if(this.notification_queue.length == 1){
-    console.log("Starting queue processing");
     this.show_next_notification();
   }
 }

@@ -246,6 +246,8 @@ EditorController.prototype.post_file_load = function(){
     this.flash.success(i18n("Creating new file in : "+this.file.provider))
     document.title = i18n("New file")+" | Anyfile Notepad";
   }
+
+  self.top_menu.close_mobile_menu();
 }
 
 EditorController.prototype.reset_options = function(){
