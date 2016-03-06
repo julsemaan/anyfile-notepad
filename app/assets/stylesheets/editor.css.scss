@@ -117,7 +117,6 @@ div.g_file_editor{
   }
 }
 
-
 div#editor_flash{
   position:fixed; 
   width:300px; 
@@ -125,6 +124,14 @@ div#editor_flash{
   top:65px; 
   background-color:transparent; 
   z-index:1000;
+}
+
+.flash_notifications {
+  display:none;
+}
+
+#show_full_flash {
+  display:none;
 }
 
 div.print_menu {
@@ -313,14 +320,42 @@ span.collaborators {
     height:400px;
     overflow-y:scroll;
   }
+  .flash_notifications {
+    display:inline;
+    position:fixed;
+    left:10px;
+    right:70px;
+    bottom:10px; 
+    height:35px;
+    z-index:99999;
+    .alert {
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      text-overflow:ellipsis !important;
+    }
+  }
+  #show_full_flash {
+    display:inline;
+  }
   #editor_flash {
-    width:100% !important;
-    height:50px !important;
+    display:none;
+    padding:10px;
+    background-color:#ffffff !important;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width:80% !important;
+    height:80% !important;
     top:inherit !important;
-    bottom:0 !important;
-    left:0;
-    right:0;
+    bottom:10% !important;
+    left:9%;
+    right:9%;
     overflow-y:scroll;
+  }
+  #show_full_flash {
+    right:10px;
+    bottom:10px;
+    position:fixed;
+    z-index:99999;
   }
 }
 
