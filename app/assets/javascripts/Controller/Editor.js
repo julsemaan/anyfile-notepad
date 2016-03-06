@@ -36,7 +36,9 @@ function EditorController(view, options){
 
   this.auto_save_interval;
 
-  this.initialize_html()
+  this.initialize_html();
+
+  this.detect_device();
 }
 
 EditorController.prototype.initialize_html = function(){
@@ -727,4 +729,12 @@ EditorController.prototype.select_locale = function(locale){
   if(confirm("Requires to restart the application to be effective. Proceed with restart ?")){
     window.location.reload();
   }
+}
+
+EditorController.prototype.detect_device = function(){
+  var self = this;
+  var client = new FingerbankClient();
+  client.endpointFromCurrentUserAgent(function(endpoint){
+    $('#current_device').html(endpoint.name);
+  });
 }
