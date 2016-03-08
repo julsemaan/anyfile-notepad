@@ -104,9 +104,7 @@ EditorController.prototype.initialize_html = function(){
   if(this.theme_pref.getValue()){
     this.initial_theme = this.theme_pref.getValue()
   }
-  setInterval(function(){self.set_background_color_from_theme()}, 500)
   this.editor_view.setTheme(this.initial_theme)
-  this.set_background_color_from_theme()
   $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
   if(!BooleanPreference.find('agree_terms').getValue()){
@@ -456,33 +454,16 @@ EditorController.prototype.select_theme = function(name){
   this.theme_pref.refreshAndSet(name, self, self.show_reauth)
 
   this.editor_view.setTheme(this.theme_pref.getValue())
-  this.set_background_color_from_theme()
   var check = this.$.find('#theme_check').detach()
   $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
   
 }
    
-EditorController.prototype.set_background_color_from_theme = function(){
-  var self = this;
-  html_element = document.getElementsByTagName("html")[0]
-  $(html_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
-  body_element = document.getElementsByTagName("body")[0]
-  $(body_element).css('background-color', this.$.find('.ace_gutter').css('background-color'))
-}
-
-EditorController.prototype.vim_command_handler = function(command){
-  var self = this;
-  if(command == "/"){
-    this.open_search()
-  }
-}
-
 EditorController.prototype.change_keybinding = function(keybinding){
   var self = this;
   if(keybinding == "vim"){
     this.editor_view.setKeyboardHandler("ace/keyboard/vim");
     if(!this.editor_view.showCommandLine){
-      this.editor_view.showCommandLine = function(command){self.vim_command_handler(command)}
       // we bind the vim write event to this controller
       ace.config.loadModule("ace/keyboard/vim", function(m) {
           var VimApi = require("ace/keyboard/vim").CodeMirror.Vim
@@ -638,7 +619,7 @@ EditorController.prototype.move_realtime_user = function(userId, position){
   self.clear_realtime_user(userId);
   self.editor_view.getSession().addGutterDecoration(position.row, userId+'-active')
   setTimeout(function(){
-  $('.'+userId+'-active').css('background-color', self.collaborators_colors[userId]);
+    $('.'+userId+'-active').css('background-color', self.collaborators_colors[userId]);
   }, 100);
 }
 
