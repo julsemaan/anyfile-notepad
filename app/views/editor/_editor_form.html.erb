@@ -22,8 +22,6 @@
 
         <%= render 'editor_menu' %>
 
-        <%= render 'shared/editor_message' %>
-
       </div>
 
     </div>
@@ -85,7 +83,14 @@
   var dropbox_oauth_controller = new DropboxOAuthController({});
 
   var oauth_controller = new GoogleOAuthController({
-    scopes : "<%= @gapi.get_scopes.join(' ') %>" 
+    scopes : [
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/drive.install',
+      'https://www.googleapis.com/auth/drive.appdata',
+    ],
   });
 
   var user_preferences;

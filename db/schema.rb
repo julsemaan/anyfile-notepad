@@ -11,13 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140125215919) do
-
-  create_table "administrators", :force => true do |t|
-    t.string   "google_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
+ActiveRecord::Schema.define(:version => 20160308021114) do
 
   create_table "extensions", :force => true do |t|
     t.string   "name"
@@ -33,13 +27,6 @@ ActiveRecord::Schema.define(:version => 20140125215919) do
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
     t.string   "discovered_by", :default => "John Doe"
-  end
-
-  create_table "site_contents", :force => true do |t|
-    t.string   "key"
-    t.text     "value",      :limit => 255, :default => ""
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
   end
 
   create_table "syntaxes", :force => true do |t|

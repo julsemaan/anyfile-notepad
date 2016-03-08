@@ -1,7 +1,0 @@
-<% content = SiteContent.find_by_key('editor_general_message').value %>
-<% unless content.empty? %>
-  <div class="alert alert-success" style="text-align:center;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <%= content.html_safe %>
-  </div>
-<% end %>
