@@ -109,12 +109,6 @@ EditorController.prototype.initialize_html = function(){
   this.set_background_color_from_theme()
   $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
-  this.$.find('#go_reauth').click(function(){self.skip_clearance = true;window.location.reload();})
-  this.$.find('#cancel_reauth').click(function(){
-    self.$.find('#reauthenticate_modal').modal('hide')
-  })
-
-
   if(!BooleanPreference.find('agree_terms').getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
     $('.modal-backdrop.fade.in').css('opacity', '1.0')
@@ -309,7 +303,6 @@ EditorController.prototype.auto_save = function(){
   if(!this.file.title == "" && this.file.persisted && this.file.did_content_change()){
     this.file.set("data", this.editor_view.getValue())
 
-    //this.block_saving()
     if(!self.auto_save_count) self.auto_save_count = 0;
     self.auto_save_count += 1;
 
