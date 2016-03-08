@@ -14,7 +14,10 @@
     Raven.config('https://d9c57689a32749529f931077dfbe8abf@app.getsentry.com/69541').install()
   </script>
 
-  <%= javascript_include_tag    "application" %>
+  <%= javascript_include_tag    "jquery" %>
+  <%= javascript_include_tag    "jquery_ujs" %>
+  <%= javascript_include_tag    "jquery-ui" %>
+
   <%= javascript_include_tag    "/jqueryFileTree/jqueryFileTree.js"%>
   <%= javascript_include_tag    "/ace.js/ace.js" %>
   <%= javascript_include_tag    "https://cdn.jsdelivr.net/jquery.cookie/1.4.0/jquery.cookie.min.js" %>
@@ -22,6 +25,8 @@
   <%= javascript_include_tag    "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js" %>
   
   <%= javascript_include_tag    "https://inverse.ca/downloads/Fingerbank/fingerbank-client.js" %>
+  
+  <%= javascript_include_tag    "application" %>
 
   <%= render 'layouts/analytics' %>
 
