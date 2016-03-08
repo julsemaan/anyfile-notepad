@@ -309,7 +309,7 @@ EditorController.prototype.auto_save = function(){
     this.$.find('.editor_save_button').html(i18n("Saving")+"...")
     var new_revision = (self.auto_save_count % 3 == 0) ? true : false;
 
-    self.file.update(false, function(response){
+    self.file.update(new_revision, function(response){
       self.reset_options()
       if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
     })
