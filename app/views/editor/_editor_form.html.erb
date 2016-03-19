@@ -45,6 +45,7 @@
     "it"    : "Italian",
     "pt-BR" : "Portuguese (BR)",
     "es"    : "Spanish",
+    "ro"    : "Romanian",
   }
   var locales_definition = {
     "nl"    : <%= render 'locales/nl.json' %>,
@@ -54,6 +55,7 @@
     "it"    : <%= render 'locales/it.json' %>,
     "es"    : <%= render 'locales/es.json' %>,
     "pt-BR" : <%= render 'locales/pt_BR.json' %>,
+    "ro"    : <%= render 'locales/ro.json' %>,
   }
   String.toLocaleString(locales_definition);
   var desired_locale = getCookie("locale");
