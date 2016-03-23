@@ -263,22 +263,27 @@ EditorController.prototype.print = function(){
 
 EditorController.prototype.save = function(){
   var self = this;
+  if(!self.can_save){
+    this.flash.warning(i18n("This file is already being saved. Calm down."), 5);
+    return;
+  }
+  this.block_saving()
   var length = this.editor_view.getValue().length
   self.editor_view.focus()
   if(this.file.title == ""){
       this.flash.error(i18n("File title can't be empty"), 5);
+      self.allow_saving()
       return false
   }
   else{
     this.file.set("data", this.editor_view.getValue())
 
-    this.block_saving()
     // give a small time for everything to show.
     setTimeout(function(){
         self.file.update(true, function(response){
-          self.reset_options()
           if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
           self.editor_view.focus();
+          self.allow_saving()
         })
     }, 500)
   }
@@ -375,10 +380,12 @@ EditorController.prototype.block_saving = function(){
     event.preventDefault();
     return false;
   });  
+  self.can_save = false;
 }
 
 EditorController.prototype.allow_saving = function(){
   var self = this;
+  self.can_save = true
   this.$.find('.editor_save_button').html(i18n("Save"))
   this.$.find('.editor_save_button').click(function(){self.save()})
   this.safe_to_quit = true
