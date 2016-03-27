@@ -8,9 +8,12 @@ process = os.popen("make extract-i18n-strings")
 strings = process.read()
 process.close()
 
-locale_file = open("app/views/locales/_"+sys.argv[1]+".json")
-locale_json = locale_file.read()
-locale = json.loads(locale_json)
+if len(sys.argv) > 1:
+    locale_file = open("app/views/locales/_"+sys.argv[1]+".json")
+    locale_json = locale_file.read()
+    locale = json.loads(locale_json)
+else:
+    locale = {}
 
 strings_array = strings.split("\n")
 del strings_array[0]
