@@ -74,7 +74,7 @@
   "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.": "Musisz włączyć tryb wyskakujących okienek (popups) w przeglądarce, następnie zalogować się na Twoim koncie Googel, po czym należy zaakceptować prośbę o nadanie uprawnień dla tej aplikacji",
   "You should now restart the app to fully flush your preferences.": "Teraz uruchom ponownie aplikację by zastosować ustawienia",
   "Your file is being loaded": "Twój plik jest właśnie wczytywany",
-  "vim": "vim"
+  "vim": "vim",
   "Can't favorite file as it is not saved yet...": "Nie można dodać pliku do ulubionych, ponieważ nie został zapisany...",
   "This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled.": "Ten plik posiada nieznane kodowanie. </br>Niektóre znaki mogą ulec napisaniu, a plik może utracić część kodowania w czasie zapisu.<br/>Autozapis został tymczasowo zablokowany."
 }
