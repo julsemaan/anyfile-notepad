@@ -101,7 +101,9 @@ EditorRouter.prototype.route = function(){
       self.controller.new(transition.params.folder_id);
     },
     redirect_new: function(transition){
-      window.location.hash = "#new/"+DEFAULT_PROVIDER
+      if(!self.check_for_drive()) {
+        window.location.hash = "#new/"+DEFAULT_PROVIDER
+      }
     },
     handle_dropbox_token: function(transition){
       console.log("checking token...")
@@ -121,22 +123,24 @@ EditorRouter.prototype.route = function(){
     actions.handle_dropbox_token();
   }
   
+// actions.redirect_new();
+} 
+
+EditorRouter.prototype.check_for_drive = function() {
+  var self = this;
   this.parse_hash_url();
   this.parse_parameters();
   // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
     if(state['action'] == 'open'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#edit/GoogleDrive/"+state['ids'][0]);
-      this.controller.edit(state['ids'][0])
-      return
+      window.location.hash = "#edit/GoogleDrive/"+state['ids'][0]
+      return true
     }
     else if(state['action'] == 'create'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app#new/GoogleDrive/"+state['folderId']);
-      this.controller.new(state['folderId'])
-      return
+      window.location.hash = "#new/GoogleDrive/"+state['folderId']
+      return true
     }
   }
-
-// actions.redirect_new();
-} 
+  return false
+}
