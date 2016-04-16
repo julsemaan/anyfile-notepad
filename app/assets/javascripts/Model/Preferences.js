@@ -23,7 +23,7 @@ function Preferences(loaded){
 }
 
 Preferences.prototype.create_initial = function(){
-  this.new_prefs_file = new DriveFile(undefined, {
+  this.new_prefs_file = new DriveFile({
     uid: "preferences",
     folder_id: "appfolder",
     fuck_syntax: true
