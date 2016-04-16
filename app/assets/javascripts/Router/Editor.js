@@ -134,10 +134,12 @@ EditorRouter.prototype.check_for_drive = function() {
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
     if(state['action'] == 'open'){
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
       window.location.hash = "#edit/GoogleDrive/"+state['ids'][0]
       return true
     }
     else if(state['action'] == 'create'){
+      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
       window.location.hash = "#new/GoogleDrive/"+state['folderId']
       return true
     }
