@@ -11,14 +11,18 @@ User.prototype.init = function(){
 }
 
 User.current_user = function(callback){
-  var request = gapi.client.drive.about.get();
+  var request = gapi.client.oauth2.userinfo.get();
   oauth_controller.execute_request(request, function(response){
-    callback(new User("current_user", {
-      name : response.user.displayName,
-      email : response.user.emailAddress,
-      picture_url : response.user.picture ? response.user.picture.url : '',
-      total_space_used : ( response.quotaBytesUsed / 1024 / 1024 / 1024 ).toFixed(2) + " GB",
-      total_space_available : ( response.quotaBytesTotal / 1024 / 1024 / 1024 ).toFixed(2) + " GB",
-    }))
+    console.log(response)
+    var current_user = new User("current_user", {
+      user_id : response.id,
+      name : response.name,
+      email : response.email,
+      picture_url : response.picture ? response.picture : '',
+      total_space_used : "N/A GB",
+      total_space_available : "N/A GB",
+    })
+    setCookie("current_user_id", current_user.user_id);
+    callback(current_user)
   }) 
 }

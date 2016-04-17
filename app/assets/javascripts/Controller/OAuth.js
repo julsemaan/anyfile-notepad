@@ -18,9 +18,26 @@ GoogleOAuthController.prototype.init = function(){
   this.do_auth();
 }
 
+GoogleOAuthController.prototype.authorize_params = function(to_add) {
+  var self = this;
+  var base = {
+    client_id: self.client_id,
+    scope: self.scopes,
+  };
+
+  if(getCookie("current_user_id")){
+    base["user_id"] = getCookie("current_user_id");
+    base["authuser"] = -1;
+  }
+
+  for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
+
+  return base;
+}
+
 GoogleOAuthController.prototype.do_auth = function(){
   var self = this
-  gapi.auth.authorize({client_id: this.client_id, scope: this.scopes, immediate : true}, function(auth_result){
+  gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
     if(auth_result["error"] != "immediate_failed"){
       self.post_auth(auth_result)
     }
@@ -39,7 +56,23 @@ GoogleOAuthController.prototype.do_auth = function(){
 GoogleOAuthController.prototype.auth_popup = function(){
   var self = this
   //Do it without the immediate
-  gapi.auth.authorize({client_id: self.client_id, scope: self.scopes}, function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
+  gapi.auth.authorize(self.authorize_params(), function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
+}
+
+GoogleOAuthController.prototype.auth_with_user = function(user_id, reload){
+  var self = this;
+//  $('#user_auth_modal').modal('show');
+ // $('#switch_user').click(function() {
+    gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
+      editor_controller.reset_collaboration();
+      User.current_user(function(){});
+      self.post_auth(auth_result);
+      if(reload){
+        window.location.reload()
+      }
+    });
+//    $('#user_auth_modal').modal('hide');
+//  });
 }
 
 GoogleOAuthController.prototype.post_auth = function(auth_result){
@@ -47,11 +80,13 @@ GoogleOAuthController.prototype.post_auth = function(auth_result){
   if (auth_result && !auth_result.error) {
     setCookie('access_token', auth_result['access_token'], 1)
     gapi.load('auth:client,drive-realtime,drive-share', function(){
-      gapi.client.load('drive', 'v2', function(){
-        self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
-        self.share_client.setOAuthToken(auth_result['access_token']);
-        self.ready()
-      })
+      gapi.client.load('oauth2', 'v2', function() {
+        gapi.client.load('drive', 'v2', function(){
+          self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
+          self.share_client.setOAuthToken(auth_result['access_token']);
+          self.ready()
+        })
+      });
     });
     
     $('#auth_modal').modal('hide')
