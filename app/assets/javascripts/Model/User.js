@@ -13,7 +13,6 @@ User.prototype.init = function(){
 User.current_user = function(callback){
   var request = gapi.client.oauth2.userinfo.get();
   oauth_controller.execute_request(request, function(response){
-    console.log(response)
     var current_user = new User("current_user", {
       user_id : response.id,
       name : response.name,
@@ -23,6 +22,7 @@ User.current_user = function(callback){
       total_space_available : "N/A GB",
     })
     setCookie("current_user_id", current_user.user_id);
+    oauth_controller.current_user = current_user;
     callback(current_user)
   }) 
 }

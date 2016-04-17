@@ -59,20 +59,14 @@ GoogleOAuthController.prototype.auth_popup = function(){
   gapi.auth.authorize(self.authorize_params(), function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
 }
 
-GoogleOAuthController.prototype.auth_with_user = function(user_id, reload){
+GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-//  $('#user_auth_modal').modal('show');
- // $('#switch_user').click(function() {
-    gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
-      editor_controller.reset_collaboration();
-      User.current_user(function(){});
-      self.post_auth(auth_result);
-      if(reload){
-        window.location.reload()
-      }
-    });
-//    $('#user_auth_modal').modal('hide');
-//  });
+  gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
+    editor_controller.reset_collaboration();
+    User.current_user(function(){});
+    self.post_auth(auth_result);
+    callback();
+  });
 }
 
 GoogleOAuthController.prototype.post_auth = function(auth_result){
