@@ -25,8 +25,8 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
     scope: self.scopes,
   };
 
-  if(getCookie("current_user_id")){
-    base["user_id"] = getCookie("current_user_id");
+  if(User.get_session_user_id()){
+    base["user_id"] = User.get_session_user_id();
     base["authuser"] = -1;
   }
 
