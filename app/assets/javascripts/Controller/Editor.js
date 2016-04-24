@@ -496,7 +496,7 @@ EditorController.prototype.init_collaboration = function(model){
   try{
   var content = model.createString(self.file.data);
   model.getRoot().set("content", content);
-  }catch(e){console.log(e)}
+  }catch(e){console.log("Error in collaboration init : "+e)}
 }
 
 EditorController.prototype.stop_collaboration = function(){
@@ -589,6 +589,14 @@ EditorController.prototype.display_collaborators = function(){
   for(var i in collaborators) {
     var collaborator = collaborators[i];
     self.add_collaborator(collaborator);
+  }
+}
+
+EditorController.prototype.reset_collaboration = function() {
+  var self = this;
+  if(self.provider == "GoogleDrive"){
+    self.stop_collaboration();
+    self.init_collaboration();
   }
 }
 

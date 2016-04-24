@@ -127,22 +127,43 @@ EditorRouter.prototype.route = function(){
 } 
 
 EditorRouter.prototype.check_for_drive = function() {
+//  https://anyfile-notepad.semaan.ca/app?state=%7B%22ids%22:%5B%220B-k7e2bQSB5_Mlc4YjNHemNJb28%22%5D,%22action%22:%22open%22,%22userId%22:%22118166999581315270523%22%7D
+//  https://devbox.home.semaan.ca/app?state=%7B%22ids%22:%5B%220B-k7e2bQSB5_Mlc4YjNHemNJb28%22%5D,%22action%22:%22open%22,%22userId%22:%22118166999581315270523%22%7D
   var self = this;
   this.parse_hash_url();
   this.parse_parameters();
   // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
-    if(state['action'] == 'open'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
-      window.location.hash = "#edit/GoogleDrive/"+state['ids'][0]
-      return true
+    console.log(state['userId'], oauth_controller.current_user.user_id)
+    if(oauth_controller.current_user.user_id != state['userId']){
+      $('#user_auth_modal').modal('show');
+      $('#switch_user').click(function() {
+        oauth_controller.auth_with_user(state['userId'], function(){
+            self.handle_drive_params(state);
+            window.location.reload();
+        });
+        $('#user_auth_modal').modal('hide');
+      });
     }
-    else if(state['action'] == 'create'){
-      window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
-      window.location.hash = "#new/GoogleDrive/"+state['folderId']
-      return true
+    else {
+      self.handle_drive_params(state);
     }
+    return true;
   }
   return false
+}
+
+EditorRouter.prototype.handle_drive_params = function(state) {
+  var self = this;
+  if(state['action'] == 'open'){
+    window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
+    window.location.hash = "#edit/GoogleDrive/"+state['ids'][0]
+    return true
+  }
+  else if(state['action'] == 'create'){
+    window.history.pushState('Anyfile Notepad', 'Anyfile Notepad', "app");
+    window.location.hash = "#new/GoogleDrive/"+state['folderId']
+    return true
+  }
 }
