@@ -63,9 +63,10 @@ GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
   gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
     editor_controller.reset_collaboration();
-    User.current_user(function(){});
-    self.post_auth(auth_result);
-    callback();
+    User.current_user(function(){
+      self.post_auth(auth_result);
+      callback();
+    });
   });
 }
 
