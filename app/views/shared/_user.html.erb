@@ -5,7 +5,7 @@
       Logged in as
       <span data-bind-current_user="name"></span>
       <br>
-      <a style="color:blue" id="switch_user_link" href="javascript:void(0)" onclick="javascript:oauth_controller.auth_with_user(undefined, function(){})">Switch user</a>
+      <a style="color:blue" id="switch_user_link" href="javascript:void(0)" onclick="javascript:oauth_controller.auth_with_user(undefined, function(){$('#app_restart_modal').modal('show') ; window.location.hash = '#new' ; window.location.reload()})">Switch user</a>
       |
       <a style="color:blue" target="_blank" href="https://accounts.google.com/AddSession">Add account</a>
   </span>
