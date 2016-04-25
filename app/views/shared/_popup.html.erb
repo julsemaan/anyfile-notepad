@@ -1,0 +1,20 @@
+<script id="popup-template" type="text/x-handlebars-template">
+<div class="modal fade" id="{{ popup_id }}" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ i18n title }}</h4>
+        </div>
+        <div class="modal-body">
+          {{ i18n message }}
+        </div>
+        <div class="modal-footer">
+          {{#if confirm}}
+            <button id="{{ cancel_id }}" type="button" class="btn btn-primary">{{ i18n "Cancel" }}</button>
+          {{/if}}
+          <button id="{{ confirm_id }}" type="button" class="btn btn-primary">{{ i18n "OK" }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

@@ -184,3 +184,7 @@ function getQueryParam(variable) {
   } 
 }
 
+function uniqueId() {
+  return $('<a></a>').uniqueId().attr('id');
+}
+
