@@ -12,13 +12,15 @@ ApplicationController.prototype.stop_dev_mode = function(){
 }
 
 ApplicationController.prototype.set_mode_and_reload = function(mode, destination){
-  if(confirm("This requires to restart the app. Proceed ?")){
-    setCookie("AFNVersion", mode);
-    if(destination){
-      window.location = destination;
+  new Popup({ message : "This action requires to restart the app. Proceed ?", callback: function(result){
+    if(result) { 
+      setCookie("AFNVersion", mode);
+      if(destination){
+        window.location = destination;
+      }
+      else {
+        window.location.reload();
+      }
     }
-    else {
-      window.location.reload();
-    }
-  }
+  }});
 }

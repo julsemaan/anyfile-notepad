@@ -687,7 +687,7 @@ EditorController.prototype.show_file_info = function() {
 
 EditorController.prototype.restart_app = function() {
   var self = this;
-  if(confirm(i18n("Are you sure ?"))) window.location.reload()
+  new Popup({ message : i18n("Are you sure ?"), callback : function(result) {if(result) window.location.reload()}, confirm : true});
 }
 
 EditorController.prototype.browser_check = function() {
@@ -717,9 +717,8 @@ EditorController.prototype.browser_check = function() {
 EditorController.prototype.select_locale = function(locale){
   var self = this;
   setCookie("locale", locale, 365)
-  if(confirm("Requires to restart the application to be effective. Proceed with restart ?")){
-    window.location.reload();
-  }
+  
+  new Popup({ message : i18n("Requires to restart the application to be effective. Proceed with restart ?"), callback : function(result) {if(result) window.location.reload()}, confirm : true });
 }
 
 EditorController.prototype.detect_device = function(){
