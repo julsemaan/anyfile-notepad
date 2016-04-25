@@ -23,7 +23,7 @@ Cache.prototype.get_data = function(){
     return true;
   }
   else{
-    alert("localStorage is not supported in this browser. Cache will not work which slows down the app considerably.")
+    new Popup({ message : "localStorage is not supported in this browser. Cache will not work which slows down the app considerably." });
     return false;
   }
 }
@@ -34,7 +34,7 @@ Cache.prototype.set_data = function(){
     return true;
   }
   else{
-    alert("localStorage is not supported in this browser. Cache will not work which slows down the app considerably.")
+    new Popup({ message : "localStorage is not supported in this browser. Cache will not work which slows down the app considerably." });
     return false;
   }
 }

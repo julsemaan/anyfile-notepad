@@ -79,12 +79,12 @@ Preferences.prototype.get_hash = function(){
   }catch(e){
     console.log(e)
     if(!this.warned){
-      alert("Your preferences could not be loaded.\nThis is likely due to a Google server error.\nPlease try restarting the app and file a bug if it persists.");
+      new Popup({ message : i18n("Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.") });
       this.warned = true;
     }
     // we replace the commit method by a warning
     this.commit = function(){
-      alert("Can't commit your preferences because they weren't loaded properly.\n Please restart the app.")
+      new Popup({ message : i18n("Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.") });
     }
     this.set_hash({})
   }

@@ -10,7 +10,7 @@ FavoritesController.prototype.add_favorite = function(provider, file_id) {
   var self = this;
   for(var i in self.favorites_pref.array){
     if(self.favorites_pref.array[i].file_id == file_id){
-      alert(i18n("A favorite with the same file ID already exists")+"("+self.favorites_pref.array[i].alias+")");
+      new Popup({ message : i18n("A favorite with the same file ID already exists")+"("+self.favorites_pref.array[i].alias+")" });
       return;
     }
   }
@@ -18,7 +18,7 @@ FavoritesController.prototype.add_favorite = function(provider, file_id) {
   if(alias.length){
     for(var i in self.favorites_pref.array){
       if(self.favorites_pref.array[i].alias == alias){
-        alert(i18n("A favorite with this name already exists."));
+        new Popup({ message : i18n("A favorite with this name already exists.") });
         return;
       }
     }
@@ -62,7 +62,7 @@ FavoritesController.prototype.refresh = function(){
         self.add_favorite(self.parent.file.provider, self.parent.file.id);
       }
       else {
-        alert(i18n("Can't favorite file as it is not saved yet..."));
+        new Popup({ message : i18n("Can't favorite file as it is not saved yet...") });
       }
     })
     $("ul.favorites").append(add_favorite);

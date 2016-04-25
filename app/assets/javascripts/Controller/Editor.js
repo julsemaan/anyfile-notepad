@@ -653,7 +653,7 @@ EditorController.prototype.open_share_modal = function() {
     oauth_controller.share_client.showSettingsDialog();
   }
   else {
-    alert(i18n("You must save the file before you can share it."));
+    new Popup({message : i18n("You must save the file before you can share it.")});
   }
 }
 
