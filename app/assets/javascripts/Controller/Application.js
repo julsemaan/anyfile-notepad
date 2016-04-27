@@ -12,7 +12,7 @@ ApplicationController.prototype.stop_dev_mode = function(){
 }
 
 ApplicationController.prototype.set_mode_and_reload = function(mode, destination){
-  new Popup({ message : "This action requires to restart the app. Proceed ?", callback: function(result){
+  new Popup({ message : "This action requires to restart the app. Proceed ?", confirm: true, callback: function(result){
     if(result) { 
       setCookie("AFNVersion", mode);
       if(destination){
