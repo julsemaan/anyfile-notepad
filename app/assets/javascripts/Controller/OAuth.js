@@ -127,7 +127,7 @@ GoogleOAuthController.prototype.execute_request = function(request, callback){
     if(!response.error){
       callback(response)
     }
-    else if(response.error.code == 401){
+    else if(response.error.code == 401 || response.error.code == 403){
       self.queue.push(function(){self.execute_request(request, callback)})
       self.authed = false
       self.do_auth()
