@@ -14,4 +14,12 @@ module ApplicationHelper
   def chrome_store_url
     "https://chrome.google.com/webstore/detail/anyfile-notepad/ghlichmdnegmcpafgmmlpkegmcndlndi"
   end
+
+  def current_commit_id
+    `git rev-parse HEAD`[0..6]
+  end
+
+  def current_version
+    `git tag | tail -1`
+  end
 end
