@@ -73,7 +73,7 @@ FileExplorerController.prototype.fetch_drive_directory = function(options, callb
     'q': "'"+directory_id+"' in parents and trashed=false",
     'fields' : 'items(id,mimeType,title)',
   });
-  request.execute(function(response){
+  oauth_controller.execute_request(request, function(response){
     var folders = []
     var files = []
     for(var i in response.items){
