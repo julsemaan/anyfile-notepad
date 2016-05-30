@@ -70,6 +70,21 @@ GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   });
 }
 
+GoogleOAuthController.prototype.switch_user = function() {
+  var self = this;
+  var previous_user = self.current_user;
+  self.auth_with_user(undefined, function(){
+    if(self.current_user.user_id != previous_user.user_id){
+      $('#app_restart_modal').modal('show'); 
+      window.location.hash = '#new' ; 
+      window.location.reload()
+    }
+    else {
+      new Popup({message : i18n("User was not changed. Remember you can add accounts via the 'Add Account' button so they are available in the app.")});
+    }
+  })
+}
+
 GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
