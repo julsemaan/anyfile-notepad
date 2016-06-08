@@ -4,13 +4,13 @@ module SyntaxesHelper
     [:C],
     [:D, :E, :F, :G],
     [:H, :I],
-    [:J],
+    [:J, :K],
     [:L],
     [:M, :N, :O],
-    [:P, :R],
+    [:P, :Q, :R],
     [:S],
     [:T],
-    [:V, :X, :Y]
+    [:U, :V, :X, :Y]
   ]
   
   def build_syntax_menus
