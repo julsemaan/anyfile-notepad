@@ -35,7 +35,11 @@ cd $HOST
 # We rename files without extension to html and fix the links
 while read -r -d $'\0'; do
   mv $REPLY $REPLY'.html'
-  sed_hrefs $REPLY $REPLY'.html'
+
+  # No need to do it for /app
+  if [ "$REPLY" != "./app" ]; then
+    sed_hrefs $REPLY $REPLY'.html'
+  fi
 done < <(find . -type f ! -name "*.*" -print0)
 
 # Download the necessary resources from the API
