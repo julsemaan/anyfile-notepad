@@ -46,6 +46,8 @@ wget $APP/syntaxes.json
 # Download other resources
 wget $APP/favicon.ico
 wget $APP/logo.png
+wget $APP/Dropbox.png
+wget $APP/GoogleDrive.png
 
 # Google webmaster checkup
 wget $APP/googlef0ce5fbdc9b3a89f.html
