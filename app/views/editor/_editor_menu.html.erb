@@ -5,7 +5,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="/"><%= image_tag "logo.png", :width => 50, :height => 50 %><div class="ripple-wrapper"><div class="ripple ripple-on" style="left: 63.5px; top: 23px; -webkit-transform: scale(9.625); transform: scale(9.625); background-color: rgba(255, 255, 255, 0.843137);"></div></div></a>
+    <a class="navbar-brand" href="/"><img src="logo.png" width="50" height=="50"><div class="ripple-wrapper"><div class="ripple ripple-on" style="left: 63.5px; top: 23px; -webkit-transform: scale(9.625); transform: scale(9.625); background-color: rgba(255, 255, 255, 0.843137);"></div></div></a>
   </div>
   <div class="extended_menu">
     <ul class="nav navbar-nav">
@@ -159,12 +159,6 @@
                 <div class="menu_content">
                   <div class="row themes">
                   <a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
-                    <% 
-                    themes = themes_list 
-                    themes.prepend("dummy")
-                    themes.prepend("dummy")
-                    themes.prepend("dummy")
-                    %>
                     {{#each themes}}
                       {{#if (eq (math @index "%" 12) 0) }}
                       <div class="col-md-4 theme-col-{{ math @index "/" 12 }}">
