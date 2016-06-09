@@ -1,15 +1,19 @@
-<%= stylesheet_link_tag    "application", :media => "all" %>
-<%= stylesheet_link_tag    "editor", :media => "all" %>
+<script class="template-partial" data-partial-name="print" type="text/x-handlebars">
+<div id="print_content" style="display:none">
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag    "editor", :media => "all" %>
 
-<div class="print_menu print_hide">
-  <a id="print" href="#print" class="btn btn-primary">Print</a>
-  <label for="line_numbers_checkbox">Line numbers : </label>
-  <input id="line_numbers_checkbox" type="checkbox" value="checked">
+  <div class="print_menu print_hide">
+    <a id="print" href="#print" class="btn btn-primary">Print</a>
+    <label for="line_numbers_checkbox">Line numbers : </label>
+    <input id="line_numbers_checkbox" type="checkbox" value="checked">
 
+  </div>
+  <% line_number = 1 %>
+  <pre class="with_line_numbers hide"></pre>
+  <pre class="without_line_numbers"></pre>
 </div>
-<% line_number = 1 %>
-<pre class="with_line_numbers hide"></pre>
-<pre class="without_line_numbers"></pre>
+</script>
 
 <script>
   $('#print').click(function(){

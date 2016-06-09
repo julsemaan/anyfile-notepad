@@ -52,7 +52,7 @@
 
             <li><a href="/faq">{{ i18n "Help (FAQ)" }}</a></li>
 
-            <li><a href="<%= root_path %>">{{ i18n "App home page" }}</a></li>
+            <li><a href="/">{{ i18n "App home page" }}</a></li>
 
             <li><a href="javascript:void(0);" onclick="javascript:editor_controller.restart_app()">{{ i18n "Restart app" }}</a></li>
           </ul>
@@ -63,7 +63,7 @@
       <li>
         <a href="javascript:void(0)" class="menu_item">{{ i18n "Open" }}</a>
         <div class="menu_content">
-          <%= render 'shared/file_explorer', :with_dropdown => true %>
+          {{> file_explorer }}
         </div>
       </li>
 
@@ -129,26 +129,26 @@
                       <div class="syntaxes">
                         <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                         <ul class="menu_list">
-                          <% build_syntax_menus.each do |letters, syntaxes| %>
+                          {{#each grouped_syntaxes}}
                               <li>
-                              <a href="javascript:void(0);" class="sub_menu_item" ><%=letters%></a>
+                              <a href="javascript:void(0);" class="sub_menu_item" >{{@key}}</a>
                               <div class="menu_content">
                                 <div class="syntaxes">
                                   <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                                    <ul class="menu_list">
-                                      <% syntaxes.each do |syntax| %>
+                                      {{#each this}}
                                         <li>
-                                          <a href="javascript:void(0);" class="syntax_button syntax_<%= syntax.ace_js_mode %>" onclick="menu_controller.hide_menu();editor_controller.set_syntax_mode('<%= syntax.ace_js_mode %>',true);">
-                                            <%= syntax.display_name %>
+                                          <a href="javascript:void(0);" class="syntax_button syntax_{{this.ace_js_mode}} %>" onclick="menu_controller.hide_menu();editor_controller.set_syntax_mode('{{this.ace_js_mode}}',true);">
+                                            {{this.display_name}}
                                           </a>                  
                                         </li>
-                                      <% end %>
+                                      {{/each}}
                                   </ul>
                                 </div>
                                
                               </div>
                             </li>
-                          <% end %>
+                          {{/each}}
                         </ul>
                       </div>
                   </div>
@@ -165,19 +165,26 @@
                     themes.prepend("dummy")
                     themes.prepend("dummy")
                     %>
-                    <% themes.each_slice(12).to_a.each do |theme_array| %>
-                      <div class="col-md-4">
+                    {{#each themes}}
+                      {{#if (eq (math @index "%" 12) 0) }}
+                      <div class="col-md-4 theme-col-{{ math @index "/" 12 }}">
                         <div class="theme_choice_column btn-group-vertical"> 
-                          <% theme_array.each do |theme| %>
-                            <% if theme == "dummy" %>
-                              <a href="javascript:void(0);" class="btn-dummy"><%= theme_display_name(theme) %></a>
-                            <% else %>
-                              <a href="javascript:void(0);" class="btn btn-default btn_theme theme_<%=theme_name(theme)%>" onclick="javascript:menu_controller.hide_menu();editor_controller.select_theme('<%= theme_name(theme) %>')"><%= theme_display_name(theme) %></a>
-                            <% end %>
-                          <% end %>
+                      {{/if}}
+                        {{#if (eq this "dummy")}}
+                          <a href="javascript:void(0);" class="btn-dummy">{{this.theme_display_name}}</a>
+                        {{else}}
+                          <a href="javascript:void(0);" class="btn btn-default btn_theme theme_{{this.theme_name}}" onclick="javascript:menu_controller.hide_menu();editor_controller.select_theme('{{this.theme_name}}')">{{this.theme_display_name}}</a>
+                        {{/if}}
+                      {{#if (eq @index (math ../themes.length "-" 1 ))}}
+                          </div>
                         </div>
-                      </div>
-                    <% end %>
+                      {{else}}
+                        {{#if (eq (math @index "%" 12) 11) }}
+                          </div>
+                        </div>
+                        {{/if}}
+                      {{/if}}
+                    {{/each}}
                   </div>
                 </div>
               </div>

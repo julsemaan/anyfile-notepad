@@ -22,7 +22,7 @@ module SyntaxesHelper
         letters = letters + ' ' + l.to_s
         Syntax.all.each do |s|
           if s.display_name[0].downcase == l.to_s.downcase
-            tmp << s
+            tmp << {:ace_js_mode => s.ace_js_mode, :display_name => s.display_name}
           end
         end
       end
