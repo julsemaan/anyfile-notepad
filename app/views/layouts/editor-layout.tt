@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Anyfile Notepad</title>
+  
+  <link rel="stylesheet" type="text/css" "/assets/application.css" media="all">
+  <link rel="stylesheet" type="text/css" "/assets/editor.css" media="all">
+  <link rel="stylesheet" type="text/css" "/jqueryFileTree/jqueryFileTree.css" media="all">
+
+  <script type="text/javascript" src="/assets/application.js"></script>
+  <script type="text/javascript" src="/jqueryFileTree/jqueryFileTree.js"></script>
+  <script type="text/javascript" src="/ace.js/ace.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.cookie/1.4.0/jquery.cookie.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js"></script>
+  <script type="text/javascript" src="https://inverse.ca/downloads/Fingerbank/fingerbank-client.js"></script>
+
+  <%= render 'layouts/analytics' %>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+</head>
+<body>
+
+  [% INCLUDE editor.part %]
+
+  <script>
+    function oauth_loaded(){
+      oauth_controller.init()
+    }
+  </script>
+
+  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=oauth_loaded"></script>
+
+    <script>
+      $(document).ready(function() {
+          $.material.init();
+      });
+    </script>
+</body>
+</html>
+
