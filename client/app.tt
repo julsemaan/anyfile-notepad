@@ -1,5 +1,5 @@
 <div id="editor_app">
-  [% INCLUDE editor.part %]
+  [% INCLUDE app.partials %]
   <div id="loading_overlay"></div>
 
   <script class="template" type="text/x-handlebars">
@@ -17,14 +17,14 @@
     {{> editor_flash }}
   </script>
 
-  [% INCLUDE 'app/print.tt' %]
+  [% INCLUDE 'print.tt' %]
 
 
   <script id="editor-template" class="template" type="text/x-handlebars-template">
     <div id="editor_menu_container" >
       <div id="editor_menu" class="g_file_menu" >
 
-        [% INCLUDE 'app/editor-menu.tt' %]
+        [% INCLUDE 'editor-menu.tt' %]
 
       </div>
 
@@ -34,7 +34,7 @@
       <div id="editor" class="page-content" contenteditable="true"></div>
     </div>
         
-    [% INCLUDE 'app/user.tt' %]
+    [% INCLUDE 'user.tt' %]
 
   </script>
 </div>

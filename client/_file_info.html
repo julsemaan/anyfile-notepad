@@ -12,7 +12,7 @@
           <p><b>{{ i18n "Folder id" }} : </b><span data-bind-file="folder_id"></span></p>
           <p><b>{{ i18n "Mime type" }} : </b><span data-bind-file="mime_type"></span></p>
           <p><b>{{ i18n "Device" }} : </b><span id="current_device"></span></p>
-          <p><b>{{ i18n "App info" }} : </b><%= current_version %>(<%= current_commit_id %>)</p>
+          <p><b>{{ i18n "App info" }} : </b>[% APP_VERSION %]([% APP_COMMIT_ID %])</p>
         </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ i18n "Close" }}</button>

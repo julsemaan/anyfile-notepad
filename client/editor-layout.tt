@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  [% INCLUDE app/app.tt %]
+  [% INCLUDE app.tt %]
 
   <script>
     function oauth_loaded(){

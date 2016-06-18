@@ -21,6 +21,8 @@ mkdir -p $COMPILED_APP
 mkdir -p $COMPILED_APP/assets
 
 APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
+APP_VERSION=`git tag | tail -1`
+APP_COMMIT_ID=`git rev-parse HEAD | cut -c1-6`
 
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
@@ -48,13 +50,13 @@ add_asset app/assets/javascripts/application.js $APPLICATION_JS
 find app/assets/javascripts/ -name '*.js' | while read file; do add_asset "$file" $APPLICATION_JS ; done
 
 # editor.part
-echo "Building editor.part"
-find client/app/ -name '_*.html' -exec cat {} >> $COMPILED_APP/editor.part \;
+echo "Building app.partials"
+find client/ -name '_*.html' | while read file ; do add_asset "$file" $COMPILED_APP/app.partials ; done
 
 # Build single page app
 echo "Building app"
 cp client/editor-layout.tt $COMPILED_APP/editor-layout.tt
-perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('editor-layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID'}, '$COMPILED_APP/app.html') || die \$tt->error()"
+perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('editor-layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID'}, '$COMPILED_APP/app.html') || die \$tt->error()"
 
 # Adding public assets
 cp -frp public/* $COMPILED_APP/
