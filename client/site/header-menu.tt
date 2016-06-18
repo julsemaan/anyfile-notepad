@@ -4,16 +4,16 @@
       <div class="panel-body">
           <div class="row">
             <div class="col-md-10 col-centered">
-              <a href="<%= root_path %>"><%= image_tag "promo_small.png" , :width => 300 %></a>
+              <a href="/"><img src="/promo_small.png" width="300" ></a>
             </div>
             <div class="col-md-10 col-centered">
-              <a class="btn btn-success" href="<%= app_path %>">Launch app <%= image_tag "logo.png", :width => 25, :height => 25 %></a>
+              <a class="btn btn-success" href="/app">Launch app <img src="/logo.png" width="25" height="25" ></a>
             </div>
             <div class="col-md-10 col-centered">
-              <a class="btn btn-primary" target="_blank" href="<%= g_plus_url %>">Find us on <%= image_tag "gplus.jpg", :width => 15, :height => 15 %></a>
+              <a class="btn btn-primary" target="_blank" href="https://plus.google.com/communities/109168786116242892967">Find us on <img src="/gplus.jpg" width="15" height="15" ></a>
             </div>
             <div class="col-md-10 col-centered">
-              <a class="btn btn-primary" target="_blank" href="<%= chrome_store_url %>">Download in Chrome Store <%= image_tag "chrome_store.jpg", :width => 15, :height => 15%></a>
+              <a class="btn btn-primary" target="_blank" href="https://chrome.google.com/webstore/detail/anyfile-notepad/ghlichmdnegmcpafgmmlpkegmcndlndi">Download in Chrome Store <img src="/chrome_store.jpg" width="15" height="15" ></a>
             </div>
           </div>
       </div>
@@ -24,7 +24,7 @@
   <div class="col-md-7">
     <div class="row">
       <div class="col-md-12">
-        <h3 class="top_notice alert alert-warning">Trouble getting started with the app ? <br> <a href="/faq">Read our FAQ</a></h3>
+        <h3 class="top_notice alert alert-warning">Trouble getting started with the app ? <br> <a href="/site/faq.html">Read our FAQ</a></h3>
       </div>
 
       <div class="col-md-12">

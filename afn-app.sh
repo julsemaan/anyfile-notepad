@@ -27,6 +27,23 @@ APP_COMMIT_ID=`git rev-parse HEAD | cut -c1-6`
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
+# pages.css
+echo "Building pages.css"
+cp bower_components/bootstrap/dist/css/bootstrap.min.css app/assets/stylesheets/libs/bootstrap.min.css.scss
+sass -I app/assets/stylesheets/ app/assets/stylesheets/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+
+# Build website
+echo "Building site pages"
+
+mkdir $COMPILED_APP/site
+
+for page in home faq help_translate; do
+  echo "-Building page $page"
+  perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('site/layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID', PAGE_KEY => '$page'}, '$COMPILED_APP/site/$page.html') || die \$tt->error()"
+done 
+
+cp $COMPILED_APP/site/home.html $COMPILED_APP/index.html
+
 # application.css
 echo "Building application.css"
 add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS

@@ -13,7 +13,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js"></script>
   <script type="text/javascript" src="https://inverse.ca/downloads/Fingerbank/fingerbank-client.js"></script>
 
-  [% INCLUDE _analytics.html %]
+  [% INCLUDE analytics.tt %]
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   

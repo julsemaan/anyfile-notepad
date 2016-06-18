@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>[% title %]</title>
+  
+  <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].css" media="all">
+  <link rel="stylesheet" type="text/css" href="/assets/pages-[% APP_VERSION_ID %].css" media="all">
+
+  <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].js"></script>
+  <script type="text/javascript" src="/marked.js"></script>
+
+  [% INCLUDE analytics.tt %]
+  
+</head>
+<body>
+
+<div class="container">
+
+
+  <div class="home_content">
+
+    [% INCLUDE 'site/header-menu.tt' %]
+    
+    [% INCLUDE 'site/site-content.tt' %]
+    
+  </div>
+  
+  [% INCLUDE 'site/footer-menu.tt' %]
+
+</div>
+
+</body>
+</html>

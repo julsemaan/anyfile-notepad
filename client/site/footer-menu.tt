@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-md-12">
       <div class="btn-group">
-        <%= link_to "Admin menu", admin_menu_path %>
+        <a href="/admin">Administration</a>
         
-        <%= link_to "Contact", g_plus_url, :target => "_blank" %>
+        <a href="https://plus.google.com/communities/109168786116242892967">Contact</a>
       </div>
     </div>
   </div>   

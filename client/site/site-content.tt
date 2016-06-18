@@ -1,0 +1,9 @@
+<script>
+  $(function(){
+      var m = new MDRenderer({
+        url : getQueryParam("test") ? '/pages/[% PAGE_KEY %].test.markdown' : '/pages/[% PAGE_KEY %].markdown', 
+        columns : 1,
+        destination : '.home_content',
+      });
+  });
+</script>
