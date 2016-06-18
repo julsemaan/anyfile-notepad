@@ -17,6 +17,8 @@
     {{> editor_flash }}
   </script>
 
+  [% INCLUDE 'app/print.tt' %]
+
 
   <script id="editor-template" class="template" type="text/x-handlebars-template">
     <div id="editor_menu_container" >

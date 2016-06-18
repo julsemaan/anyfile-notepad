@@ -1,11 +1,5 @@
 @import "bootstrap";
 
-@media print {
-  .print_hide {
-    display:none;
-  }
-}
-
 .flash_notice{
   @extend .alert;
   @extend .alert-info;
