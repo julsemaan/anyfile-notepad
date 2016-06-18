@@ -49,8 +49,7 @@ find app/assets/javascripts/ -name '*.js' | while read file; do add_asset "$file
 
 # editor.part
 echo "Building editor.part"
-find client/app/ -name '_*.html.erb' -exec cat {} >> $COMPILED_APP/editor.part \;
-find client/app/ ! -name '_*.html.erb' -name '*.html.erb' -exec cat {} >> $COMPILED_APP/editor.part \;
+find client/app/ -name '_*.html' -exec cat {} >> $COMPILED_APP/editor.part \;
 
 # Build single page app
 echo "Building app"
