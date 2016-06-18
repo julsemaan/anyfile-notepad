@@ -3,8 +3,8 @@
 <head>
   <title>Anyfile Notepad</title>
   
-  <link rel="stylesheet" type="text/css" "/assets/application-[% APP_VERSION_ID %].css" media="all">
-  <link rel="stylesheet" type="text/css" "/jqueryFileTree/jqueryFileTree.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].css" media="all">
+  <link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css" media="all">
 
   <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].js"></script>
   <script type="text/javascript" src="/jqueryFileTree/jqueryFileTree.js"></script>
@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  [% INCLUDE editor.part %]
+  [% INCLUDE app/app.tt %]
 
   <script>
     function oauth_loaded(){

@@ -23,7 +23,7 @@ Popup.prototype.init = function(args) {
       self.callback(result);
     }
 
-    $('#'+self.cancel_id).click(function() { post_click(false) });
-    $('#'+self.confirm_id).click(function() { post_click(true) });
+    $('#'+self.cancel_id).click(function() {post_click(false)});
+    $('#'+self.confirm_id).click(function() {post_click(true)});
   }
 }

@@ -1,13 +1,6 @@
 <div id="editor_app">
+  [% INCLUDE editor.part %]
   <div id="loading_overlay"></div>
-  <%= render :partial => 'shared/popup' %>
-  <%= render :partial => 'shared/modal' %>
-  <%= render 'file_info' %>
-  <%= render :partial => 'major_notice_modal' %>
-  <%= render :partial => 'terms' %>
-  <%= render :partial => 'flash' %>
-  <%= render :partial => 'print' %>
-  <%= render 'shared/file_explorer' %>
 
   <script class="template" type="text/x-handlebars">
     {{> modal id="app_restart_modal" title="Restarting" message="The app is being restarted, please wait." with_bar=true }}
@@ -29,7 +22,7 @@
     <div id="editor_menu_container" >
       <div id="editor_menu" class="g_file_menu" >
 
-        <%= render 'editor_menu' %>
+        [% INCLUDE 'app/editor-menu.tt' %]
 
       </div>
 
@@ -39,7 +32,7 @@
       <div id="editor" class="page-content" contenteditable="true"></div>
     </div>
         
-    <%= render 'shared/user' %>
+    [% INCLUDE 'app/user.tt' %]
 
   </script>
 </div>
@@ -83,15 +76,15 @@
   var partials = $('.template-partial');
   var context = {
     locales : locales,
-    grouped_syntaxes : <%= JSON.generate(build_syntax_menus).html_safe %>,
-    themes : <%= JSON.generate(themes_list.map{|theme| {theme: theme, theme_display_name: theme_display_name(theme), theme_name: theme_name(theme)}}).html_safe %>,
+    grouped_syntaxes : {}, //<%= JSON.generate(build_syntax_menus).html_safe %>,
+    themes : [], //<%= JSON.generate(themes_list.map{|theme| {theme: theme, theme_display_name: theme_display_name(theme), theme_name: theme_name(theme)}}).html_safe %>,
   };
   for(var i=0; i<3; i++){
     context.themes.unshift("dummy");
   }
 
   Handlebars.registerHelper('i18n', i18n);
-  Handlebars.registerHelper('isNull', function(val) {
+  Handlebars.registerHelper('isNull', function(val){
     return val == null;
   });
   Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {

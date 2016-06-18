@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body" id={{#if id}} "{{ id }}_body" {{else}} "modal_body" {{/if}}>
           {{#if with_bar}}
-            <%= render 'shared/loading_bar' %>
+            {{> loading_bar }}
           {{/if}}
           {{ i18n message }}
           <div class="additionnal_message" ></div>
