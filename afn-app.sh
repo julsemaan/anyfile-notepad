@@ -85,7 +85,7 @@ perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'cli
 # Adding public assets
 cp -frp client/public/* $COMPILED_APP/
 
-# Adding JSON resources
-cp dist/extensions.json $COMPILED_APP/
-cp dist/syntaxes.json $COMPILED_APP/
-cp dist/mime_types.json $COMPILED_APP/
+# Adding JSON resources (from prod for now...)
+wget https://anyfile-notepad.semaan.ca/extensions.json -o $COMPILED_APP/extensions.json
+wget https://anyfile-notepad.semaan.ca/syntaxes.json -o $COMPILED_APP/syntaxes.json
+wget https://anyfile-notepad.semaan.ca/mime_types.json -o $COMPILED_APP/mime_types.json
