@@ -29,8 +29,8 @@ APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
 # pages.css
 echo "Building pages.css"
-cp bower_components/bootstrap/dist/css/bootstrap.min.css app/assets/stylesheets/libs/bootstrap.min.css.scss
-sass -I app/assets/stylesheets/ app/assets/stylesheets/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+cp bower_components/bootstrap/dist/css/bootstrap.min.css client/assets/css/libs/bootstrap.min.css.scss
+sass -I client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
 
 # Build website
 echo "Building site pages"
@@ -54,24 +54,23 @@ cp $COMPILED_APP/site/home.html $COMPILED_APP/index.html
 # application.css
 echo "Building application.css"
 add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
-sass -I app/assets/stylesheets/ app/assets/stylesheets/editor.css.scss >> $APPLICATION_CSS
+sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
 # application.js
 echo "Building application.js"
 add_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
 add_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
 
-add_asset app/assets/javascripts/libs/rsvp.min.js $APPLICATION_JS
-add_asset app/assets/javascripts/libs/route-recognizer.js $APPLICATION_JS
-add_asset app/assets/javascripts/DataBinder.js $APPLICATION_JS
-add_asset app/assets/javascripts/Model.js $APPLICATION_JS
-add_asset app/assets/javascripts/Model/Preference.js $APPLICATION_JS
-add_asset app/assets/javascripts/Model/CloudFile.js $APPLICATION_JS
-# todo - rename application.js to something else
-add_asset app/assets/javascripts/application.js $APPLICATION_JS
+add_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
+add_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS
+add_asset client/assets/js/DataBinder.js $APPLICATION_JS
+add_asset client/assets/js/Model.js $APPLICATION_JS
+add_asset client/assets/js/Model/Preference.js $APPLICATION_JS
+add_asset client/assets/js/Model/CloudFile.js $APPLICATION_JS
+add_asset client/assets/js/helpers.js $APPLICATION_JS
 
 # todo - exclude the files above
-find app/assets/javascripts/ -name '*.js' | while read file; do add_asset "$file" $APPLICATION_JS ; done
+find client/assets/js/ -name '*.js' | while read file; do add_asset "$file" $APPLICATION_JS ; done
 
 # editor.part
 echo "Building app.partials"
