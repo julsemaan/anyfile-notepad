@@ -86,6 +86,9 @@ perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'cli
 cp -frp client/public/* $COMPILED_APP/
 
 # Adding JSON resources (from prod for now...)
-wget https://anyfile-notepad.semaan.ca/extensions.json -o $COMPILED_APP/extensions.json
-wget https://anyfile-notepad.semaan.ca/syntaxes.json -o $COMPILED_APP/syntaxes.json
-wget https://anyfile-notepad.semaan.ca/mime_types.json -o $COMPILED_APP/mime_types.json
+echo "Fetching extensions.json"
+curl https://anyfile-notepad.semaan.ca/extensions.json --fail --silent --show-error > $COMPILED_APP/extensions.json
+echo "Fetching syntaxes.json"
+curl https://anyfile-notepad.semaan.ca/syntaxes.json --fail --silent --show-error > $COMPILED_APP/syntaxes.json
+echo "Fetching mime_types.json"
+curl https://anyfile-notepad.semaan.ca/mime_types.json --fail --silent --show-error > $COMPILED_APP/mime_types.json
