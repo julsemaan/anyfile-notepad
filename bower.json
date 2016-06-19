@@ -1,0 +1,17 @@
+{
+  "name": "anyfile-notepad",
+  "authors": [
+    "Julien Semaan <julien@semaan.ca>"
+  ],
+  "description": "Anyfile Notepad",
+  "main": "",
+  "moduleType": [],
+  "license": "GPL",
+  "homepage": "https://anyfile-notepad.semaan.ca",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "3.1.1",
+    "jquery-ui": "~1.11",
+    "jquery": "~1.11"
+  }
+}
