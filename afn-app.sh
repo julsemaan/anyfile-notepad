@@ -83,7 +83,7 @@ cp client/editor-layout.tt $COMPILED_APP/editor-layout.tt
 perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('editor-layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID'}, '$COMPILED_APP/app.html') || die \$tt->error()"
 
 # Adding public assets
-cp -frp public/* $COMPILED_APP/
+cp -frp client/public/* $COMPILED_APP/
 
 # Adding JSON resources
 cp dist/extensions.json $COMPILED_APP/
