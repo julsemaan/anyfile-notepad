@@ -59,6 +59,7 @@ sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 # application.js
 echo "Building application.js"
 add_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
+add_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
 add_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
 
 add_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
