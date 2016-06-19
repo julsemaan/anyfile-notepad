@@ -39,7 +39,14 @@ mkdir $COMPILED_APP/site
 
 for page in home faq help_translate; do
   echo "-Building page $page"
-  perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('site/layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID', PAGE_KEY => '$page'}, '$COMPILED_APP/site/$page.html') || die \$tt->error()"
+
+  if [ "$page" == "home" ]; then
+    COLUMNS=2
+  else
+    COLUMNS=1
+  fi
+
+  perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('site/layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID', PAGE_KEY => '$page', COLUMNS => $COLUMNS}, '$COMPILED_APP/site/$page.html') || die \$tt->error()"
 done 
 
 cp $COMPILED_APP/site/home.html $COMPILED_APP/index.html
