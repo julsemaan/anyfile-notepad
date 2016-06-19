@@ -1,11 +1,11 @@
 build:
-	rails s -e build -p 3001 -P tmp/pids/build-server.pid &
-	sleep 15
-	bash build.sh
-	bash -c 'kill `cat tmp/pids/build-server.pid`'
+	bash afn-app.sh
+	mkdir dist
+	cp -fr tmp/app-compiled/* dist/
+	tar cvfz afn.tgz dist/
 
 clean:
-	rm -fr build
+	rm -fr tmp/app-compiled
 	rm -fr dist
 	rm -f afn.tgz
 
