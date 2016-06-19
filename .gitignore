@@ -27,6 +27,7 @@ pickle-email-*.html
 /cstore/*
 /config/development.yml
 /public/pages/*.markdown
+/bower_components
 
 /build/
 /dist/
