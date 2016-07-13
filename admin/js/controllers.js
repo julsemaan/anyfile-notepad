@@ -1,5 +1,14 @@
-angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope){
+angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope, $sessionStorage, $http, $base64){
   $scope.errors = {};
+  $scope.username = $sessionStorage.username;
+  $scope.password = $sessionStorage.password;
+  $scope.login = function() {
+    console.log("Login!")
+    $http.defaults.headers.common.Authorization = 'Basic ' + 
+          $base64.encode($scope.username + ':' + $scope.password);
+    $sessionStorage.username = $scope.username;
+    $sessionStorage.password = $scope.password;
+  }
 });
 
 angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController', function($scope, $controller, $state, popupService, $window, MimeType) {

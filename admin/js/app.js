@@ -1,4 +1,4 @@
-angular.module('afnAdminApp', ['ui.router', 'ngResource', 'afnAdminApp.baseControllers', 'afnAdminApp.controllers', 'afnAdminApp.services']);
+angular.module('afnAdminApp', ['ui.router', 'ngResource', 'ngStorage', 'base64', 'afnAdminApp.baseControllers', 'afnAdminApp.controllers', 'afnAdminApp.services']);
 
 angular.module('afnAdminApp').config(function($stateProvider) {
   $stateProvider.state('mime_types', { // state for showing all mime types
