@@ -1,0 +1,15 @@
+<a ui-sref="newMimeType" class="btn-primary btn-lg nodecoration">Add New Mime Type</a>
+
+<table class="table mime_type-table">
+  <tr>
+    <td><h3>All Mime types</h3></td>
+    <td></td>
+  </tr>
+  <tr ng-repeat="mime_type in mime_types">
+    <td>{{mime_type.type_name}}</td>
+    <td>
+      <a class="btn btn-primary" ui-sref="viewMimeType({id:mime_type.id})">View</a>
+      <a class="btn btn-danger"  ng-click="deleteMimeType(mime_type)">Delete</a>
+    </td>
+  </tr>
+</table>
