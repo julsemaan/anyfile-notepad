@@ -1,17 +1,13 @@
 <table class="table mime_type-table">
   <tr>
-    <td><h3>Details for {{mime_type.type_name}}</h3></td>
+    <td><h3>Details for {{object.__display_attr__}}</h3></td>
     <td></td>
   </tr>
-  <tr>
-    <td>Mime type name</td>
-    <td>{{mime_type.type_name}}</td>
-  </tr>
-  <tr>
-    <td>Integrated</td>
-    <td>{{mime_type.integrated}}</td>
+  <tr ng-repeat="(key, value) in object" ng-if="key != '__display_attr__'">
+    <td>{{key}}</td>
+    <td>{{value}}</td>
   </tr>
 </table>
 <div>
-  <a class="btn btn-primary" ui-sref="editMimeType({id:mime_type.id})">Edit</a>
+  <a class="btn btn-primary" ui-sref="edit{{model_name}}({id:object.id})">Edit</a>
 </div>

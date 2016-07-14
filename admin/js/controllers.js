@@ -1,4 +1,7 @@
 angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope, $sessionStorage, $http, $base64){
+  if($scope.crud_model) {
+    $scope.model_name = $scope.crud_model.prototype.model_name;
+  }
   $scope.errors = {};
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
@@ -9,24 +12,43 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     $sessionStorage.username = $scope.username;
     $sessionStorage.password = $scope.password;
   }
-});
 
-angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController', function($scope, $controller, $state, popupService, $window, MimeType) {
+  $scope.format_object = function(object) {
+    object["__display_attr__"] = object[$scope.crud_model.prototype.display_attr];
+    return object;
+  };
+}).controller('CRUDListController', function($scope, $controller, popupService, $window){
   $controller('CRUDController', {$scope: $scope});
 
-  $scope.mime_types = MimeType.query();
+  $scope.crud_model.query().$promise.then(function(objects) {
+    $scope.objects = objects;
+    for(var k in $scope.objects) {
+      $scope.objects[k] = $scope.format_object($scope.objects[k]);
+    }
+  });
 
-  $scope.deleteMimeType = function(mime_type) {
+  $scope.deleteObject = function(o) {
     if (popupService.showPopup('Really delete this?')) {
-      mime_type.$delete(function() {
+      o.$delete(function() {
         $window.location.href = '';
       });
     }
   };
-}).controller('MimeTypeViewController', function($scope, $controller, $stateParams, MimeType) {
+}).controller('CRUDViewController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
-  $scope.mime_type = MimeType.get({ id: $stateParams.id });
+  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){$scope.object = $scope.format_object(object)});
+});
+
+angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController', function($scope, $controller, MimeType) {
+  $scope.crud_model = MimeType;
+  $controller('CRUDListController', {$scope: $scope});
+
+}).controller('MimeTypeViewController', function($scope, $controller, $stateParams, MimeType) {
+  $scope.crud_model = MimeType;
+  $controller('CRUDViewController', {$scope: $scope});
+
 }).controller('MimeTypeCreateController', function($scope, $controller, $state, $stateParams, MimeType) {
+  $scope.crud_model = MimeType;
   $controller('CRUDController', {$scope: $scope});
   $scope.mime_type = new MimeType();
 
@@ -36,6 +58,7 @@ angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController
     });
   };
 }).controller('MimeTypeEditController', function($scope, $controller, $state, $stateParams, MimeType, $timeout) {
+  $scope.crud_model = MimeType;
   $controller('CRUDController', {$scope: $scope});
   $scope.updateMimeType = function() {
     $scope.mime_type.$update(function() {

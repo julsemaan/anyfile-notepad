@@ -1,20 +1,8 @@
 <div ng-repeat="error in errors">
   <p>{{ error }}</p>
 </div>
-<div class="form-group">
-  <label for="title" class="col-sm-2 control-label">Title</label>
-  <div class="col-sm-10">
-    <input type="text" ng-model="mime_type.type_name" class="form-control" id="type_name" placeholder="something/somestuff"/>
-  </div>
-</div>
-<div class="form-group">
-  <label for="year" class="col-sm-2 control-label">Release Year</label>
-  <div class="col-sm-10">
-    <input type="checkbox" ng-model="mime_type.integrated" class="form-control" id="integrated"/>
-  </div>
-</div>
-<div class="form-group">
-  <div class="col-sm-offset-2 col-sm-10">
-    <input type="submit" class="btn btn-primary" value="Save"/>
-  </div>
-</div>
+<afn-input type="text" placeholder="something/somestuff" field-name="Type name" field-attr='type_name' ng-model-var="mime_type.type_name"></afn-input>
+<afn-input type="text" field-name="Discovered by" field-attr='discovered_by' ng-model-var="mime_type.discovered_by"></afn-input>
+<afn-input type="checkbox" field-name="Integrated" field-attr='integrated' ng-model-var="mime_type.integrated"></afn-input>
+<afn-input type="submit"></afn-input>
+

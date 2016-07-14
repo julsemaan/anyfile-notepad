@@ -1,0 +1,8 @@
+<div class="form-group">
+  <label for="{{fieldAttr}}" class="col-sm-2 control-label">{{fieldName}}</label>
+  <div class="col-sm-10">
+    <input type="text" ng-model="$parent.ngModelVar" class="form-control" id="{{fieldAttr}}" placeholder="{{placeholder}}" ng-if="type == 'text'"/>
+    <input type="checkbox" ng-model="$parent.ngModelVar" class="form-control" id="{{fieldAttr}}" ng-if="type == 'checkbox'"/>
+    <input type="submit" class="btn btn-primary" value="Save" ng-if="type == 'submit'"/>
+  </div>
+</div>
