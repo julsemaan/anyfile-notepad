@@ -18,17 +18,24 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     return object;
   };
 
-  $scope.pushObject = function(method,object) {
-    $scope.mime_type.$update(function() {
+  $scope.pushObject = function(method, object) {
+    var success = function() {
       $state.go($scope.model_name);
-    },function(e) {
+    };
+    var fail = function(e) {
       console.log(e);
       var rand = Math.random().toString(36).substring(7);
       if(e.status == 401) {
         $scope.errors[rand] = "Unauthorized, you need to login to modify stuff...";
         $timeout(function(){delete $scope.errors[rand]}, 5000)
       }
-    });
+    };
+    if(method == "update") {
+      object.$update(success,fail);
+    }
+    else if(method == "create") {
+      object.$save(success,fail);
+    }
   }
 }).controller('CRUDListController', function($scope, $controller, popupService, $window){
   $controller('CRUDController', {$scope: $scope});
@@ -67,13 +74,13 @@ angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController
   console.log($scope.mime_type)
 
   $scope.addMimeType = function() {
-    $scope.pushObject($scope.mime_type.$save, $scope.mime_type);
+    $scope.pushObject("create", $scope.mime_type);
   };
 }).controller('MimeTypeEditController', function($scope, $controller, $stateParams, MimeType) {
   $scope.crud_model = MimeType;
   $controller('CRUDController', {$scope: $scope});
   $scope.updateMimeType = function() {
-    $scope.pushObject($scope.mime_type.$update, $scope.mime_type);
+    $scope.pushObject("update", $scope.mime_type);
   };
 
   $scope.loadMimeType = function() {
