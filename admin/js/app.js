@@ -1,7 +1,7 @@
 angular.module('afnAdminApp', ['ui.router', 'ngResource', 'ngStorage', 'base64', 'afnAdminApp.baseControllers', 'afnAdminApp.controllers', 'afnAdminApp.services', 'afnAdminApp.directives']);
 
 angular.module('afnAdminApp').config(function($stateProvider) {
-  $stateProvider.state('mime_types', { // state for showing all mime types
+  $stateProvider.state('MimeType', { // state for showing all mime types
     url: '/mime_types',
     templateUrl: 'partials/crud/index.html',
     controller: 'MimeTypeListController'
@@ -19,5 +19,5 @@ angular.module('afnAdminApp').config(function($stateProvider) {
     controller: 'MimeTypeEditController'
   });
 }).run(function($state) {
-  $state.go('mime_types'); //make a transition to mime_types state when app starts
+  $state.go('MimeType'); //make a transition to mime_types state when app starts
 });

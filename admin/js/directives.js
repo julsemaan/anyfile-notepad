@@ -6,7 +6,6 @@ angular.module('afnAdminApp.directives', []).directive('afnInput', function(){
     },
     templateUrl: '/partials/shared/afn-input.html',
     link: function(scope, iElement, iAttrs){
-      console.log(iAttrs);
       scope.iAttrs = iAttrs;
     },
   }

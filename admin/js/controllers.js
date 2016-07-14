@@ -1,4 +1,4 @@
-angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope, $sessionStorage, $http, $base64){
+angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope, $sessionStorage, $http, $base64, $timeout, $state){
   if($scope.crud_model) {
     $scope.model_name = $scope.crud_model.prototype.model_name;
   }
@@ -13,17 +13,30 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     $sessionStorage.password = $scope.password;
   }
 
-  $scope.format_object = function(object) {
+  $scope.formatObject = function(object) {
     object["__display_attr__"] = object[$scope.crud_model.prototype.display_attr];
     return object;
   };
+
+  $scope.pushObject = function(method,object) {
+    $scope.mime_type.$update(function() {
+      $state.go($scope.model_name);
+    },function(e) {
+      console.log(e);
+      var rand = Math.random().toString(36).substring(7);
+      if(e.status == 401) {
+        $scope.errors[rand] = "Unauthorized, you need to login to modify stuff...";
+        $timeout(function(){delete $scope.errors[rand]}, 5000)
+      }
+    });
+  }
 }).controller('CRUDListController', function($scope, $controller, popupService, $window){
   $controller('CRUDController', {$scope: $scope});
 
   $scope.crud_model.query().$promise.then(function(objects) {
     $scope.objects = objects;
     for(var k in $scope.objects) {
-      $scope.objects[k] = $scope.format_object($scope.objects[k]);
+      $scope.objects[k] = $scope.formatObject($scope.objects[k]);
     }
   });
 
@@ -36,7 +49,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
   };
 }).controller('CRUDViewController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
-  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){$scope.object = $scope.format_object(object)});
+  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){$scope.object = $scope.formatObject(object)});
 });
 
 angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController', function($scope, $controller, MimeType) {
@@ -54,24 +67,13 @@ angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController
   console.log($scope.mime_type)
 
   $scope.addMimeType = function() {
-    $scope.mime_type.$save(function() {
-      $state.go('mime_types');
-    });
+    $scope.pushObject($scope.mime_type.$save, $scope.mime_type);
   };
-}).controller('MimeTypeEditController', function($scope, $controller, $state, $stateParams, MimeType, $timeout) {
+}).controller('MimeTypeEditController', function($scope, $controller, $stateParams, MimeType) {
   $scope.crud_model = MimeType;
   $controller('CRUDController', {$scope: $scope});
   $scope.updateMimeType = function() {
-    $scope.mime_type.$update(function() {
-      $state.go('mime_types');
-    },function(e) {
-      console.log(e);
-      var rand = Math.random().toString(36).substring(7);
-      if(e.status == 401) {
-        $scope.errors[rand] = "Unauthorized, you need to login to modify stuff...";
-        $timeout(function(){delete $scope.errors[rand]}, 5000)
-      }
-    });
+    $scope.pushObject($scope.mime_type.$update, $scope.mime_type);
   };
 
   $scope.loadMimeType = function() {
