@@ -11,11 +11,11 @@ angular.module('afnAdminApp').config(function($stateProvider) {
     controller: 'MimeTypeViewController'
   }).state('newMimeType', { //state for adding a new mime_type
     url: '/mime_types/new',
-    templateUrl: 'partials/mime_types/add.html',
+    templateUrl: 'partials/crud/add.html',
     controller: 'MimeTypeCreateController'
   }).state('editMimeType', { //state for updating a mime_type
     url: '/mime_types/:id/edit',
-    templateUrl: 'partials/mime_types/edit.html',
+    templateUrl: 'partials/crud/edit.html',
     controller: 'MimeTypeEditController'
   });
 }).run(function($state) {
