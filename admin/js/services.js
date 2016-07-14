@@ -6,6 +6,7 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
   });
   res.prototype.model_name = "MimeType";
   res.prototype.display_attr = "type_name";
+  res.prototype.type_name = "";
   return res;
 }).service('Syntax', function($resource) {
   var res = $resource('http://devbox.home.semaan.ca:8080/syntaxes/:id', {id: '@id'}, {

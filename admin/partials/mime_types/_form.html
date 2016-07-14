@@ -2,7 +2,14 @@
   <p>{{ error }}</p>
 </div>
 <afn-input type="text" placeholder="something/somestuff" field-name="Type name" field-attr='type_name' ng-model-var="mime_type.type_name"></afn-input>
+<afn-input type="text" placeholder="something/somestuff" field-name="Type name" field-attr='type_name' ng-model-var="mime_type.type_name"></afn-input>
 <afn-input type="text" field-name="Discovered by" field-attr='discovered_by' ng-model-var="mime_type.discovered_by"></afn-input>
 <afn-input type="checkbox" field-name="Integrated" field-attr='integrated' ng-model-var="mime_type.integrated"></afn-input>
 <afn-input type="submit"></afn-input>
 
+<div class="form-group">
+  <label for="plot" class="col-sm-2 control-label">Movie Genre</label>
+  <div class="col-sm-10">
+    <input type="text" ng-model="mime_type.type_name" class="form-control" id="plot" placeholder="Movie genre here"/>
+  </div>
+</div>

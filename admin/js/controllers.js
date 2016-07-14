@@ -51,6 +51,7 @@ angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController
   $scope.crud_model = MimeType;
   $controller('CRUDController', {$scope: $scope});
   $scope.mime_type = new MimeType();
+  console.log($scope.mime_type)
 
   $scope.addMimeType = function() {
     $scope.mime_type.$save(function() {

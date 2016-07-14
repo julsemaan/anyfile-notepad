@@ -3,11 +3,11 @@ angular.module('afnAdminApp', ['ui.router', 'ngResource', 'ngStorage', 'base64',
 angular.module('afnAdminApp').config(function($stateProvider) {
   $stateProvider.state('mime_types', { // state for showing all mime types
     url: '/mime_types',
-    templateUrl: 'partials/mime_types/index.html',
+    templateUrl: 'partials/crud/index.html',
     controller: 'MimeTypeListController'
   }).state('viewMimeType', { //state for showing single mime type
     url: '/mime_types/:id/view',
-    templateUrl: 'partials/mime_types/view.html',
+    templateUrl: 'partials/crud/view.html',
     controller: 'MimeTypeViewController'
   }).state('newMimeType', { //state for adding a new mime_type
     url: '/mime_types/new',
