@@ -1,0 +1,11 @@
+
+<div class="panel panel-warning" ng-show="hasError()">
+  <div class="panel-heading">Errors while saving:</div>
+  <div class="panel-body form-error-container">
+    <div class="form-error alert alert-danger" role="alert" ng-repeat="(key, error) in form_errors">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      <span ng-bind-html="error"></span>
+    </div>
+  </div>
+</div>
