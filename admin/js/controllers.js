@@ -6,6 +6,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     $scope.snake_model_name_pl = $scope.crud_model.prototype.snake_model_name_pl;
   }
   $scope.form_errors = {};
+
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
   $scope.login = function() {
@@ -14,6 +15,20 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
           $base64.encode($scope.username + ':' + $scope.password);
     $sessionStorage.username = $scope.username;
     $sessionStorage.password = $scope.password;
+  }
+
+  if($scope.username && $scope.password) $scope.login()
+
+  $scope.loggedIn = function() {
+    return $http.defaults.headers.common.Authorization;
+  };
+
+  $scope.logout = function() {
+    $http.defaults.headers.common.Authorization = null;
+    $sessionStorage.username = '';
+    $sessionStorage.password = '';
+    $scope.username = '';
+    $scope.password = '';
   }
 
   $scope.formatObject = function(object) {

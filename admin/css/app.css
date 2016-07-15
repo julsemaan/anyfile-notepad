@@ -20,3 +20,21 @@ a.nodecoration{
 .form-error {
   margin:5px;
 }
+
+.login-saved {
+  text-align:center;
+  font-size:90%;
+}
+
+.logout {
+  font-style:italic;
+}
+
+.login-action {
+  text-align:center;
+}
+
+.logged-in-user {
+  display:block;
+  font-weight:bold;
+}

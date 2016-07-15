@@ -26,11 +26,23 @@
     <div class="container">
       <div class="row top-buffer">
         <div class="col-xs-2" ng-controller="CRUDController">
-          <label for="username">Username:</label>
-          <input type="text" id="username" ng-model="username">
-          <label for="password">Password:</label>
-          <input type="password" id="password" ng-model="password">
-          <button ng-click="login()">Login</button>
+          <div class="login-saved alert alert-success" ng-show="loggedIn()">
+            <div>Credentials saved for:<span class="logged-in-user">{{username}}</span></div>
+            <div class="logout"><a href="#" ng-click="logout()">Logout</a></div>
+          </div>
+          <form ng-submit="login()" ng-hide="loggedIn()">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" ng-model="username">
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" ng-model="password">
+            </div>
+            <div class="login-action form-group">
+              <input type="submit" value="Login" class="btn btn-primary">
+            </div>
+          </form>
         </div>
         <div class="col-xs-8">
           <div ui-view></div> <!-- This is where our views will load -->
