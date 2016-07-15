@@ -84,18 +84,32 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
   $scope.loadObject();
 });
 
-angular.module('afnAdminApp.controllers', []).controller('MimeTypeListController', function($scope, $controller, MimeType) {
+angular.module('afnAdminApp.controllers', [])
+// Mime types
+.controller('MimeTypeListController', function($scope, $controller, MimeType) {
   $scope.crud_model = MimeType;
   $controller('CRUDListController', {$scope: $scope});
-
 }).controller('MimeTypeViewController', function($scope, $controller, $stateParams, MimeType) {
   $scope.crud_model = MimeType;
   $controller('CRUDViewController', {$scope: $scope});
-
 }).controller('MimeTypeCreateController', function($scope, $controller, $state, $stateParams, MimeType) {
   $scope.crud_model = MimeType;
   $controller('CRUDCreateController', {$scope: $scope});
 }).controller('MimeTypeEditController', function($scope, $controller, $stateParams, MimeType) {
   $scope.crud_model = MimeType;
+  $controller('CRUDEditController', {$scope: $scope});
+})
+// Syntaxes
+.controller('SyntaxListController', function($scope, $controller, Syntax) {
+  $scope.crud_model = Syntax;
+  $controller('CRUDListController', {$scope: $scope});
+}).controller('SyntaxViewController', function($scope, $controller, $stateParams, Syntax) {
+  $scope.crud_model = Syntax;
+  $controller('CRUDViewController', {$scope: $scope});
+}).controller('SyntaxCreateController', function($scope, $controller, $state, $stateParams, Syntax) {
+  $scope.crud_model = Syntax;
+  $controller('CRUDCreateController', {$scope: $scope});
+}).controller('SyntaxEditController', function($scope, $controller, $stateParams, Syntax) {
+  $scope.crud_model = Syntax;
   $controller('CRUDEditController', {$scope: $scope});
 });

@@ -11,7 +11,6 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
   res.prototype.snake_model_name_pl = "mime_types";
 
   res.prototype.display_attr = "type_name";
-  res.prototype.type_name = "";
   return res;
 }).service('Syntax', function($resource) {
   var res = $resource('http://devbox.home.semaan.ca:8080/syntaxes/:id', {id: '@id'}, {
@@ -20,6 +19,13 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
     }
   });
   res.prototype.model_name = "Syntax";
+  res.prototype.model_name_pl = "Syntaxes";
+
+  res.prototype.snake_model_name = "syntax";
+  res.prototype.snake_model_name_pl = "syntaxes";
+
+  res.prototype.display_attr = "display_name";
+  res.prototype.type_name = "";
   return res;
 }).service('popupService',function($window){
     this.showPopup=function(message){

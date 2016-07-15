@@ -16,8 +16,9 @@
           <a class="navbar-brand" ui-sref="MimeType">Anyfile Notepad Admin</a>
         </div>
         <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a ui-sref="MimeType">Mime types</a></li>
+          <ul class="nav navbar-nav" auto-active>
+            <li ng-class="{ active: (model_name == 'MimeType') }"><a ui-sref="MimeType">Mime types</a></li>
+            <li><a ui-sref="Syntax">Syntaxes</a></li>
           </ul>
         </div>
       </div>
