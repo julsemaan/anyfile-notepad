@@ -12,3 +12,11 @@
 a.nodecoration{
     text-decoration:none;
 }
+
+.form-error-container {
+  padding:5px;
+}
+
+.form-error {
+  margin:5px;
+}

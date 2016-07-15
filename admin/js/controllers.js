@@ -5,7 +5,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     $scope.snake_model_name = $scope.crud_model.prototype.snake_model_name;
     $scope.snake_model_name_pl = $scope.crud_model.prototype.snake_model_name_pl;
   }
-  $scope.errors = {};
+  $scope.form_errors = {};
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
   $scope.login = function() {
@@ -21,16 +21,35 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     return object;
   };
 
+  $scope.hasError = function() {
+    return (Object.keys($scope.form_errors).length > 0);
+  }
+
+  $scope.addError = function(error, timeout) {
+    var rand = Math.random().toString(36).substring(7);
+    $scope.form_errors[rand] = error;
+    if(timeout) {
+      $timeout(function(){delete $scope.form_errors[rand]}, 5000)
+    }
+  }
+
   $scope.pushObject = function(method, object) {
+    // Emptying existing errors
+    for(var e in $scope.form_errors) delete $scope.form_errors[e];
+
     var success = function() {
       $state.go($scope.model_name);
     };
     var fail = function(e) {
       console.log(e);
-      var rand = Math.random().toString(36).substring(7);
       if(e.status == 401) {
-        $scope.errors[rand] = "Unauthorized, you need to login to modify stuff...";
-        $timeout(function(){delete $scope.errors[rand]}, 5000)
+        $scope.addError("Unauthorized, you need to login to modify stuff...", 5000);
+      }
+      else if(e.status == 422) {
+        var issues = e.data.issues;
+        for(var field in issues) {
+          $scope.addError("Field <i>"+field+"</i> has errors : "+issues[field].map(function(o){return '<b>'+o+'</b>'}).join(','));
+        }
       }
     };
     if(method == "update") {

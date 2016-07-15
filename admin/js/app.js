@@ -1,4 +1,4 @@
-angular.module('afnAdminApp', ['ui.router', 'ngResource', 'ngStorage', 'base64', 'afnAdminApp.baseControllers', 'afnAdminApp.controllers', 'afnAdminApp.services', 'afnAdminApp.directives']);
+angular.module('afnAdminApp', ['ui.router', 'ngResource', 'ngStorage', 'ngSanitize', 'base64', 'afnAdminApp.baseControllers', 'afnAdminApp.controllers', 'afnAdminApp.services', 'afnAdminApp.directives']);
 
 angular.module('afnAdminApp').config(function($stateProvider) {
   $stateProvider
