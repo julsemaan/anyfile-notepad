@@ -1,16 +1,6 @@
-angular.module('afnAdminApp.baseControllers', []).controller('AppController', function($scope, flashService) {
+angular.module('afnAdminApp.baseControllers', []).controller('AppController', function($scope, $sessionStorage, $http, $base64, flashService) {
   $scope.flash = flashService.flash;
-})
-
-.controller('CRUDController', function($scope, $sessionStorage, $http, $base64, $timeout, $state, flashService){
-  if($scope.crud_model) {
-    $scope.model_name = $scope.crud_model.prototype.model_name;
-    $scope.model_name_pl = $scope.crud_model.prototype.model_name_pl;
-    $scope.snake_model_name = $scope.crud_model.prototype.snake_model_name;
-    $scope.snake_model_name_pl = $scope.crud_model.prototype.snake_model_name_pl;
-  }
-  $scope.form_errors = {};
-
+  
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
   $scope.login = function() {
@@ -34,6 +24,17 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     $scope.username = '';
     $scope.password = '';
   }
+
+})
+
+.controller('CRUDController', function($scope, $timeout, $state, flashService){
+  if($scope.crud_model) {
+    $scope.model_name = $scope.crud_model.prototype.model_name;
+    $scope.model_name_pl = $scope.crud_model.prototype.model_name_pl;
+    $scope.snake_model_name = $scope.crud_model.prototype.snake_model_name;
+    $scope.snake_model_name_pl = $scope.crud_model.prototype.snake_model_name_pl;
+  }
+  $scope.form_errors = {};
 
   $scope.formatObject = function(object) {
     object["__display_attr__"] = object[$scope.crud_model.prototype.display_attr];
