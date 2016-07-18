@@ -31,5 +31,17 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
     this.showPopup=function(message){
         return $window.confirm(message);
     }
-});;
+}).service('flashService', function($timeout){
+  console.log(this)
+  this.flash = [];
+  
+  this.add = function(type, msg, timeout) {
+    var self = this;
+    var o = {type:type, msg:msg};
+    this.flash.push(o);
+    if(timeout) {
+      $timeout(function(){self.flash.splice(self.flash.indexOf(o), 1)}, timeout)
+    }
+  }
+});
 

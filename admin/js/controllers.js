@@ -1,4 +1,8 @@
-angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', function($scope, $sessionStorage, $http, $base64, $timeout, $state){
+angular.module('afnAdminApp.baseControllers', []).controller('AppController', function($scope, flashService) {
+  $scope.flash = flashService.flash;
+})
+
+.controller('CRUDController', function($scope, $sessionStorage, $http, $base64, $timeout, $state, flashService){
   if($scope.crud_model) {
     $scope.model_name = $scope.crud_model.prototype.model_name;
     $scope.model_name_pl = $scope.crud_model.prototype.model_name_pl;
@@ -44,7 +48,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     var rand = Math.random().toString(36).substring(7);
     $scope.form_errors[rand] = error;
     if(timeout) {
-      $timeout(function(){delete $scope.form_errors[rand]}, 5000)
+      $timeout(function(){delete $scope.form_errors[rand]}, timeout)
     }
   }
 
@@ -53,6 +57,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
     for(var e in $scope.form_errors) delete $scope.form_errors[e];
 
     var success = function() {
+      flashService.add("success", $scope.model_name + " saved.", 5000);
       $state.go($scope.model_name);
     };
     var fail = function(e) {
@@ -74,7 +79,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
       object.$save(success,fail);
     }
   }
-}).controller('CRUDListController', function($scope, $controller, popupService, $window){
+}).controller('CRUDListController', function($scope, $controller, popupService, flashService, $state){
   $controller('CRUDController', {$scope: $scope});
 
   $scope.crud_model.query().$promise.then(function(objects) {
@@ -87,7 +92,8 @@ angular.module('afnAdminApp.baseControllers', []).controller('CRUDController', f
   $scope.deleteObject = function(o) {
     if (popupService.showPopup('Really delete this?')) {
       o.$delete(function() {
-        $window.location.href = '';
+        flashService.add('success', "Deleted "+$scope.model_name, 5000);
+        $state.go($scope.model_name);
       });
     }
   };
