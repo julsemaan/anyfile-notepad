@@ -38,3 +38,19 @@ a.nodecoration{
   display:block;
   font-weight:bold;
 }
+
+.animated-alerts {
+  -webkit-transition:1s linear all;
+  transition:1s linear all;
+}
+
+.animated-alerts.ng-enter, .animated-alerts.ng-leave.ng-leave-active {
+  max-height:0;
+  opacity:0;
+}
+
+.animated-alerts.ng-enter.ng-enter-active, .animated-alerts.ng-leave {
+  max-height: 100px;
+  opacity:1;
+}
+

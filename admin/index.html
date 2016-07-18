@@ -26,6 +26,7 @@
     <div class="container">
       <div class="row top-buffer">
         <div class="col-xs-2">
+          <div ng-include="'partials/shared/_flash.html'"></div>
           <div class="login-saved alert alert-success" ng-show="loggedIn()">
             <div>Credentials saved for:<span class="logged-in-user">{{username}}</span></div>
             <div class="logout"><a href="#" ng-click="logout()">Logout</a></div>
@@ -45,7 +46,6 @@
           </form>
         </div>
         <div class="col-xs-8">
-          <div ng-include="'partials/shared/_flash.html'"></div>
           <div ui-view></div> <!-- This is where our views will load -->
         </div>
       </div>
