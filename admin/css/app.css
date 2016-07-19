@@ -2,11 +2,11 @@
     margin-top:10px;
 }
 
-.movietable tr td:nth-child(2){
+.object-table tr td:nth-child(2){
     width: 150px;
 }
 
-.movietable tr:nth-child(1) td{
+.object-table tr:nth-child(1) td{
     border-top: none;
 }
 a.nodecoration{

@@ -1,15 +1,12 @@
 <a ui-sref="new{{model_name}}" class="btn-primary btn-lg nodecoration" ng-show="loggedIn()">Add New {{model_name}}</a>
 
-<table class="table object-table">
-  <tr>
-    <td><h3>All {{model_name_pl}}</h3></td>
-    <td></td>
-  </tr>
-  <tr ng-repeat="object in objects | orderBy:'id'">
-    <td>{{object.__display_attr__}}</td>
-    <td>
+<div>
+  <h3>All {{model_name_pl}}</h3>
+  <div class="row" ng-repeat="object in objects | orderBy:'id'">
+    <div class="col-md-8">{{object.__display_attr__}}</div>
+    <div class="col-md-4">
       <a class="btn btn-primary" ui-sref="view{{model_name}}({id:object.id})">View</a>
       <a class="btn btn-danger" ng-show="loggedIn()" ng-click="deleteObject(object)">Delete</a>
-    </td>
-  </tr>
-</table>
+    </div>
+  </div>
+</div>

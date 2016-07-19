@@ -13,9 +13,15 @@
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#extended-menu" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
           <a class="navbar-brand" ui-sref="MimeType">Anyfile Notepad Admin</a>
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" id="extended-menu">
           <ul class="nav navbar-nav" auto-active>
             <li ng-class="{ active: (model_name == 'MimeType') }"><a ui-sref="MimeType">Mime types</a></li>
             <li><a ui-sref="Syntax">Syntaxes</a></li>
@@ -25,7 +31,7 @@
     </nav>
     <div class="container">
       <div class="row top-buffer">
-        <div class="col-xs-2">
+        <div class="col-md-2">
           <div ng-include="'partials/shared/_flash.html'"></div>
           <div class="login-saved alert alert-success" ng-show="loggedIn()">
             <div>Credentials saved for:<span class="logged-in-user">{{username}}</span></div>
@@ -45,12 +51,14 @@
             </div>
           </form>
         </div>
-        <div class="col-xs-8">
+        <div class="col-md-8">
           <div ui-view></div> <!-- This is where our views will load -->
         </div>
       </div>
     </div>
     <script type="text/javascript" src="https://code.angularjs.org/1.5.7/angular.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/ngStorage.min.js"></script>
     <script type="text/javascript" src="js/angular-base64.min.js"></script>
