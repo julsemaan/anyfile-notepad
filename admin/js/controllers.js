@@ -80,7 +80,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
       object.$save(success,fail);
     }
   }
-}).controller('CRUDListController', function($scope, $controller, popupService, flashService, $state){
+}).controller('CRUDListController', function($scope, $controller, popupService, flashService, $state, $location, $anchorScroll){
   $controller('CRUDController', {$scope: $scope});
 
   $scope.crud_model.query().$promise.then(function(objects) {
@@ -93,8 +93,10 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
   $scope.deleteObject = function(o) {
     if (popupService.showPopup('Really delete this?')) {
       o.$delete(function() {
+        $scope.objects.splice($scope.objects.indexOf(o), 1);
         flashService.add('success', "Deleted "+$scope.model_name, 5000);
-        $state.go($scope.model_name);
+        $location.hash('flash');
+        $anchorScroll();
       });
     }
   };
