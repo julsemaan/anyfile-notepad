@@ -27,11 +27,11 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
   res.prototype.display_attr = "display_name";
   res.prototype.type_name = "";
   return res;
-}).service('popupService',function($window){
+}).service('$popup',function($window){
     this.showPopup=function(message){
         return $window.confirm(message);
     }
-}).service('flashService', function($timeout){
+}).service('$flash', function($timeout){
   console.log(this)
   this.flash = [];
   

@@ -1,5 +1,5 @@
-angular.module('afnAdminApp.baseControllers', []).controller('AppController', function($scope, $sessionStorage, $http, $base64, flashService) {
-  $scope.flash = flashService.flash;
+angular.module('afnAdminApp.baseControllers', []).controller('AppController', function($scope, $sessionStorage, $http, $base64, $flash) {
+  $scope.flash = $flash.flash;
   
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
@@ -27,7 +27,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 
 })
 
-.controller('CRUDController', function($scope, $timeout, $state, flashService){
+.controller('CRUDController', function($scope, $timeout, $state, $flash){
   if($scope.crud_model) {
     $scope.model_name = $scope.crud_model.prototype.model_name;
     $scope.model_name_pl = $scope.crud_model.prototype.model_name_pl;
@@ -58,7 +58,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     for(var e in $scope.form_errors) delete $scope.form_errors[e];
 
     var success = function() {
-      flashService.add("success", $scope.model_name + " saved.", 5000);
+      $flash.add("success", $scope.model_name + " saved.", 5000);
       $state.go($scope.model_name);
     };
     var fail = function(e) {
@@ -80,7 +80,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
       object.$save(success,fail);
     }
   }
-}).controller('CRUDListController', function($scope, $controller, popupService, flashService, $state, $location, $anchorScroll){
+}).controller('CRUDListController', function($scope, $controller, $popup, $flash, $state, $location, $anchorScroll){
   $controller('CRUDController', {$scope: $scope});
 
   $scope.crud_model.query().$promise.then(function(objects) {
@@ -91,10 +91,10 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
   });
 
   $scope.deleteObject = function(o) {
-    if (popupService.showPopup('Really delete this?')) {
+    if ($popup.showPopup('Really delete this?')) {
       o.$delete(function() {
         $scope.objects.splice($scope.objects.indexOf(o), 1);
-        flashService.add('success', "Deleted "+$scope.model_name, 5000);
+        $flash.add('success', "Deleted "+$scope.model_name, 5000);
         $location.hash('flash');
         $anchorScroll();
       });
