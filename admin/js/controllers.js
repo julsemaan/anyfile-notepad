@@ -94,7 +94,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     if ($popup.showPopup('Really delete this?')) {
       o.$delete(function() {
         $scope.objects.splice($scope.objects.indexOf(o), 1);
-        $flash.add('success', "Deleted "+$scope.model_name, 5000);
+        $flash.add('success', "Deleted "+$scope.model_name+" '"+o.__display_attr__+"'", 5000);
         $location.hash('flash');
         $anchorScroll();
       });

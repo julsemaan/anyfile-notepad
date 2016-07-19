@@ -1,3 +1,7 @@
+#flash .alert {
+  text-align:center;
+}
+
 .top-buffer{
     margin-top:10px;
 }
