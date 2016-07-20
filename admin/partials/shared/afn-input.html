@@ -4,5 +4,6 @@
     <input type="text" ng-model="$parent.ngModelVar" class="form-control" id="{{iAttrs.fieldAttr}}" placeholder="{{iAttrs.placeholder}}" ng-if="iAttrs.type == 'text'"/>
     <input type="checkbox" ng-model="$parent.ngModelVar" class="form-control" id="{{iAttrs.fieldAttr}}" ng-if="iAttrs.type == 'checkbox'"/>
     <input type="submit" class="btn btn-primary" value="Save" ng-if="iAttrs.type == 'submit'"/>
+    <select ng-model="$parent.ngModelVar" ng-options="o.id as o.__display_attr__ for o in options" ng-if="iAttrs.type == 'select'"></select>
   </div>
 </div>

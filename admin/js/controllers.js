@@ -118,6 +118,12 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     $scope.pushObject("create", $scope.object);
   };
   
+  $scope.relationOptions = {};
+  for(var key in $scope.object.__proto__.relations) {
+    $scope.relationOptions[key] = $scope.object.__proto__.relations[key].query();
+  }
+
+  
 }).controller('CRUDEditController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
   
@@ -125,11 +131,13 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     $scope.pushObject("update", $scope.object);
   };
 
-  $scope.loadObject = function() {
-    $scope.object = $scope.crud_model.get({ id: $stateParams.id });
-  };
+  $scope.object = $scope.crud_model.get({ id: $stateParams.id });
+  
+  $scope.relationOptions = {};
+  for(var key in $scope.object.__proto__.relations) {
+    $scope.relationOptions[key] = $scope.object.__proto__.relations[key].query();
+  }
 
-  $scope.loadObject();
 });
 
 angular.module('afnAdminApp.controllers', [])

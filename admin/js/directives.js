@@ -3,6 +3,7 @@ angular.module('afnAdminApp.directives', []).directive('afnInput', function(){
     restrict: 'E',
     scope: {
       ngModelVar: '=',
+      options: '=',
     },
     templateUrl: '/partials/shared/afn-input.html',
     link: function(scope, iElement, iAttrs){
