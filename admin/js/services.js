@@ -19,15 +19,51 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
 
   var super_query = res.query;
   res.query = function() {
-    var self = this;
     var defer = $q.defer();
-    super_query.call(self, arguments).$promise.then(function(objects){
+    var reply = []
+    super_query.call(this, arguments).$promise.then(function(objects){
       for(var i in objects) {
         objects[i] = res.formatObject(objects[i]);
+        reply.push(objects[i]);
       }
       defer.resolve(objects);
+    }, function() {defer.reject()});
+    reply.$promise = defer.promise;
+    return reply;
+  }
+
+  var super_get = res.get;
+  res.get = function(args) {
+    var defer = $q.defer();
+    var reply = new res();
+    super_get.call(this, args).$promise.then(function(object){
+      console.log(object)
+      object = res.formatObject(object);
+      var promise = reply.$promise;
+      res.shallowClearAndCopy(object, reply);
+      reply.$promise = promise;
+      defer.resolve(object);
     });
-    return {$promise:defer.promise};
+    reply.$promise = defer.promise;
+    console.log(super_get.call(this, args))
+    console.log(reply)
+    return reply;
+  }
+  
+  res.shallowClearAndCopy = function(src, dst) {
+    dst = dst || {};
+
+    angular.forEach(dst, function(value, key) {
+      delete dst[key];
+    });
+
+    for (var key in src) {
+      if (src.hasOwnProperty(key) && !(key.charAt(0) === '$' && key.charAt(1) === '$')) {
+        dst[key] = src[key];
+      }
+    }
+
+    return dst;
   }
 
   return res;

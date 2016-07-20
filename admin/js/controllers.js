@@ -107,13 +107,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 }).controller('CRUDListController', function($scope, $controller, $popup, $flash, $state, $location, $anchorScroll){
   $controller('CRUDController', {$scope: $scope});
 
-  $scope.crud_model.query().$promise.then(function(objects) {
-    $scope.objects = objects;
-    for(var k in $scope.objects) {
-      $scope.objects[k] = $scope.formatObject($scope.objects[k]);
-    }
-    $scope.crud_loaded();
-  });
+  $scope.objects = $scope.crud_model.query();
 
   $scope.deleteObject = function(o) {
     if ($popup.showPopup('Really delete this?')) {
@@ -129,9 +123,8 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 }).controller('CRUDViewController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
   $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){
-    $scope.object = $scope.formatObject(object); 
+    $scope.object = object;
     $scope.load_relations();
-    $scope.crud_loaded();
   });
 
 }).controller('CRUDCreateController', function($scope, $controller) {
