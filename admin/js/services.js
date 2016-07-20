@@ -1,5 +1,5 @@
 angular.module('afnAdminApp.services', [])
-.factory('$CRUDResource', function($resource, $q){
+.factory('$CRUDResource', function($resource, $q, $filter){
   
   return function CRUDResourceFactory(res) {
     res.formatObject = function(object) {
@@ -26,6 +26,7 @@ angular.module('afnAdminApp.services', [])
       super_query.call(this, arguments).$promise.then(function(objects){
         delete objects['$promise'];
         delete objects['$resolved'];
+        objects = $filter('orderBy')(objects, res.prototype.display_attr);
         for(var i in objects) {
           objects[i] = res.formatObject(objects[i]);
           reply.push(objects[i]);

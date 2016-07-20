@@ -2,7 +2,7 @@
 
 <div>
   <h3>All {{model_name_pl}}</h3>
-  <div class="row" ng-repeat="object in objects | orderBy:'id'">
+  <div class="row" ng-repeat="object in objects">
     <div class="col-md-8">{{object.__display_attr__}}</div>
     <div class="col-md-4">
       <a class="btn btn-primary" ui-sref="view{{model_name}}({id:object.id})">View</a>
