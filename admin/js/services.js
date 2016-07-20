@@ -1,4 +1,4 @@
-angular.module('afnAdminApp.services', []).factory('MimeType', function($resource) {
+angular.module('afnAdminApp.services', []).factory('MimeType', function($resource, $q) {
   var res = $resource('http://devbox.home.semaan.ca:8080/mime_types/:id', {id: '@id'}, {
     update: {
       method: 'PUT'
@@ -11,6 +11,25 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
   res.prototype.snake_model_name_pl = "mime_types";
 
   res.prototype.display_attr = "type_name";
+
+  res.formatObject = function(object) {
+    object["__display_attr__"] = object[object.__proto__.display_attr];
+    return object;
+  };
+
+  var super_query = res.query;
+  res.query = function() {
+    var self = this;
+    var defer = $q.defer();
+    super_query.call(self, arguments).$promise.then(function(objects){
+      for(var i in objects) {
+        objects[i] = res.formatObject(objects[i]);
+      }
+      defer.resolve(objects);
+    });
+    return {$promise:defer.promise};
+  }
+
   return res;
 }).factory('Syntax', function($resource) {
   var res = $resource('http://devbox.home.semaan.ca:8080/syntaxes/:id', {id: '@id'}, {
