@@ -22,8 +22,10 @@ angular.module('afnAdminApp.services', [])
     var super_query = res.query;
     res.query = function() {
       var defer = $q.defer();
-      var reply = []
+      var reply = [];
       super_query.call(this, arguments).$promise.then(function(objects){
+        delete objects['$promise'];
+        delete objects['$resolved'];
         for(var i in objects) {
           objects[i] = res.formatObject(objects[i]);
           reply.push(objects[i]);
