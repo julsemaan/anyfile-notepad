@@ -7,6 +7,18 @@ angular.module('afnAdminApp.services', [])
       return object;
     };
 
+    res.loadRelations = function(object) {
+      object.__relations__ = {};
+      for (var key in object.__proto__.relations) {
+        (function() {
+          var scoped_key = key;
+          relation_class = object.__proto__.relations[key]
+          object.__relations__[scoped_key] = relation_class.get({ id: object[scoped_key] });
+        })();
+      }
+      return object;
+    }
+
     var super_query = res.query;
     res.query = function() {
       var defer = $q.defer();
@@ -28,6 +40,7 @@ angular.module('afnAdminApp.services', [])
       var reply = new res();
       super_get.call(this, args).$promise.then(function(object){
         object = res.formatObject(object);
+        object = res.loadRelations(object);
         var promise = reply.$promise;
         res.shallowClearAndCopy(object, reply);
         reply.$promise = promise;

@@ -90,15 +90,6 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 
   $scope.load_relations = function() {
     $scope.relations = {};
-    for (var key in $scope.crud_model.prototype.relations) {
-      (function() {
-        var scoped_key = key;
-        relation_class = $scope.crud_model.prototype.relations[key]
-        relation_class.get({ id: $scope.object[key] }).$promise.then(function(o){ 
-          $scope.relations[scoped_key] = $scope.formatObject(o);
-        });
-      })();
-    }
   };
   
 
