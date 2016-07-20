@@ -25,7 +25,26 @@ angular.module('afnAdminApp.services', []).factory('MimeType', function($resourc
   res.prototype.snake_model_name_pl = "syntaxes";
 
   res.prototype.display_attr = "display_name";
-  res.prototype.type_name = "";
+  return res;
+}).factory('Extension', function($resource, Syntax, MimeType){
+  var res = $resource('http://devbox.home.semaan.ca:8080/extensions/:id', {id: '@id'}, {
+    update: {
+      method: 'PUT'
+    }
+  });
+  res.prototype.model_name = "Extension";
+  res.prototype.model_name_pl = "Extensions";
+
+  res.prototype.snake_model_name = "extension";
+  res.prototype.snake_model_name_pl = "extensions";
+
+  res.prototype.display_attr = "name";
+
+  res.prototype.relations = {
+    syntax_id : Syntax,
+    mime_type_id : MimeType,
+  };
+
   return res;
 }).service('$popup',function($window){
     this.showPopup=function(message){

@@ -3,9 +3,13 @@
     <td><h3>Details for {{object.__display_attr__}}</h3></td>
     <td></td>
   </tr>
-  <tr ng-repeat="(key, value) in object" ng-if="key != '__display_attr__'">
+  <tr ng-repeat="(key, value) in object" ng-if="key != '__display_attr__' && !isRelationshipKey(key)">
     <td>{{key}}</td>
     <td>{{value}}</td>
+  </tr>
+  <tr ng-repeat="(key, value) in object" ng-if="isRelationshipKey(key)">
+    <td>{{relations[key].model_name}}</td>
+    <td><a href="{{relationshipURL('view', relations[key])}}">{{relations[key].__display_attr__}}</a></td>
   </tr>
 </table>
 <div>

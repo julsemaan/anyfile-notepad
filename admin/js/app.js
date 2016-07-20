@@ -37,6 +37,24 @@ angular.module('afnAdminApp').config(function($stateProvider) {
     url: '/syntaxes/:id/edit',
     templateUrl: 'partials/crud/edit.html',
     controller: 'SyntaxEditController'
+  })
+  // Extensions
+  .state('Extension', {
+    url: '/extensions',
+    templateUrl: 'partials/crud/index.html',
+    controller: 'ExtensionListController',
+  }).state('viewExtension', { //state for showing single mime type
+    url: '/extensions/:id/view',
+    templateUrl: 'partials/crud/view.html',
+    controller: 'ExtensionViewController'
+  }).state('newExtension', { //state for adding a new mime_type
+    url: '/extensions/new',
+    templateUrl: 'partials/crud/add.html',
+    controller: 'ExtensionCreateController'
+  }).state('editExtension', { //state for updating a mime_type
+    url: '/extensions/:id/edit',
+    templateUrl: 'partials/crud/edit.html',
+    controller: 'ExtensionEditController'
   });
 }).run(function($state) {
   $state.go('MimeType'); //make a transition to mime_types state when app starts

@@ -4,7 +4,6 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
   $scope.username = $sessionStorage.username;
   $scope.password = $sessionStorage.password;
   $scope.login = function() {
-    console.log("Login!")
     $http.defaults.headers.common.Authorization = 'Basic ' + 
           $base64.encode($scope.username + ':' + $scope.password);
     $sessionStorage.username = $scope.username;
@@ -37,7 +36,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
   $scope.form_errors = {};
 
   $scope.formatObject = function(object) {
-    object["__display_attr__"] = object[$scope.crud_model.prototype.display_attr];
+    object["__display_attr__"] = object[object.__proto__.display_attr];
     return object;
   };
 
@@ -62,7 +61,6 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
       $state.go($scope.model_name);
     };
     var fail = function(e) {
-      console.log(e);
       if(e.status == 401) {
         $scope.addError("Unauthorized, you need to login to modify stuff...", 5000);
       }
@@ -80,6 +78,32 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
       object.$save(success,fail);
     }
   }
+
+  $scope.isRelationshipKey = function(key) {
+    return /_id$/.test(key);
+  }
+  
+  $scope.relationshipURL = function(action, object) {
+    if(!object) return;
+    return $state.href(action+object.model_name, {id:object.id});
+  }
+
+  $scope.load_relations = function() {
+    $scope.relations = {};
+    for (var key in $scope.crud_model.prototype.relations) {
+      (function() {
+        var scoped_key = key;
+        relation_class = $scope.crud_model.prototype.relations[key]
+        relation_class.get({ id: $scope.object[key] }).$promise.then(function(o){ 
+          $scope.relations[scoped_key] = $scope.formatObject(o);
+        });
+      })();
+    }
+  };
+  
+
+  $scope.crud_loaded = $scope.crud_loaded || function(){}
+
 }).controller('CRUDListController', function($scope, $controller, $popup, $flash, $state, $location, $anchorScroll){
   $controller('CRUDController', {$scope: $scope});
 
@@ -88,6 +112,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     for(var k in $scope.objects) {
       $scope.objects[k] = $scope.formatObject($scope.objects[k]);
     }
+    $scope.crud_loaded();
   });
 
   $scope.deleteObject = function(o) {
@@ -103,7 +128,11 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 
 }).controller('CRUDViewController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
-  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){$scope.object = $scope.formatObject(object)});
+  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){
+    $scope.object = $scope.formatObject(object); 
+    $scope.load_relations();
+    $scope.crud_loaded();
+  });
 
 }).controller('CRUDCreateController', function($scope, $controller) {
   $controller('CRUDController', {$scope: $scope});
@@ -154,5 +183,19 @@ angular.module('afnAdminApp.controllers', [])
   $controller('CRUDCreateController', {$scope: $scope});
 }).controller('SyntaxEditController', function($scope, $controller, $stateParams, Syntax) {
   $scope.crud_model = Syntax;
+  $controller('CRUDEditController', {$scope: $scope});
+})
+// Extensions
+.controller('ExtensionListController', function($scope, $controller, Extension) {
+  $scope.crud_model = Extension;
+  $controller('CRUDListController', {$scope: $scope});
+}).controller('ExtensionViewController', function($scope, $controller, $stateParams, Extension, $state) {
+  $scope.crud_model = Extension;
+  $controller('CRUDViewController', {$scope: $scope});
+}).controller('ExtensionCreateController', function($scope, $controller, $state, $stateParams, Extension) {
+  $scope.crud_model = Extension;
+  $controller('CRUDCreateController', {$scope: $scope});
+}).controller('ExtensionEditController', function($scope, $controller, $stateParams, Extension) {
+  $scope.crud_model = Extension;
   $controller('CRUDEditController', {$scope: $scope});
 });
