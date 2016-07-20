@@ -53,6 +53,10 @@ a.nodecoration{
   transition:1s linear all;
 }
 
+.index-row {
+  margin-bottom:5px;
+}
+
 .animated-alerts.ng-enter, .animated-alerts.ng-leave.ng-leave-active {
   max-height:0;
   opacity:0;
