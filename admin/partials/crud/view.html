@@ -9,7 +9,11 @@
   </tr>
   <tr ng-repeat="(key, value) in object" ng-if="isRelationshipKey(key)">
     <td>{{object.__relations__[key].model_name}}</td>
-    <td><a href="{{relationshipURL('view', object.__relations__[key])}}">{{object.__relations__[key].__display_attr__}}</a></td>
+    <td>
+      <a href="{{relationshipURL('view', object.__relations__[key])}}">{{object.__relations__[key].__display_attr__}}</a>
+      <span class="error" ng-if="value != '' && !object.__relations__[key].__display_attr__">Not found</span>
+      <span ng-if="value == ''">None</span>
+    </td>
   </tr>
 </table>
 <div>
