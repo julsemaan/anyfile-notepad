@@ -88,11 +88,6 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
     return $state.href(action+object.model_name, {id:object.id});
   }
 
-  $scope.load_relations = function() {
-    $scope.relations = {};
-  };
-  
-
   $scope.crud_loaded = $scope.crud_loaded || function(){}
 
 }).controller('CRUDListController', function($scope, $controller, $popup, $flash, $state, $location, $anchorScroll){
@@ -113,10 +108,7 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
 
 }).controller('CRUDViewController', function($scope, $controller, $stateParams){
   $controller('CRUDController', {$scope: $scope});
-  $scope.crud_model.get({ id: $stateParams.id }).$promise.then(function(object){
-    $scope.object = object;
-    $scope.load_relations();
-  });
+  $scope.object = $scope.crud_model.get({ id: $stateParams.id });
 
 }).controller('CRUDCreateController', function($scope, $controller) {
   $controller('CRUDController', {$scope: $scope});
