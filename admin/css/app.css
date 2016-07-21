@@ -1,3 +1,11 @@
+.navbar-brand {
+  padding:0;
+}
+
+.navbar-brand img {
+  height:100%;
+}
+
 #flash .alert {
   text-align:center;
 }
