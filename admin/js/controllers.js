@@ -65,15 +65,20 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
         $scope.addError("Unauthorized, you need to login to modify stuff...", 5000);
       }
       else if(e.status == 422) {
-        $scope.addError(e.data.message);
+        if(e.data.message) $scope.addError(e.data.message);
 
         var issues = e.data.issues;
         for(var field in issues) {
           $scope.addError("Field <i>"+field+"</i> has errors : "+issues[field].map(function(o){return '<b>'+o+'</b>'}).join(','));
         }
       }
+      else {
+        if(e.data.message) $scope.addError(e.data.message);
+      }
     };
     if(method == "update") {
+      delete object['__display_attr__'];
+      delete object['__relations__'];
       object.$update(success,fail);
     }
     else if(method == "create") {

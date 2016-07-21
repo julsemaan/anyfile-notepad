@@ -52,7 +52,7 @@ angular.module('afnAdminApp.services', [])
       reply.$promise = defer.promise;
       return reply;
     }
-    
+
     res.shallowClearAndCopy = function(src, dst) {
       dst = dst || {};
 
