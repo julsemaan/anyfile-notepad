@@ -65,6 +65,8 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
         $scope.addError("Unauthorized, you need to login to modify stuff...", 5000);
       }
       else if(e.status == 422) {
+        $scope.addError(e.data.message);
+
         var issues = e.data.issues;
         for(var field in issues) {
           $scope.addError("Field <i>"+field+"</i> has errors : "+issues[field].map(function(o){return '<b>'+o+'</b>'}).join(','));
