@@ -88,7 +88,10 @@ func main() {
 	// Create a REST API resource index
 	index := resource.NewIndex()
 
-	directory := "/tmp/tests-afn-api"
+	directory := os.Getenv("AFN_REST_DATA_DIR")
+	if directory == "" {
+		directory = "."
+	}
 
 	// Add a resource on /users[/:user_id]
 	index.Bind("mime_types", mime_type, filestore.NewHandler(directory, "mime_types", []string{"type_name"}), resource.Conf{
