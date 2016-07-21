@@ -90,7 +90,7 @@ func main() {
 
 	directory := os.Getenv("AFN_REST_DATA_DIR")
 	if directory == "" {
-		directory = "."
+		directory = "./db"
 	}
 
 	// Add a resource on /users[/:user_id]
