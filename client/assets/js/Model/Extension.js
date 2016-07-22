@@ -7,6 +7,7 @@ Extension.prototype = new Model()
 Extension.rest_attributes = function(){
   return {
     model_name: "Extension",
-    url_name: "extensions"
+    url_name: "extensions",
+    base_url: "https://api.anyfile-notepad.semaan.ca",
   }
 }

@@ -29,9 +29,9 @@ function EditorController(view, options){
   this.flash = options["flash"]
 
   this.models = {
-    'extensions':new RestAdapter({model:Extension, suffix:'.json'}),
-    'mime_types':new RestAdapter({model:MimeType, suffix:'.json'}),
-    'syntaxes':new RestAdapter({model:Syntax, suffix:'.json'}),
+    'extensions':new RestAdapter({model:Extension}),
+    'mime_types':new RestAdapter({model:MimeType}),
+    'syntaxes':new RestAdapter({model:Syntax}),
   }
 
   this.auto_save_interval;
