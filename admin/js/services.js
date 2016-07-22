@@ -75,7 +75,7 @@ angular.module('afnAdminApp.services', [])
   return res;
 })
 .factory('MimeType', function($resource, $CRUDResource) {
-  var res = $resource('http://devbox.home.semaan.ca:8080/mime_types/:id', {id: '@id'}, {
+  var res = $resource(AFN_VARS['api_uri']+'/mime_types/:id', {id: '@id'}, {
     update: {
       method: 'PUT'
     }
@@ -93,7 +93,7 @@ angular.module('afnAdminApp.services', [])
 
   return res;
 }).factory('Syntax', function($resource, $CRUDResource) {
-  var res = $resource('http://devbox.home.semaan.ca:8080/syntaxes/:id', {id: '@id'}, {
+  var res = $resource(AFN_VARS['api_uri']+'/syntaxes/:id', {id: '@id'}, {
     update: {
       method: 'PUT'
     }
@@ -109,7 +109,7 @@ angular.module('afnAdminApp.services', [])
   res.prototype.display_attr = "display_name";
   return res;
 }).factory('Extension', function($resource, $CRUDResource, Syntax, MimeType){
-  var res = $resource('http://devbox.home.semaan.ca:8080/extensions/:id', {id: '@id'}, {
+  var res = $resource(AFN_VARS['api_uri']+'/extensions/:id', {id: '@id'}, {
     update: {
       method: 'PUT'
     }
