@@ -79,7 +79,7 @@
   var context = {
     locales : locales,
     grouped_syntaxes : {}, //<%= JSON.generate(build_syntax_menus).html_safe %>,
-    themes : [], //<%= JSON.generate(themes_list.map{|theme| {theme: theme, theme_display_name: theme_display_name(theme), theme_name: theme_name(theme)}}).html_safe %>,
+    themes : [% THEMES_JSON %],
   };
   for(var i=0; i<3; i++){
     context.themes.unshift("dummy");

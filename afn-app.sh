@@ -80,7 +80,7 @@ find client/ -name '_*.html' | while read file ; do add_asset "$file" $COMPILED_
 # Build single page app
 echo "Building app"
 cp client/editor-layout.tt $COMPILED_APP/editor-layout.tt
-perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', 'client/']}) ; \$tt->process('editor-layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID'}, '$COMPILED_APP/app.html') || die \$tt->error()"
+perl client/render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID
 
 # Adding public assets
 cp -frp client/public/* $COMPILED_APP/
