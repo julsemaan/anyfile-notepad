@@ -170,6 +170,7 @@ function start_server() {
   python -m SimpleHTTPServer 2>&1 &
   WEB_PID=$!
   echo $WEB_PID > $WEB_PID_FILE
+  cd -
 }
 
 function watch_dir() {
