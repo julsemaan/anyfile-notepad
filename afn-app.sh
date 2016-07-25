@@ -14,7 +14,7 @@ function add_asset() {
 export -f add_asset
 
 RUNNING_DIR=$(pwd)
-COMPILED_APP="tmp/app-compiled"
+COMPILED_APP="$RUNNING_DIR/tmp/app-compiled"
 
 rm -fr $COMPILED_APP/*
 
@@ -33,7 +33,7 @@ APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
 function should_reset() {
   if [ -e $SHOULD_RESET_FILE ]; then
-    return `cat tmp/should_reset`
+    return `cat $SHOULD_RESET_FILE`
   else
     return 0
   fi
