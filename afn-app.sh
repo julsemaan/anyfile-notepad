@@ -145,11 +145,11 @@ function public_assets() {
 function json_resources() {
   # Adding JSON resources (from prod for now...)
   echo "Fetching extensions.json"
-  curl https://anyfile-notepad.semaan.ca/extensions.json --fail --silent --show-error > $COMPILED_APP/extensions.json
+  curl https://api.anyfile-notepad.semaan.ca/extensions --fail --silent --show-error > $COMPILED_APP/extensions.json
   echo "Fetching syntaxes.json"
-  curl https://anyfile-notepad.semaan.ca/syntaxes.json --fail --silent --show-error > $COMPILED_APP/syntaxes.json
+  curl https://api.anyfile-notepad.semaan.ca/syntaxes --fail --silent --show-error > $COMPILED_APP/syntaxes.json
   echo "Fetching mime_types.json"
-  curl https://anyfile-notepad.semaan.ca/mime_types.json --fail --silent --show-error > $COMPILED_APP/mime_types.json
+  curl https://api.anyfile-notepad.semaan.ca/mime_types --fail --silent --show-error > $COMPILED_APP/mime_types.json
 }
 
 pages_css
