@@ -13,6 +13,7 @@ function add_asset() {
 }
 export -f add_asset
 
+RUNNING_DIR=$(pwd)
 COMPILED_APP="tmp/app-compiled"
 
 rm -fr $COMPILED_APP/*
@@ -20,8 +21,8 @@ rm -fr $COMPILED_APP/*
 mkdir -p $COMPILED_APP
 mkdir -p $COMPILED_APP/assets
 
-SHOULD_RESET_FILE="tmp/should_reset"
-WEB_PID_FILE="tmp/web.pid"
+SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
+WEB_PID_FILE="$RUNNING_DIR/tmp/web.pid"
 
 APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
 APP_VERSION=`git tag | tail -1`
@@ -48,7 +49,7 @@ function pages_css() {
   fi
 
   cp bower_components/bootstrap/dist/css/bootstrap.min.css client/assets/css/libs/bootstrap.min.css.scss
-  #sass -I client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+  sass -I client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
 }
 
 function pages() {
@@ -86,7 +87,7 @@ function application_css() {
   fi
 
   add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
-  #sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
+  sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 }
 
 function application_js() {
@@ -165,6 +166,7 @@ if ! [ "$1" == "webdev" ]; then
 fi
 
 function start_server() {
+  cd $COMPILED_APP
   python -m SimpleHTTPServer 2>&1 &
   WEB_PID=$!
   echo $WEB_PID > $WEB_PID_FILE
@@ -175,7 +177,7 @@ function watch_dir() {
   ACTION=$2
   OPTIONS=$3
   while true; do
-    inotifywait $OPTIONS -r -e create,modify,delete $DIR
+    inotifywait $OPTIONS -r -e create,modify,delete $RUNNING_DIR/$DIR
     kill $(cat $WEB_PID_FILE)
     for action in $2; do
       eval $action
@@ -186,12 +188,12 @@ function watch_dir() {
 
 function exit_cleanup() {
   echo "Exiting..."
-  kill `cat tmp/web.pid`
+  kill $(cat $WEB_PID_FILE)
   rm $SHOULD_RESET_FILE
 }
 
-start_server
 trap exit_cleanup EXIT
+start_server
 
 watch_dir client/assets/css "pages_css application_css" &
 watch_dir client/assets/js "application_js" &
