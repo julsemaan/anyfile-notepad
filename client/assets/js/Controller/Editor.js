@@ -460,7 +460,7 @@ EditorController.prototype.select_theme = function(name){
 
   this.theme_pref.refreshAndSet(name, self, self.show_reauth)
 
-  this.editor_view.setTheme(this.theme_pref.getValue())
+  this.editor_view.setTheme(name)
   var check = this.$.find('#theme_check').detach()
   $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
   
