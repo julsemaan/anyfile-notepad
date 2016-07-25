@@ -134,7 +134,7 @@ function app() {
   fi
 
   cp client/editor-layout.tt $COMPILED_APP/editor-layout.tt
-  perl client/render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID
+  perl client/render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
 }
 
 function public_assets() {
@@ -156,10 +156,10 @@ pages_css
 pages
 application_css
 application_js
+json_resources
 editor_part
 app
 public_assets
-json_resources
 
 if ! [ "$1" == "webdev" ]; then
   exit

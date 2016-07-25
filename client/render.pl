@@ -6,13 +6,16 @@ use warnings;
 use Template;
 use Getopt::Long;
 use JSON;
+use File::Slurp qw(read_file);
+use Tie::IxHash;
 
-my ($COMPILED_APP_DIR, $APP_VERSION_ID, $APP_VERSION, $APP_COMMIT_ID);
+my ($COMPILED_APP_DIR, $APP_VERSION_ID, $APP_VERSION, $APP_COMMIT_ID, $SYNTAX_DB);
 GetOptions(
     "COMPILED_APP_DIR=s" => \$COMPILED_APP_DIR,
     "APP_VERSION_ID=s" => \$APP_VERSION_ID, 
     "APP_VERSION=s" => \$APP_VERSION, 
     "APP_COMMIT_ID=s" => \$APP_COMMIT_ID,
+    "SYNTAX_DB=s" => \$SYNTAX_DB,
 ) or die("Error in command line arguments\n");;
 
 my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, 'client/']}); 
@@ -31,11 +34,44 @@ while(readdir $ace_dir) {
     }
 }
 
+tie my %SYNTAXES, 'Tie::IxHash';
+
+my $syntaxes_db = decode_json(read_file($SYNTAX_DB));
+
+my @GROUPS = (
+    ['A', 'B'],
+    ['C'],
+    ['D', 'E', 'F', 'G'],
+    ['H', 'I'],
+    ['J', 'K'],
+    ['L'],
+    ['M', 'N', 'O'],
+    ['P', 'Q', 'R'],
+    ['S'],
+    ['T'],
+    ['U', 'V', 'W', 'X', 'Y', 'Z']
+);
+
+foreach my $group (@GROUPS) {
+    my @tmp;
+    my $letters = '';
+    foreach my $letter (@$group) {
+        $letters = $letters . $letter . ' ';
+        foreach my $syntax (@$syntaxes_db) {
+            if(lc(substr($syntax->{display_name}, 0, 1)) eq lc($letter)){
+                push @tmp, $syntax;
+            }
+        }
+    }
+    $SYNTAXES{$letters} = \@tmp;
+}
+
 $tt->process('editor-layout.tt', {
     APP_VERSION_ID => $APP_VERSION_ID, 
     APP_VERSION => $APP_VERSION, 
     APP_COMMIT_ID => $APP_COMMIT_ID,
     THEMES_JSON => encode_json(\@THEMES),
+    SYNTAXES_JSON => encode_json(\%SYNTAXES),
 }, $COMPILED_APP_DIR.'/app.html') || die $tt->error();
 
 

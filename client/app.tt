@@ -78,7 +78,7 @@
   var partials = $('.template-partial');
   var context = {
     locales : locales,
-    grouped_syntaxes : {}, //<%= JSON.generate(build_syntax_menus).html_safe %>,
+    grouped_syntaxes : [% SYNTAXES_JSON %],
     themes : [% THEMES_JSON %],
   };
   for(var i=0; i<3; i++){
@@ -225,3 +225,7 @@ function user_hover_out(){
 }
 
 </script>
+
+[% # vim: syntax=html 
+%]
+
