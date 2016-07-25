@@ -63,7 +63,7 @@ function pages() {
 
   mkdir $COMPILED_APP/site
 
-  for page in home faq help_translate; do
+  for page in home faq news help_translate; do
     echo "-Building page $page"
 
     if [ "$page" == "home" ]; then
