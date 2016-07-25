@@ -1,0 +1,4 @@
+var AFN_VARS = {
+  api_uri:"http://api.anyfile-notepad.semaan.ca"
+};
+
