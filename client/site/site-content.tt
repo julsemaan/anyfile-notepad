@@ -1,7 +1,7 @@
 <script>
   $(function(){
       var m = new MDRenderer({
-        url : getQueryParam("test") ? 'http://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].test.markdown' : 'http://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].markdown', 
+        url : getQueryParam("test") ? 'https://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].test.markdown' : 'https://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].markdown', 
         columns : [% COLUMNS %],
         destination : '.home_content',
       });
