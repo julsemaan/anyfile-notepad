@@ -14,8 +14,15 @@ function add_asset() {
 export -f add_asset
 
 RUNNING_DIR=$(pwd)
-COMPILED_APP="$RUNNING_DIR/tmp/app-compiled"
 
+if [ -n $AFN_BUILD_DIR ]; then
+  echo "Building app into $AFN_BUILD_DIR"
+  COMPILED_APP="$AFN_BUILD_DIR"
+else
+  COMPILED_APP="$RUNNING_DIR/tmp/app-compiled"
+fi
+
+mkdir -p $COMPILED_APP
 rm -fr $COMPILED_APP/*
 
 mkdir -p $COMPILED_APP
