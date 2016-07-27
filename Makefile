@@ -1,13 +1,13 @@
-client-dist:
+client-dist.tgz:
 	bash afn-app.sh
-	mkdir client-dist
-	cp -fr tmp/app-compiled/* client-dist/
+	mkdir client/dist
+	cp -fr tmp/app-compiled/* client/dist/
 	echo "Press any key to launch archive build." && read dummy
-	tar cvfz client-dist.tgz client-dist/
+	tar -C client/ -cvzf client-dist.tgz dist/
 
-clean-client-dist:
+clean:
 	rm -fr tmp/app-compiled/*
-	rm -fr client-dist
+	rm -fr client/dist
 	rm -f client-dist.tgz
 
 .PHONY : extract-i18n-strings
