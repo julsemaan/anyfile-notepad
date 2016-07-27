@@ -8,6 +8,7 @@ Syntax.rest_attributes = function(){
   return {
     model_name: "Syntax",
     url_name: "syntaxes",
+    suffix: ".json",
     base_url: AFN_VARS["api_uri"],
   }
 }
