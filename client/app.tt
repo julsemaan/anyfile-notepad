@@ -55,17 +55,17 @@
     "tr"    : "Turkish",
   }
   var locales_definition = {
-    "nl"    : <%= render 'locales/nl.json' %>,
-    "en"    : <%= render 'locales/en.json' %>,
-    "fr"    : <%= render 'locales/fr.json' %>,
-    "de"    : <%= render 'locales/de.json' %>,
-    "it"    : <%= render 'locales/it.json' %>,
-    "es"    : <%= render 'locales/es.json' %>,
-    "pt-BR" : <%= render 'locales/pt_BR.json' %>,
-    "ro"    : <%= render 'locales/ro.json' %>,
-    "pl"    : <%= render 'locales/pl.json' %>,
-    "tr"    : <%= render 'locales/tr.json' %>,
-    "ja"    : <%= render 'locales/ja.json' %>,
+    "nl"    : [% INCLUDE 'locales/_nl.json' %],
+    "en"    : [% INCLUDE 'locales/_en.json' %],
+    "fr"    : [% INCLUDE 'locales/_fr.json' %],
+    "de"    : [% INCLUDE 'locales/_de.json' %],
+    "it"    : [% INCLUDE 'locales/_it.json' %],
+    "es"    : [% INCLUDE 'locales/_es.json' %],
+    "pt-BR" : [% INCLUDE 'locales/_pt_BR.json' %],
+    "ro"    : [% INCLUDE 'locales/_ro.json' %],
+    "pl"    : [% INCLUDE 'locales/_pl.json' %],
+    "tr"    : [% INCLUDE 'locales/_tr.json' %],
+    "ja"    : [% INCLUDE 'locales/_ja.json' %],
   }
   String.toLocaleString(locales_definition);
   var desired_locale = getCookie("locale");
@@ -172,13 +172,8 @@
           editor_controller.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
         }
         else {
-          editor_controller.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version of version 4!</a>");
+          editor_controller.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
         }
-        
-
-        editor_controller.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the app ?<br/>Click here to report it on the community</a>");
-
-        editor_controller.flash.sticky_success("<a target='_blank' href='/help_translate.html'>Interested in translating the app in your language ? Click here</a>");
         
         if(!String.locale.match('^en')){
           editor_controller.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
