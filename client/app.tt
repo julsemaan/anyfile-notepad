@@ -47,6 +47,7 @@
     "fr"    : "French",
     "de"    : "German",
     "it"    : "Italian",
+    "ja"    : "Japanese",
     "pl"    : "Polish",
     "pt-BR" : "Portuguese (BR)",
     "es"    : "Spanish",
@@ -54,16 +55,17 @@
     "tr"    : "Turkish",
   }
   var locales_definition = {
-    "nl"    : [% INCLUDE 'locales/_nl.json' %],
-    "en"    : [% INCLUDE 'locales/_en.json' %],
-    "fr"    : [% INCLUDE 'locales/_fr.json' %],
-    "de"    : [% INCLUDE 'locales/_de.json' %],
-    "it"    : [% INCLUDE 'locales/_it.json' %],
-    "es"    : [% INCLUDE 'locales/_es.json' %],
-    "pt-BR" : [% INCLUDE 'locales/_pt_BR.json' %],
-    "ro"    : [% INCLUDE 'locales/_ro.json' %],
-    "pl"    : [% INCLUDE 'locales/_pl.json' %],
-    "tr"    : [% INCLUDE 'locales/_tr.json' %],
+    "nl"    : <%= render 'locales/nl.json' %>,
+    "en"    : <%= render 'locales/en.json' %>,
+    "fr"    : <%= render 'locales/fr.json' %>,
+    "de"    : <%= render 'locales/de.json' %>,
+    "it"    : <%= render 'locales/it.json' %>,
+    "es"    : <%= render 'locales/es.json' %>,
+    "pt-BR" : <%= render 'locales/pt_BR.json' %>,
+    "ro"    : <%= render 'locales/ro.json' %>,
+    "pl"    : <%= render 'locales/pl.json' %>,
+    "tr"    : <%= render 'locales/tr.json' %>,
+    "ja"    : <%= render 'locales/ja.json' %>,
   }
   String.toLocaleString(locales_definition);
   var desired_locale = getCookie("locale");
