@@ -15,7 +15,7 @@ export -f add_asset
 
 RUNNING_DIR=$(pwd)
 
-if [ -n $AFN_BUILD_DIR ]; then
+if ! [ -z $AFN_BUILD_DIR ]; then
   echo "Building app into $AFN_BUILD_DIR"
   COMPILED_APP="$AFN_BUILD_DIR"
 else
@@ -23,6 +23,8 @@ else
 fi
 
 mkdir -p $COMPILED_APP
+echo "Press Enter to execute rm -fr $COMPILED_APP/*"
+read
 rm -fr $COMPILED_APP/*
 
 mkdir -p $COMPILED_APP
