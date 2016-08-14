@@ -180,7 +180,7 @@
           editor_controller.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
         }
 
-        editor_controller.sticky_success("Version 5.0 has just been released. <a target='_blank' href='http://bit.ly/afn-community'>Report any bug on the community by clicking here.</a>");
+        editor_controller.flash.sticky_success("Version 5.0 has just been released. <a target='_blank' href='http://bit.ly/afn-community'>Report any bug on the community by clicking here.</a>");
 
         new EditorRouter(editor_controller)
         top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
