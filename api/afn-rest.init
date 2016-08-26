@@ -15,6 +15,9 @@ prog="afn-rest-64"
 
 lockfile=/var/lock/subsys/$prog
 
+export AFN_REST_USERNAME=change
+export AFN_REST_PASSWORD=me
+
 start() {
     [ -x $exec ] || exit 5
     echo -n $"Starting $prog: "
@@ -90,4 +93,3 @@ case "$1" in
         exit 2
 esac
 exit $?
-
