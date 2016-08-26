@@ -8,6 +8,7 @@ If you want to tackle a large feature, I would first suggest you get in touch wi
 
 * Get a Github account
 * Fork this repo
+* Figure out on your own all the dependencies and stuff required to get going (instructions incomming soon!)
 * Write code that works
 * Propose a Pull request
 * Wait and let me unleash the full power of reviewing
