@@ -9,3 +9,6 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 - Second, an API (api.anyfile-notepad.semaan.ca) to serve the data that backs the application (syntaxes, extensions and mime types configuration)
 - Third, a simple administrative interface to manage the three resources above (admin.anyfile-notepad.semaan.ca)
 
+# Licence
+
+GPL
