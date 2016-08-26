@@ -88,9 +88,11 @@
   }
 
   Handlebars.registerHelper('i18n', i18n);
+
   Handlebars.registerHelper('isNull', function(val){
     return val == null;
   });
+
   Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
       lvalue = parseFloat(lvalue);
       rvalue = parseFloat(rvalue);
@@ -103,12 +105,19 @@
           "%": lvalue % rvalue
       }[operator];
   });
+
   Handlebars.registerHelper("eq", function(param1, param2) {return param1 == param2;});
+  Handlebars.registerHelper("ne", function(param1, param2) {return param1 != param2;});
   Handlebars.registerHelper("ge", function(param1, param2) {return param1 >= param2});
+  Handlebars.registerHelper("gt", function(param1, param2) {return param1 > param2});
+  Handlebars.registerHelper("le", function(param1, param2) {return param1 <= param2});
+  Handlebars.registerHelper("lt", function(param1, param2) {return param1 < param2;});
+
   partials.each(function() {
     var $source = $(this);
     Handlebars.registerPartial($source.data('partial-name'), $source.html());
   });
+
   templates.each( function() {
     var $source = $(this);
     var source = $source.html();
