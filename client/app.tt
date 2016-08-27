@@ -5,7 +5,6 @@
   <script class="template" type="text/x-handlebars">
     {{> modal id="app_restart_modal" title="Restarting" message="The app is being restarted, please wait." with_bar=true }}
     {{> modal id="file_load_modal" title="Your file is being loaded" message="Depending on the file size, this can be long." with_bar=true }}
-    {{> modal id="clearance_wait_modal" title="Waiting for your preferences to be saved." message="This should take a few seconds. You can skip this step if it is too long." with_bar=true button_id="skip_clearance" button_text="Skip" }}
     {{> modal id="auth_failed_modal" title="The authentication failed with Google" message="You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests." button_id="restart_app" button_text="Restart app" }}
     {{> modal id="error_modal" title="An unexpected error occured with the provider server" message="The app flow will still continue but unexpected behavior may occur. When in doubt restart the app." dismiss=true }}
     {{> modal id="auth_modal" title="You need to authorize this app to access your Google Drive" message="Without this the app is useless to you." button_id="start_g_oauth" button_text="Authorize!" }}

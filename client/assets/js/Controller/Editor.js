@@ -5,8 +5,6 @@ function EditorController(view, options){
   this.file_id = options["file_id"];
   
   this.ajax_defered_waiting = {}
-  this.skip_clearance = false;
-  this.clearance_interval = null;
   this.safe_to_quit = true;
   
   this.content = null;
@@ -44,8 +42,6 @@ function EditorController(view, options){
 EditorController.prototype.initialize_html = function(){
   var self = this;
 
-  this.$.find('#skip_clearance').click(function(){self.skip_clearance = true})
-
   self.$editor.css('top', self.$.find('#menu').height() + "px");
   $(window).resize(function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
@@ -74,10 +70,6 @@ EditorController.prototype.initialize_html = function(){
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
-    }
-    if(!self.is_ready_to_submit() && !self.skip_clearance){
-      self.clearance_interval = setInterval(function(){self.wait_for_clearance(function(){location.reload()})}, 1000)
-        return i18n("Some of your preferences are still being saved. Press 'Don't reload' to wait for them to be saved.");
     }
   });
 
@@ -248,7 +240,6 @@ EditorController.prototype.post_file_load = function(){
 
 EditorController.prototype.reset_options = function(){
   var self = this;
-  this.skip_clearance = false;
   this.allow_saving();
 }
 
@@ -344,17 +335,6 @@ EditorController.prototype.is_ready_to_submit = function(){
     }
   }
   return true
-}
-
-EditorController.prototype.wait_for_clearance = function(){
-  var self = this;
-  if(this.is_ready_to_submit() || this.skip_clearance){
-    clearInterval(this.clearance_interval)
-    this.$.find('#clearance_wait_modal').modal('hide')
-  }
-  else{
-    this.$.find('#clearance_wait_modal').modal('show')
-  }
 }
 
 EditorController.prototype.change_font_size = function(font_size){
