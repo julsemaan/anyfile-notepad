@@ -9,7 +9,7 @@ strings = process.read()
 process.close()
 
 if len(sys.argv) > 1:
-    locale_file = open("app/views/locales/_"+sys.argv[1]+".json")
+    locale_file = open("client/locales/_"+sys.argv[1]+".json")
     locale_json = locale_file.read()
     locale = json.loads(locale_json)
 else:

@@ -11,9 +11,9 @@ clean:
 .PHONY : extract-i18n-strings
 
 extract-i18n-strings:
-	grep -roP 'i18n.".*?"' app/ | grep -oP '".*"' | sort -h | uniq
-	grep -r 'shared/modal' app/ | grep -oP ':title\s*=>\s*".*?"' | grep -oP '".*"'
-	grep -r 'shared/modal' app/ | grep -oP ':message\s*=>\s*".*?"' | grep -oP '".*"'
+	grep -roP 'i18n.".*?"' client/ | grep -oP '".*"' | sort -h | uniq
+	grep -r 'modal' client/ | grep -oP 'title\s*=\s*".*?"' | grep -oP '".*"'
+	grep -r 'modal' client/ | grep -oP 'message\s*=\s*".*?"' | grep -oP '".*"'
 
 .PHONY : deploy
 
