@@ -266,7 +266,7 @@ EditorController.prototype.save = function(){
   var length = this.editor_view.getValue().length
   self.editor_view.focus()
   if(this.file.title == ""){
-      this.flash.error(i18n("File title can't be empty"), 5);
+      this.flash.error(i18n("Filename can't be empty"), 5);
       self.allow_saving()
       return false
   }
