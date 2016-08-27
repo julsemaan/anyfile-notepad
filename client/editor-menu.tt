@@ -79,6 +79,7 @@
       <li>
         <a href="javascript:void(0)" class="menu_item" >{{ i18n "Options" }}</a>
         <div class="menu_content" data-show-callback="editor_controller.options_show_callback()">
+          <!-- OPTIONS CONTENT/* -->
           <div class="options">
 
             <div class="row">
@@ -199,9 +200,21 @@
 
             </div>
 
-          </div><!-- */OPTIONS CONTENT -->
+          </div> <!-- */OPTIONS CONTENT -->
         </div>
-      </li><!-- */OPTIONS -->
+      </li> <!-- */OPTIONS -->
+
+      <li>
+        <a href="javascript:void(0)" class="menu_item" >{{ i18n "Help" }}</a>
+        <div class="menu_content">
+          <ul class="menu_list">
+            <li><a href="javascript:void(0);" onclick="javascript:new Popup({title : 'Keyboard shortcuts', hb_partial : '#keyboard-shortcuts'});">{{ i18n "Keyboard shortcuts" }}</a></li>
+
+            <li><a href="/faq" >{{ i18n "Frequently asked questions (FAQ)" }}</a></li>
+          </ul>
+        </div>
+
+      </li>
 
     </ul>
     <form id="file_title_form" class="navbar-form navbar-left" onsubmit="javascript:editor_controller.save();return false;">
@@ -213,3 +226,6 @@
   <div id="expanded_menu">
   </div>
 </div>
+
+[% # vim: syntax=html 
+%]

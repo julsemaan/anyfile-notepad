@@ -6,7 +6,16 @@ Popup.prototype.init = function(args) {
   if(args) {
     self.callback = self.callback || function(){};
     self.confirm = self.confirm || false;
-    if(!self.message) throw "No message specified for popup";
+    if(!self.message && !self.hb_partial) throw "No message or partial specified for popup";
+
+    if(self.hb_partial) {
+      var $hb_source = $(self.hb_partial);
+      var source = $hb_source.html();
+      console.log($hb_source.html());
+      var template = Handlebars.compile(source);
+      self.content = template(self);
+      console.log(self)
+    }
 
     self.popup_id = uniqueId();
     self.cancel_id = uniqueId();
