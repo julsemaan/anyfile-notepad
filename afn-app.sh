@@ -41,10 +41,11 @@ APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
 function should_reset() {
+  #### NOTE - this uses process returns code so 0 means it should reset while 1 means it doesn't so it fits in the logic of a bash if
   if [ -e $SHOULD_RESET_FILE ]; then
-    return `cat $SHOULD_RESET_FILE`
-  else
     return 0
+  else
+    return 1
   fi
 }
 
@@ -53,6 +54,7 @@ function pages_css() {
   echo "Building pages.css"
   
   if should_reset; then
+    echo "Resetting pages.css"
     rm -f client/assets/css/libs/bootstrap.min.css.scss
     rm -f $COMPILED_APP/assets/pages-*.css
   fi
@@ -66,6 +68,7 @@ function pages() {
   echo "Building site pages"
 
   if should_reset; then
+    echo "Resetting pages"
     rm -fr $COMPILED_APP/site
     rm -f $COMPILED_APP/index.html
   fi
@@ -92,6 +95,7 @@ function application_css() {
   echo "Building application.css"
 
   if should_reset; then
+    echo "Resetting application.css"
     rm -f $COMPILED_APP/assets/application-*.css
   fi
 
@@ -104,6 +108,7 @@ function application_js() {
   echo "Building application.js"
 
   if should_reset; then
+    echo "Resetting application.js"
     rm -f $COMPILED_APP/assets/application-*.js
   fi
 
@@ -128,6 +133,7 @@ function editor_part() {
   echo "Building app.partials"
   
   if should_reset; then
+    echo "Resetting app.partials"
     rm -f $COMPILED_APP/app.partials
   fi
 
@@ -139,6 +145,7 @@ function app() {
   echo "Building app"
 
   if should_reset; then
+    echo "Resetting app"
     rm -f $COMPILED_APP/app.html
   fi
 
@@ -199,7 +206,7 @@ function watch_dir() {
 function exit_cleanup() {
   echo "Exiting..."
   kill $(cat $WEB_PID_FILE)
-  rm $SHOULD_RESET_FILE
+  rm -f $SHOULD_RESET_FILE
 }
 
 trap exit_cleanup EXIT
