@@ -385,3 +385,14 @@ ul.favorites {
   }
 }
 
+div#current_user{
+  position:fixed;
+  text-align:right;
+  font-style:italic;
+  right:10px;
+  top:5px;
+  z-index:999;
+  padding:5px;
+}
+
+
