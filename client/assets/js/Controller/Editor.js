@@ -93,12 +93,16 @@ EditorController.prototype.initialize_html = function(){
 
   this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
 
-  $(window).on('keydown.search', function(event) {
-    if (!( String.fromCharCode(event.which).toLowerCase() == 'f' && event.shiftKey && event.ctrlKey) && !(event.which == 19)) return true;
-    self.open_search()
-    event.preventDefault();
-    return false;
-  });  
+  $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
+    if(event.ctrlKey && event.which != 17) {
+      switch(String.fromCharCode(event.which).toLowerCase()) {
+        case 'p':
+          self.print();
+      }
+      event.preventDefault();
+      return false;
+    }
+  });
 
   this.initial_theme = "ace/theme/chrome"
   if(this.theme_pref.getValue()){
