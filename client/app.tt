@@ -3,6 +3,7 @@
   <div id="loading_overlay"></div>
 
   <script class="template" type="text/x-handlebars">
+    {{> modal id="app_load_modal" title="Starting up application" message="Hang tight..." with_bar=true }}
     {{> modal id="app_restart_modal" title="Restarting" message="The app is being restarted, please wait." with_bar=true }}
     {{> modal id="file_load_modal" title="Your file is being loaded" message="Depending on the file size, this can be long." with_bar=true }}
     {{> modal id="auth_failed_modal" title="The authentication failed with Google" message="You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests." button_id="restart_app" button_text="Restart app" }}
