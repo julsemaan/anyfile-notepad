@@ -22,14 +22,6 @@ else
   COMPILED_APP="$RUNNING_DIR/tmp/app-compiled"
 fi
 
-mkdir -p $COMPILED_APP
-echo "Press Enter to execute rm -fr $COMPILED_APP/*"
-read
-rm -fr $COMPILED_APP/*
-
-mkdir -p $COMPILED_APP
-mkdir -p $COMPILED_APP/assets
-
 SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
 WEB_PID_FILE="$RUNNING_DIR/tmp/web.pid"
 
@@ -168,14 +160,26 @@ function json_resources() {
   curl https://api.anyfile-notepad.semaan.ca/mime_types --fail --silent --show-error > $COMPILED_APP/mime_types.json
 }
 
-pages_css
-pages
-application_css
-application_js
-json_resources
-editor_part
-app
-public_assets
+function build_all() {
+  mkdir -p $COMPILED_APP
+  echo "Press Enter to execute rm -fr $COMPILED_APP/*"
+  read
+  rm -fr $COMPILED_APP/*
+
+  mkdir -p $COMPILED_APP
+  mkdir -p $COMPILED_APP/assets
+
+  pages_css
+  pages
+  application_css
+  application_js
+  json_resources
+  editor_part
+  app
+  public_assets
+}
+
+build_all
 
 if ! [ "$1" == "webdev" ]; then
   exit
@@ -212,9 +216,7 @@ function exit_cleanup() {
 trap exit_cleanup EXIT
 start_server
 
-watch_dir client/assets/css "pages_css application_css" &
-watch_dir client/assets/js "application_js" &
-watch_dir client/ "editor_part app" "--exclude client/assets/css --exclude client/assets/js" &
+watch_dir client/ build_all &
 
 echo "1" > $SHOULD_RESET_FILE
 
