@@ -185,7 +185,7 @@
               </div>
 
               <div class="col-md-4">
-                <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">{{ i18n "Select language" }}</a>
+                <a class="sub_menu_item btn btn-primary" href="javascript:void(0)">Select language</a>
                 <div class="menu_content">
                   <ul class="menu_list">
                     <div class="text-center"><a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a></div>
