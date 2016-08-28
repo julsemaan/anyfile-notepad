@@ -90,6 +90,12 @@ EditorController.prototype.initialize_html = function(){
       switch(String.fromCharCode(event.which).toLowerCase()) {
         case 'p':
           self.print();
+        case 'c':
+          return true;
+        case 'x':
+          return true;
+        case 'v':
+          return true;
       }
       event.preventDefault();
       return false;
