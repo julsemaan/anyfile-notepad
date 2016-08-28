@@ -4,12 +4,15 @@ import operator
 import re
 import sys
 
-process = os.popen("make extract-i18n-strings")
+# change directory to where the script is hosted
+zidir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(zidir)
+process = os.popen("cd "+zidir+" && make extract-i18n-strings")
 strings = process.read()
 process.close()
 
 if len(sys.argv) > 1:
-    locale_file = open("client/locales/_"+sys.argv[1]+".json")
+    locale_file = open("locales/_"+sys.argv[1]+".json")
     locale_json = locale_file.read()
     locale = json.loads(locale_json)
 else:
