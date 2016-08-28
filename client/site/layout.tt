@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>[% title %]</title>
+  <title>Anyfile Notepad [% PAGE_KEY %]</title>
   
   <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].css" media="all">
   <link rel="stylesheet" type="text/css" href="/assets/pages-[% APP_VERSION_ID %].css" media="all">
