@@ -1,8 +1,11 @@
 client-dist.tgz:
-	mkdir client/dist
-	AFN_BUILD_DIR=client/dist/ bash afn-app.sh
+	make client/dist
 	echo "Press any key to launch archive build." && read dummy
 	tar -C client/ -cvzf client-dist.tgz dist/
+
+client/dist:
+	mkdir client/dist
+	AFN_BUILD_DIR=client/dist/ bash afn-app.sh
 
 clean:
 	rm -fr client/dist

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+_GIT_DIR="$GIT_DIR"
+
+if ! [ -z $_GIT_DIR ]; then
+  echo "Using git dir $_GIT_DIR"
+else
+  _GIT_DIR="."
+fi
+
 function emptyfile() {
   truncate -s 0 $1
 }
@@ -26,8 +34,8 @@ SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
 WEB_PID_FILE="$RUNNING_DIR/tmp/web.pid"
 
 APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
-APP_VERSION=`git tag | tail -1`
-APP_COMMIT_ID=`git rev-parse HEAD | cut -c1-6`
+APP_VERSION=`cd $_GIT_DIR && git tag | tail -1 ; cd -`
+APP_COMMIT_ID=`cd $_GIT_DIR && git rev-parse HEAD | cut -c1-6 ; cd -`
 
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"

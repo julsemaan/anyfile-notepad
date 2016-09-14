@@ -23,8 +23,7 @@ my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, 'client/']});
 my @THEMES;
 
 opendir(my $ace_dir, "client/public/ace.js") or die("Can't open themes dir : $!");
-while(readdir $ace_dir) {
-    my $file = $_;
+while(my $file = readdir $ace_dir) {
     if($file =~ /^theme-(.*)\.js/) {
         my $theme_name = $1;
         my $display_name = $theme_name;
