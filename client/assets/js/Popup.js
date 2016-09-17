@@ -1,5 +1,7 @@
 Class("Popup", ["Model"]);
 
+Popup.c = 0;
+
 Popup.prototype.init = function(args) {
   Model.call(this, args);
   var self = this;
@@ -7,6 +9,7 @@ Popup.prototype.init = function(args) {
     self.callback = self.callback || function(){};
     self.confirm = self.confirm || false;
     if(!self.message && !self.hb_partial) throw "No message or partial specified for popup";
+    self.global_context = context;
 
     if(self.hb_partial) {
       var $hb_source = $(self.hb_partial);
@@ -27,6 +30,10 @@ Popup.prototype.init = function(args) {
     var template = Handlebars.compile(source);
     $(template(self)).insertAfter($source);
     $("#"+self.popup_id).modal({'show':true, keyboard:false});
+
+    // Adding to the z-index everytime so the new popup always comes in front of any existing one.
+    $('#'+self.popup_id).css('z-index', $('#'+self.popup_id).css('z-index')+Popup.c);
+    Popup.c += 1;
 
     var post_click = function(result) {
       $("#"+self.popup_id).modal('hide');
