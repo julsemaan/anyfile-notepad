@@ -43,9 +43,10 @@ Right after launch the install of the assets of the app and launch the build scr
 # ./afn-app.sh
 ```
 
-Should you want to serve files using the build script, you will need to have python 2+ installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
+Should you want to serve files using the build script, you will need to have python 2+ and `inotifywait` installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
 
 ```
+# apt-get install python inotify-tools
 # ./afn-app.sh webdev
 ```
 
