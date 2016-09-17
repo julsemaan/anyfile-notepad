@@ -13,7 +13,7 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 
 > NOTE: These instructions are made for Linux and were tested on Debian 8
 
-First, install `perl`, `cpan`, `gcc` and `make` from your distribution repository. Then install these packages from CPAN:
+First, install `perl`, `cpan`, `gcc`, `curl` and `make` from your distribution repository. Then install these packages from CPAN:
 
 ```
 # apt-get install perl gcc make
