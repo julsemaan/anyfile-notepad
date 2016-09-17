@@ -150,8 +150,25 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12">
-                <a class="advanced_options_btn sub_menu_item btn btn-primary" href="javascript:void(0)">Advanced</a>
+              <div class="col-md-6">
+                <a class="big_options_btn sub_menu_item btn btn-primary" href="javascript:void(0)">Accounts</a>
+                <div class="menu_content">
+                  <a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                  <ul class="menu_list back_btn_padded">
+                    <li>
+                      <a href="https://accounts.google.com/AddSession" onclick="javascript:void window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">{{ i18n "Add Google account" }}</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(1)" onclick="javascript:oauth_controller.switch_user()">{{ i18n "Switch Google account" }}</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0);" onclick="javascript:menu_controller.hide_menu();dropbox_oauth_controller.test(function(){new Popup({message : i18n('Already connected !')})})">{{ i18n "Connect Dropbox" }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <a class="big_options_btn sub_menu_item btn btn-primary" href="javascript:void(0)">Advanced</a>
                 <div class="menu_content">
                   <a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                   <ul class="menu_list back_btn_padded">
@@ -199,7 +216,6 @@
 
                     <li><a href="javascript:void(0);" onclick="javascript:user_preferences.reset();menu_controller.hide_menu();new Popup({ message : i18n('You should now restart the app to fully flush your preferences.'), callback : function(result) {if(result) editor_controller.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});">{{ i18n "Reset preferences" }}</a></li>
 
-                    <li><a href="javascript:void(0);" onclick="javascript:menu_controller.hide_menu();dropbox_oauth_controller.test(function(){new Popup({message : i18n('Already connected !')})})">{{ i18n "Connect Dropbox" }}</a></li>
 
                   </ul>
                 </div>
