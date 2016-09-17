@@ -372,7 +372,12 @@ span.collaborators {
 
 ul.favorites {
   li:first-child {
+    a {
+      margin-top:20px !important;
+      margin-left:-10px !important;
+    }
     border-bottom:2px solid black !important;
+    height:75px;
   }
 
   li button {
