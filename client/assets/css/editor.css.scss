@@ -212,12 +212,17 @@ span.collaborators {
     .options {
       color:black;
       padding:1em;
+
+      .advanced_options_btn {
+        display:block;
+        width:100%;
+      }
     }
 
-    .advanced_options_btn {
-      display:block;
-      width:100%;
+    .back_btn_padded {
+      padding-right:56px !important;
     }
+
 
     ul.menu_list {
       @extend .list-group;
