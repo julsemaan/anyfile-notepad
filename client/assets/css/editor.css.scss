@@ -214,6 +214,11 @@ span.collaborators {
       padding:1em;
     }
 
+    .advanced_options_btn {
+      display:block;
+      width:100%;
+    }
+
     ul.menu_list {
       @extend .list-group;
       margin:0;
