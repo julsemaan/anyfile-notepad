@@ -43,6 +43,8 @@ Right after launch the install of the assets of the app and launch the build scr
 # ./afn-app.sh
 ```
 
+The app will then be compiled into static pages and assets that can be served using any basic hosting service. These files will be in `tmp/app-compiled/`
+
 Should you want to serve files using the build script, you will need to have python 2+ and `inotifywait` installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
 
 ```
