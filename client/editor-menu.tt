@@ -46,7 +46,7 @@
             
             <li><a href="javascript:void(0);" onclick="javascript:editor_controller.show_file_info();menu_controller.hide_menu()" >{{ i18n "Show file info" }}</a></li>
 
-            <li><a href="javascript:void(0);" onclick="javascript:user_preferences.reset();menu_controller.hide_menu();new Popup({ message : i18n('You should now restart the app to fully flush your preferences. Proceed with restart now ?'), callback : function(result) {if(result) editor_controller.restart_app()}, confirm : true});">{{ i18n "Reset preferences" }}</a></li>
+            <li><a href="javascript:void(0);" onclick="javascript:user_preferences.reset();menu_controller.hide_menu();new Popup({ message : i18n('You should now restart the app to fully flush your preferences.'), callback : function(result) {if(result) editor_controller.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});">{{ i18n "Reset preferences" }}</a></li>
 
             <li><a href="javascript:void(0);" onclick="javascript:menu_controller.hide_menu();dropbox_oauth_controller.test(function(){new Popup({message : i18n('Already connected !')})})">{{ i18n "Connect Dropbox" }}</a></li>
 

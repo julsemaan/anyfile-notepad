@@ -21,6 +21,9 @@ Popup.prototype.init = function(args) {
     self.cancel_id = uniqueId();
     self.confirm_id = uniqueId();
 
+    self.confirm_btn = self.confirm_btn || i18n("OK");
+    self.cancel_btn = self.cancel_btn || i18n("Cancel");
+
     var $source = $("#popup-template");
     var source = $source.html();
     var template = Handlebars.compile(source);
