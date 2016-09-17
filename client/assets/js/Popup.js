@@ -11,10 +11,8 @@ Popup.prototype.init = function(args) {
     if(self.hb_partial) {
       var $hb_source = $(self.hb_partial);
       var source = $hb_source.html();
-      console.log($hb_source.html());
       var template = Handlebars.compile(source);
       self.content = template(self);
-      console.log(self)
     }
 
     self.popup_id = uniqueId();
