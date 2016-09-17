@@ -103,7 +103,7 @@ In order to do so, follow 'Step 1' from the following documentation https://deve
 Here are some tips on how to configure it:
  * You will be calling the API using a 'Web application' / 'Javascript'
  * You will require access to the user data
- * The authorized javascript should be `http://localhost:8000` if using the local dev server
+ * The authorized javascript origin should be `http://localhost:8000` if using the local dev server
  * The authorized URI should be `http://localhost:8000/app.html` if using the local dev server
 
 Once your application and credentials are created, you will need to get the 'Client ID' from the credentials you created as well as the 'Drive App ID'. So, if your 'Credentials Client ID' is `362162162007-o0uhasgsdlte2s2or9cr265bg2bhvth1.apps.googleusercontent.com`, your 'Drive App ID' will be `362162162007` (the first part of the ID prior to the `-`).
