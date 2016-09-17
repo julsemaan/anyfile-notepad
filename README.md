@@ -30,8 +30,6 @@ Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` a
 # gem install sass
 ```
 
-Should you want to serve files using the build script, you will need to have python 2+ installed.
-
 Next, install `npm` and `bower` and clone the repo.
 Right after launch the install of the assets of the app and launch the build script.
 
@@ -44,6 +42,10 @@ Right after launch the install of the assets of the app and launch the build scr
 # bower install
 # ./afn-app.sh
 ```
+
+Should you want to serve files using the build script, you will need to have python 2+ installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
+
+`# ./afn-app.sh webdev`
 
 ## Issues
 
