@@ -28,6 +28,10 @@ skip_patterns = [
     re.compile("^rep -r")
 ]
 
+skip_strings = [
+    ".*?",
+]
+
 non_extractable_strings = [
     "\"Skip\"",
     "\"Restart app\"",
@@ -43,6 +47,9 @@ for string in strings_array:
     for skip_pattern in skip_patterns:
         if skip_pattern.match(stripped):
             skip = True
+
+    if stripped in skip_strings:
+        skip = True
 
     if not skip and not stripped in locale:
         missing[stripped] = ""
