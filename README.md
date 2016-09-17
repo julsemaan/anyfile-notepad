@@ -38,8 +38,8 @@ Right after launch the install of the assets of the app and launch the build scr
 ```
 # git clone https://github.com/julsemaan/anyfile-notepad.git
 # cd anyfile-notepad
-# bower install
 # npm install -g bower
+# bower install
 # ./afn-app.sh
 ```
 
