@@ -8,7 +8,7 @@ ApplicationController.prototype.try_dev_mode = function(){
 }
 
 ApplicationController.prototype.stop_dev_mode = function(){
-  this.set_mode_and_reload("", "/app");
+  this.set_mode_and_reload("");
 }
 
 ApplicationController.prototype.set_mode_and_reload = function(mode, destination){
