@@ -45,7 +45,9 @@ Right after launch the install of the assets of the app and launch the build scr
 
 Should you want to serve files using the build script, you will need to have python 2+ installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
 
-`# ./afn-app.sh webdev`
+```
+# ./afn-app.sh webdev
+```
 
 ## Issues
 
