@@ -325,7 +325,8 @@ EditorController.prototype.set_syntax_mode = function(syntax,save){
   var self = this;
   save = save || false
   this.$.find('.syntax_button').css("background-color", "initial")
-  this.$.find('.syntax_'+syntax).css("background-color", "#009688")
+  var primary_color = $("<div>").appendTo("body").addClass("btn-primary").css("background-color");
+  this.$.find('.syntax_'+syntax).css("background-color", primary_color);
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
