@@ -94,7 +94,7 @@ Should you want to serve files using the build script, you will need to have pyt
 # ./afn-app.sh webdev
 ```
 
-The application will then be available though `http://localhost:8000`.
+The application will then be available through `http://localhost:8000`.
 
 ### Setting up Google Drive for the app
 
