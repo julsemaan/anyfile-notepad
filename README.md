@@ -36,6 +36,8 @@ Next, install `npm` and `bower` and clone the repo.
 Right after launch the install of the assets of the app and launch the build script.
 
 ```
+# apt-get install npm
+# ln -s /usr/bin/nodejs /usr/bin/node
 # git clone https://github.com/julsemaan/anyfile-notepad.git
 # cd anyfile-notepad
 # npm install -g bower
