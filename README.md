@@ -16,6 +16,7 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 First, install `perl`, `cpan`, `gcc` and `make` from your distribution repository. Then install these packages from CPAN:
 
 ```
+# apt-get install perl gcc make
 # cpan Template
 # cpan Getopt::Long
 # cpan JSON
@@ -24,8 +25,10 @@ First, install `perl`, `cpan`, `gcc` and `make` from your distribution repositor
 ```
 
 Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` and install `sass`:
-
-`# gem install sass`
+```
+# apt-get install ruby
+# gem install sass
+```
 
 Should you want to serve files using the build script, you will need to have python 2+ installed.
 
