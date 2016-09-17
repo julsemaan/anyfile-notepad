@@ -1,7 +1,7 @@
 function GoogleOAuthController(options){
   var self = this;
-  this.client_id = "249464630588-ombbls22arnr75jdl4uprsof9t9rrp42.apps.googleusercontent.com";
-  this.drive_app_id = "249464630588";
+  this.client_id = AFN_VARS['google_client_id'];
+  this.drive_app_id = AFN_VARS['drive_app_id'];
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
@@ -163,7 +163,7 @@ Class("DropboxOAuthController", ["Model"]);
 
 DropboxOAuthController.prototype.init = function(options){
   Model.call(this, options);
-  this.client = new Dropbox.Client({ key: "ps6cmsgenf8ypox" });
+  this.client = new Dropbox.Client({ key: AFN_VARS['dropbox_key']});
   this.client.authDriver(new Dropbox.AuthDriver.Redirect);
 }
 
