@@ -9,6 +9,32 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 - Second, an API (api.anyfile-notepad.semaan.ca) to serve the data that backs the application (syntaxes, extensions and mime types configuration)
 - Third, a simple administrative interface to manage the three resources above (admin.anyfile-notepad.semaan.ca)
 
+## Building the app
+
+> NOTE: These instructions are made for Linux
+
+First, install perl and CPAN from your distribution repository. Then install these packages from CPAN:
+
+```
+# cpan Template
+# cpan Getopt::Long
+# cpan JSON
+# cpan File::Slurp
+# cpan Tie::IxHash
+```
+
+Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` and install `sass`:
+
+`# gem install sass`
+
+Should you want to serve files using the build script, you will need to have python 2+ installed.
+
+Next, launch the build script to build the app.
+
+```
+# ./afn-app.sh
+```
+
 ## Issues
 
 Report any issues using the [Google community](http://bit.ly/afn-community)
