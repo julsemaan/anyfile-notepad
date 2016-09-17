@@ -14,7 +14,7 @@
         <a href="javascript:void(0)" class="menu_item">{{ i18n "File" }}</a>
 
         <div class="menu_content">
-          <ul class="menu_list">
+          <ul class="menu_list file_menu">
             <li>
               <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "New" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
               <div class="menu_content">
@@ -23,6 +23,14 @@
                   <li><a href="#new/GoogleDrive" onclick="menu_controller.hide_menu();">Google Drive</a></li>
                   <li><a href="#new/Dropbox" onclick="menu_controller.hide_menu();">Dropbox</a></li>
                 </ul>
+              </div>
+            </li>
+            
+            <li>
+              <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "Open" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+              <div class="menu_content">
+                <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+                {{> file_explorer }}
               </div>
             </li>
 
@@ -59,13 +67,6 @@
         </div>
       </li>
       <!-- */FILE -->
-
-      <li>
-        <a href="javascript:void(0)" class="menu_item">{{ i18n "Open" }}</a>
-        <div class="menu_content">
-          {{> file_explorer }}
-        </div>
-      </li>
 
       <li>
         <a href="javascript:void(0)" class="menu_item">{{ i18n "Favorites" }}</a>
