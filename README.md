@@ -32,11 +32,14 @@ Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` a
 
 Should you want to serve files using the build script, you will need to have python 2+ installed.
 
-Next, clone the repo and launch the build script to build the app.
+Next, install `npm` and `bower` and clone the repo.
+Right after launch the install of the assets of the app and launch the build script.
 
 ```
 # git clone https://github.com/julsemaan/anyfile-notepad.git
 # cd anyfile-notepad
+# bower install
+# npm install -g bower
 # ./afn-app.sh
 ```
 
