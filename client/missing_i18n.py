@@ -33,12 +33,12 @@ skip_strings = [
 ]
 
 non_extractable_strings = [
-    "\"Skip\"",
-    "\"Restart app\"",
-    "\"Authorize!\"",
+    "Skip",
+    "Restart app",
+    "Authorize!",
 ]
 
-strings_array += non_extractable_strings
+strings_array += ['"'+s+'"' for s in non_extractable_strings]
 
 for string in strings_array:
     stripped = string[1:-1]
