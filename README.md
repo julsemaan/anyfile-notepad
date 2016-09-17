@@ -29,9 +29,11 @@ Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` a
 
 Should you want to serve files using the build script, you will need to have python 2+ installed.
 
-Next, launch the build script to build the app.
+Next, clone the repo and launch the build script to build the app.
 
 ```
+# git clone https://github.com/julsemaan/anyfile-notepad.git
+# cd anyfile-notepad
 # ./afn-app.sh
 ```
 
