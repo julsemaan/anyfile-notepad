@@ -13,7 +13,7 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 
 > NOTE: These instructions are made for Linux
 
-First, install perl and CPAN from your distribution repository. Then install these packages from CPAN:
+First, install `perl`, `cpan` and `make` from your distribution repository. Then install these packages from CPAN:
 
 ```
 # cpan Template
