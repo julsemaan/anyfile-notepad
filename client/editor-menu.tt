@@ -27,7 +27,7 @@
             </li>
             
             <li>
-              <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "Open" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+              <a href="javascript:void(0)" class="menu-file-open sub_menu_item" target="_blank">{{ i18n "Open" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
               <div class="menu_content">
                 <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                 {{> file_explorer }}
@@ -35,7 +35,7 @@
             </li>
 
             <li>
-              <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "Favorites" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+              <a href="javascript:void(0)" class="menu-file-favorites sub_menu_item" target="_blank">{{ i18n "Favorites" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
               <div class="menu_content">
                 <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                 <ul class="menu_list favorites"></ul>
@@ -174,7 +174,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <a class="big_options_btn sub_menu_item btn btn-primary" href="javascript:void(0)">Advanced</a>
+                <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="javascript:void(0)">Advanced</a>
                 <div class="menu_content">
                   <a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
                   <ul class="menu_list back_btn_padded">

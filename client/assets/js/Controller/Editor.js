@@ -123,7 +123,7 @@ EditorController.prototype.initialize_html = function(){
 
   if(self.major_notice_pref.getValue() < parseInt($('#major_notice_modal').attr('data-version')) ){
     $('#major_notice_modal').modal('show');
-    $('#agree_major_notice').click(function(){
+    $('.agree_major_notice').click(function(){
       $('#major_notice_modal').modal('hide'); 
       self.major_notice_pref.refreshAndSet(parseInt($('#major_notice_modal').attr('data-version')), self, self.show_reauth)
     })
