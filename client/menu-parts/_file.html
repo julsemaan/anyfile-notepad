@@ -1,61 +1,59 @@
 <script class="template-partial" data-partial-name="mfile" type="text/x-handlebars">
 <ul class="menu_list file_menu">
   <li>
-    <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "New" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+    <a href="{{noaction}}" class="sub_menu_item" target="_blank">{{ i18n "New" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
     <div class="menu_content">
-      <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+      <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
       <ul class="menu_list">
-        <li><a href="#new/GoogleDrive" onclick="menu_controller.hide_menu();">Google Drive</a></li>
-        <li><a href="#new/Dropbox" onclick="menu_controller.hide_menu();">Dropbox</a></li>
+        <li><a href="#new/GoogleDrive" {{{ m-action-n-close }}}>Google Drive</a></li>
+        <li><a href="#new/Dropbox" {{{ m-action-n-close }}}>Dropbox</a></li>
       </ul>
     </div>
   </li>
   
   <li>
-    <a href="javascript:void(0)" class="menu-file-open sub_menu_item" target="_blank">{{ i18n "Open" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+    <a href="{{noaction}}" class="menu-file-open sub_menu_item" target="_blank">{{ i18n "Open" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
     <div class="menu_content">
-      <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+      <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
       {{> mfile-open }}
     </div>
   </li>
 
   <li>
-    <a href="javascript:void(0)" class="menu-file-favorites sub_menu_item" target="_blank">{{ i18n "Favorites" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+    <a href="{{noaction}}" class="menu-file-favorites sub_menu_item" target="_blank">{{ i18n "Favorites" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
     <div class="menu_content">
-      <a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+      <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
       <ul class="menu_list favorites"></ul>
     </div>
   </li>
 
   <li>
-    <a href="javascript:void(0)" class="sub_menu_item" target="_blank">{{ i18n "Select syntax" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+    <a href="{{noaction}}" class="sub_menu_item" target="_blank">{{ i18n "Select syntax" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
     <div class="menu_content">
       {{> mfile-select-syntax }}
     </div>
   </li>
 
-  <li><a href="javascript:void(0);" onclick="javascript:editor_controller.save();menu_controller.hide_menu();" >{{ i18n "Save" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.save()" }}} >{{ i18n "Save" }}</a></li>
 
-  <li><a href="javascript:void(0);" onclick="javascript:editor_controller.open_share_modal();menu_controller.hide_menu();" >{{ i18n "Share" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_share_modal()" }}}>{{ i18n "Share" }}</a></li>
 
-  <li><a href="javascript:void(0);" onclick="javascript:editor_controller.print();menu_controller.hide_menu()" >{{ i18n "Print" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.print()" }}}>{{ i18n "Print" }}</a></li>
   
   <li>
-    <a href="javascript:void(0);" onclick="javascript:editor_controller.open_search();menu_controller.hide_menu()">
-      {{ i18n "Search" }} (Ctrl-F)
-    </a>
+    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_search()" }}}>{{ i18n "Search" }} (Ctrl-F)</a>
   </li>
   
   <li>
-    <a href="javascript:void(0);" onclick="javascript:editor_controller.open_replace();menu_controller.hide_menu()">
+    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_replace()" }}}>
       {{ i18n "Search & replace" }}
     </a>
   </li>
   
-  <li><a href="javascript:void(0);" onclick="javascript:editor_controller.show_file_info();menu_controller.hide_menu()" >{{ i18n "Show file info" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.show_file_info()" }}}>{{ i18n "Show file info" }}</a></li>
 
   <li><a href="/faq">{{ i18n "Help (FAQ)" }}</a></li>
 
-  <li><a href="javascript:void(0);" onclick="javascript:editor_controller.restart_app()">{{ i18n "Restart app" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.restart_app()" }}}>{{ i18n "Restart app" }}</a></li>
 </ul>
 </script>

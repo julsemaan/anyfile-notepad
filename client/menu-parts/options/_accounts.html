@@ -5,16 +5,16 @@
     <h5 class="menu_header">Google Drive</h5>
   </li>
   <li>
-    <a href="https://accounts.google.com/AddSession" onclick="javascript:menu_controller.hide_menu();window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">{{ i18n "Add account" }}</a>
+    <a href="{{noaction}}" {{{ m-action-n-close "window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0')" }}}>{{ i18n "Add account" }}</a>
   </li>
   <li>
-    <a href="javascript:void(1)" onclick="javascript:menu_controller.hide_menu();oauth_controller.switch_user()">{{ i18n "Switch account" }}</a>
+    <a href="{{noaction}}" {{{ m-action-n-close "oauth_controller.switch_user()" }}}>{{ i18n "Switch account" }}</a>
   </li>
   <li>
     <h5 class="menu_header">Dropbox</h5>
   </li>
   <li>
-    <a href="javascript:void(0);" onclick="javascript:menu_controller.hide_menu();dropbox_oauth_controller.test(function(){new Popup({message : i18n('Already connected !')})})">{{ i18n "Connect account" }}</a>
+    <a href="{{noaction}}" {{{ m-action-n-close "dropbox_oauth_controller.test(function(){new Popup({message : i18n('Already connected !')})})" }}}>{{ i18n "Connect account" }}</a>
   </li>
 </ul>
 </script>

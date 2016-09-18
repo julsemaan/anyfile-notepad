@@ -1,15 +1,15 @@
 <script class="template-partial" data-partial-name="moptions-advanced-select-theme" type="text/x-handlebars">
 <div class="row themes">
-<a href="javascript:void(0)" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+<a href="{{noaction}}" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
   {{#each themes}}
     {{#if (eq (math @index "%" 12) 0) }}
     <div class="col-md-4 theme-col-{{ math @index "/" 12 }}">
       <div class="theme_choice_column btn-group-vertical"> 
     {{/if}}
       {{#if (eq this "dummy")}}
-        <a href="javascript:void(0);" class="btn-dummy">{{this.theme_display_name}}</a>
+        <a href="{{noaction}};" class="btn-dummy">{{this.theme_display_name}}</a>
       {{else}}
-        <a href="javascript:void(0);" class="btn btn-default btn_theme theme_{{this.theme_name}}" onclick="javascript:menu_controller.hide_menu();editor_controller.select_theme('{{this.theme_name}}')">{{this.theme_display_name}}</a>
+        <a href="{{noaction}};" class="btn btn-default btn_theme theme_{{this.theme_name}}"{{{ m-action-n-close (concat "editor_controller.select_theme('" this.theme_name "')") }}}>{{this.theme_display_name}}</a>
       {{/if}}
     {{#if (eq @index (math ../themes.length "-" 1 ))}}
         </div>
