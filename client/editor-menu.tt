@@ -11,7 +11,7 @@
     <ul class="nav navbar-nav">
       <!-- FILE/* -->
       <li>
-        <a href="javascript:void(0)" class="menu_item">{{ i18n "File" }}</a>
+        <a href="javascript:void(0)" id="file_menu_btn" class="menu_item">{{ i18n "File" }}</a>
 
         <div class="menu_content">
           <ul class="menu_list file_menu">
@@ -103,7 +103,7 @@
 
       <!-- OPTIONS/* -->
       <li>
-        <a href="javascript:void(0)" class="menu_item" >{{ i18n "Options" }}</a>
+        <a href="javascript:void(0)" id="options_menu_btn" class="menu_item" >{{ i18n "Options" }}</a>
         <div class="menu_content" data-show-callback="editor_controller.options_show_callback()">
           <!-- OPTIONS CONTENT/* -->
           <div class="options">
@@ -233,7 +233,7 @@
       </li> <!-- */OPTIONS -->
 
       <li>
-        <a href="javascript:void(0)" class="menu_item" >{{ i18n "Help" }}</a>
+        <a href="javascript:void(0)" id="help_menu_btn" class="menu_item" >{{ i18n "Help" }}</a>
         <div class="menu_content">
           <ul class="menu_list">
             <li><a href="/">{{ i18n "App home page" }}</a></li>
