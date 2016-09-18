@@ -1,0 +1,30 @@
+#!/bin/bash
+DEPLOY_DIR=${DEPLOY_DIR:-"/var/www/html/anyfile-notepad/development"}
+VARS_FILE=${VARS_FILE:-"client/assets/js/VARS.js.example"}
+BACKUP_DIR="$DEPLOY_DIR-"`date +%s`
+GIT_DIR=`pwd`
+BUILD_DIR="/tmp/afn-build$GIT_DIR"
+while read oldrev newrev ref
+do
+    if [[ $ref =~ .*/master$ ]];
+    then
+        echo "Master ref received.  Deploying master branch to $DEPLOY_DIR"
+        mkdir -p $BUILD_DIR
+        # Switching to /tmp/ before attempting to switch to BUILD_DIR so deletion is not the end the world if BUILD_DIR is undef
+        cd /tmp/ && cd $BUILD_DIR && rm -fr *
+        git --work-tree=$BUILD_DIR --git-dir=$GIT_DIR checkout -f
+        cp $VARS_FILE client/assets/js/VARS.js
+        bower install --allow-root
+        GIT_DIR="$GIT_DIR" make client/dist
+        mv $DEPLOY_DIR $BACKUP_DIR
+        mkdir -p $DEPLOY_DIR
+        cp -frp $BUILD_DIR/client/dist/* $DEPLOY_DIR/
+        sudo service httpd reload
+        cd `dirname $BACKUP_DIR`
+        tar -czf `basename $BACKUP_DIR`.tgz `basename $BACKUP_DIR`
+        rm -fr $BACKUP_DIR
+    else
+        echo "Ref $ref successfully received.  Doing nothing: only the master branch may be deployed on this server."
+    fi
+done
+
