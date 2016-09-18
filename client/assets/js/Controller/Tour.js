@@ -27,33 +27,33 @@ TourController.prototype.remove_overlay = function() {
 TourController.prototype.menu_change_tour = function() {
   var self = this;
   self.install_overlay();
-	var tour = new Shepherd.Tour({
-		defaults: {
-			classes: 'shepherd-theme-default'
-		}
-	});
+  var tour = new Shepherd.Tour({
+    defaults: {
+      classes: 'shepherd-theme-default'
+    }
+  });
 
-	tour.addStep('present-file-menu-changes', {
+  tour.addStep('present-file-menu-changes', {
     when: {
       show:function() {
         document.getElementById('file_menu_btn').click();
       },
     },
-		text: 'All file related operations are in this menu now.',
-		attachTo: '#file_menu_btn right',
-	});
+    text: 'All file related operations are in this menu now.',
+    attachTo: '#file_menu_btn right',
+  });
 
-	tour.addStep('present-file-menu-moved', {
-		text: 'The open and favorites menu as well as the syntax selection are now here.',
-		attachTo: '#expanded_menu a.menu-file-favorites right',
+  tour.addStep('present-file-menu-moved', {
+    text: 'The open and favorites menu as well as the syntax selection are now here.',
+    attachTo: '#expanded_menu a.menu-file-favorites right',
     when: {
       hide: function() {
         document.getElementById('file_menu_btn').click();
       },
     },
-	});
+  });
 
-	tour.addStep('present-options-menu-changes', {
+  tour.addStep('present-options-menu-changes', {
     beforeShowPromise: function() {
       return new RSVP.Promise(function(resolve, reject) {
         setTimeout(function() {
@@ -62,11 +62,11 @@ TourController.prototype.menu_change_tour = function() {
         }, 1000)
       });
     },
-		text: 'The Options menu now contains a section to manage your accounts as well as an advanced section.',
-		attachTo: '#expanded_menu bottom',
-	});
+    text: 'The Options menu now contains a section to manage your accounts as well as an advanced section.',
+    attachTo: '#expanded_menu bottom',
+  });
 
-	tour.addStep('present-options-menu-advanced', {
+  tour.addStep('present-options-menu-advanced', {
     beforeShowPromise: function() {
       return new RSVP.Promise(function(resolve, reject) {
         $('#expanded_menu .menu-options-advanced').click();
@@ -75,26 +75,26 @@ TourController.prototype.menu_change_tour = function() {
         }, 1000)
       });
     },
-		text: 'The advanced section allows you to select a theme, the display language and other advanced options.',
-		attachTo: '#expanded_menu right',
-	});
+    text: 'The advanced section allows you to select a theme, the display language and other advanced options.',
+    attachTo: '#expanded_menu right',
+  });
 
-	tour.addStep('present-changes-completed', {
-		text: 'We hope you like those changes, and feel free to provide feedback on how we can make the app better via our Google+ Community.',
-		attachTo: '#expanded_menu right',
+  tour.addStep('present-changes-completed', {
+    text: 'We hope you like those changes, and feel free to provide feedback on how we can make the app better via our Google+ Community.',
+    attachTo: '#expanded_menu right',
     when: {
       hide: function() {
         document.getElementById('options_menu_btn').click();
         self.remove_overlay();
       },
     },
-		buttons: [
-			{
-				text: 'Done',
-				action: tour.complete
-			}
-		]
-	});
-	tour.start();
+    buttons: [
+      {
+        text: 'Done',
+        action: tour.complete
+      }
+    ]
+  });
+  tour.start();
 }
 
