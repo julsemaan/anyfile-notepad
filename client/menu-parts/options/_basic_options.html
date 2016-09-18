@@ -1,0 +1,41 @@
+<script class="template-partial" data-partial-name="moptions-basic-options" type="text/x-handlebars">
+<div class="row">
+  <div class="col-md-3">
+    {{ i18n "Editor mode" }} :
+    <select class="keybinding_select form-control">
+      <option value="normal">{{ i18n "Normal" }}</option>
+      <option value="vim">{{ i18n "vim" }}</option>
+      <option value="emacs">{{ i18n "Emacs" }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    {{ i18n "Tab size" }} : 
+    <select class="tab_size_select form-control">
+      <option value="2">{{ i18n "2" }}</option>
+      <option value="3">{{ i18n "3" }}</option>
+      <option value="4">{{ i18n "4" }}</option>
+      <option value="5">{{ i18n "5" }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    {{ i18n "Font size" }} :
+    <select class="font_size_select form-control">
+      <option value="0.5em">{{ i18n "Small" }}</option>
+      <option value="1em">{{ i18n "Normal" }}</option>
+      <option value="1.5em">{{ i18n "Large" }}</option>
+      <option value="2em">{{ i18n "X-large" }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <div class="togglebutton">
+      <label>
+        {{ i18n "Word wrapping" }} : <input type="checkbox" class="word_wrap_checkbox">
+      </label>
+    </div>
+  </div>
+
+</div>
+</script>

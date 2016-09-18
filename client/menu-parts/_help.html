@@ -1,0 +1,13 @@
+<script class="template-partial" data-partial-name="mhelp" type="text/x-handlebars">
+<ul class="menu_list">
+  <li><a href="/">{{ i18n "App home page" }}</a></li>
+
+  <li><a href="javascript:void(0);" onclick="javascript:new Popup({title : 'Keyboard shortcuts', hb_partial : '#keyboard-shortcuts'});menu_controller.hide_menu();">{{ i18n "Keyboard shortcuts" }}</a></li>
+
+  <li><a href="/faq" >{{ i18n "Frequently asked questions (FAQ)" }}</a></li>
+  
+  <li><a href="http://bit.ly/afn-community">{{ i18n "Google+ Community" }}</a></li>
+
+  <li><a href="javascript:void(0);" onclick="javascript:new Popup({title : 'About this app', hb_partial : '#about'});menu_controller.hide_menu();">{{ i18n "About" }}</a></li>
+</ul>
+</script>
