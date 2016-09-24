@@ -1,0 +1,27 @@
+<script class="template-partial" data-partial-name="mfile-select-syntax" type="text/x-handlebars">
+<div class="syntaxes">
+  <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+  <ul class="menu_list">
+    {{#each grouped_syntaxes}}
+        <li>
+        <a href="{{noaction}};" class="sub_menu_item" >{{@key}}</a>
+        <div class="menu_content">
+          <div class="syntaxes">
+            <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+             <ul class="menu_list">
+                {{#each this}}
+                  <li>
+                    <a href="{{noaction}};" class="syntax_button syntax_{{this.ace_js_mode}}" {{{ m-action-n-close (concat "editor_controller.set_syntax_mode('" this.ace_js_mode "',true)") }}}>
+                      {{this.display_name}}
+                    </a>                  
+                  </li>
+                {{/each}}
+            </ul>
+          </div>
+         
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+</div>
+</script>

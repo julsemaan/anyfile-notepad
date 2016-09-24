@@ -3,6 +3,7 @@ function TopMenuController(view, options){
   this.$ = $('#'+view);
   this.flash = options['flash'];
   this.editor = options['editor'];
+  this.menu = options['menu'];
 
   this.mobile_size = 768;
 
@@ -35,4 +36,11 @@ TopMenuController.prototype.close_mobile_menu = function() {
       self.editor.$editor.css('top', self.$.height() + "px");
     });
   }
+}
+
+TopMenuController.prototype.action_and_close = function(f) {
+  var self = this;
+  f = f || function(){};
+  f();
+  self.menu.hide_menu();
 }

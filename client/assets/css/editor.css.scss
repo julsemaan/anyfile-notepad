@@ -167,6 +167,12 @@ span.collaborators {
   z-index:1040;
 }
 
+h5.menu_header {
+  margin-left:10px;
+  color:black;
+  border-bottom:2px solid black;
+}
+
 #menu {
   min-height:60px;
   .navbar-brand {
@@ -212,7 +218,17 @@ span.collaborators {
     .options {
       color:black;
       padding:1em;
+
+      .big_options_btn {
+        display:block;
+        width:100%;
+      }
     }
+
+    .back_btn_padded {
+      padding-right:56px !important;
+    }
+
 
     ul.menu_list {
       @extend .list-group;
@@ -286,23 +302,30 @@ span.collaborators {
   #menu #expanded_menu .options {
     width:700px;
   }
+  .mobile-show {
+    display:none;
+  }
 }
 
 @media (max-height:768px) and (max-width:768px) {
-  #menu #expanded_menu .options, .syntaxes, .themes {
+  #menu #expanded_menu .options, .file_menu, .syntaxes, .themes {
     height:350px;
     overflow-y:scroll;
   }
 }
 
 @media (max-height:600px) and (max-width:768px) {
-  #menu #expanded_menu .options, .syntaxes, .themes {
+  #menu #expanded_menu .options, .file_menu, .syntaxes, .themes {
     height:250px;
     overflow-y:scroll;
   }
 }
 
 @media (max-width:768px) {
+  .non-mobile-show {
+    display:none;
+  }
+
   #menu #expanded_menu .options {
     width:275px;
   }
@@ -372,7 +395,12 @@ span.collaborators {
 
 ul.favorites {
   li:first-child {
+    a {
+      margin-top:20px !important;
+      margin-left:-10px !important;
+    }
     border-bottom:2px solid black !important;
+    height:75px;
   }
 
   li button {

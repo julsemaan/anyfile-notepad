@@ -1,25 +1,31 @@
 <script class="template-partial" data-partial-name="major_notice_modal" type="text/x-handlebars">
-<div class="modal fade" id="major_notice_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false" data-version="2">
+<div class="modal fade" id="major_notice_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false" data-version="3">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-      <h2>Welcome to Anyfile Notepad 4.0</h2>
-      <h3>This version introduces Dropbox support !</h3>
-
-      <h4>To get started :</h4>
-      <ul>
-        <li>Click 'File' -> 'Connect Dropbox'</li>
-        <li>Login with your Dropbox credentials</li>
-        <li>You can now create and open file from your Dropbox from the app.</li>
-        <li><b>NOTE: Dropbox doesn't support opening a file directly from the Dropbox interface. Nothing I can do about it...</b></li>
-      </ul>
-
-      <h4 style="text-align:center" class="alert alert-warning"> If you encounter any bugs or have any question (or maybe want to say thank you), write a message on our Google+ community </h4>
-
+        <h4>This version introduces changes to the menus.</h4>
+        <div class="mobile-show">
+          <h5>Overview of the changes:</h5>
+          <ul>
+            <li>The Open menu and the favorites have been moved to the File menu.</li>
+            <li>The syntax selection is now in the File menu</li>
+            <li>There is a new Accounts sub menu in the Options to manage the Google and Dropbox accounts.</li>
+            <li>There is a new Advanced sub menu in the Options to manage the language and theme used by the app</li>
+          </li>
+        </div>
+        <div class="non-mobile-show">
+          <h4>We suggest you take a quick tour to visualize the changes</h4>
+        </div>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="agree_major_notice">OK! Let's go</button>
+        <div class="non-mobile-show">
+          <button type="button" class="btn btn-primary agree_major_notice">Skip the tour</button>
+          <button type="button" onclick="javascript:application.tour_controller.menu_change_tour()" class="btn btn-primary agree_major_notice">OK! Let's go</button>
+        </div>
+        <div class="mobile-show">
+          <button type="button" class="btn btn-primary agree_major_notice">OK! Let's go</button>
+        </div>
       </div>
     </div>
   </div>

@@ -100,6 +100,7 @@ function application_css() {
   fi
 
   add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
+  add_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 }
 
@@ -115,6 +116,8 @@ function application_js() {
   add_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
   add_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
   add_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
+  add_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
+  add_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
 
   add_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
   add_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS

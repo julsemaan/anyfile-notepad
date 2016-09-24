@@ -92,8 +92,21 @@
 
   Handlebars.registerHelper('i18n', i18n);
 
+  Handlebars.registerHelper('noaction', function(){return "javascript:void(0)"});
+
+  Handlebars.registerHelper('m-action-n-close', function(action){
+    action = typeof(action) == "string" ? action : "";
+    return 'data-eb-click="top_menu_controller.action_and_close(function(){'+action+'})"'
+  });
+
   Handlebars.registerHelper('isNull', function(val){
     return val == null;
+  });
+
+  Handlebars.registerHelper('concat', function(){
+    var params = Array.from(arguments);
+    params = params.slice(0, params.length - 1);
+    return params.join('');
   });
 
   Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
@@ -147,7 +160,8 @@
   var user_preferences;
   var editor_controller;
   var top_menu_controller;
-  var menu_controller;
+  var menu_controller = new MenuController("menu");
+
 
   oauth_controller.add_to_queue(function(){
     user_preferences = new Preferences(
@@ -194,7 +208,7 @@
         editor_controller.flash.sticky_success("Version 5 has just been released. <a target='_blank' href='http://bit.ly/afn-community'>Report any bug on the community by clicking here.</a>");
 
         new EditorRouter(editor_controller)
-        top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller });
+        top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller, 'menu':menu_controller });
         editor_controller.top_menu = top_menu_controller;
 
         // check for browser compat
@@ -204,8 +218,6 @@
       }
     )
   })
-
-  menu_controller = new MenuController("menu");
 
 //editor_controller.initialize_html() 
 
