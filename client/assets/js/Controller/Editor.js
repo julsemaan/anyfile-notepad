@@ -237,7 +237,7 @@ EditorController.prototype.post_file_load = function(){
     document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
-    this.flash.success(i18n("Creating new file in : "+this.file.provider))
+    this.flash.success(i18n("Creating new file in: "+this.file.provider))
     document.title = i18n("New file")+" | Anyfile Notepad";
   }
 
@@ -709,7 +709,7 @@ EditorController.prototype.select_locale = function(locale){
   var self = this;
   setCookie("locale", locale, 365)
   
-  new Popup({ message : i18n("Requires to restart the application to be effective. Proceed with restart ?"), callback : function(result) {if(result) window.location.reload()}, confirm : true });
+  new Popup({ message : i18n("Requires to restart the application to be effective. Proceed with restart?"), callback : function(result) {if(result) window.location.reload()}, confirm : true });
 }
 
 EditorController.prototype.detect_device = function(){

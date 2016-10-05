@@ -72,5 +72,152 @@
   "You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests.": "Tiene que habilitar los 'pop-ups' en su navegador, luego, iniciar sesión en su cuenta de Google y aceptar la solicitud de autorización.",
   "You should now restart the app to fully flush your preferences.": "Debe de reiniciar la app ahora para limpiar completamente sus preferencias.",
   "Your file is being loaded": "Su archivo está siendo cargado",
-  "vim": "Modo Vim"
+  "vim": "Modo Vim",
+"About": "Acerca de",
+
+"Action": "Acción",
+
+"Add account": "Agregar cuenta",
+
+"An unexpected error occurred with the provider server": "Un error inesperado ocurrió  con el servidor proveedor",
+
+"Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Almacenamiento en el explorador inexistente. La aplicación no puede funcionar sin eso. Por favor usa otro explorador web o actualiza el que estás usando.",
+
+"Build ID": "ID de la compilación",
+
+"Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "No se pudo usar tus preferencias porque no fueron cargadas apropiadamente. Se recomienda reiniciar la aplicación.",
+
+"Cancel": "Cancelar",
+
+"Connect Dropbox": "Conectar cuenta de Dropbox",
+
+"Connect account": "Conectar cuenta",
+
+"Creating new file in: ": "Creando archivo nuevo en:",
+
+"Duplicate selection": "Duplicar selección",
+
+"File id": "ID del archivo",
+
+"File provider": "Proveedor del archivo",
+
+"Filename can't be empty": "El nombre del archivo no puede estar vacío",
+
+"Folder id": "ID de la carpeta",
+
+"Frequently asked questions (FAQ)": "Preguntas Frecuentes (FAQ)",
+
+"Go line down": "Ir una línea abajo",
+
+"Go line up": "Ir una línea arriba",
+
+"Go to end": "Ir hasta el final",
+
+"Go to left": "Ir hacia la izquierda",
+
+"Go to line": "Ir a la línea",
+
+"Go to line end": "Ir hacia el final de la línea",
+
+"Go to line start": "Ir hacia el inicio de la línea",
+
+"Go to matching bracket":  "Ir hacia el corchete correspondiente",
+
+"Go to page down": "Avanzar de página",
+
+"Go to page up": "Regresar de página",
+
+"Go to right": "Ir a la derecha",
+
+"Go to start": "Ir al inicio",
+
+"Go to word left": "Ir una palabara hacia la izquierda",
+
+"Go to word right": "Ir una palabra hacia la derecha",
+
+"Google+ Community": "Comunidad de Google+",
+
+"Hang tight...": "Sostente...",
+
+"Help": "Ayuda",
+
+"Help (FAQ)": "Ayuda (FAQ)",
+
+"In order to open this file, you need to switch user.": "Para poder abrir este archivo, necesitas cambiar de usuario",
+
+"Keyboard shortcuts": "Combinación de teclas (Accesos directos)",
+
+"Logged in as": "Sesión iniciada como", 
+
+"Moving around":  "Moviendo",
+
+"OK": "Ok",
+
+"Requires to restart the application to be effective. Proceed with restart?": "Se requiere reinicar la aplicación para que tome efecto. ¿Proceder con el reinicio?",
+
+"Restarting": "Reiniciando",
+
+"Scroll line down": "Desplazarse una línea hacia abajo",
+
+"Scroll line up": "Desplazarse una línea hacia arriba",
+
+"Scroll page down": "Desplazarse una página hacia abajo",
+
+"Scroll page up": "Desplazarse una página hacia arriba",
+
+"Select all": "Seleccionar todo",
+
+"Select down": "Seleccionar hacia abajo",
+
+"Select left": "Seleccionar hacia la izquierda",
+
+"Select line end": "Seleccionar el final de la línea",
+
+"Select line start": "Seleccionar el inicio de la línea",
+
+"Select page down": "Seleccionar la página de abajo",
+
+"Select page up": "Seleccionar la página de arriba",
+
+"Select right": "Seleccionar hacia la derecha",
+
+"Select to end": "Seleccionar hasta el final",
+
+"Select to line end": "Seleccionar hasta el final de la línea",
+
+"Select to line start": "Seleccionar hasta el inicio de la línea",
+
+"Select to matching bracket":  "Seleccionar hasta el corchete correspondiente",
+
+"Select to start": "Seleccionar hasta el inicio",
+
+"Select up": "Seleccionar hacia arriba",
+
+"Select word left": "Seleccionar palabra de la izquierda",
+
+"Select word right": "Seleccionar palabra de la derecha",
+
+"Selection": "Selección",
+
+"Starting up application": "Iniciando la aplicación",
+
+"Switch account": "Cambiar de cuenta",
+
+"Switch user": "Cambiar de usuario",
+
+"The app is being restarted, please wait.": "La aplicación se está reiniciando, por favor espera.",
+
+"This outlines the main shortcuts, for the complete list see:": "Esto marca los accesos directos principales, para la lista completa ve:",
+
+"User was not changed. Remember you can add accounts via the 'Add Account' button so they are available in the app.": "El usuario no se ha cambiado. Recuerda que puedes agregar más cuentas a través del botón 'Agregar Cuenta' para que estén disponibles en la aplicación.",
+
+"Version": "Versión",
+
+"We got this message from Dropbox": "Obtuvimos este mensaje de Dropbox",
+
+"Your device": "Tu dispositivo",
+
+"Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.": "Tus preferencias no pudieron ser cargadas. Esto es probablemente debido a un error en los servidores de Google. Por favor intenta reinicar la aplicación y, si el problema continúa, reporta el error."
+
+
 }
