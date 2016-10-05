@@ -348,7 +348,7 @@ EditorController.prototype.change_font_size = function(font_size){
   var self = this;
 
   this.font_size_pref.refreshAndSet(font_size, self, function(){self.show_reauth()})
-  this.editor_view.setFontSize(this.font_size_pref.getValue())
+  this.editor_view.setFontSize(font_size)
 }
 
 EditorController.prototype.change_tab_size = function(tab_size){
@@ -356,7 +356,7 @@ EditorController.prototype.change_tab_size = function(tab_size){
 
   this.tab_size_pref.refreshAndSet(tab_size, self, self.show_reauth)
 
-  this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
+  this.editor_view.getSession().setTabSize(tab_size)
 }
 
 EditorController.prototype.block_saving = function(){
