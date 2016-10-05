@@ -14,7 +14,7 @@ User.set_session_user_id = function(user_id) {
   if(typeof(Storage) !== "undefined") {
     sessionStorage.current_user_id = user_id;
   } else {
-    new Popup({ message : i18n("Browser storage is inexistant. The app cannot work without it. Please use another browser or a update your current one.") });
+    new Popup({ message : i18n("Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.") });
   }
 }
 
@@ -22,7 +22,7 @@ User.get_session_user_id = function() {
   if(typeof(Storage) !== "undefined") {
     return sessionStorage.current_user_id;
   } else {
-    new Popup({ message : i18n("Browser storage is inexistant. The app cannot work without it. Please use another browser or a update your current one.") });
+    new Popup({ message : i18n("Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.") });
   }
 }
 
