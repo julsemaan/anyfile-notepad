@@ -41,7 +41,7 @@ Next, install `npm` and `bower`.
 ```
 # apt-get install npm
 # ln -s /usr/bin/nodejs /usr/bin/node
-# npm install -g bower
+# npm install -g
 ```
 
 ### Setting up the app dependencies
