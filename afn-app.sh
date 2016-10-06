@@ -21,6 +21,14 @@ function add_asset() {
 }
 export -f add_asset
 
+function add_min_prefix() {
+  file=$1
+  ext="${file##*.}"
+  filename="${file%.*}"
+  echo -n "${filename}.min.${ext}"
+}
+export -f add_min_prefix
+
 RUNNING_DIR=$(pwd)
 
 if ! [ -z $AFN_BUILD_DIR ]; then
@@ -103,7 +111,7 @@ function application_css() {
   add_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
-  ./node_modules/.bin/minify $APPLICATION_CSS
+  ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
 }
 
 function application_js() {
@@ -132,7 +140,7 @@ function application_js() {
   # todo - exclude the files above
   find client/assets/js/ -name '*.js' | while read file; do add_asset "$file" $APPLICATION_JS ; done
 
-  ./node_modules/.bin/minify $APPLICATION_JS
+  ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
 }
 
 function editor_part() {
