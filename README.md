@@ -19,11 +19,7 @@ First, install `perl`, `cpan`, `gcc`, `curl` and `make` from your distribution r
 
 ```
 # apt-get install perl gcc make
-# cpan Template
-# cpan Getopt::Long
-# cpan JSON
-# cpan File::Slurp
-# cpan Tie::IxHash
+# cpan Template Getopt::Long JSON File::Slurp Tie::IxHash
 ```
 
 ### CSS (SASS) compilation setup
