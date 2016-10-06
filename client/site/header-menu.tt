@@ -35,7 +35,7 @@
       </div>
 
       <div class="col-md-12">
-        <div class="top_notice alert alert-success"><h4><a href="/news">Click here to read about the v5 release.</a></h4></div>
+        <div class="top_notice alert alert-success"><h4><b><a href="/news">App is now opensource!</a></b></h4></div>
       </div>
     </div>
   </div>
