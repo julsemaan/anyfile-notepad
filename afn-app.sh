@@ -185,9 +185,9 @@ function json_resources() {
 
 function build_all() {
   mkdir -p $COMPILED_APP
-  echo "Press Enter to execute rm -fr $COMPILED_APP/*"
-  read
+  cd /tmp/
   rm -fr $COMPILED_APP/*
+  cd -
 
   mkdir -p $COMPILED_APP
   mkdir -p $COMPILED_APP/assets
