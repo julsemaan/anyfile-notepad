@@ -36,12 +36,11 @@ Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` a
 
 ### Assets package manager setup
 
-Next, install `npm` and `bower`.
+Next, install `npm`.
 
 ```
 # apt-get install npm
 # ln -s /usr/bin/nodejs /usr/bin/node
-# npm install -g
 ```
 
 ### Setting up the app dependencies
@@ -51,7 +50,8 @@ Then, clone the repo, and launch the install of the assets of the app.
 ```
 # git clone https://github.com/julsemaan/anyfile-notepad.git
 # cd anyfile-notepad
-# bower install
+# npm install
+# ./node_modules/.bin/bower install
 ```
 
 ### Basic configuration and initial launch
