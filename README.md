@@ -22,14 +22,6 @@ First, install `perl`, `cpan`, `gcc`, `curl` and `make` from your distribution r
 # cpan Template Getopt::Long JSON File::Slurp Tie::IxHash
 ```
 
-### CSS (SASS) compilation setup
-
-Next, you need to have `sass` installed, so grab a version of `ruby` and `gem` and install `sass`:
-```
-# apt-get install ruby
-# gem install sass
-```
-
 ### Assets package manager setup
 
 Next, install `npm`.

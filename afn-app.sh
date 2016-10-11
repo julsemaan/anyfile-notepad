@@ -68,7 +68,7 @@ function pages_css() {
   fi
 
   cp bower_components/bootstrap/dist/css/bootstrap.min.css client/assets/css/libs/bootstrap.min.css.scss
-  sass -I client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+  ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
 }
 
 function pages() {
@@ -109,7 +109,7 @@ function application_css() {
 
   add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
   add_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
-  sass -I client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
+  ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
   ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
 }
