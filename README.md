@@ -18,7 +18,7 @@ This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app
 First, install `perl`, `cpan`, `gcc`, `curl` and `make` from your distribution repository. Then install these packages from CPAN:
 
 ```
-# apt-get install perl gcc make
+# apt-get install perl gcc curl make
 # cpan Template Getopt::Long JSON File::Slurp Tie::IxHash
 ```
 
