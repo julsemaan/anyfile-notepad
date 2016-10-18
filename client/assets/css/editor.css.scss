@@ -10,6 +10,10 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
   font-weight:bold;
 }
 
+.hidden-soft {
+  display:none;
+}
+
 html{
   background-color:#EBEBEB;
 }
@@ -67,6 +71,15 @@ div#editor_menu_container{
   form a {
     color:white;
     font-style:italic;
+  }
+  a.autosave {
+/*    display:none;*/
+    i{
+      font-size:90%;
+      position:relative;
+      top:5px;
+      left:0;
+    }
   }
   /*width:280px;*/
 }

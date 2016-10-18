@@ -5,6 +5,8 @@
   
   <meta charset="UTF-8">
 
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
   <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].min.css" media="all">
   <link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css" media="all">
 

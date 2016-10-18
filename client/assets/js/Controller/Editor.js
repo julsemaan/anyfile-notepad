@@ -294,12 +294,16 @@ EditorController.prototype.save = function(){
 EditorController.prototype.activate_auto_save = function(){
   var self = this
   this.deactivate_auto_save()
+  $('.autosave-on').show();
+  $('.autosave-off').hide();
   self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
 }
 
 EditorController.prototype.deactivate_auto_save = function(){
   var self = this
   clearInterval(this.auto_save_interval)
+  $('.autosave-off').show();
+  $('.autosave-on').hide();
 }
 
 EditorController.prototype.auto_save = function(){
