@@ -41,6 +41,15 @@
             </a>
           </li>
 
+          <li>
+            <a href="{{noaction}}" onclick="editor_controller.toggle_auto_save_setting()">
+              <div class="menu-togglebutton togglebutton">
+                <label>
+                  {{ i18n "Autosave" }} <input type="checkbox" id="autosave-setting" onclick="editor_controller.toggle_auto_save_setting()">
+                </label>
+              </div>
+            </a>
+          </li>
 
         </ul>
       </div>

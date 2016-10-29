@@ -437,4 +437,11 @@ div#current_user{
   padding:5px;
 }
 
-
+.menu-togglebutton {
+  label {
+    font-weight:bold!important;
+  }
+  input {
+    margin-left:8px;
+  }  
+}

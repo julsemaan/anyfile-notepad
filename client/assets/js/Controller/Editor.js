@@ -291,12 +291,39 @@ EditorController.prototype.save = function(){
   return false;
 }
 
+EditorController.prototype.toggle_auto_save_setting = function() {
+  var self = this;
+  if(BooleanPreference.find("autosave").getValue()) {
+    self.deactivate_auto_save_setting();
+  }
+  else {
+    self.activate_auto_save_setting();
+  }
+}
+
+
+EditorController.prototype.activate_auto_save_setting = function() {
+  var self = this;
+  BooleanPreference.find("autosave").refreshAndSet("true", self, self.show_reauth);
+  $('#autosave-setting').val(true);
+  self.activate_auto_save();
+}
+
+EditorController.prototype.deactivate_auto_save_setting = function() {
+  var self = this;
+  BooleanPreference.find("autosave").refreshAndSet("false", self, self.show_reauth);
+  $('#autosave-setting').val(false);
+  self.deactivate_auto_save();
+}
+
 EditorController.prototype.activate_auto_save = function(){
   var self = this
   this.deactivate_auto_save()
-  $('.autosave-on').show();
-  $('.autosave-off').hide();
-  self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+  if(BooleanPreference.find("autosave").getValue()) {
+    $('.autosave-on').show();
+    $('.autosave-off').hide();
+    self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+  }
 }
 
 EditorController.prototype.deactivate_auto_save = function(){
