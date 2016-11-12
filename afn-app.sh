@@ -80,6 +80,8 @@ function pages_css() {
 
   cp bower_components/bootstrap/dist/css/bootstrap.min.css client/assets/css/libs/bootstrap.min.css.scss
   ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+  
+  rm -f client/assets/css/libs/bootstrap.min.css.scss
 }
 
 function pages() {
