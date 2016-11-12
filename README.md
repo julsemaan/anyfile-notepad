@@ -52,8 +52,9 @@ Then, launch the build script and ensure no error or warning shows.
 
 ```
 # ./afn-app.sh 
-Press Enter to execute rm -fr /root/anyfile-notepad/tmp/app-compiled/*
-
+...
+A lot of output to build ace.js the first time
+...
 Building pages.css
 Building site pages
 -Building page home
