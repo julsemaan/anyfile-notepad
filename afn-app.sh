@@ -57,6 +57,17 @@ function should_reset() {
   fi
 }
 
+function ace_js() {
+  cd bower_components/ace-anyfile-notepad
+  if ! find -maxdepth 1 -name 'ace-*' -type d | egrep '.*' > /dev/null ; then 
+    npm install
+    make dist
+  fi
+  cd -
+  mkdir $COMPILED_APP/ace.js
+  cp -a bower_components/ace-anyfile-notepad/ace-*/src-min/* $COMPILED_APP/ace.js/
+}
+
 function pages_css() {
   # pages.css
   echo "Building pages.css"
@@ -192,6 +203,7 @@ function build_all() {
   mkdir -p $COMPILED_APP
   mkdir -p $COMPILED_APP/assets
 
+  ace_js
   pages_css
   pages
   application_css
