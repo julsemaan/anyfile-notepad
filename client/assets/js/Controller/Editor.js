@@ -51,6 +51,10 @@ EditorController.prototype.initialize_html = function(){
     self.change_word_wrap($(this).prop('checked'))
   });
 
+  $('.autosave-setting').on('change', function(){
+    self.toggle_auto_save_setting($(this).prop('checked'))
+  });
+
   $('select').on('change', function() {
     if($(this).hasClass('keybinding_select')){
       self.change_keybinding(this.value);
@@ -291,35 +295,35 @@ EditorController.prototype.save = function(){
   return false;
 }
 
-EditorController.prototype.toggle_auto_save_setting = function() {
+EditorController.prototype.toggle_auto_save_setting = function(newVal) {
   var self = this;
-  if(BooleanPreference.find("autosave").getValue()) {
-    self.deactivate_auto_save_setting();
+  if(newVal) {
+    self.activate_auto_save_setting();
   }
   else {
-    self.activate_auto_save_setting();
+    self.deactivate_auto_save_setting();
   }
 }
 
 
 EditorController.prototype.activate_auto_save_setting = function() {
   var self = this;
-  BooleanPreference.find("autosave").refreshAndSet("true", self, self.show_reauth);
-  $('#autosave-setting').val(true);
-  self.activate_auto_save();
+  BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
+  $('.autosave-setting').attr('checked', 'checked');
+  self.activate_auto_save(true);
 }
 
 EditorController.prototype.deactivate_auto_save_setting = function() {
   var self = this;
-  BooleanPreference.find("autosave").refreshAndSet("false", self, self.show_reauth);
-  $('#autosave-setting').val(false);
+  BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
+  $('.autosave-setting').removeAttr('checked');
   self.deactivate_auto_save();
 }
 
-EditorController.prototype.activate_auto_save = function(){
+EditorController.prototype.activate_auto_save = function(force){
   var self = this
   this.deactivate_auto_save()
-  if(BooleanPreference.find("autosave").getValue()) {
+  if(force || BooleanPreference.find("autosave").getValue()) {
     $('.autosave-on').show();
     $('.autosave-off').hide();
     self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
@@ -681,6 +685,7 @@ EditorController.prototype.open_share_modal = function() {
 
 EditorController.prototype.options_show_callback = function() {
   var self = this;
+  console.log("doing callback")
   $("select").each(function(){
     if($(this).hasClass('keybinding_select')) {
       $(this).val(StringPreference.find("keybinding").getValue())
@@ -698,6 +703,13 @@ EditorController.prototype.options_show_callback = function() {
   }
   else{
     $('.word_wrap_checkbox').removeAttr('checked');
+  }
+  
+  if(BooleanPreference.find("autosave").getValue()){
+    $('.autosave-setting').attr('checked', 'checked');
+  }
+  else{
+    $('.autosave-setting').removeAttr('checked');
   }
 
 }
