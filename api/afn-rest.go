@@ -16,7 +16,6 @@ func main() {
 	schema.UpdatedField.ReadOnly = false
 
 	var (
-		// Define a user resource schema
 		mime_type = schema.Schema{
 			Description: `The mime_type object`,
 			Fields: schema.Fields{
@@ -39,7 +38,6 @@ func main() {
 			},
 		}
 
-		// Define a post resource schema
 		extension = schema.Schema{
 			Description: `Represents an extension`,
 			Fields: schema.Fields{
@@ -68,7 +66,7 @@ func main() {
 		}
 
 		syntax = schema.Schema{
-			Description: `Represents an syntax`,
+			Description: `Represents a syntax`,
 			Fields: schema.Fields{
 				"id":         schema.IDField,
 				"created_at": schema.CreatedField,
@@ -93,7 +91,6 @@ func main() {
 		directory = "./db"
 	}
 
-	// Add a resource on /users[/:user_id]
 	index.Bind("mime_types", mime_type, filestore.NewHandler(directory, "mime_types", []string{"type_name"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
