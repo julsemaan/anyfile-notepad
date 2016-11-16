@@ -81,6 +81,23 @@ func main() {
 				},
 			},
 		}
+
+		setting = schema.Schema{
+			Description: `Represents a setting`,
+			Fields: schema.Fields{
+				"id":         schema.IDField,
+				"created_at": schema.CreatedField,
+				"updated_at": schema.UpdatedField,
+				"var_name": {
+					Required:   true,
+					Filterable: true,
+				},
+				"value": {
+					Required:   true,
+					Filterable: true,
+				},
+			},
+		}
 	)
 
 	// Create a REST API resource index
@@ -103,6 +120,9 @@ func main() {
 		AllowedModes: resource.ReadWrite,
 	})
 
+	index.Bind("settings", setting, filestore.NewHandler(directory, "settings", []string{"var_name"}), resource.Conf{
+		AllowedModes: resource.ReadWrite,
+	})
 	// Create API HTTP handler for the resource graph
 	api, err := rest.NewHandler(index)
 	if err != nil {

@@ -189,4 +189,18 @@ angular.module('afnAdminApp.controllers', [])
 }).controller('ExtensionEditController', function($scope, $controller, $stateParams, Extension) {
   $scope.crud_model = Extension;
   $controller('CRUDEditController', {$scope: $scope});
+})
+// Settings
+.controller('SettingListController', function($scope, $controller, Setting) {
+  $scope.crud_model = Setting;
+  $controller('CRUDListController', {$scope: $scope});
+}).controller('SettingViewController', function($scope, $controller, $stateParams, Setting) {
+  $scope.crud_model = Setting;
+  $controller('CRUDViewController', {$scope: $scope});
+}).controller('SettingCreateController', function($scope, $controller, $state, $stateParams, Setting) {
+  $scope.crud_model = Setting;
+  $controller('CRUDCreateController', {$scope: $scope});
+}).controller('SettingEditController', function($scope, $controller, $stateParams, Setting) {
+  $scope.crud_model = Setting;
+  $controller('CRUDEditController', {$scope: $scope});
 });

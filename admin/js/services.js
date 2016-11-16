@@ -145,5 +145,23 @@ angular.module('afnAdminApp.services', [])
       $timeout(function(){self.flash.splice(self.flash.indexOf(o), 1)}, timeout)
     }
   }
+}).factory('Setting', function($resource, $CRUDResource) {
+  var res = $resource(AFN_VARS['api_uri']+'/settings/:id', {id: '@id'}, {
+    update: {
+      method: 'PUT'
+    }
+  });
+  res = $CRUDResource(res);
+
+  res.prototype.model_name = "Setting";
+  res.prototype.model_name_pl = "Settings";
+
+  res.prototype.snake_model_name = "setting";
+  res.prototype.snake_model_name_pl = "settings";
+
+  res.prototype.display_attr = "var_name";
+
+
+  return res;
 });
 
