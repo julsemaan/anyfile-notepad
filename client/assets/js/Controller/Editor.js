@@ -48,7 +48,8 @@ EditorController.prototype.initialize_html = function(){
   })
 
   $('.word_wrap_checkbox').on('change', function(){
-    self.change_word_wrap($(this).prop('checked'))
+    self.change_word_wrap($(this).prop('checked'));
+    $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
   });
 
   $('.autosave-setting').on('change', function(){
@@ -309,14 +310,14 @@ EditorController.prototype.toggle_auto_save_setting = function(newVal) {
 EditorController.prototype.activate_auto_save_setting = function() {
   var self = this;
   BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
-  $('.autosave-setting').attr('checked', 'checked');
+  $('.autosave-setting').prop('checked', true);
   self.activate_auto_save(true);
 }
 
 EditorController.prototype.deactivate_auto_save_setting = function() {
   var self = this;
   BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
-  $('.autosave-setting').removeAttr('checked');
+  $('.autosave-setting').prop('checked', false);
   self.deactivate_auto_save();
 }
 
@@ -685,7 +686,6 @@ EditorController.prototype.open_share_modal = function() {
 
 EditorController.prototype.options_show_callback = function() {
   var self = this;
-  console.log("doing callback")
   $("select").each(function(){
     if($(this).hasClass('keybinding_select')) {
       $(this).val(StringPreference.find("keybinding").getValue())
@@ -699,17 +699,17 @@ EditorController.prototype.options_show_callback = function() {
   });
   
   if(BooleanPreference.find("word_wrap").getValue()){
-    $('.word_wrap_checkbox').attr('checked', 'checked');
+    $('.word_wrap_checkbox').prop('checked', true);
   }
   else{
-    $('.word_wrap_checkbox').removeAttr('checked');
+    $('.word_wrap_checkbox').prop('checked', false);
   }
   
   if(BooleanPreference.find("autosave").getValue()){
-    $('.autosave-setting').attr('checked', 'checked');
+    $('.autosave-setting').prop('checked', true);
   }
   else{
-    $('.autosave-setting').removeAttr('checked');
+    $('.autosave-setting').prop('checked', false);
   }
 
 }
