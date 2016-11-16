@@ -48,7 +48,12 @@ EditorController.prototype.initialize_html = function(){
   })
 
   $('.word_wrap_checkbox').on('change', function(){
-    self.change_word_wrap($(this).prop('checked'))
+    self.change_word_wrap($(this).prop('checked'));
+    $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
+  });
+
+  $('.autosave-setting').on('change', function(){
+    self.toggle_auto_save_setting($(this).prop('checked'))
   });
 
   $('select').on('change', function() {
@@ -291,12 +296,39 @@ EditorController.prototype.save = function(){
   return false;
 }
 
-EditorController.prototype.activate_auto_save = function(){
+EditorController.prototype.toggle_auto_save_setting = function(newVal) {
+  var self = this;
+  if(newVal) {
+    self.activate_auto_save_setting();
+  }
+  else {
+    self.deactivate_auto_save_setting();
+  }
+}
+
+
+EditorController.prototype.activate_auto_save_setting = function() {
+  var self = this;
+  BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
+  $('.autosave-setting').prop('checked', true);
+  self.activate_auto_save(true);
+}
+
+EditorController.prototype.deactivate_auto_save_setting = function() {
+  var self = this;
+  BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
+  $('.autosave-setting').prop('checked', false);
+  self.deactivate_auto_save();
+}
+
+EditorController.prototype.activate_auto_save = function(force){
   var self = this
   this.deactivate_auto_save()
-  $('.autosave-on').show();
-  $('.autosave-off').hide();
-  self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+  if(force || BooleanPreference.find("autosave").getValue()) {
+    $('.autosave-on').show();
+    $('.autosave-off').hide();
+    self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+  }
 }
 
 EditorController.prototype.deactivate_auto_save = function(){
@@ -667,10 +699,17 @@ EditorController.prototype.options_show_callback = function() {
   });
   
   if(BooleanPreference.find("word_wrap").getValue()){
-    $('.word_wrap_checkbox').attr('checked', 'checked');
+    $('.word_wrap_checkbox').prop('checked', true);
   }
   else{
-    $('.word_wrap_checkbox').removeAttr('checked');
+    $('.word_wrap_checkbox').prop('checked', false);
+  }
+  
+  if(BooleanPreference.find("autosave").getValue()){
+    $('.autosave-setting').prop('checked', true);
+  }
+  else{
+    $('.autosave-setting').prop('checked', false);
   }
 
 }

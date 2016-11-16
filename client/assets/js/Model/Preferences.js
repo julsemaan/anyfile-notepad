@@ -11,6 +11,7 @@ function Preferences(loaded){
     'agree_terms' : 'false',
     'keybinding' : 'normal',
     'favorites' : "[]",
+    'autosave' : 'true',
   }
   
   this.HASH_PREFERENCES = [
@@ -77,6 +78,7 @@ Preferences.prototype.get_hash = function(){
   try{
     this.preferences = JSON.parse(this.prefs_file.data)
   }catch(e){
+    console.log(this.prefs_file.data)
     console.log(e)
     if(!this.warned){
       new Popup({ message : i18n("Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.") });
