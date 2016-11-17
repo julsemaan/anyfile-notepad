@@ -47,6 +47,8 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
+  self.fontSizeWidget = new FontSizeWidget({widget_class:'font-size-selection', editor_controller:self});
+
   $('.word_wrap_checkbox').on('change', function(){
     self.change_word_wrap($(this).prop('checked'));
     $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
@@ -63,9 +65,6 @@ EditorController.prototype.initialize_html = function(){
     else if($(this).hasClass('tab_size_select')){
       self.change_tab_size(this.value);
     }
-    else if($(this).hasClass('font_size_select')){
-      self.change_font_size(this.value);
-    }
   });
 
   $(window).bind('beforeunload',function(){
@@ -73,10 +72,6 @@ EditorController.prototype.initialize_html = function(){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
   });
-
-  if(this.font_size_pref.getValue() != null){
-    this.editor_view.setFontSize(this.font_size_pref.getValue())
-  }
 
   if(this.tab_size_pref.getValue() != null){
     this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
@@ -384,13 +379,6 @@ EditorController.prototype.is_ready_to_submit = function(){
   return true
 }
 
-EditorController.prototype.change_font_size = function(font_size){
-  var self = this;
-
-  this.font_size_pref.refreshAndSet(font_size, self, function(){self.show_reauth()})
-  this.editor_view.setFontSize(font_size)
-}
-
 EditorController.prototype.change_tab_size = function(tab_size){
   var self = this;
 
@@ -687,10 +675,9 @@ EditorController.prototype.options_show_callback = function() {
     else if($(this).hasClass('tab_size_select')){
       $(this).val(StringPreference.find("ace_js_tab_size").getValue())
     }
-    else if($(this).hasClass('font_size_select')){
-      $(this).val(StringPreference.find("ace_js_font_size").getValue())
-    }
   });
+
+  self.fontSizeWidget.refreshFromPreference();
   
   if(BooleanPreference.find("word_wrap").getValue()){
     $('.word_wrap_checkbox').prop('checked', true);
