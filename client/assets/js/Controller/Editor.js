@@ -471,16 +471,6 @@ EditorController.prototype.change_word_wrap = function(value){
 }
 
 
-EditorController.prototype.open_search = function(){
-  var self = this;
-  this.editor_view.execCommand('find')
-}
-
-EditorController.prototype.open_replace = function(){
-  var self = this;
-  this.editor_view.execCommand('replace') 
-}
-
 EditorController.prototype.select_theme = function(name){
   var self = this;
   var current_theme = this.theme_pref.getValue()

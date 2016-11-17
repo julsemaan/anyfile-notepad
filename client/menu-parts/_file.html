@@ -41,11 +41,11 @@
   <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.print()" }}}>{{ i18n "Print" }}</a></li>
   
   <li>
-    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_search()" }}}>{{ i18n "Search" }} (Ctrl-F)</a>
+    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.editor_view.execCommand('find')" }}}>{{ i18n "Search" }} (Ctrl-F)</a>
   </li>
   
   <li>
-    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_replace()" }}}>
+    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.editor_view.execCommand('replace')" }}}>
       {{ i18n "Search & replace" }}
     </a>
   </li>
