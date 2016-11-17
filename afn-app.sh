@@ -148,6 +148,7 @@ function application_js() {
   add_asset client/assets/js/Model.js $APPLICATION_JS
   add_asset client/assets/js/Model/Preference.js $APPLICATION_JS
   add_asset client/assets/js/Model/CloudFile.js $APPLICATION_JS
+  add_asset client/assets/js/Widget/Preference.js $APPLICATION_JS
   add_asset client/assets/js/helpers.js $APPLICATION_JS
 
   # todo - exclude the files above
