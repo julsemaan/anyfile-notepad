@@ -68,10 +68,6 @@ EditorController.prototype.initialize_html = function(){
     }
   });
 
-  this.$.find(".show_file_info").click(function(){
-    self.$.find('#file_info_modal').modal('show')
-  })
-
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
@@ -720,11 +716,6 @@ EditorController.prototype.options_show_callback = function() {
     $('.autosave-setting').prop('checked', false);
   }
 
-}
-
-EditorController.prototype.show_file_info = function() {
-  var self = this;
-  self.$.find('#file_info_modal').modal('show')
 }
 
 EditorController.prototype.restart_app = function() {
