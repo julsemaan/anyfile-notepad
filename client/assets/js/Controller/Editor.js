@@ -11,7 +11,6 @@ function EditorController(view, options){
   this.content_saved = "";
 
   this.word_wrap_pref = options["word_wrap_pref"]
-  this.font_size_pref = options["font_size_pref"]
   this.tab_size_pref = options["tab_size_pref"]
   this.major_notice_pref = options["major_notice_pref"]
 
