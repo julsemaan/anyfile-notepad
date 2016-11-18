@@ -12,14 +12,12 @@ PreferenceWidget.prototype.init = function(options){
   
   switch(self.widget().prop("tagName")) {
     case "INPUT":
-      console.log("working on input")
       switch(self.widget().attr('type')) {
         case "text":
-          console.log("text input");
           self.inputType = "text";
+					throw "Input text not implemented...";
           break;
         case "checkbox":
-          console.log("checkbox input");
           self.inputType = "checkbox";
           self.widget().on('change', function(){
             self.handleChange($(this).prop('checked'))
@@ -28,7 +26,6 @@ PreferenceWidget.prototype.init = function(options){
       }
       break;
     case "SELECT":
-      console.log("working on select");
       self.inputType = "select";
       $('select').on('change.'+self.constructor.name, function() {
         if($(this).attr('data-pref-widget') == self.constructor.name){
