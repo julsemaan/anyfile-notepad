@@ -21,7 +21,7 @@
       <!-- OPTIONS/* -->
       <li>
         <a href="javascript:void(0)" id="options_menu_btn" class="menu_item" >{{ i18n "Options" }}</a>
-        <div class="menu_content" data-show-callback="editor_controller.options_show_callback()">
+        <div class="menu_content">
           {{> moptions }}
         </div>
       </li>

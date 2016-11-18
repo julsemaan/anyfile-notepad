@@ -571,14 +571,6 @@ EditorController.prototype.open_share_modal = function() {
   }
 }
 
-EditorController.prototype.options_show_callback = function() {
-  var self = this;
-  self.fontSizeWidget.refreshFromPreference();
-  self.tabSizeWidget.refreshFromPreference();
-  self.editorModeWidget.refreshFromPreference();
-  
-}
-
 EditorController.prototype.restart_app = function() {
   var self = this;
   new Popup({ message : i18n("Are you sure ?"), callback : function(result) {if(result) window.location.reload()}, confirm : true});
