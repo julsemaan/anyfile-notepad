@@ -5,9 +5,11 @@ PreferenceWidget.prototype.init = function(options){
   Model.call(this, options);
   if(!options) return;
 
+  self.widgetName = self.constructor.name;
+
   self.editor_controller = options["editor_controller"];
   if(!self.editor_controller) {
-    throw("Missing editor controller for "+self.constructor.name);
+    throw("Missing editor controller for "+self.widgetName);
   }
   
   switch(self.widget().prop("tagName")) {
@@ -27,8 +29,8 @@ PreferenceWidget.prototype.init = function(options){
       break;
     case "SELECT":
       self.inputType = "select";
-      $('select').on('change.'+self.constructor.name, function() {
-        if($(this).attr('data-pref-widget') == self.constructor.name){
+      $('select').on('change.'+self.widgetName, function() {
+        if($(this).attr('data-pref-widget') == self.widgetName){
           self.handleChange(this.value);
         }
       });
@@ -56,7 +58,7 @@ PreferenceWidget.prototype.widgetValToPrefVal = function(val) {
 
 PreferenceWidget.prototype.widget = function() {
   var self = this;
-  return $("[data-pref-widget='"+self.constructor.name+"']");
+  return $("[data-pref-widget='"+self.widgetName+"']");
 }
 
 PreferenceWidget.prototype.refreshFromPreference = function() {
