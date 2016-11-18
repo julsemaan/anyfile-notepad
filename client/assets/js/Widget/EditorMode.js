@@ -6,7 +6,7 @@ EditorModeWidget.prototype.preference = function() {
 
 EditorModeWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-	var keybinding = self.preference().getValue();
+  var keybinding = self.preference().getValue();
   if(keybinding == "vim"){
     self.editor_controller.editor_view.setKeyboardHandler("ace/keyboard/vim");
     if(!self.editor_controller.editor_view.showCommandLine){
