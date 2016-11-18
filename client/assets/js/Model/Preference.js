@@ -33,8 +33,8 @@ Preference.prototype.refreshAndSet = function(value, locker, fail_action) {
   var self = this;
   return new RSVP.Promise( function(r, f) {
     user_preferences.refresh(function(){
-      r();
       self.setValue(value, locker, fail_action);
+      r();
     });
   });
 }
