@@ -10,11 +10,6 @@ PreferenceWidget.prototype.init = function(options){
     throw("Missing editor controller for "+self.constructor.name);
   }
   
-  self.widget_class = options["widget_class"];
-  if(!self.widget_class) {
-    throw("There is no widget class for "+self.constructor.name);
-  }
-
   switch(self.widget().prop("tagName")) {
     case "INPUT":
       console.log("working on input")
@@ -36,7 +31,7 @@ PreferenceWidget.prototype.init = function(options){
       console.log("working on select");
       self.inputType = "select";
       $('select').on('change.'+self.constructor.name, function() {
-        if($(this).hasClass(self.widget_class)){
+        if($(this).attr('data-pref-widget') == self.constructor.name){
           self.handleChange(this.value);
         }
       });
@@ -64,7 +59,7 @@ PreferenceWidget.prototype.widgetValToPrefVal = function(val) {
 
 PreferenceWidget.prototype.widget = function() {
   var self = this;
-  return $('.'+self.widget_class);
+  return $("[data-pref-widget='"+self.constructor.name+"']");
 }
 
 PreferenceWidget.prototype.refreshFromPreference = function() {
