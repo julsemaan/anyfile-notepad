@@ -10,7 +10,6 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.word_wrap_pref = options["word_wrap_pref"]
   this.tab_size_pref = options["tab_size_pref"]
   this.major_notice_pref = options["major_notice_pref"]
 
@@ -46,13 +45,9 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
-  self.fontSizeWidget = new FontSizeWidget({widget_class:'font-size-selection', editor_controller:self});
-  self.autosaveWidget = new AutosaveWidget({widget_class:'autosave-setting', editor_controller:self});
-
-  $('.word_wrap_checkbox').on('change', function(){
-    self.change_word_wrap($(this).prop('checked'));
-    $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
-  });
+  self.fontSizeWidget = new FontSizeWidget({editor_controller:self});
+  self.autosaveWidget = new AutosaveWidget({editor_controller:self});
+  self.wordWrapWidget = new WordWrapWidget({editor_controller:self});
 
   $('select').on('change', function() {
     if($(this).hasClass('keybinding_select')){
@@ -74,8 +69,6 @@ EditorController.prototype.initialize_html = function(){
   }
 
   this.change_keybinding(this.keybinding_pref.getValue())
-
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
 
   $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
     if(event.ctrlKey && event.which != 17) {
@@ -420,14 +413,6 @@ EditorController.prototype.set_wait = function(key, value){
   this.ajax_defered_waiting[key] = value
 }
 
-EditorController.prototype.change_word_wrap = function(value){
-  var self = this;
-
-  this.word_wrap_pref.refreshAndSet(value, self, function(){self.show_reauth()});
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
-}
-
-
 EditorController.prototype.select_theme = function(name){
   var self = this;
   var current_theme = this.theme_pref.getValue()
@@ -647,13 +632,6 @@ EditorController.prototype.options_show_callback = function() {
   });
 
   self.fontSizeWidget.refreshFromPreference();
-  
-  if(BooleanPreference.find("word_wrap").getValue()){
-    $('.word_wrap_checkbox').prop('checked', true);
-  }
-  else{
-    $('.word_wrap_checkbox').prop('checked', false);
-  }
   
 }
 

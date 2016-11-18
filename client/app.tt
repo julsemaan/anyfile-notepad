@@ -167,7 +167,6 @@
     user_preferences = new Preferences(
       function(){
         editor_controller = new EditorController("editor_app", {
-          'word_wrap_pref':BooleanPreference.find('word_wrap'),
           'tab_size_pref' : StringPreference.find('ace_js_tab_size'),
           'major_notice_pref' : IntPreference.find('major_notice'),
           'theme_pref': StringPreference.find('theme'),
