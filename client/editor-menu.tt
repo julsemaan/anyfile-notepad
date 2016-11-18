@@ -40,8 +40,8 @@
     <form id="file_title_form" class="navbar-form navbar-left" onsubmit="javascript:editor_controller.save();return false;">
       <input type="text" data-bind-file="title" class="form-control col-lg-8" placeholder="{{ i18n "Filename" }}">
       <a href="javascript:void(0);" class="editor_save_button" >{{ i18n "Save" }}</a>
-      <a class="autosave autosave-on hidden-soft" title="Autosave is enabled" href="{{noaction}}"><i data-eb-click="editor_controller.deactivate_auto_save()" class="material-icons">alarm</i></a>
-      <a class="autosave autosave-off hidden-soft" title="Autosave is disabled" href="{{noaction}}"><i data-eb-click="editor_controller.activate_auto_save(true)" class="material-icons">alarm_off</i></a>
+      <a class="autosave autosave-on hidden-soft" title="Autosave is enabled" href="{{noaction}}"><i data-eb-click="editor_controller.deactivate_autosave()" class="material-icons">alarm</i></a>
+      <a class="autosave autosave-off hidden-soft" title="Autosave is disabled" href="{{noaction}}"><i data-eb-click="editor_controller.activate_autosave(true)" class="material-icons">alarm_off</i></a>
     </form>
     <span class="collaborators"></span>
   </div>

@@ -18,10 +18,23 @@ PreferenceWidget.prototype.init = function(options){
   switch(self.widget().prop("tagName")) {
     case "INPUT":
       console.log("working on input")
+      switch(self.widget().attr('type')) {
+        case "text":
+          console.log("text input");
+          self.inputType = "text";
+          break;
+        case "checkbox":
+          console.log("checkbox input");
+          self.inputType = "checkbox";
+          self.widget().on('change', function(){
+            self.handleChange($(this).prop('checked'))
+          });
+          break;
+      }
       break;
     case "SELECT":
       console.log("working on select");
-
+      self.inputType = "select";
       $('select').on('change.'+self.constructor.name, function() {
         if($(this).hasClass(self.widget_class)){
           self.handleChange(this.value);
@@ -56,7 +69,14 @@ PreferenceWidget.prototype.widget = function() {
 
 PreferenceWidget.prototype.refreshFromPreference = function() {
   var self = this;
-  self.widget().val(self.prefValToWidgetVal(self.preference().getValue()));
+  switch(self.inputType) {
+    case "checkbox":
+      self.widget().prop('checked', self.preference().getValue());
+      break;
+    default:
+      self.widget().val(self.prefValToWidgetVal(self.preference().getValue()));
+      break;
+  }
   self.refreshFromPreferenceChild();
 }
 

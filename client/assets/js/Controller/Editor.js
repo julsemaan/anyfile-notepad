@@ -31,7 +31,7 @@ function EditorController(view, options){
     'syntaxes':new RestAdapter({model:Syntax}),
   }
 
-  this.auto_save_interval;
+  this.autosave_interval;
 
   this.initialize_html();
 
@@ -47,14 +47,11 @@ EditorController.prototype.initialize_html = function(){
   })
 
   self.fontSizeWidget = new FontSizeWidget({widget_class:'font-size-selection', editor_controller:self});
+  self.autosaveWidget = new AutosaveWidget({widget_class:'autosave-setting', editor_controller:self});
 
   $('.word_wrap_checkbox').on('change', function(){
     self.change_word_wrap($(this).prop('checked'));
     $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
-  });
-
-  $('.autosave-setting').on('change', function(){
-    self.toggle_auto_save_setting($(this).prop('checked'))
   });
 
   $('select').on('change', function() {
@@ -220,10 +217,10 @@ EditorController.prototype.post_file_load = function(){
   var new_data = this.editor_view.getSession().getValue();
   if(this.file.data != new_data){
     this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
-    this.deactivate_auto_save();
+    this.deactivate_autosave();
   }
   else {
-    this.activate_auto_save()
+    this.activate_autosave()
   }
 
   clearInterval(this.check_content_changed_interval)
@@ -291,60 +288,33 @@ EditorController.prototype.save = function(){
   return false;
 }
 
-EditorController.prototype.toggle_auto_save_setting = function(newVal) {
-  var self = this;
-  if(newVal) {
-    self.activate_auto_save_setting();
-  }
-  else {
-    self.deactivate_auto_save_setting();
-  }
-}
-
-
-EditorController.prototype.activate_auto_save_setting = function() {
-  var self = this;
-  StatIncrement.record("activate-autosave-setting");
-  BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
-  $('.autosave-setting').prop('checked', true);
-  self.activate_auto_save(true);
-}
-
-EditorController.prototype.deactivate_auto_save_setting = function() {
-  var self = this;
-  StatIncrement.record("deactivate-autosave-setting");
-  BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
-  $('.autosave-setting').prop('checked', false);
-  self.deactivate_auto_save();
-}
-
-EditorController.prototype.activate_auto_save = function(force){
+EditorController.prototype.activate_autosave = function(force){
   var self = this
-  this.deactivate_auto_save()
+  this.deactivate_autosave()
   if(force || BooleanPreference.find("autosave").getValue()) {
     $('.autosave-on').show();
     $('.autosave-off').hide();
-    self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+    self.autosave_interval = setInterval(function(){self.autosave()}, 5000)
   }
 }
 
-EditorController.prototype.deactivate_auto_save = function(){
+EditorController.prototype.deactivate_autosave = function(){
   var self = this
-  clearInterval(this.auto_save_interval)
+  clearInterval(this.autosave_interval)
   $('.autosave-off').show();
   $('.autosave-on').hide();
 }
 
-EditorController.prototype.auto_save = function(){
+EditorController.prototype.autosave = function(){
   var self = this;
   if(!this.file.title == "" && this.file.persisted && this.file.did_content_change()){
     this.file.set("data", this.editor_view.getValue())
 
-    if(!self.auto_save_count) self.auto_save_count = 0;
-    self.auto_save_count += 1;
+    if(!self.autosave_count) self.autosave_count = 0;
+    self.autosave_count += 1;
 
     this.$.find('.editor_save_button').html(i18n("Saving")+"...")
-    var new_revision = (self.auto_save_count % 3 == 0) ? true : false;
+    var new_revision = (self.autosave_count % 3 == 0) ? true : false;
 
     self.file.update(new_revision, function(response){
       self.reset_options()
@@ -685,13 +655,6 @@ EditorController.prototype.options_show_callback = function() {
     $('.word_wrap_checkbox').prop('checked', false);
   }
   
-  if(BooleanPreference.find("autosave").getValue()){
-    $('.autosave-setting').prop('checked', true);
-  }
-  else{
-    $('.autosave-setting').prop('checked', false);
-  }
-
 }
 
 EditorController.prototype.restart_app = function() {
