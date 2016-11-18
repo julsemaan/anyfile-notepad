@@ -167,11 +167,9 @@
     user_preferences = new Preferences(
       function(){
         editor_controller = new EditorController("editor_app", {
-          'tab_size_pref' : StringPreference.find('ace_js_tab_size'),
           'major_notice_pref' : IntPreference.find('major_notice'),
           'theme_pref': StringPreference.find('theme'),
           'menu_width_pref' : StringPreference.find('menu_width'),
-          'keybinding_pref' : StringPreference.find('keybinding'),
           'flash' : new FlashController('editor_flash'),
           'file_explorer': new FileExplorerController("file_explorer_container", {
             'height_pref' : StringPreference.find('file_explorer_height'),

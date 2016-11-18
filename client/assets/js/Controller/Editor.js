@@ -10,7 +10,6 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.tab_size_pref = options["tab_size_pref"]
   this.major_notice_pref = options["major_notice_pref"]
 
   this.theme_pref = options["theme_pref"]
@@ -19,8 +18,6 @@ function EditorController(view, options){
   this.favorites_controller = options["favorites_controller"]
 
   this.menu_width_pref = options["menu_width_pref"]
-
-  this.keybinding_pref = options["keybinding_pref"]
 
   this.flash = options["flash"]
 
@@ -48,27 +45,14 @@ EditorController.prototype.initialize_html = function(){
   self.fontSizeWidget = new FontSizeWidget({editor_controller:self});
   self.autosaveWidget = new AutosaveWidget({editor_controller:self});
   self.wordWrapWidget = new WordWrapWidget({editor_controller:self});
-
-  $('select').on('change', function() {
-    if($(this).hasClass('keybinding_select')){
-      self.change_keybinding(this.value);
-    }
-    else if($(this).hasClass('tab_size_select')){
-      self.change_tab_size(this.value);
-    }
-  });
+  self.tabSizeWidget = new TabSizeWidget({editor_controller:self});
+  self.editorModeWidget = new EditorModeWidget({editor_controller:self});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
   });
-
-  if(this.tab_size_pref.getValue() != null){
-    this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
-  }
-
-  this.change_keybinding(this.keybinding_pref.getValue())
 
   $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
     if(event.ctrlKey && event.which != 17) {
@@ -341,14 +325,6 @@ EditorController.prototype.is_ready_to_submit = function(){
   return true
 }
 
-EditorController.prototype.change_tab_size = function(tab_size){
-  var self = this;
-
-  this.tab_size_pref.refreshAndSet(tab_size, self, self.show_reauth)
-
-  this.editor_view.getSession().setTabSize(tab_size)
-}
-
 EditorController.prototype.block_saving = function(){
   var self = this;
   this.$.find('.editor_save_button').html(i18n("Saving")+"...")
@@ -429,31 +405,6 @@ EditorController.prototype.select_theme = function(name){
   
 }
    
-EditorController.prototype.change_keybinding = function(keybinding){
-  var self = this;
-  if(keybinding == "vim"){
-    this.editor_view.setKeyboardHandler("ace/keyboard/vim");
-    if(!this.editor_view.showCommandLine){
-      // we bind the vim write event to this controller
-      ace.config.loadModule("ace/keyboard/vim", function(m) {
-          var VimApi = require("ace/keyboard/vim").CodeMirror.Vim
-          VimApi.defineEx("write", "w", function(cm, input) {
-              self.save()
-          })
-      })
-    }
-  }
-  else if(keybinding == "emacs"){
-    this.editor_view.setKeyboardHandler("ace/keyboard/emacs");
-  }
-  else{
-    this.editor_view.setKeyboardHandler();
-  }
-
-  StringPreference.find("keybinding").refreshAndSet(keybinding, self, self.show_reauth)
-}
-
-
 EditorController.prototype.init_collaboration = function(model){
   var self = this;
   try{
@@ -622,16 +573,9 @@ EditorController.prototype.open_share_modal = function() {
 
 EditorController.prototype.options_show_callback = function() {
   var self = this;
-  $("select").each(function(){
-    if($(this).hasClass('keybinding_select')) {
-      $(this).val(StringPreference.find("keybinding").getValue())
-    }
-    else if($(this).hasClass('tab_size_select')){
-      $(this).val(StringPreference.find("ace_js_tab_size").getValue())
-    }
-  });
-
   self.fontSizeWidget.refreshFromPreference();
+  self.tabSizeWidget.refreshFromPreference();
+  self.editorModeWidget.refreshFromPreference();
   
 }
 
