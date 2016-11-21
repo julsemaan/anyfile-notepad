@@ -1,21 +1,21 @@
 <script class="template-partial" data-partial-name="moptions-advanced-select-theme" type="text/x-handlebars">
-<div class="row themes">
+<div class="row themes" data-pref-widget="SelectThemeWidget">
 <a href="{{noaction}}" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
   {{#each themes}}
-    {{#if (eq (math @index "%" 12) 0) }}
+    {{#if (eq (math @index "%" 14) 0) }}
     <div class="col-md-4 theme-col-{{ math @index "/" 12 }}">
       <div class="theme_choice_column btn-group-vertical"> 
     {{/if}}
       {{#if (eq this "dummy")}}
         <a href="{{noaction}};" class="btn-dummy">{{this.theme_display_name}}</a>
       {{else}}
-        <a href="{{noaction}};" class="btn btn-default btn_theme theme_{{this.theme_name}}"{{{ m-action-n-close (concat "editor_controller.select_theme('" this.theme_name "')") }}}>{{this.theme_display_name}}</a>
+        <a href="{{noaction}};" data-val="{{ this.theme_name }}" class="btn btn-default btn-theme">{{this.theme_display_name}}</a>
       {{/if}}
     {{#if (eq @index (math ../themes.length "-" 1 ))}}
         </div>
       </div>
     {{else}}
-      {{#if (eq (math @index "%" 12) 11) }}
+      {{#if (eq (math @index "%" 14) 13) }}
         </div>
       </div>
       {{/if}}

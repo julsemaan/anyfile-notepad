@@ -12,8 +12,6 @@ function EditorController(view, options){
 
   this.major_notice_pref = options["major_notice_pref"]
 
-  this.theme_pref = options["theme_pref"]
-
   this.file_explorer = options["file_explorer"]
   this.favorites_controller = options["favorites_controller"]
 
@@ -47,6 +45,7 @@ EditorController.prototype.initialize_html = function(){
   self.wordWrapWidget = new WordWrapWidget({editor_controller:self});
   self.tabSizeWidget = new TabSizeWidget({editor_controller:self});
   self.editorModeWidget = new EditorModeWidget({editor_controller:self});
+  self.selectThemeWidget = new SelectThemeWidget({editor_controller:self});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
@@ -70,13 +69,6 @@ EditorController.prototype.initialize_html = function(){
       return false;
     }
   });
-
-  this.initial_theme = "ace/theme/chrome"
-  if(this.theme_pref.getValue()){
-    this.initial_theme = this.theme_pref.getValue()
-  }
-  this.editor_view.setTheme(this.initial_theme)
-  $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
   if(!BooleanPreference.find('agree_terms').getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
@@ -389,22 +381,6 @@ EditorController.prototype.set_wait = function(key, value){
   this.ajax_defered_waiting[key] = value
 }
 
-EditorController.prototype.select_theme = function(name){
-  var self = this;
-  var current_theme = this.theme_pref.getValue()
-  if(!this.theme_pref.getValue()){
-    current_theme = this.initial_theme
-  }
-  $("."+escape_jquery_selector("theme_"+current_theme)).removeClass("btn-primary")
-
-  this.theme_pref.refreshAndSet(name, self, self.show_reauth)
-
-  this.editor_view.setTheme(name)
-  var check = this.$.find('#theme_check').detach()
-  $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
-  
-}
-   
 EditorController.prototype.init_collaboration = function(model){
   var self = this;
   try{

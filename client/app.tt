@@ -168,7 +168,6 @@
       function(){
         editor_controller = new EditorController("editor_app", {
           'major_notice_pref' : IntPreference.find('major_notice'),
-          'theme_pref': StringPreference.find('theme'),
           'menu_width_pref' : StringPreference.find('menu_width'),
           'flash' : new FlashController('editor_flash'),
           'file_explorer': new FileExplorerController("file_explorer_container", {
