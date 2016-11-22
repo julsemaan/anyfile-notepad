@@ -1,5 +1,5 @@
 <script class="template-partial" data-partial-name="mfile-select-syntax" type="text/x-handlebars">
-<div class="syntaxes" data-pref-widget="SelectSyntaxWidget">
+<div class="syntaxes">
   <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
   <ul class="menu_list">
     {{#each grouped_syntaxes}}
@@ -8,7 +8,7 @@
         <div class="menu_content">
           <div class="syntaxes">
             <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
-             <ul class="menu_list">
+             <ul class="menu_list syntaxes" data-pref-widget="SelectSyntaxWidget">
                 {{#each this}}
                   <li>
                     <a href="{{noaction}};" data-val="{{this.ace_js_mode}}" class="syntax_button">

@@ -65,6 +65,7 @@ PreferenceWidget.prototype.bindEvents = function() {
         });
       });
       break;
+    case "UL":
     case "DIV":
       self.inputType = "links";
       self.doOnce('eventBind', function() {
@@ -96,6 +97,7 @@ PreferenceWidget.prototype.unbindEvents = function() {
     case "SELECT":
       $('select').off('change.'+self.widgetName);
       break;
+    case "UL":
     case "DIV":
       self.widget().find('[data-val]').off('click.'+self.widgetName);
       break;
@@ -124,18 +126,24 @@ PreferenceWidget.prototype.widget = function() {
   return $("[data-pref-widget='"+self.widgetName+"']");
 }
 
+PreferenceWidget.prototype.getReadPreference = function() {
+  var self = this;
+  return self.preference();
+}
+
 PreferenceWidget.prototype.refreshFromPreference = function() {
   var self = this;
+  var preference = self.getReadPreference();
   switch(self.inputType) {
     case "checkbox":
-      self.widget().prop('checked', self.preference().getValue());
+      self.widget().prop('checked', preference.getValue());
       break;
     case "links":
       self.widget().find('[data-val]').removeClass('btn-primary');
-      self.widget().find('[data-val="'+self.preference().getValue()+'"]').addClass('btn-primary');
+      self.widget().find('[data-val="'+preference.getValue()+'"]').addClass('btn-primary');
       break;
     default:
-      self.widget().val(self.prefValToWidgetVal(self.preference().getValue()));
+      self.widget().val(preference.getValue());
       break;
   }
   self.refreshFromPreferenceChild();

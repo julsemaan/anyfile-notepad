@@ -293,6 +293,13 @@ h5.menu_header {
         min-width:250px;
         min-height:250px;
       }
+      .syntax_button.btn-primary {
+        background-color:#3f51b5 !important;
+        color:white !important;
+      }
+      .syntax_button.disabled {
+        color:rgba(#000000, (26/100)) !important;
+      }
     }
 
   }
@@ -444,4 +451,8 @@ div#current_user{
   input {
     margin-left:8px;
   }  
+}
+
+li a.btn-primary {
+  @extend .btn-primary;
 }
