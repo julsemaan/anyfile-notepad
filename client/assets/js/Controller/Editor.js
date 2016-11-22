@@ -46,6 +46,7 @@ EditorController.prototype.initialize_html = function(){
   self.tabSizeWidget = new TabSizeWidget({editor_controller:self});
   self.editorModeWidget = new EditorModeWidget({editor_controller:self});
   self.selectThemeWidget = new SelectThemeWidget({editor_controller:self});
+  self.selectSyntaxWidget = new SelectSyntaxWidget({editor_controller:self});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
@@ -128,7 +129,7 @@ EditorController.prototype.new = function(folder_id){
       folder_id : folder_id,
     })
     self.post_file_load()
-    self.set_syntax_mode(self.file.syntax.ace_js_mode, false);
+    self.setSyntaxMode(self.file.syntax.ace_js_mode, false);
   }
 
   if(this.provider == "Dropbox"){
@@ -194,7 +195,7 @@ EditorController.prototype.post_file_load = function(){
 
   clearInterval(this.check_content_changed_interval)
   this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
-  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
+  this.setSyntaxMode(this.file.syntax.ace_js_mode);
   this.allow_saving()
 
   if(this.file.persisted){
@@ -293,17 +294,15 @@ EditorController.prototype.autosave = function(){
   }
 }
 
-EditorController.prototype.set_syntax_mode = function(syntax,save){
+EditorController.prototype.setSyntaxMode = function(syntax){
   var self = this;
-  save = save || false
-  this.$.find('.syntax_button').css("background-color", "initial")
-  var primary_color = $("<div>").appendTo("body").addClass("btn-primary").css("background-color");
-  this.$.find('.syntax_'+syntax).css("background-color", primary_color);
-  this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
-  this.editor_view.getSession().setMode("ace/mode/"+syntax);
-  if(this.file_id != "" && save){
+  if(window.syntaxes){
     StatIncrement.record("setting-syntax-manually."+self.file.extension());
-    StringPreference.find("syntaxes["+self.file.extension()+"]").refreshAndSet(syntax, self, self.show_reauth)
+    this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
+    this.editor_view.getSession().setMode("ace/mode/"+syntax);
+  }
+  else {
+    console.log("syntaxes aren't initialized...")
   }
 }
 
