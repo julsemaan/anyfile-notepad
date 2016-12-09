@@ -3,18 +3,24 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/julsemaan/rest-layer-file"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
 	"github.com/rs/rest-layer/schema"
+	"gopkg.in/alexcesaro/statsd.v2"
 )
+
+var statsdConn, _ = statsd.New(statsd.Address("192.168.1.74:8125"))
 
 type ClosingBuffer struct {
 	io.Reader
@@ -25,6 +31,8 @@ func (ClosingBuffer) Close() error {
 }
 
 func main() {
+	defer statsdConn.Close()
+
 	schema.CreatedField.ReadOnly = false
 	schema.UpdatedField.ReadOnly = false
 
@@ -175,7 +183,16 @@ func main() {
 
 		if matched, _ := regexp.MatchString("^/stats/", r.URL.Path); matched {
 			log.Print("Allowing without authentication for stats namespace")
-			if err := addIpToStats(w, r); err != nil {
+			if statsRequest, err := parseStatsPayload(w, r); err == nil {
+				spew.Dump(statsRequest)
+				statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
+				switch statsRequest["type"] {
+				case "increment":
+					log.Printf("Incrementing %s", statsRequest["key"])
+					statsdConn.Increment(statsRequest["key"])
+				}
+				return
+			} else {
 				return
 			}
 		} else if r.Method == "GET" || r.Method == "OPTIONS" {
@@ -193,7 +210,7 @@ func main() {
 	}
 }
 
-func addIpToStats(w http.ResponseWriter, r *http.Request) error {
+func parseStatsPayload(w http.ResponseWriter, r *http.Request) (map[string]string, error) {
 	buf, _ := ioutil.ReadAll(r.Body)
 	dec := json.NewDecoder(bytes.NewBuffer(buf))
 	var s map[string]string
@@ -207,14 +224,7 @@ func addIpToStats(w http.ResponseWriter, r *http.Request) error {
 		re := regexp.MustCompile("^([0-9.]+):")
 		s["ip"] = re.FindAllStringSubmatch(r.RemoteAddr, 1)[0][1]
 	}
-	newBody, err := json.Marshal(s)
-	if err != nil {
-		log.Printf("Error while creating new JSON body %s", err)
-		return err
-	} else {
-		r.Body = ClosingBuffer{bytes.NewBuffer(newBody)}
-		return nil
-	}
+	return s, nil
 }
 
 func authenticate(w http.ResponseWriter, r *http.Request) bool {
