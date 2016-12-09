@@ -91,6 +91,7 @@ CloudFile.prototype.mime_type_from_extension = function (){
 
 CloudFile.prototype.update = function(new_revision, callback) {
   var self = this;
+  StatIncrement.record("file-update."+self.constructor.name);
   this._post_update_callback = callback
   if (this.did_content_change() || new_revision){
     self.update_data(new_revision, callback)
