@@ -197,17 +197,21 @@ EditorController.prototype.edit = function(id){
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
       if(!error){
-        if(this.provider == "GoogleDrive") {
+        if(self.provider == "GoogleDrive") {
           self.make_collaborative()
         }
 
         // Can't change filename with Dropbox
-        if(this.provider == "Dropbox"){
+        if(self.provider == "Dropbox"){
           $('input[data-bind-file="title"]').attr('disabled', 'disabled');
         }
         else {
           $('input[data-bind-file="title"]').removeAttr('disabled');
         }
+
+        StatIncrement.record("file-edit."+self.provider);
+        // NOTE: Extension already has a dot at the beginning
+        StatIncrement.record("file-edit.extensions"+self.file.extension());
 
         self.post_file_load()
       }
@@ -255,6 +259,7 @@ EditorController.prototype.reset_options = function(){
 }
 
 EditorController.prototype.print = function(){
+  StatIncrement.record("file-print");
   var myWindow = window.open("", "MsgWindow", "width=800, height=600");
   var lines = this.editor_view.getValue().split('\n');
   for(var i in lines){
@@ -309,6 +314,7 @@ EditorController.prototype.toggle_auto_save_setting = function(newVal) {
 
 EditorController.prototype.activate_auto_save_setting = function() {
   var self = this;
+  StatIncrement.record("activate-autosave-setting");
   BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
   $('.autosave-setting').prop('checked', true);
   self.activate_auto_save(true);
@@ -316,6 +322,7 @@ EditorController.prototype.activate_auto_save_setting = function() {
 
 EditorController.prototype.deactivate_auto_save_setting = function() {
   var self = this;
+  StatIncrement.record("deactivate-autosave-setting");
   BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
   $('.autosave-setting').prop('checked', false);
   self.deactivate_auto_save();
@@ -366,6 +373,7 @@ EditorController.prototype.set_syntax_mode = function(syntax,save){
   this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
   this.editor_view.getSession().setMode("ace/mode/"+syntax);
   if(this.file_id != "" && save){
+    StatIncrement.record("setting-syntax-manually."+self.file.extension());
     StringPreference.find("syntaxes["+self.file.extension()+"]").refreshAndSet(syntax, self, self.show_reauth)
   }
 }
