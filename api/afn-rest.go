@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -19,15 +18,7 @@ import (
 	"gopkg.in/alexcesaro/statsd.v2"
 )
 
-var statsdConn, _ = statsd.New(statsd.Address("192.168.1.74:8125"))
-
-type ClosingBuffer struct {
-	io.Reader
-}
-
-func (ClosingBuffer) Close() error {
-	return nil
-}
+var statsdConn, _ = statsd.New(statsd.Address(os.Getenv("AFN_STATSD_URI")))
 
 func main() {
 	defer statsdConn.Close()
