@@ -3,13 +3,22 @@ function ApplicationController() {
   this.dev_mode = (getCookie("AFNVersion") == this.dev_mode_name); 
   this.tour_controller = new TourController({});
   this.is_mobile();
+  StatIncrement.record("app-load");
+  if(this.is_mobile()) {
+    StatIncrement.record("mobile-device");
+  }
+  if(this.dev_mode) {
+    StatIncrement.record("dev-mode");
+  }
 }
 
 ApplicationController.prototype.try_dev_mode = function(){
+  StatIncrement.record("try-dev-mode");
   this.set_mode_and_reload(this.dev_mode_name);
 }
 
 ApplicationController.prototype.stop_dev_mode = function(){
+  StatIncrement.record("stop-dev-mode");
   this.set_mode_and_reload("");
 }
 
