@@ -156,7 +156,7 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		if matched, _ := regexp.MatchString("^/stats/", r.URL.Path); matched {
+		if matched, _ := regexp.MatchString("^/stats", r.URL.Path); matched {
 			log.Print("Allowing without authentication for stats namespace")
 			if statsRequest, err := parseStatsPayload(w, r); err == nil {
 				statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
@@ -165,6 +165,7 @@ func main() {
 					log.Printf("Incrementing %s", statsRequest["key"])
 					statsdConn.Increment(statsRequest["key"])
 				}
+				w.Write([]byte("OK"))
 				return
 			} else {
 				return
