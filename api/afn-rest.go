@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/julsemaan/rest-layer-file"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
@@ -119,27 +118,6 @@ func main() {
 				},
 			},
 		}
-
-		stat = schema.Schema{
-			Description: `Represents a stat`,
-			Fields: schema.Fields{
-				"id":         schema.IDField,
-				"created_at": schema.CreatedField,
-				"updated_at": schema.UpdatedField,
-				"statType": {
-					Required:   true,
-					Filterable: true,
-				},
-				"value": {
-					Required:   true,
-					Filterable: true,
-				},
-				"ip": {
-					Required:   true,
-					Filterable: true,
-				},
-			},
-		}
 	)
 
 	// Create a REST API resource index
@@ -166,9 +144,6 @@ func main() {
 		AllowedModes: resource.ReadWrite,
 	})
 
-	index.Bind("stats", stat, filestore.NewHandler(directory, "stats", []string{}), resource.Conf{
-		AllowedModes: resource.ReadWrite,
-	})
 	// Create API HTTP handler for the resource graph
 	api, err := rest.NewHandler(index)
 	if err != nil {
@@ -184,7 +159,6 @@ func main() {
 		if matched, _ := regexp.MatchString("^/stats/", r.URL.Path); matched {
 			log.Print("Allowing without authentication for stats namespace")
 			if statsRequest, err := parseStatsPayload(w, r); err == nil {
-				spew.Dump(statsRequest)
 				statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
 				switch statsRequest["type"] {
 				case "increment":
