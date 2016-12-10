@@ -59,13 +59,13 @@ function should_reset() {
 
 function ace_js() {
   cd bower_components/ace-anyfile-notepad
-  if ! find -maxdepth 1 -name 'ace-*' -type d | egrep '.*' > /dev/null ; then 
+  if ! find -maxdepth 1 -name 'afn-dist' -type d | egrep '.*' > /dev/null ; then 
     npm install
-    make dist
+    make afn-dist
   fi
   cd -
   mkdir $COMPILED_APP/ace.js
-  cp -a bower_components/ace-anyfile-notepad/ace-*/src-min/* $COMPILED_APP/ace.js/
+  cp -a bower_components/ace-anyfile-notepad/afn-dist/* $COMPILED_APP/ace.js/
 }
 
 function pages_css() {
