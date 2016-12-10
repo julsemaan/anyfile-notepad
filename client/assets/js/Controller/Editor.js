@@ -10,19 +10,12 @@ function EditorController(view, options){
   this.content = null;
   this.content_saved = "";
 
-  this.word_wrap_pref = options["word_wrap_pref"]
-  this.font_size_pref = options["font_size_pref"]
-  this.tab_size_pref = options["tab_size_pref"]
   this.major_notice_pref = options["major_notice_pref"]
-
-  this.theme_pref = options["theme_pref"]
 
   this.file_explorer = options["file_explorer"]
   this.favorites_controller = options["favorites_controller"]
 
   this.menu_width_pref = options["menu_width_pref"]
-
-  this.keybinding_pref = options["keybinding_pref"]
 
   this.flash = options["flash"]
 
@@ -32,7 +25,7 @@ function EditorController(view, options){
     'syntaxes':new RestAdapter({model:Syntax}),
   }
 
-  this.auto_save_interval;
+  this.autosave_interval;
 
   this.initialize_html();
 
@@ -47,48 +40,19 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
-  $('.word_wrap_checkbox').on('change', function(){
-    self.change_word_wrap($(this).prop('checked'));
-    $('.word_wrap_checkbox').prop('checked', $(this).prop('checked'))
-  });
-
-  $('.autosave-setting').on('change', function(){
-    self.toggle_auto_save_setting($(this).prop('checked'))
-  });
-
-  $('select').on('change', function() {
-    if($(this).hasClass('keybinding_select')){
-      self.change_keybinding(this.value);
-    }
-    else if($(this).hasClass('tab_size_select')){
-      self.change_tab_size(this.value);
-    }
-    else if($(this).hasClass('font_size_select')){
-      self.change_font_size(this.value);
-    }
-  });
-
-  this.$.find(".show_file_info").click(function(){
-    self.$.find('#file_info_modal').modal('show')
-  })
+  self.fontSizeWidget = new FontSizeWidget({editor_controller:self});
+  self.autosaveWidget = new AutosaveWidget({editor_controller:self});
+  self.wordWrapWidget = new WordWrapWidget({editor_controller:self});
+  self.tabSizeWidget = new TabSizeWidget({editor_controller:self});
+  self.editorModeWidget = new EditorModeWidget({editor_controller:self});
+  self.selectThemeWidget = new SelectThemeWidget({editor_controller:self});
+  self.selectSyntaxWidget = new SelectSyntaxWidget({editor_controller:self});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
   });
-
-  if(this.font_size_pref.getValue() != null){
-    this.editor_view.setFontSize(this.font_size_pref.getValue())
-  }
-
-  if(this.tab_size_pref.getValue() != null){
-    this.editor_view.getSession().setTabSize(this.tab_size_pref.getValue())
-  }
-
-  this.change_keybinding(this.keybinding_pref.getValue())
-
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
 
   $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
     if(event.ctrlKey && event.which != 17) {
@@ -106,13 +70,6 @@ EditorController.prototype.initialize_html = function(){
       return false;
     }
   });
-
-  this.initial_theme = "ace/theme/chrome"
-  if(this.theme_pref.getValue()){
-    this.initial_theme = this.theme_pref.getValue()
-  }
-  this.editor_view.setTheme(this.initial_theme)
-  $("."+escape_jquery_selector("theme_"+this.initial_theme)).addClass("btn-primary")
 
   if(!BooleanPreference.find('agree_terms').getValue()){
     $("#terms_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
@@ -172,7 +129,7 @@ EditorController.prototype.new = function(folder_id){
       folder_id : folder_id,
     })
     self.post_file_load()
-    self.set_syntax_mode(self.file.syntax.ace_js_mode, false);
+    self.selectSyntaxWidget.setSyntaxMode(self.file.syntax.ace_js_mode);
   }
 
   if(this.provider == "Dropbox"){
@@ -230,15 +187,15 @@ EditorController.prototype.post_file_load = function(){
   var new_data = this.editor_view.getSession().getValue();
   if(this.file.data != new_data){
     this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
-    this.deactivate_auto_save();
+    this.deactivate_autosave();
   }
   else {
-    this.activate_auto_save()
+    this.activate_autosave()
   }
 
   clearInterval(this.check_content_changed_interval)
   this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
-  this.set_syntax_mode(this.file.syntax.ace_js_mode, false);
+  self.selectSyntaxWidget.setSyntaxMode(self.file.syntax.ace_js_mode);
   this.allow_saving()
 
   if(this.file.persisted){
@@ -301,60 +258,33 @@ EditorController.prototype.save = function(){
   return false;
 }
 
-EditorController.prototype.toggle_auto_save_setting = function(newVal) {
-  var self = this;
-  if(newVal) {
-    self.activate_auto_save_setting();
-  }
-  else {
-    self.deactivate_auto_save_setting();
-  }
-}
-
-
-EditorController.prototype.activate_auto_save_setting = function() {
-  var self = this;
-  StatIncrement.record("activate-autosave-setting");
-  BooleanPreference.find("autosave").refreshAndSet(true, self, self.show_reauth);
-  $('.autosave-setting').prop('checked', true);
-  self.activate_auto_save(true);
-}
-
-EditorController.prototype.deactivate_auto_save_setting = function() {
-  var self = this;
-  StatIncrement.record("deactivate-autosave-setting");
-  BooleanPreference.find("autosave").refreshAndSet(false, self, self.show_reauth);
-  $('.autosave-setting').prop('checked', false);
-  self.deactivate_auto_save();
-}
-
-EditorController.prototype.activate_auto_save = function(force){
+EditorController.prototype.activate_autosave = function(force){
   var self = this
-  this.deactivate_auto_save()
+  this.deactivate_autosave()
   if(force || BooleanPreference.find("autosave").getValue()) {
     $('.autosave-on').show();
     $('.autosave-off').hide();
-    self.auto_save_interval = setInterval(function(){self.auto_save()}, 5000)
+    self.autosave_interval = setInterval(function(){self.autosave()}, 5000)
   }
 }
 
-EditorController.prototype.deactivate_auto_save = function(){
+EditorController.prototype.deactivate_autosave = function(){
   var self = this
-  clearInterval(this.auto_save_interval)
+  clearInterval(this.autosave_interval)
   $('.autosave-off').show();
   $('.autosave-on').hide();
 }
 
-EditorController.prototype.auto_save = function(){
+EditorController.prototype.autosave = function(){
   var self = this;
   if(!this.file.title == "" && this.file.persisted && this.file.did_content_change()){
     this.file.set("data", this.editor_view.getValue())
 
-    if(!self.auto_save_count) self.auto_save_count = 0;
-    self.auto_save_count += 1;
+    if(!self.autosave_count) self.autosave_count = 0;
+    self.autosave_count += 1;
 
     this.$.find('.editor_save_button').html(i18n("Saving")+"...")
-    var new_revision = (self.auto_save_count % 3 == 0) ? true : false;
+    var new_revision = (self.autosave_count % 3 == 0) ? true : false;
 
     self.file.update(new_revision, function(response){
       self.reset_options()
@@ -364,17 +294,15 @@ EditorController.prototype.auto_save = function(){
   }
 }
 
-EditorController.prototype.set_syntax_mode = function(syntax,save){
+EditorController.prototype.setSyntaxMode = function(syntax) {
   var self = this;
-  save = save || false
-  this.$.find('.syntax_button').css("background-color", "initial")
-  var primary_color = $("<div>").appendTo("body").addClass("btn-primary").css("background-color");
-  this.$.find('.syntax_'+syntax).css("background-color", primary_color);
-  this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
-  this.editor_view.getSession().setMode("ace/mode/"+syntax);
-  if(this.file_id != "" && save){
+  if(window.syntaxes){
     StatIncrement.record("setting-syntax-manually."+self.file.extension());
-    StringPreference.find("syntaxes["+self.file.extension()+"]").refreshAndSet(syntax, self, self.show_reauth)
+    this.file.syntax = syntaxes.find({key:'ace_js_mode', value:syntax})
+    this.editor_view.getSession().setMode("ace/mode/"+syntax);
+  }
+  else {
+    console.log("syntaxes aren't initialized...")
   }
 }
 
@@ -386,21 +314,6 @@ EditorController.prototype.is_ready_to_submit = function(){
     }
   }
   return true
-}
-
-EditorController.prototype.change_font_size = function(font_size){
-  var self = this;
-
-  this.font_size_pref.refreshAndSet(font_size, self, function(){self.show_reauth()})
-  this.editor_view.setFontSize(font_size)
-}
-
-EditorController.prototype.change_tab_size = function(tab_size){
-  var self = this;
-
-  this.tab_size_pref.refreshAndSet(tab_size, self, self.show_reauth)
-
-  this.editor_view.getSession().setTabSize(tab_size)
 }
 
 EditorController.prototype.block_saving = function(){
@@ -466,65 +379,6 @@ EditorController.prototype.set_wait = function(key, value){
   var self = this;
   this.ajax_defered_waiting[key] = value
 }
-
-EditorController.prototype.change_word_wrap = function(value){
-  var self = this;
-
-  this.word_wrap_pref.refreshAndSet(value, self, function(){self.show_reauth()});
-  this.editor_view.getSession().setUseWrapMode(this.word_wrap_pref.getValue())
-}
-
-
-EditorController.prototype.open_search = function(){
-  var self = this;
-  this.editor_view.execCommand('find')
-}
-
-EditorController.prototype.open_replace = function(){
-  var self = this;
-  this.editor_view.execCommand('replace') 
-}
-
-EditorController.prototype.select_theme = function(name){
-  var self = this;
-  var current_theme = this.theme_pref.getValue()
-  if(!this.theme_pref.getValue()){
-    current_theme = this.initial_theme
-  }
-  $("."+escape_jquery_selector("theme_"+current_theme)).removeClass("btn-primary")
-
-  this.theme_pref.refreshAndSet(name, self, self.show_reauth)
-
-  this.editor_view.setTheme(name)
-  var check = this.$.find('#theme_check').detach()
-  $("."+escape_jquery_selector("theme_"+name)).addClass("btn-primary")
-  
-}
-   
-EditorController.prototype.change_keybinding = function(keybinding){
-  var self = this;
-  if(keybinding == "vim"){
-    this.editor_view.setKeyboardHandler("ace/keyboard/vim");
-    if(!this.editor_view.showCommandLine){
-      // we bind the vim write event to this controller
-      ace.config.loadModule("ace/keyboard/vim", function(m) {
-          var VimApi = require("ace/keyboard/vim").CodeMirror.Vim
-          VimApi.defineEx("write", "w", function(cm, input) {
-              self.save()
-          })
-      })
-    }
-  }
-  else if(keybinding == "emacs"){
-    this.editor_view.setKeyboardHandler("ace/keyboard/emacs");
-  }
-  else{
-    this.editor_view.setKeyboardHandler();
-  }
-
-  StringPreference.find("keybinding").refreshAndSet(keybinding, self, self.show_reauth)
-}
-
 
 EditorController.prototype.init_collaboration = function(model){
   var self = this;
@@ -690,41 +544,6 @@ EditorController.prototype.open_share_modal = function() {
   else {
     new Popup({message : i18n("You must save the file before you can share it.")});
   }
-}
-
-EditorController.prototype.options_show_callback = function() {
-  var self = this;
-  $("select").each(function(){
-    if($(this).hasClass('keybinding_select')) {
-      $(this).val(StringPreference.find("keybinding").getValue())
-    }
-    else if($(this).hasClass('tab_size_select')){
-      $(this).val(StringPreference.find("ace_js_tab_size").getValue())
-    }
-    else if($(this).hasClass('font_size_select')){
-      $(this).val(StringPreference.find("ace_js_font_size").getValue())
-    }
-  });
-  
-  if(BooleanPreference.find("word_wrap").getValue()){
-    $('.word_wrap_checkbox').prop('checked', true);
-  }
-  else{
-    $('.word_wrap_checkbox').prop('checked', false);
-  }
-  
-  if(BooleanPreference.find("autosave").getValue()){
-    $('.autosave-setting').prop('checked', true);
-  }
-  else{
-    $('.autosave-setting').prop('checked', false);
-  }
-
-}
-
-EditorController.prototype.show_file_info = function() {
-  var self = this;
-  self.$.find('#file_info_modal').modal('show')
 }
 
 EditorController.prototype.restart_app = function() {

@@ -10,7 +10,7 @@ function EditorRouter(controller){
       if(!window.location.hash.match('^#access_token')){
         setCookie("last_hash_url", window.location.hash, 1);
       }
-      self.controller.deactivate_auto_save()
+      self.controller.deactivate_autosave()
       self.route()
     });
     self.route()

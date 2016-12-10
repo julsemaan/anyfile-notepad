@@ -12,14 +12,30 @@ function emptyfile() {
   truncate -s 0 $1
 }
 
-function add_asset() {
+function add_template() {
+  add_to_file "$1" "$2" ""
+}
+
+function add_js_asset() {
+  add_to_file "$1" "$2" ";"
+}
+
+function add_css_asset() {
+  add_to_file "$1" "$2" ""
+}
+
+function add_to_file() {
   to_add="$1"
   add_to="$2"
-  echo "" >> $add_to
+  separator="$3"
+  echo "$separator" >> $add_to
   cat $to_add >> $add_to
-  echo "" >> $add_to
+  echo "$separator" >> $add_to
 }
-export -f add_asset
+export -f add_js_asset
+export -f add_css_asset
+export -f add_template
+export -f add_to_file
 
 function add_min_prefix() {
   file=$1
@@ -120,8 +136,8 @@ function application_css() {
     rm -f $COMPILED_APP/assets/application-*.css
   fi
 
-  add_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
-  add_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
+  add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
+  add_css_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
   ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
@@ -136,22 +152,23 @@ function application_js() {
     rm -f $COMPILED_APP/assets/application-*.js
   fi
 
-  add_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
-  add_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
-  add_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
-  add_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
-  add_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
+  add_js_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
+  add_js_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
+  add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
+  add_js_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
+  add_js_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
 
-  add_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
-  add_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS
-  add_asset client/assets/js/DataBinder.js $APPLICATION_JS
-  add_asset client/assets/js/Model.js $APPLICATION_JS
-  add_asset client/assets/js/Model/Preference.js $APPLICATION_JS
-  add_asset client/assets/js/Model/CloudFile.js $APPLICATION_JS
-  add_asset client/assets/js/helpers.js $APPLICATION_JS
+  add_js_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
+  add_js_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS
+  add_js_asset client/assets/js/DataBinder.js $APPLICATION_JS
+  add_js_asset client/assets/js/Model.js $APPLICATION_JS
+  add_js_asset client/assets/js/Model/Preference.js $APPLICATION_JS
+  add_js_asset client/assets/js/Model/CloudFile.js $APPLICATION_JS
+  add_js_asset client/assets/js/Widget/Preference.js $APPLICATION_JS
+  add_js_asset client/assets/js/helpers.js $APPLICATION_JS
 
   # todo - exclude the files above
-  find client/assets/js/ -name '*.js' | while read file; do add_asset "$file" $APPLICATION_JS ; done
+  find client/assets/js/ -name '*.js' | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
   ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
 }
@@ -165,7 +182,7 @@ function editor_part() {
     rm -f $COMPILED_APP/app.partials
   fi
 
-  find client/ -name '_*.html' | while read file ; do add_asset "$file" $COMPILED_APP/app.partials ; done
+  find client/ -name '_*.html' | while read file ; do add_template "$file" $COMPILED_APP/app.partials ; done
 }
 
 function app() {
