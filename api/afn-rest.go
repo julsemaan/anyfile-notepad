@@ -151,6 +151,7 @@ func main() {
 			log.Print("Allowing without authentication for stats namespace")
 			if statsRequest, err := parseStatsPayload(w, r); err == nil {
 				statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
+				log.Printf("Stats request from %s", statsRequest["ip"])
 				switch statsRequest["type"] {
 				case "increment":
 					log.Printf("Incrementing %s", statsRequest["key"])
@@ -185,7 +186,7 @@ func parseStatsPayload(w http.ResponseWriter, r *http.Request) (map[string]strin
 		panic(err)
 	}
 	if r.Header.Get("X-Forwarded-For") != "" {
-		s["ip"] = r.Header.Get("X-Forwarded-For")
+		s["ip"] = strings.Split(r.Header.Get("X-Forwarded-For"), ",")[0]
 	} else {
 		re := regexp.MustCompile("^([0-9.]+):")
 		s["ip"] = re.FindAllStringSubmatch(r.RemoteAddr, 1)[0][1]
