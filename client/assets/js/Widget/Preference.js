@@ -43,7 +43,7 @@ PreferenceWidget.prototype.bindEvents = function() {
       switch(self.widget().attr('type')) {
         case "text":
           self.inputType = "text";
-					throw "Input text not implemented...";
+          throw "Input text not implemented...";
           break;
         case "checkbox":
           self.inputType = "checkbox";
