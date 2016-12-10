@@ -12,14 +12,25 @@ function emptyfile() {
   truncate -s 0 $1
 }
 
+function add_template() {
+  add_to_file "$1" "$2" ""
+}
+
 function add_asset() {
+  add_to_file "$1" "$2" ";"
+}
+
+function add_to_file() {
   to_add="$1"
   add_to="$2"
-  echo "" >> $add_to
+  separator="$3"
+  echo "$separator" >> $add_to
   cat $to_add >> $add_to
-  echo "" >> $add_to
+  echo "$separator" >> $add_to
 }
 export -f add_asset
+export -f add_template
+export -f add_to_file
 
 function add_min_prefix() {
   file=$1
@@ -166,7 +177,7 @@ function editor_part() {
     rm -f $COMPILED_APP/app.partials
   fi
 
-  find client/ -name '_*.html' | while read file ; do add_asset "$file" $COMPILED_APP/app.partials ; done
+  find client/ -name '_*.html' | while read file ; do add_template "$file" $COMPILED_APP/app.partials ; done
 }
 
 function app() {
