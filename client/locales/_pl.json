@@ -7,8 +7,10 @@
     "A favorite with the same file ID already exists": "Zak\u0142adka w ulubionych dla tego pliku ju\u017c istnieje",
     "A favorite with this name already exists.": "Zak\u0142adka w ulubionych o takiej samej nazwie ju\u017c istnieje",
     "About": "O aplikacji",
+    "Accounts": "Konta",
     "Action": "Akcja",
     "Add account": "Dodaj konto",
+    "Advanced": "Zaawansowane",
     "An unexpected error occurred with the provider server": "Niespodziewany b\u0142\u0105d na stronie serwera us\u0142ugodawcy",
     "App home page": "Strona g\u0142\u00f3wna aplikacji",
     "Are you sure ?": "Jeste\u015b pewien?",
@@ -78,6 +80,7 @@
     "Reset preferences": "Przywr\u00f3\u0107 domy\u015blne ustawienia",
     "Restart app": "Uruchom ponownie aplikacj\u0119",
     "Restarting": "Restartowanie",
+    "Running stable snapshot": "Uruchomiona stabilna wersja aplikacji",
     "Save": "Zapisz",
     "Saved": "Zapisano",
     "Saving": "Zapisywanie",
@@ -142,5 +145,6 @@
     "Your device": "Twoje urz\u0105dzenie.",
     "Your file is being loaded": "Tw\u00f3j plik jest w\u0142a\u015bnie wczytywany",
     "Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.": "Twoje ustawienia nie mog\u0142y zosta\u0107 za\u0142adowane. Jest to prawdopodobnie wynikiem b\u0142\u0119du serwera Google'a. Spr\u00f3buj uruchomi\u0107 ponownie aplikacj\u0119 i prze\u015blij komunikat o b\u0142\u0119dzie je\u017celi ponownie si\u0119 on pojawi.",
+    "use development version (if available)": "u\u017cyj wersji deweloperskiej (je\u017celi dost\u0119pna)",
     "vim": "vim"
 }
