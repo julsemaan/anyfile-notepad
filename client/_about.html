@@ -2,8 +2,8 @@
   <p><b>{{ i18n "Version" }} : </b>[% APP_VERSION %]</p>
   <p><b>{{ i18n "Build ID" }} : </b>[% APP_COMMIT_ID %]</p>
   {{#if global_context.application.dev_mode}}
-  <p><b>Running development snapshot</b> <a href="javascript:void(0)" onclick="javascript:application.stop_dev_mode()">use stable version</a></p>
+  <p><b>{{ i18n "Running development snapshot" }}</b> <a href="javascript:void(0)" onclick="javascript:application.stop_dev_mode()">{{ i18n "use stable version" }}</a></p>
   {{else}}
-  <p><b>Running stable snapshot</b> <a href="javascript:void(0)" onclick="javascript:application.try_dev_mode()">use development version (if available)</a></p>
+  <p><b>{{ i18n "Running stable snapshot" }}</b> <a href="javascript:void(0)" onclick="javascript:application.try_dev_mode()">{{ i18n "use development version (if available)" }}</a></p>
   {{/if}}
 </script>
