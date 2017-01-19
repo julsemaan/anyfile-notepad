@@ -12,6 +12,11 @@ function ApplicationController() {
   }
 }
 
+ApplicationController.prototype.startLoading = function() {
+  $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
+  $('.modal-backdrop.fade.in').css('opacity', '1.0')
+}
+
 ApplicationController.prototype.try_dev_mode = function(){
   StatIncrement.record("try-dev-mode");
   this.set_mode_and_reload(this.dev_mode_name);
