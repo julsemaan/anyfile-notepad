@@ -40,13 +40,13 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
-  self.fontSizeWidget = new FontSizeWidget({editor_controller:self});
-  self.autosaveWidget = new AutosaveWidget({editor_controller:self});
-  self.wordWrapWidget = new WordWrapWidget({editor_controller:self});
-  self.tabSizeWidget = new TabSizeWidget({editor_controller:self});
-  self.editorModeWidget = new EditorModeWidget({editor_controller:self});
-  self.selectThemeWidget = new SelectThemeWidget({editor_controller:self});
-  self.selectSyntaxWidget = new SelectSyntaxWidget({editor_controller:self});
+  self.fontSizeWidget = new FontSizeWidget();
+  self.autosaveWidget = new AutosaveWidget();
+  self.wordWrapWidget = new WordWrapWidget();
+  self.tabSizeWidget = new TabSizeWidget();
+  self.editorModeWidget = new EditorModeWidget();
+  self.selectThemeWidget = new SelectThemeWidget();
+  self.selectSyntaxWidget = new SelectSyntaxWidget();
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
@@ -133,7 +133,7 @@ EditorController.prototype.new = function(folder_id){
   }
 
   if(this.provider == "Dropbox"){
-    dropbox_oauth_controller.test(create_new)
+    application.controllers.dropbox_oauth.test(create_new)
   }
   else {
     create_new();
@@ -444,7 +444,7 @@ EditorController.prototype.make_collaborative = function(){
   function(model) {self.init_collaboration(model)},
   function(error) {
     if(error.type == "token_refresh_required"){
-      oauth_controller.do_auth();
+      application.controllers.google_oauth.do_auth();
     }
   }
   );
@@ -538,8 +538,8 @@ EditorController.prototype.clear_realtime_user = function(userId){
 EditorController.prototype.open_share_modal = function() {
   var self = this;
   if(self.file.persisted){
-    oauth_controller.share_client.setItemIds([self.file.id]);
-    oauth_controller.share_client.showSettingsDialog();
+    application.controllers.google_oauth.share_client.setItemIds([self.file.id]);
+    application.controllers.google_oauth.share_client.showSettingsDialog();
   }
   else {
     new Popup({message : i18n("You must save the file before you can share it.")});

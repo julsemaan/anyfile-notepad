@@ -10,6 +10,8 @@ function ApplicationController() {
   if(this.dev_mode) {
     StatIncrement.record("dev-mode");
   }
+
+  this.controllers = {};
 }
 
 ApplicationController.prototype.startLoading = function() {

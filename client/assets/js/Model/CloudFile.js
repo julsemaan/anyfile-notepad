@@ -113,6 +113,6 @@ CloudFile.prototype.delete = function(){
   var request = gapi.client.drive.files.delete({
     'fileId': this.id
   });
-  oauth_controller.execute_request(request, function(response){
+  application.controllers.google_oauth.execute_request(request, function(response){
   })
 }

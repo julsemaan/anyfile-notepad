@@ -41,7 +41,7 @@ Preferences.prototype.get_from_drive = function(){
     'q': '\'appfolder\' in parents'
   });
 
-  oauth_controller.execute_request(request, function(response){
+  application.controllers.google_oauth.execute_request(request, function(response){
     var files = response.items
     if(!files){
       self.create_initial()

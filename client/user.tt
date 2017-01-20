@@ -5,7 +5,7 @@
       {{ i18n "Logged in as" }}
       <span data-bind-current_user="name"></span>
       <br>
-      <a style="color:blue" href="javascript:void(0)" onclick="javascript:oauth_controller.switch_user()">{{ i18n "Switch user" }}</a>
+      <a style="color:blue" href="javascript:void(0)" onclick="javascript:application.controllers.google_oauth.switch_user()">{{ i18n "Switch user" }}</a>
       |
       <a style="color:blue" href="https://accounts.google.com/AddSession" onclick="javascript:void window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">{{ i18n "Add account" }}</a>
   </span>

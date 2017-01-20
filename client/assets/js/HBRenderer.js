@@ -30,7 +30,7 @@ HBRenderer.prototype.registerHelpers = function() {
 
   Handlebars.registerHelper('m-action-n-close', function(action){
     action = typeof(action) == "string" ? action : "";
-    return 'data-eb-click="top_menu_controller.action_and_close(function(){'+action+'})"'
+    return 'data-eb-click="application.controllers.editor.top_menu.action_and_close(function(){'+action+'})"'
   });
 
   Handlebars.registerHelper('isNull', function(val){

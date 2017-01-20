@@ -44,9 +44,9 @@ hbrenderer.renderAll(context);
 // Shows the 'application is loading' modal
 application.startLoading();
 
-var dropbox_oauth_controller = new DropboxOAuthController({});
+application.controllers.dropbox_oauth = new DropboxOAuthController({});
 
-var oauth_controller = new GoogleOAuthController({
+application.controllers.google_oauth = new GoogleOAuthController({
   scopes : [
     'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/drive openid',
@@ -58,15 +58,11 @@ var oauth_controller = new GoogleOAuthController({
 });
 
 var user_preferences;
-var editor_controller;
-var top_menu_controller;
-var menu_controller = new MenuController("menu");
 
-
-oauth_controller.add_to_queue(function(){
+application.controllers.google_oauth.add_to_queue(function(){
   user_preferences = new Preferences(
     function(){
-      editor_controller = new EditorController("editor_app", {
+      application.controllers.editor = new EditorController("editor_app", {
         'major_notice_pref' : IntPreference.find('major_notice'),
         'menu_width_pref' : StringPreference.find('menu_width'),
         'flash' : new FlashController('editor_flash'),
@@ -75,14 +71,13 @@ oauth_controller.add_to_queue(function(){
           }),
         'favorites_controller': new FavoritesController({
           favorites_pref:ArrayPreference.find("favorites"),
-          menu_controller:menu_controller,
         }),
       })
+      var editor_controller = application.controllers.editor;
       editor_controller.favorites_controller.parent = editor_controller;
 
       editor_controller.file_explorer.parent = editor_controller;
       editor_controller.file_explorer.flash = editor_controller.flash;
-      editor_controller.oauth_controller = oauth_controller;
       editor_controller.file_explorer.load();
       
 
@@ -107,7 +102,8 @@ oauth_controller.add_to_queue(function(){
       editor_controller.flash.sticky_success("Application code is now Open Source. <a target='_blank' href='/news'>More details here.</a>");
 
       new EditorRouter(editor_controller)
-      top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller, 'menu':menu_controller });
+      var menu_controller = new MenuController("menu");
+      var top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller, 'menu':menu_controller });
       editor_controller.top_menu = top_menu_controller;
 
       // check for browser compat

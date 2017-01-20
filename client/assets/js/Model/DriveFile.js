@@ -40,7 +40,7 @@ DriveFile.prototype.get_file_data = function(){
     })
 
   };
-  oauth_controller.execute_request(request, callback)
+  application.controllers.google_oauth.execute_request(request, callback)
 }
 
 DriveFile.prototype.update_metadata = function(callback){
@@ -112,7 +112,7 @@ DriveFile.prototype.update_data = function(new_revision, callback){
         console.log(file)
       };
     }
-    oauth_controller.execute_request(request, function(file){
+    application.controllers.google_oauth.execute_request(request, function(file){
       if(!file.error){
         //set id if it's not persisted and set persisted
         if(!self.persisted){
