@@ -79,6 +79,8 @@ application.controllers.google_oauth.add_to_queue(function(){
       editor_controller.file_explorer.parent = editor_controller;
       editor_controller.file_explorer.flash = editor_controller.flash;
       editor_controller.file_explorer.load();
+
+      editor_controller.initialize_html();
       
       application.setupDevModeFlash();
       application.setupLocaleFlash();

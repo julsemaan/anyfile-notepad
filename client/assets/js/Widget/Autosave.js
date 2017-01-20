@@ -7,10 +7,10 @@ AutosaveWidget.prototype.preference = function() {
 AutosaveWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
   if(self.preference().getValue()) {
-    self.editor_controller.activate_autosave()
+    application.controllers.editor.activate_autosave()
   }
   else {
-    self.editor_controller.deactivate_autosave()
+    application.controllers.editor.deactivate_autosave()
   }
 }
 

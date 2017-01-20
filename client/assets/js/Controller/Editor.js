@@ -27,8 +27,6 @@ function EditorController(view, options){
 
   this.autosave_interval;
 
-  this.initialize_html();
-
   this.detect_device();
 }
 
@@ -40,13 +38,13 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
-  self.fontSizeWidget = new FontSizeWidget();
-  self.autosaveWidget = new AutosaveWidget();
-  self.wordWrapWidget = new WordWrapWidget();
-  self.tabSizeWidget = new TabSizeWidget();
-  self.editorModeWidget = new EditorModeWidget();
-  self.selectThemeWidget = new SelectThemeWidget();
-  self.selectSyntaxWidget = new SelectSyntaxWidget();
+  self.fontSizeWidget = new FontSizeWidget({});
+  self.autosaveWidget = new AutosaveWidget({});
+  self.wordWrapWidget = new WordWrapWidget({});
+  self.tabSizeWidget = new TabSizeWidget({});
+  self.editorModeWidget = new EditorModeWidget({});
+  self.selectThemeWidget = new SelectThemeWidget({});
+  self.selectSyntaxWidget = new SelectSyntaxWidget({});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){

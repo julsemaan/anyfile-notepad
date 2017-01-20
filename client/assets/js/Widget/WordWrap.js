@@ -6,7 +6,7 @@ WordWrapWidget.prototype.preference = function() {
 
 WordWrapWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  self.editor_controller.editor_view.getSession().setUseWrapMode(self.preference().getValue())
+  application.controllers.editor.editor_view.getSession().setUseWrapMode(self.preference().getValue())
 }
 
 
