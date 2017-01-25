@@ -50,7 +50,7 @@ ApplicationController.prototype.setupDevModeFlash = function() {
 ApplicationController.prototype.setupLocaleFlash = function() {
   var self = this;
   if(!String.locale.match('^en')){
-    editor_controller.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
+    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
   }
 } 
 
