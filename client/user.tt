@@ -1,7 +1,7 @@
 
 <div id="current_user" class="alert alert-success">
   <div style="display:inline-block">
-  <span id="user_details" style="display:none;">
+  <span class="details" style="display:none;">
       {{ i18n "Logged in as" }}
       <span data-bind-current_user="name"></span>
       <br>

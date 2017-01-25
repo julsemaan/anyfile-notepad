@@ -6,30 +6,35 @@ UserWidget.prototype.init = function(args) {
   var selector = args["selector"];
   if(!selector) throw("Missing selector for the UserWidget");
 
-  $(selector).on({
-    mouseenter: self.userHoverIn,
-    mouseleave: self.userHoverOut,
+  self.view = $(selector);
+  self.details = self.view.find('.details');
+
+  self.view.on({
+    mouseenter: function() {self.userHoverIn()},
+    mouseleave: function() {self.userHoverOut()},
   });
 
 }
 
 UserWidget.prototype.userHoverIn = function(){
-  //$(this).find("#user_details").show();
-  var orig = $.data(this, 'dimensions');
-  if(!orig) $.data(this, 'dimensions', { width: $(this).outerWidth(), height: $(this).outerHeight() });
+  var self = this;
+
+  var orig = $.data(self.view, 'dimensions');
+  if(!orig) $.data(self.view, 'dimensions', { width: self.view.outerWidth(), height: self.view.outerHeight() });
   // clear the other things to do and open it
-  $("#current_user").stop()
-  $("#current_user").animate({width:"500px"}, function(){
-  $("#user_details").show()
-  $("#current_user").animateAuto('width')
+  self.view.stop()
+  self.view.animate({width:"500px"}, function(){
+  self.details.show()
+  self.view.animateAuto('width')
 });
 }
 
 UserWidget.prototype.userHoverOut = function(){
-  //$(this).find("#user_details").hide();
-  var orig = $.data(this, 'dimensions')
-  $("#current_user").stop()
-  $("#user_details").hide()
-  $("#current_user").animate({width:orig.width+"px", height:orig.height+"px"});
+  var self = this;
+
+  var orig = $.data(self.view, 'dimensions')
+  self.view.stop()
+  self.details.hide()
+  self.view.animate({width:orig.width+"px", height:orig.height+"px"});
 }
 
