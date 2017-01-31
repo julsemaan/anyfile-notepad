@@ -45,6 +45,8 @@ EditorController.prototype.initialize_html = function(){
   self.editorModeWidget = new EditorModeWidget({});
   self.selectThemeWidget = new SelectThemeWidget({});
   self.selectSyntaxWidget = new SelectSyntaxWidget({});
+  self.showAllCharactersWidget = new ShowAllCharactersWidget({});
+  self.tabsAsSpacesWidget = new TabsAsSpacesWidget({});
 
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){

@@ -236,6 +236,10 @@ h5.menu_header {
         display:block;
         width:100%;
       }
+
+      hr {
+        margin: 0.25em 0;
+      }
     }
 
     .back_btn_padded {
@@ -455,4 +459,11 @@ div#current_user{
 
 li a.btn-primary {
   @extend .btn-primary;
+}
+
+.option-toggle {
+  .togglebutton {
+    display:inline;
+  }
+  text-align:center;
 }

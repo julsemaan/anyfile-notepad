@@ -12,6 +12,8 @@ function Preferences(loaded){
     'keybinding' : 'normal',
     'favorites' : "[]",
     'autosave' : 'true',
+    'show_all_characters' : 'false',
+    'tabs_as_spaces' : 'true',
   }
   
   this.HASH_PREFERENCES = [
