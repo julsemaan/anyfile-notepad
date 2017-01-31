@@ -1,7 +1,7 @@
 Class("WordWrapWidget", ["PreferenceWidget"]);
 
 WordWrapWidget.prototype.preference = function() {
-  return BooleanPreference.find('autosave'); 
+  return BooleanPreference.find('word_wrap'); 
 }
 
 WordWrapWidget.prototype.refreshFromPreferenceChild = function() {
