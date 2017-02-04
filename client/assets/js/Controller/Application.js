@@ -59,7 +59,7 @@ ApplicationController.prototype.is_mobile = function() {
 }
 
 ApplicationController.prototype.set_mode_and_reload = function(mode, destination){
-  new Popup({ message : "This action requires to restart the app. Proceed ?", confirm: true, callback: function(result){
+  new Popup({ message : i18n("This action requires to restart the app. Proceed ?"), confirm: true, callback: function(result){
     if(result) { 
       setCookie("AFNVersion", mode);
       if(destination){

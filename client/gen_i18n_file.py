@@ -49,4 +49,5 @@ for string in strings_array:
     if not skip and not stripped in locale:
         to_translate[stripped] = stripped
 
-print json.dumps(to_translate, sort_keys=True, indent=2, separators=(',', ': '))
+with open('locales/_en.json', 'w') as f:
+    f.write(json.dumps(to_translate, sort_keys=True, indent=2, separators=(',', ': ')))

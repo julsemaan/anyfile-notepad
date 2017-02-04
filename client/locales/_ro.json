@@ -125,6 +125,7 @@
   "The authentication failed with Google": "Procesul de autentificare cu Google a esuat",
   "The browser you are using is completely untested with this app. Consider using another browser.": "Browser-ul folosit nu este testat pentru folosirea aplicatiei. Folositi un alt browser.",
   "The browser you are using is not officialy tested. The app should work but your milleage may vary.": "Browser-ul folosit nu este oficial testat. Este posibil ca aplicatia sa functioneze corect dar nu garantam acest lucru ",
+  "This action requires to restart the app. Proceed ?": "This action requires to restart the app. Proceed ?",
   "This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled.": "Fisierul are o codificare necunoscuta.<br/>Unele caractere nu vor fi afisate corect si posibil ca fisierul sa nu fie salvat corect.<br/>Salvarea automata este temporar oprita.",
   "This file is already being saved. Calm down.": "Acest fisier a fost salvat. Calmeaza-te!",
   "This outlines the main shortcuts, for the complete list see:": "Acest lucru prezint\u0103 principalele comenzile rapide, pentru lista complet\u0103 a se vedea",
