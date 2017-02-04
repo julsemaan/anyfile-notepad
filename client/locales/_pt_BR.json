@@ -18,6 +18,8 @@
   "Are you sure ?": "Voc\u00ea tem certeza?",
   "Authorize!": "Autorizar!",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "O Armazenamento do navegador \u00e9 inexistente. O aplicadito n\u00e3o funciona sem isto. Por favor, use outro navegador ou atualize o que voc\u00ea est\u00e1 utilizando.",
   "Build ID": "ID de constru\u00e7\u00e3o",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "N\u00e3o foi poss\u00edvel aplicar suas prefer\u00eancias porque elas n\u00e3o foram carregadas adequadamente. \u00c9 recomendado reiniciar a aplica\u00e7\u00e3o.",

@@ -18,6 +18,8 @@
   "Are you sure ?": "\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f",
   "Authorize!": "\u8a8d\u8a3c\u5b8c\u4e86\uff01",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.",
   "Build ID": "Build ID",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "\u8a2d\u5b9a\u304c\u9069\u5207\u306b\u8aad\u307f\u8fbc\u307e\u308c\u306a\u304b\u3063\u305f\u305f\u3081\u8a2d\u5b9a\u3092\u4fdd\u5b58\u3067\u304d\u307e\u305b\u3093\u3002\u30a2\u30d7\u30ea\u3092\u518d\u8d77\u52d5\u3057\u3066\u4e0b\u3055\u3044",

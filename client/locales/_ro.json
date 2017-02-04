@@ -18,6 +18,8 @@
   "Are you sure ?": "Sunteti sigur?",
   "Authorize!": "Autorizare!",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Va rugam sa folositi un alt Browser intrucat cel pe care il folositi nu are spatiu de stocare si aplicati nu poate functiona fara acesta!",
   "Build ID": "ID aplicatie",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "Va rugam sa restartati aplicatia intrucat preferintele nu au putut fi incarcate corect",

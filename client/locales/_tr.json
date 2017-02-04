@@ -18,6 +18,8 @@
   "Are you sure ?": "Emin misiniz?",
   "Authorize!": "\u0130zin verin!",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Taray\u0131c\u0131n\u0131n depolama alan\u0131 bulunmamaktad\u0131r. Uygulama onsuz \u00e7al\u0131\u015famaz. L\u00fctfen ya ba\u015fka bir taray\u0131c\u0131 kullan\u0131n ya da bu taray\u0131c\u0131y\u0131 g\u00fcncelleyin.",
   "Build ID": "Derlenme Numaras\u0131",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "D\u00fczg\u00fcn y\u00fcklenemedi\u011fi i\u00e7in tercihleriniz g\u00fcncellenemiyor. Uygulaman\u0131z\u0131 yeniden ba\u015flatman\u0131z\u0131 tavsiye ederiz.",

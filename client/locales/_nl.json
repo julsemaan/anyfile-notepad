@@ -18,6 +18,8 @@
   "Are you sure ?": "Weet u het zeker?",
   "Authorize!": "Machtigen!",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Geen opslagmedium gevonden. De app kan niet werken zonder opslagmogelijkheid. Gebruik een andere browser of update uw huidige.",
   "Build ID": "Build-ID",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "Kunt u uw voorkeuren niet opslaan, omdat ze niet goed zijn geladen. Probeer de app opnieuw te starten.",

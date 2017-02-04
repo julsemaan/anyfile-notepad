@@ -18,6 +18,8 @@
   "Are you sure ?": "Jeste\u015b pewien?",
   "Authorize!": "Dodaj uprawnienia",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Ta przegl\u0105darka nie udost\u0119pnia lokalnych kontener\u00f3w danych. S\u0105 one konieczne dla poprawnego dzia\u0142ania aplikacji. U\u017cyj prosz\u0119 innej przegl\u0105darki lub zaktualizuj wersj\u0119 bie\u017c\u0105cej.",
   "Build ID": "Id kompilacji",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "Nie mo\u017cna zapisa\u0107 ustawie\u0144, poniewa\u017c nie zosta\u0142y poprawnie za\u0142adowane. Zaleca si\u0119 ponowne uruchomienie aplikacji.",

@@ -18,6 +18,8 @@
   "Are you sure ?": "\u00cates-vous s\u00fbr",
   "Authorize!": "Authoriser!",
   "Autosave": "Sauvegarde auto",
+  "Autosave is disabled": "Sauvegarde auto désactivée",
+  "Autosave is enabled": "Sauvegarde auto activée",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Stockage du navigateur inexistant. L'application ne peux fonctionner sans ceci. Veuillez utiliser un autre navigateur ou mettre à jour votre navigateur actuel.",
   "Build ID": "ID du build",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "Impossible de sauvegarder vos pr\u00e9f\u00e9rences puisqu'elles n'ont pas \u00e9t\u00e9 charg\u00e9es correctement. Il est sugg\u00e9r\u00e9 de red\u00e9marrer l'application.",

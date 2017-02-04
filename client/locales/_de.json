@@ -18,6 +18,8 @@
   "Are you sure ?": "Bist du sicher?",
   "Authorize!": "Autorisieren!",
   "Autosave": "Autosave",
+  "Autosave is disabled": "Autosave is disabled",
+  "Autosave is enabled": "Autosave is enabled",
   "Browser storage is non-existent. The app cannot work without it. Please use another browser or update your current one.": "Browser-Speicherung ist ben\u00f6tigt. Die App kann nicht ohne funktionieren. Bitte benutze einen anderen Browser oder update deinen aktuellen.",
   "Build ID": "Build ID",
   "Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.": "Ihre Einstellungen k\u00f6nnen nicht \u00fcbergeben werden, weil sie nicht richtig geladen wurden. Es ist empfohlen die App neu zu starten",
