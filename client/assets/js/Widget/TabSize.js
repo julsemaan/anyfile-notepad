@@ -6,7 +6,7 @@ TabSizeWidget.prototype.preference = function() {
 
 TabSizeWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  self.editor_controller.editor_view.getSession().setTabSize(self.preference().getValue())
+  application.controllers.editor.editor_view.getSession().setTabSize(self.preference().getValue())
 }
 
 

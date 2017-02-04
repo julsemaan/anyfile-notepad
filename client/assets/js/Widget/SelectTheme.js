@@ -6,7 +6,7 @@ SelectThemeWidget.prototype.preference = function() {
 
 SelectThemeWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  self.editor_controller.editor_view.setTheme(self.preference().getValue());
+  application.controllers.editor.editor_view.setTheme(self.preference().getValue());
 }
 
 

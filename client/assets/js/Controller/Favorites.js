@@ -57,7 +57,7 @@ FavoritesController.prototype.refresh = function(){
     var add_favorite = $('<li><a href="javascript:void(0)">'+i18n("Favorite this file")+'</a></li>');
     add_favorite.click(function(e){
       e.preventDefault();
-      self.menu_controller.hide_menu();
+      application.controllers.editor.top_menu.menu.hide_menu();
       if(self.parent.file.id){
         self.add_favorite(self.parent.file.provider, self.parent.file.id);
       }
@@ -73,13 +73,13 @@ FavoritesController.prototype.refresh = function(){
       delete_button.click(function(e){
         e.preventDefault();
         self.remove_favorite(element.alias);
-        self.menu_controller.hide_menu();
+        application.controllers.editor.top_menu.menu.hide_menu();
         return false;
       });
       var provider = element.provider || DEFAULT_PROVIDER;
       var link = $('<a href="#edit/'+provider+"/"+element.file_id+'">'+element.alias+'</a>');
       link.click(function(){
-        self.menu_controller.hide_menu();
+        application.controllers.editor.top_menu.menu.hide_menu();
       });
       var li = $('<li></li>');
       li.append(link);

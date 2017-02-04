@@ -34,26 +34,26 @@
     </div>
   </li>
 
-  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.save()" }}} >{{ i18n "Save" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.save()" }}} >{{ i18n "Save" }}</a></li>
 
-  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.open_share_modal()" }}}>{{ i18n "Share" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.open_share_modal()" }}}>{{ i18n "Share" }}</a></li>
 
-  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.print()" }}}>{{ i18n "Print" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.print()" }}}>{{ i18n "Print" }}</a></li>
   
   <li>
-    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.editor_view.execCommand('find')" }}}>{{ i18n "Search" }} (Ctrl-F)</a>
+    <a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.editor_view.execCommand('find')" }}}>{{ i18n "Search" }} (Ctrl-F)</a>
   </li>
   
   <li>
-    <a href="{{noaction}};" {{{ m-action-n-close "editor_controller.editor_view.execCommand('replace')" }}}>
+    <a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.editor_view.execCommand('replace')" }}}>
       {{ i18n "Search & replace" }}
     </a>
   </li>
   
-  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.$.find('#file_info_modal').modal('show')" }}}>{{ i18n "Show file info" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.$.find('#file_info_modal').modal('show')" }}}>{{ i18n "Show file info" }}</a></li>
 
   <li><a href="/faq">{{ i18n "Help (FAQ)" }}</a></li>
 
-  <li><a href="{{noaction}};" {{{ m-action-n-close "editor_controller.restart_app()" }}}>{{ i18n "Restart app" }}</a></li>
+  <li><a href="{{noaction}};" {{{ m-action-n-close "application.controllers.editor.restart_app()" }}}>{{ i18n "Restart app" }}</a></li>
 </ul>
 </script>

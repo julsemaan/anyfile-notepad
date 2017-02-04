@@ -1,0 +1,106 @@
+var application = new ApplicationController();
+
+[%
+locales = {
+  "nl"    = "Dutch",
+  "en"    = "English",
+  "fr"    = "French",
+  "de"    = "German",
+  "it"    = "Italian",
+  "ja"    = "Japanese",
+  "pl"    = "Polish",
+  "pt-BR" = "Portuguese (BR)",
+  "es"    = "Spanish",
+  "ro"    = "Romanian",
+  "tr"    = "Turkish",
+}
+%]
+
+var locale_controller = new LocaleController();
+
+[% FOREACH id IN locales.keys %]
+[% file = 'locales/_' _ id _ '.json' %]
+locale_controller.addLocale("[% id %]", "[% locales.$id %]", [% INCLUDE $file %]);
+[% END %]
+
+function i18n(string) {
+  return locale_controller.i18n(string)
+}
+
+var context = {
+  locales : locale_controller.nameMap,
+  grouped_syntaxes : [% SYNTAXES_JSON %],
+  themes : [% THEMES_JSON %],
+  application : application,
+  ace: ace,
+};
+for(var i=0; i<3; i++){
+  context.themes.unshift("dummy");
+}
+
+var hbrenderer = new HBRenderer();
+hbrenderer.renderAll(context);
+
+// Shows the 'application is loading' modal
+application.startLoading();
+
+application.controllers.dropbox_oauth = new DropboxOAuthController({});
+
+application.controllers.google_oauth = new GoogleOAuthController({
+  scopes : [
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/drive.install',
+    'https://www.googleapis.com/auth/drive.appdata',
+  ],
+});
+
+var user_preferences;
+
+application.controllers.google_oauth.add_to_queue(function(){
+  user_preferences = new Preferences(
+    function(){
+      application.controllers.editor = new EditorController("editor_app", {
+        'major_notice_pref' : IntPreference.find('major_notice'),
+        'menu_width_pref' : StringPreference.find('menu_width'),
+        'flash' : new FlashController('editor_flash'),
+        'file_explorer': new FileExplorerController("file_explorer_container", {
+          'height_pref' : StringPreference.find('file_explorer_height'),
+          }),
+        'favorites_controller': new FavoritesController({
+          favorites_pref:ArrayPreference.find("favorites"),
+        }),
+      })
+      var editor_controller = application.controllers.editor;
+      editor_controller.favorites_controller.parent = editor_controller;
+
+      editor_controller.file_explorer.parent = editor_controller;
+      editor_controller.file_explorer.flash = editor_controller.flash;
+      editor_controller.file_explorer.load();
+
+      editor_controller.initialize_html();
+      
+      application.setupDevModeFlash();
+      application.setupLocaleFlash();
+
+      editor_controller.flash.sticky_success("Application code is now Open Source. <a target='_blank' href='/news'>More details here.</a>");
+
+      new EditorRouter(editor_controller)
+      var menu_controller = new MenuController("menu");
+      var top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller, 'menu':menu_controller });
+      editor_controller.top_menu = top_menu_controller;
+
+      // check for browser compat
+      setTimeout(function(){
+        editor_controller.browser_check();
+      }, 5000);
+    }
+  )
+})
+
+new UserWidget({selector:"#current_user"});
+
+[% # vim: syntax=javascript 
+%]

@@ -3,7 +3,7 @@ Class("DropboxFile", ["CloudFile"]);
 DropboxFile.prototype.init = function(options) {
   CloudFile.prototype.init.call(this, options);
   this.set("provider", "Dropbox");
-  this.oauth_controller = dropbox_oauth_controller;
+  this.oauth_controller = application.controllers.dropbox_oauth;
   this.client = this.oauth_controller.client;
 }
 

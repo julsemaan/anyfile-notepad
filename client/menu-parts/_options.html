@@ -44,7 +44,7 @@
               {{{ 
                 m-action-n-close (concat
                   "user_preferences.reset();"
-                  "new Popup({ message : i18n('You should now restart the app to fully flush your preferences.'), callback : function(result) {if(result) editor_controller.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});")
+                  "new Popup({ message : i18n('You should now restart the app to fully flush your preferences.'), callback : function(result) {if(result) application.controllers.editor.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});")
               }}} 
             >
               {{ i18n "Reset preferences" }}

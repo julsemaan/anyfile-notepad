@@ -8,7 +8,7 @@ SelectSyntaxWidget.prototype.getReadPreference = function() {
 SelectSyntaxWidget.prototype.preference = function(acceptVirtual) {
   acceptVirtual = acceptVirtual || false;
   var self = this;
-  var extension = self.editor_controller.file ? self.editor_controller.file.extension() : '';
+  var extension = application.controllers.editor.file ? application.controllers.editor.file.extension() : '';
   var p = StringPreference.find("syntaxes["+extension+"]");
   if(p.getValue()) {
     return p;
@@ -16,8 +16,8 @@ SelectSyntaxWidget.prototype.preference = function(acceptVirtual) {
   else if(!acceptVirtual) {
     return p;
   }
-  else if(self.editor_controller.file) {
-    self.virtualPreference = self.virtualPreference || new StringPreference({key:"virtual_syntax", value:self.editor_controller.file.ace_js_mode});
+  else if(application.controllers.editor.file) {
+    self.virtualPreference = self.virtualPreference || new StringPreference({key:"virtual_syntax", value:application.controllers.editor.file.ace_js_mode});
     return self.virtualPreference;
   }
   else {
@@ -27,7 +27,7 @@ SelectSyntaxWidget.prototype.preference = function(acceptVirtual) {
 
 SelectSyntaxWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  self.editor_controller.setSyntaxMode(self.preference(true).getValue());
+  application.controllers.editor.setSyntaxMode(self.preference(true).getValue());
 }
 
 SelectSyntaxWidget.prototype.setSyntaxMode = function(syntax){

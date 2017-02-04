@@ -10,6 +10,13 @@ function ApplicationController() {
   if(this.dev_mode) {
     StatIncrement.record("dev-mode");
   }
+
+  this.controllers = {};
+}
+
+ApplicationController.prototype.startLoading = function() {
+  $("#app_load_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
+  $('.modal-backdrop.fade.in').css('opacity', '1.0')
 }
 
 ApplicationController.prototype.try_dev_mode = function(){
@@ -21,6 +28,31 @@ ApplicationController.prototype.stop_dev_mode = function(){
   StatIncrement.record("stop-dev-mode");
   this.set_mode_and_reload("");
 }
+
+
+ApplicationController.prototype.setupDevModeFlash = function() {
+  var self = this;
+  if(self.dev_mode){
+    self.controllers.editor.flash.sticky_warning("<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>");
+    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
+  }
+  else {
+    AppSetting.find("beta-available").then(function(setting) {
+      if(setting["value"] == "true") {
+        self.controllers.editor.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
+      }
+    }, function(error) {
+      console.log("Cannot find beta-available variable to display BETA access.", error)
+    });
+  }
+}
+
+ApplicationController.prototype.setupLocaleFlash = function() {
+  var self = this;
+  if(!String.locale.match('^en')){
+    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
+  }
+} 
 
 ApplicationController.prototype.is_mobile = function() {
   this._is_mobile = $('#editor_menu .navbar-toggle').is(":visible");

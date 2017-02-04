@@ -7,11 +7,6 @@ PreferenceWidget.prototype.init = function(options){
 
   self.widgetName = self.constructor.name;
 
-  self.editor_controller = options["editor_controller"];
-  if(!self.editor_controller) {
-    throw("Missing editor controller for "+self.widgetName);
-  }
-
   self.initCache();
   
   self.bindEvents();
@@ -181,7 +176,7 @@ PreferenceWidget.prototype.handleChange = function(value) {
 
   value = self.widgetValToPrefVal(value);
 
-  self.preference().refreshAndSet(value, self.editor_controller, function(){self.editor_controller.show_reauth()}).then(function() {
+  self.preference().refreshAndSet(value, application.controllers.editor, function(){application.controllers.editor.show_reauth()}).then(function() {
     self.refreshFromPreference();
     self.enable();
   });

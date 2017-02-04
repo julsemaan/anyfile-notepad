@@ -26,7 +26,7 @@ FileExplorerController.prototype.render_directory = function(provider, folders, 
     var file_link = $("<a href='#edit/"+provider+"/"+file.id+"'>"+file.title+"</a>");
     file_element.addClass("file ext_"+CloudFile.file_extension(file.title).substr(1))
     file_element.append(file_link);
-    file_link.attr('onclick', "javascript:menu_controller.hide_menu();window.location='#edit/"+provider+"/"+file.id+"'")
+    file_link.attr('onclick', "javascript:application.controllers.editor.top_menu.menu.hide_menu();window.location='#edit/"+provider+"/"+file.id+"'")
     container.append(file_element);
   }
   return container;
@@ -35,10 +35,10 @@ FileExplorerController.prototype.render_directory = function(provider, folders, 
 FileExplorerController.prototype.fetch_dropbox_directory = function(options, callback){
   var self = this;
 
-  dropbox_oauth_controller.do_auth(function(){
+  application.controllers.dropbox_oauth.do_auth(function(){
     var r = new DropboxRequest({
-      auth_handler:dropbox_oauth_controller,
-      client:dropbox_oauth_controller.client,
+      auth_handler:application.controllers.dropbox_oauth,
+      client:application.controllers.dropbox_oauth.client,
       request : function(){
         var request = this;
         this.client.stat(options['dir'], {readDir:true}, function(e,r,ls){request.handle_response(e,r,ls)})
@@ -73,7 +73,7 @@ FileExplorerController.prototype.fetch_drive_directory = function(options, callb
     'q': "'"+directory_id+"' in parents and trashed=false",
     'fields' : 'items(id,mimeType,title)',
   });
-  oauth_controller.execute_request(request, function(response){
+  application.controllers.google_oauth.execute_request(request, function(response){
     var folders = []
     var files = []
     for(var i in response.items){

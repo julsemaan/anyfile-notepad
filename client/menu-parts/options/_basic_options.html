@@ -1,6 +1,6 @@
 <script class="template-partial" data-partial-name="moptions-basic-options" type="text/x-handlebars">
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-4">
     {{ i18n "Editor mode" }} :
     <select class="form-control" data-pref-widget="EditorModeWidget">
       <option value="normal">{{ i18n "Normal" }}</option>
@@ -9,7 +9,7 @@
     </select>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     {{ i18n "Tab size" }} : 
     <select class="form-control" data-pref-widget="TabSizeWidget">
       <option value="2">{{ i18n "2" }}</option>
@@ -19,7 +19,7 @@
     </select>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     {{ i18n "Font size" }} :
     <select class="form-control" data-pref-widget="FontSizeWidget">
       <option value="0.5em">{{ i18n "Small" }}</option>
@@ -29,13 +29,41 @@
     </select>
   </div>
 
-  <div class="col-md-3">
+</div>
+
+<hr>
+
+<div class="row">
+
+  <div class="col-md-4 option-toggle">
+    {{ i18n "Word wrapping" }} : 
     <div class="togglebutton">
       <label>
-        {{ i18n "Word wrapping" }} : <input type="checkbox" data-pref-widget="WordWrapWidget">
+        <input type="checkbox" data-pref-widget="WordWrapWidget">
+      </label>
+    </div>
+  </div>
+
+  <div class="col-md-4 option-toggle">
+    {{ i18n "Tabs as spaces" }} : 
+    <div class="togglebutton">
+      <label>
+        <input type="checkbox" data-pref-widget="TabsAsSpacesWidget">
+      </label>
+    </div>
+  </div>
+
+  <div class="col-md-4 option-toggle">
+    {{ i18n "Show all characters" }} : 
+    <div class="togglebutton">
+      <label>
+        <input type="checkbox" data-pref-widget="ShowAllCharactersWidget">
       </label>
     </div>
   </div>
 
 </div>
+
+<hr>
+
 </script>

@@ -107,7 +107,7 @@ EditorRouter.prototype.route = function(){
     },
     handle_dropbox_token: function(transition){
       console.log("checking token...")
-      dropbox_oauth_controller.test(function(){
+      application.controllers.dropbox_oauth.test(function(){
         window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
       });
     },
@@ -135,11 +135,11 @@ EditorRouter.prototype.check_for_drive = function() {
   // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
-    console.log(state['userId'], oauth_controller.current_user.user_id)
-    if(oauth_controller.current_user.user_id != state['userId']){
+    console.log(state['userId'], application.controllers.google_oauth.current_user.user_id)
+    if(application.controllers.google_oauth.current_user.user_id != state['userId']){
       $('#user_auth_modal').modal('show');
       $('#switch_user').click(function() {
-        oauth_controller.auth_with_user(state['userId'], function(){
+        application.controllers.google_oauth.auth_with_user(state['userId'], function(){
             self.handle_drive_params(state);
             window.location.reload();
         });

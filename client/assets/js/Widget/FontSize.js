@@ -6,6 +6,6 @@ FontSizeWidget.prototype.preference = function() {
 
 FontSizeWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  self.editor_controller.editor_view.setFontSize(self.preference().getValue());
+  application.controllers.editor.editor_view.setFontSize(self.preference().getValue());
 }
 

@@ -28,7 +28,7 @@
 
   <script>
     function oauth_loaded(){
-      oauth_controller.init()
+      application.controllers.google_oauth.init()
     }
   </script>
 
