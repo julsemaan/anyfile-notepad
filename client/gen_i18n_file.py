@@ -11,17 +11,12 @@ process = os.popen("cd "+zidir+" && make extract-i18n-strings")
 strings = process.read()
 process.close()
 
-if len(sys.argv) > 1:
-    locale_file = open("locales/_"+sys.argv[1]+".json")
-    locale_json = locale_file.read()
-    locale = json.loads(locale_json)
-else:
-    locale = {}
+locale = {}
 
 strings_array = strings.split("\n")
 del strings_array[0]
 
-missing = {}
+to_translate = {}
 
 skip_patterns = [
     re.compile("\<\%.*%\>"),
@@ -52,6 +47,6 @@ for string in strings_array:
         skip = True
 
     if not skip and not stripped in locale:
-        missing[stripped] = ""
+        to_translate[stripped] = stripped
 
-print json.dumps(missing, sort_keys=True, indent=2, separators=(',', ': '))
+print json.dumps(to_translate, sort_keys=True, indent=2, separators=(',', ': '))
