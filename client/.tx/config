@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[anyfile-notepad.anyfile-notepad]
+file_filter = locales/_<lang>.json
+source_file = locales/_en.json
+source_lang = en
+type = json
+
