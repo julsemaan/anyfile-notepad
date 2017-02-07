@@ -8,6 +8,15 @@ else
   _GIT_DIR="."
 fi
 
+WEBDEV="$1"
+function is_webdev() {
+  if [ "$WEBDEV" == "webdev" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 function emptyfile() {
   truncate -s 0 $1
 }
@@ -140,7 +149,11 @@ function application_css() {
   add_css_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
-  ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
+  if ! is_webdev; then
+    ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
+  else
+    cp $APPLICATION_CSS `add_min_prefix $APPLICATION_CSS`
+  fi
 }
 
 function application_js() {
@@ -170,7 +183,11 @@ function application_js() {
   # todo - exclude the files above
   find client/assets/js/ -name '*.js' | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
-  ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
+  if ! is_webdev; then
+    ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
+  else
+    cp $APPLICATION_JS `add_min_prefix $APPLICATION_JS`
+  fi
 }
 
 function editor_part() {
@@ -203,14 +220,23 @@ function public_assets() {
   cp -frp client/public/* $COMPILED_APP/
 }
 
+function download_if_necessary() {
+  DST="$1"
+  URL="$2"
+  
+  if ! is_webdev || ! [ -f tmp/cache/$DST ]; then
+    echo "Fetching $DST"
+    curl "$URL" --fail --silent --show-error > tmp/cache/$DST
+  fi
+
+  cp tmp/cache/$DST $COMPILED_APP/$DST
+}
+
 function json_resources() {
   # Adding JSON resources (from prod for now...)
-  echo "Fetching extensions.json"
-  curl https://api.anyfile-notepad.semaan.ca/extensions --fail --silent --show-error > $COMPILED_APP/extensions.json
-  echo "Fetching syntaxes.json"
-  curl https://api.anyfile-notepad.semaan.ca/syntaxes --fail --silent --show-error > $COMPILED_APP/syntaxes.json
-  echo "Fetching mime_types.json"
-  curl https://api.anyfile-notepad.semaan.ca/mime_types --fail --silent --show-error > $COMPILED_APP/mime_types.json
+  download_if_necessary extensions.json https://api.anyfile-notepad.semaan.ca/extensions
+  download_if_necessary syntaxes.json https://api.anyfile-notepad.semaan.ca/syntaxes
+  download_if_necessary mime_types.json https://api.anyfile-notepad.semaan.ca/mime_types
 }
 
 function build_all() {
@@ -235,7 +261,7 @@ function build_all() {
 
 build_all
 
-if ! [ "$1" == "webdev" ]; then
+if ! is_webdev; then
   exit
 fi
 
