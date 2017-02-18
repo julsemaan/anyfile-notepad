@@ -224,6 +224,7 @@ function download_if_necessary() {
   DST="$1"
   URL="$2"
   
+  mkdir -p tmp/cache/
   if ! is_webdev || ! [ -f tmp/cache/$DST ]; then
     echo "Fetching $DST"
     curl "$URL" --fail --silent --show-error > tmp/cache/$DST
