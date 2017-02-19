@@ -147,7 +147,7 @@ div#editor_flash{
   right:10px; 
   top:65px; 
   background-color:transparent; 
-  z-index:1000;
+  z-index:900;
 }
 
 .flash_notifications {
@@ -331,28 +331,11 @@ h5.menu_header {
   }
 }
 
-@media (max-height:768px) and (max-width:768px) {
-  #menu #expanded_menu .options, .file_menu, .syntaxes, .themes {
-    height:350px;
-    overflow-y:scroll;
-  }
-}
-
-@media (max-height:600px) and (max-width:768px) {
-  #menu #expanded_menu .options, .file_menu, .syntaxes, .themes {
-    height:250px;
-    overflow-y:scroll;
-  }
-}
-
 @media (max-width:768px) {
   .non-mobile-show {
     display:none;
   }
 
-  #menu #expanded_menu .options {
-    width:275px;
-  }
   #current_user {
     display:none;
   }
@@ -385,7 +368,7 @@ h5.menu_header {
     right:70px;
     bottom:10px; 
     height:40px;
-    z-index:99999;
+    z-index:900;
     .alert {
       width:100%;
       height:100%;
@@ -413,7 +396,30 @@ h5.menu_header {
     right:10px;
     bottom:10px;
     position:fixed;
-    z-index:99999;
+    z-index:900;
+  }
+
+  #expanded_menu {
+    overflow-y:scroll;
+    position:relative;
+    left:0;
+    right:5px;
+    bottom:5px;
+  }
+
+  #fileTree{
+    max-height:inherit !important;
+
+    li {
+      font-size:14px;
+      font-weight:bold;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      padding-left:35px;
+      background-size:25px;
+      background-position-x:5px;
+      background-position-y:10px;
+    }
   }
 }
 
