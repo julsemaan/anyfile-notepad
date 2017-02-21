@@ -55,7 +55,7 @@ EditorController.prototype.initialize_html = function(){
   });
 
   $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
-    if(event.ctrlKey && event.which != 17) {
+    if(event.ctrlKey && !event.altKey && event.which != 17) {
       switch(String.fromCharCode(event.which).toLowerCase()) {
         case 'p':
           self.print();
