@@ -125,7 +125,7 @@ function pages() {
     echo "-Building page $page"
 
     if [ "$page" == "home" ]; then
-      COLUMNS=2
+      COLUMNS=3
     else
       COLUMNS=1
     fi
