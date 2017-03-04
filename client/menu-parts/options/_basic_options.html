@@ -36,7 +36,7 @@
 
 <div class="row">
 
-  <div class="col-md-4 option-toggle">
+  <div class="col-md-6 option-toggle">
     {{ i18n "Word wrapping" }} : 
     <div class="togglebutton">
       <label>
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="col-md-4 option-toggle">
+  <div class="col-md-6 option-toggle">
     {{ i18n "Tabs as spaces" }} : 
     <div class="togglebutton">
       <label>
@@ -53,12 +53,25 @@
       </label>
     </div>
   </div>
+</div>
 
-  <div class="col-md-4 option-toggle">
+<hr>
+
+<div class="row">
+  <div class="col-md-6 option-toggle">
     {{ i18n "Show all characters" }} : 
     <div class="togglebutton">
       <label>
         <input type="checkbox" data-pref-widget="ShowAllCharactersWidget">
+      </label>
+    </div>
+  </div>
+
+  <div class="col-md-6 option-toggle">
+    {{ i18n "Show print margin" }} : 
+    <div class="togglebutton">
+      <label>
+        <input type="checkbox" data-pref-widget="ShowPrintMarginWidget">
       </label>
     </div>
   </div>

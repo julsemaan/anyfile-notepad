@@ -13,6 +13,7 @@ function Preferences(loaded){
     'favorites' : "[]",
     'autosave' : 'true',
     'show_all_characters' : 'false',
+    'show_print_margin' : 'true',
     'tabs_as_spaces' : 'true',
   }
   

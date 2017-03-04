@@ -46,6 +46,7 @@ EditorController.prototype.initialize_html = function(){
   self.selectThemeWidget = new SelectThemeWidget({});
   self.selectSyntaxWidget = new SelectSyntaxWidget({});
   self.showAllCharactersWidget = new ShowAllCharactersWidget({});
+  self.showPrintMarginWidget = new ShowPrintMarginWidget({});
   self.tabsAsSpacesWidget = new TabsAsSpacesWidget({});
 
   $(window).bind('beforeunload',function(){
