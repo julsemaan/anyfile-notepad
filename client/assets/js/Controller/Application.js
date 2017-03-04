@@ -37,7 +37,7 @@ ApplicationController.prototype.setupDevModeFlash = function() {
     self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
   }
   else {
-    AppSetting.find("beta-available").then(function(setting) {
+    AppSetting.find("beta-available").then(function(setting) {
       if(setting["value"] == "true") {
         self.controllers.editor.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
       }
