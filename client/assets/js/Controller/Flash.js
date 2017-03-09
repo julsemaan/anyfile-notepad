@@ -94,9 +94,11 @@ FlashController.prototype.toggle_maximize = function(){
 }
 
 FlashController.prototype.maximize = function(){
+  $('.flash_notifications').hide();
   this.view.fadeIn();
 }
 
 FlashController.prototype.minimize = function(){
   this.view.fadeOut();
+  $('.flash_notifications').show();
 }
