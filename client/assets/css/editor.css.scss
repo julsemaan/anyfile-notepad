@@ -134,6 +134,8 @@ div.g_file_editor{
       bottom:0;
       top:auto;
       border-radius:5px 0 0 0;
+      /* force the font size since changing the size in the editor was changing this as well and messing up the search display */
+      font-size:14px !important;
     }
     .ace_search_field {
       color:black;
@@ -473,3 +475,4 @@ li a.btn-primary {
   }
   text-align:center;
 }
+
