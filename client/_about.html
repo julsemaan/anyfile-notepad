@@ -5,6 +5,11 @@
   {{#if global_context.application.dev_mode}}
   <p><b>{{ i18n "Running development snapshot" }}</b> <a href="javascript:void(0)" onclick="javascript:application.stop_dev_mode()">{{ i18n "use stable version" }}</a></p>
   {{else}}
-  <p><b>{{ i18n "Running stable snapshot" }}</b> <a href="javascript:void(0)" onclick="javascript:application.try_dev_mode()">{{ i18n "use development version (if available)" }}</a></p>
+    <p class="if-dev-available">
+      <b>{{ i18n "Running stable snapshot" }}</b>
+      {{#if global_context.application.dev_mode_available}}
+        <a href="javascript:void(0)" onclick="javascript:application.try_dev_mode()">{{ i18n "use development version (if available)" }}</a>
+      {{/if}}
+    </p>
   {{/if}}
 </script>

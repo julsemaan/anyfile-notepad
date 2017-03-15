@@ -1,6 +1,7 @@
 function ApplicationController() {
   this.dev_mode_name = "dev";
   this.dev_mode = (getCookie("AFNVersion") == this.dev_mode_name); 
+  this.dev_mode_available = false;
   this.tour_controller = new TourController({});
   this.is_mobile();
   StatIncrement.record("app-load");
@@ -40,6 +41,7 @@ ApplicationController.prototype.setupDevModeFlash = function() {
     AppSetting.find("beta-available").then(function(setting) {
       if(setting["value"] == "true") {
         self.controllers.editor.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
+        self.dev_mode_available = true;
       }
     }, function(error) {
       console.log("Cannot find beta-available variable to display BETA access.", error)
