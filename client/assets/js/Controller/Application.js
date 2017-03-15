@@ -20,32 +20,45 @@ ApplicationController.prototype.startLoading = function() {
   $('.modal-backdrop.fade.in').css('opacity', '1.0')
 }
 
-ApplicationController.prototype.try_dev_mode = function(){
-  StatIncrement.record("try-dev-mode");
-  this.set_mode_and_reload(this.dev_mode_name);
+ApplicationController.prototype.try_dev_mode = function(force){
+  var stat = force ? "try-dev-mode" : "try-dev-mode-forced";
+  StatIncrement.record(stat);
+  this.set_mode_and_reload(this.dev_mode_name, force);
 }
 
-ApplicationController.prototype.stop_dev_mode = function(){
-  StatIncrement.record("stop-dev-mode");
-  this.set_mode_and_reload("");
+ApplicationController.prototype.stop_dev_mode = function(force){
+  var stat = force ? "stop-dev-mode" : "stop-dev-mode-forced";
+  StatIncrement.record(stat);
+  this.set_mode_and_reload("", force);
 }
 
 
-ApplicationController.prototype.setupDevModeFlash = function() {
+ApplicationController.prototype.setupDevMode = function() {
+  var self = this;
+  AppSetting.find("beta-available").then(function(setting) {
+    self.dev_mode_available = (setting["value"] == "true");
+    self.actOnDevModeSettings();
+  }, function(error) {
+    console.log("Cannot find beta-available variable to display BETA access.", error);
+    //Assume its available if we can't reach the API
+    self.dev_mode_available = true;
+    self.actOnDevModeSettings();
+  });
+}
+
+ApplicationController.prototype.actOnDevModeSettings = function() {
   var self = this;
   if(self.dev_mode){
-    self.controllers.editor.flash.sticky_warning("<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>");
-    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
+    if(self.dev_mode_available) {
+      self.controllers.editor.flash.sticky_warning("<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>");
+      self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
+    }
+    else {
+      new Popup({ message : i18n("The BETA version is not available anymore and has become the official release. Next time a BETA is available you will be notified and will have the choice to opt in. Thank you for your participation to the BETA try out. When you will press OK, you will be brought back to the stable version of the app."), callback : function(result) {self.stop_dev_mode(true)} });
+    }
   }
-  else {
-    AppSetting.find("beta-available").then(function(setting) {
-      if(setting["value"] == "true") {
-        self.controllers.editor.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
-        self.dev_mode_available = true;
-      }
-    }, function(error) {
-      console.log("Cannot find beta-available variable to display BETA access.", error)
-    });
+  else if(self.dev_mode_available) {
+    self.controllers.editor.flash.sticky_success("<a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>");
   }
 }
 
@@ -60,16 +73,18 @@ ApplicationController.prototype.is_mobile = function() {
   this._is_mobile = $('#editor_menu .navbar-toggle').is(":visible");
 }
 
-ApplicationController.prototype.set_mode_and_reload = function(mode, destination){
+ApplicationController.prototype.set_mode_and_reload = function(mode, force){
+  var action = function() {
+      setCookie("AFNVersion", mode);
+      window.location.reload();
+  }
+
+  if(force) {
+    action();
+  }
   new Popup({ message : i18n("This action requires to restart the app. Proceed ?"), confirm: true, callback: function(result){
     if(result) { 
-      setCookie("AFNVersion", mode);
-      if(destination){
-        window.location = destination;
-      }
-      else {
-        window.location.reload();
-      }
+      action();
     }
   }});
 }

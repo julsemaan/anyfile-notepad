@@ -82,7 +82,7 @@ application.controllers.google_oauth.add_to_queue(function(){
 
       editor_controller.initialize_html();
       
-      application.setupDevModeFlash();
+      application.setupDevMode();
       application.setupLocaleFlash();
 
       editor_controller.flash.sticky_success("Application code is now Open Source. <a target='_blank' href='/news'>More details here.</a>");
