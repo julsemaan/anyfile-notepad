@@ -12,9 +12,11 @@
             <div class="col-md-10 col-centered">
               <a class="btn btn-primary" target="_blank" href="https://plus.google.com/communities/109168786116242892967">Find us on <img src="/gplus.jpg" width="15" height="15" ></a>
             </div>
+            <!--
             <div class="col-md-10 col-centered">
               <a class="btn btn-primary" target="_blank" href="https://chrome.google.com/webstore/detail/anyfile-notepad/ghlichmdnegmcpafgmmlpkegmcndlndi">Download in Chrome Store <img src="/chrome_store.jpg" width="15" height="15" ></a>
             </div>
+            -->
           </div>
       </div>
     </div>
@@ -34,9 +36,11 @@
         </div>
       </div>
 
+      <!--
       <div class="col-md-12">
         <div class="top_notice alert alert-success"><h4><b><a href="/news">App is now Open Source!</a></b></h4></div>
       </div>
+      -->
     </div>
   </div>
 </div>
