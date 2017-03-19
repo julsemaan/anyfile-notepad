@@ -85,7 +85,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       application.setupDevMode();
       application.setupLocaleFlash();
 
-      editor_controller.flash.sticky_success("Application code is now Open Source. <a target='_blank' href='/news'>More details here.</a>");
+      editor_controller.flash.sticky_success("<a target='_blank' href='/news'>New US west coast hosting for the app.<br/>Read more here.</a>");
 
       new EditorRouter(editor_controller)
       var menu_controller = new MenuController("menu");
