@@ -92,6 +92,7 @@ EditorController.prototype.initialize_html = function(){
     })
   }
 
+  self.editor_view.on("change", function(){self.content_changed()});
 }
 
 
@@ -194,8 +195,6 @@ EditorController.prototype.post_file_load = function(){
     this.activate_autosave()
   }
 
-  clearInterval(this.check_content_changed_interval)
-  this.check_content_changed_interval = setInterval(function(){self.check_content_changed()}, 100)
   self.selectSyntaxWidget.setSyntaxMode(self.file.syntax.ace_js_mode);
   this.allow_saving()
 
@@ -245,8 +244,6 @@ EditorController.prototype.save = function(){
       return false
   }
   else{
-    this.file.set("data", this.editor_view.getValue())
-
     // give a small time for everything to show.
     setTimeout(function(){
         self.file.update(true, function(response){
@@ -279,8 +276,6 @@ EditorController.prototype.deactivate_autosave = function(){
 EditorController.prototype.autosave = function(){
   var self = this;
   if(!this.file.title == "" && this.file.persisted && this.file.did_content_change()){
-    this.file.set("data", this.editor_view.getValue())
-
     if(!self.autosave_count) self.autosave_count = 0;
     self.autosave_count += 1;
 
@@ -353,9 +348,10 @@ EditorController.prototype.show_file_explorer = function(){
   this.open_explorer()
 }
 
-EditorController.prototype.check_content_changed = function(){
+EditorController.prototype.content_changed = function(){
   var self = this;
 
+  this.file.set("data", this.editor_view.getValue());
   if(!this.file.persisted){
     this.$.find('.editor_save_button').html(i18n("Save"))
     return
@@ -364,7 +360,6 @@ EditorController.prototype.check_content_changed = function(){
   if(this.file.persisted && this.realtime_content){
     this.realtime_content.setText(this.editor_view.getValue());
   }
-  this.file.set("data", this.editor_view.getValue());
   
   if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
     if(this.file.did_content_change()){
