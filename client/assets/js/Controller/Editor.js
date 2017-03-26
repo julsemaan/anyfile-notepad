@@ -38,17 +38,6 @@ EditorController.prototype.initialize_html = function(){
     self.$editor.css('top', self.$.find('#menu').height() + "px");
   })
 
-  self.fontSizeWidget = new FontSizeWidget({});
-  self.autosaveWidget = new AutosaveWidget({});
-  self.wordWrapWidget = new WordWrapWidget({});
-  self.tabSizeWidget = new TabSizeWidget({});
-  self.editorModeWidget = new EditorModeWidget({});
-  self.selectThemeWidget = new SelectThemeWidget({});
-  self.selectSyntaxWidget = new SelectSyntaxWidget({});
-  self.showAllCharactersWidget = new ShowAllCharactersWidget({});
-  self.showPrintMarginWidget = new ShowPrintMarginWidget({});
-  self.tabsAsSpacesWidget = new TabsAsSpacesWidget({});
-
   $(window).bind('beforeunload',function(){
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
@@ -131,7 +120,7 @@ EditorController.prototype.new = function(folder_id){
       folder_id : folder_id,
     })
     self.post_file_load()
-    self.selectSyntaxWidget.setSyntaxMode(self.file.syntax.ace_js_mode);
+    self.preferences_controller.widgets.selectSyntax.setSyntaxMode(self.file.syntax.ace_js_mode);
   }
 
   if(this.provider == "Dropbox"){
@@ -195,7 +184,7 @@ EditorController.prototype.post_file_load = function(){
     this.activate_autosave()
   }
 
-  self.selectSyntaxWidget.setSyntaxMode(self.file.syntax.ace_js_mode);
+  self.preferences_controller.widgets.selectSyntax.setSyntaxMode(self.file.syntax.ace_js_mode);
   this.allow_saving()
 
   if(this.file.persisted){

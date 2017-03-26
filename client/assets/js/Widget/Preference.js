@@ -173,12 +173,14 @@ PreferenceWidget.prototype.handleChange = function(value) {
   var self = this;
 
   self.disable();
+  $(document).trigger('preference-change-in-progress');
 
   value = self.widgetValToPrefVal(value);
 
   self.preference().refreshAndSet(value, application.controllers.editor, function(){application.controllers.editor.show_reauth()}).then(function() {
     self.refreshFromPreference();
     self.enable();
+    $(document).trigger('preference-change-done');
   });
 }
 
