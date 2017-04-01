@@ -6,6 +6,7 @@
     <div class="col-md-8">{{object.__display_attr__}}</div>
     <div class="col-md-4">
       <a class="btn btn-primary" ui-sref="view{{model_name}}({id:object.id})">View</a>
+      <a class="btn btn-primary" ng-show="loggedIn()" ui-sref="edit{{model_name}}({id:object.id})">Edit</a>
       <a class="btn btn-danger" ng-show="loggedIn()" ng-click="deleteObject(object)">Delete</a>
     </div>
   </div>
