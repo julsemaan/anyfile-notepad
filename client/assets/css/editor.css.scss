@@ -1,5 +1,18 @@
 @import "libs/bundled-material.min.css.scss";
 
+@mixin anchor($direction, $color) {
+  width: 0; 
+  height: 0; 
+  position:absolute;
+
+  @if $direction == "bottom" {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid $color;
+  }
+}
+
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/Lato-Regular.ttf");
@@ -131,9 +144,8 @@ div.g_file_editor{
     display:inline-block;
     font-size:1em;
     .ace_search.right {
-      bottom:0;
-      top:auto;
-      border-radius:5px 0 0 0;
+      top:0;
+      bottom:auto;
       /* force the font size since changing the size in the editor was changing this as well and messing up the search display */
       font-size:14px !important;
     }
@@ -336,24 +348,40 @@ h5.menu_header {
   .mobile-show {
     display:none;
   }
-	.flash_notifications {
-		position:fixed; 
-		width:300px; 
-		right:10px; 
-		top:65px; 
-		background-color:transparent; 
-		z-index:900;
-	}
+  .flash_notifications {
+    .alert {
+      position:relative;
+      top:auto;
+      left:0;
+      bottom:0;
+
+      .anchor {
+        bottom:-10px;
+        right: 17px;
+        @include anchor(bottom, white)
+      }
+      .anchor-success {
+        @include anchor(bottom, #4caf50)
+      }
+      .anchor-warning {
+        @include anchor(bottom, #ff5722)
+      }
+      .anchor-danger {
+        @include anchor(bottom, #f44336)
+      }
+    }
+    position:fixed; 
+    width:300px; 
+    right:10px; 
+    bottom:55px; 
+    background-color:transparent; 
+    z-index:900;
+  }
   #editor_flash {
     .anchor {
-      width: 0; 
-      height: 0; 
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 10px solid white;
-      position:absolute;
       bottom:-10px;
       right: 17px;
+      @include anchor(bottom, white)
     }
   }
 }
@@ -489,3 +517,4 @@ li a.btn-primary {
   }
   text-align:center;
 }
+

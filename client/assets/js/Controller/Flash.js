@@ -18,7 +18,7 @@ FlashController.prototype.get_alert_id = function(){
 
 FlashController.prototype.add = function(text, type, timeout, where){
   var alert_id = this.get_alert_id()
-  var html = "<div style='text-align:left' class='alert alert-"+type+"' data-flash-id="+alert_id+"><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button><p>"+text+"</p></div>"
+  var html = "<div style='text-align:left' class='alert alert-"+type+"' data-flash-id="+alert_id+"><div class='anchor anchor-"+type+"'></div><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button><p>"+text+"</p></div>"
   var element = $($.parseHTML(html));
   var notification = element.clone();
   element.hide()
