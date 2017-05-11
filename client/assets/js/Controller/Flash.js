@@ -9,6 +9,8 @@ function FlashController(view){
   this.view.parent().append(this.notifications);
   this.notification_queue = [];
   this.count = 0;
+
+  this.alert_template = Handlebars.compile($('[data-template-name="flash-message"]').html());
 }
 
 FlashController.prototype.get_alert_id = function(){
@@ -17,9 +19,10 @@ FlashController.prototype.get_alert_id = function(){
 }
 
 FlashController.prototype.add = function(text, type, timeout, where){
+  var self = this;
+
   var alert_id = this.get_alert_id()
-  var html = "<div style='text-align:left' class='alert alert-"+type+"' data-flash-id="+alert_id+"><div class='anchor anchor-"+type+"'></div><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button><p>"+text+"</p></div>"
-  var element = $($.parseHTML(html));
+  var element = $(self.alert_template({text:text, type:type, timeout:timeout, alert_id:alert_id}));
   var notification = element.clone();
   element.hide()
   where.prepend(element)
