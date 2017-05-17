@@ -152,6 +152,10 @@ div.g_file_editor{
     .ace_search_field {
       color:black;
     }
+    /* Highlighted searches with a yellow background */
+    .ace_selected-word, .ace_highlight-marker {
+      background-color:rgba(255, 255, 0,0.6);
+    }
   }
 }
 
