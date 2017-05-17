@@ -64,9 +64,9 @@ DriveFile.prototype.update_metadata = function(callback){
 DriveFile.prototype.update_data = function(new_revision, callback){
   var self = this
 
-  const boundary = '-------314159265358979323846';
-  const delimiter = "\r\n--" + boundary + "\r\n";
-  const close_delim = "\r\n--" + boundary + "--";
+  var boundary = '-------314159265358979323846';
+  var delimiter = "\r\n--" + boundary + "\r\n";
+  var close_delim = "\r\n--" + boundary + "--";
 
   this.set("_tmp_title_saved", this.title)
   this.set("_tmp_data_saved", this.data)
