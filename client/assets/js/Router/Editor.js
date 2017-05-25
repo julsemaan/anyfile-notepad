@@ -106,7 +106,8 @@ EditorRouter.prototype.route = function(){
       }
     },
     handle_dropbox_token: function(transition){
-      console.log("checking token...")
+      console.log("parsing and checking Dropbox token...");
+      application.controllers.dropbox_oauth.setTokenFromUrl();
       application.controllers.dropbox_oauth.test(function(){
         window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
       });
