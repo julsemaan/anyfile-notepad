@@ -32,11 +32,15 @@ DropboxFile.prototype.handle_metadata_response = function(response) {
     client:self.client,
     request : self.client.filesDownload({path:self.id}),
     success : function(response){
-      console.log(response)
-        self.set("data", response)
+      var reader = new FileReader();
+      reader.readAsText(response.fileBlob);
+      reader.addEventListener('loadend', (e) => {
+        var text = e.srcElement.result;
+        self.set("data", text)
         self.set("data_saved", self.data)
         self.compute_syntax()
         self.loaded()
+      });
     }
   })
   r.perform();
