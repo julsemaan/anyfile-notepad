@@ -236,7 +236,7 @@ EditorController.prototype.save = function(){
     // give a small time for everything to show.
     setTimeout(function(){
         self.file.update(true, function(response){
-          if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
+          if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.urlId();
           self.editor_view.focus();
           self.allow_saving()
         })
@@ -273,7 +273,7 @@ EditorController.prototype.autosave = function(){
 
     self.file.update(new_revision, function(response){
       self.reset_options()
-      if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.id
+      if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.urlId()
     })
 
   }

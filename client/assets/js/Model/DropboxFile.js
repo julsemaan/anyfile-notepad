@@ -2,6 +2,11 @@ Class("DropboxFile", ["CloudFile"]);
 
 DropboxFile.prototype.init = function(options) {
   CloudFile.prototype.init.call(this, options);
+
+  if(this.id[0] != "/") {
+    this.id = "/" + this.id;
+  }
+
   this.set("provider", "Dropbox");
   this.oauth_controller = application.controllers.dropbox_oauth;
   this.client = this.oauth_controller.client;
@@ -22,11 +27,14 @@ DropboxFile.prototype.get_file_data = function(){
 
 DropboxFile.prototype.handle_metadata_response = function(response) {
   var self = this;
+
+  console.log(response)
+
   self.set("mime_type", response.mimeType);
   self.set("title", self.id);
   self.set("folder_id", self.id.split("/").slice(0,-1).join("/"));
   self.set("title_saved", response.name);
-
+  
   var r = new DropboxRequest({
     auth_handler:self.oauth_controller,
     client:self.client,
@@ -40,6 +48,9 @@ DropboxFile.prototype.handle_metadata_response = function(response) {
         self.set("data_saved", self.data)
         self.compute_syntax()
         self.loaded()
+  
+        console.log("yes hellooooo", self)
+
       });
     }
   })
@@ -69,4 +80,8 @@ DropboxFile.prototype.update_data = function(new_revision, callback){
     },
   })
   r.perform();
+}
+
+DropboxFile.prototype.urlId = function(){
+  return this.id.substr(1);
 }

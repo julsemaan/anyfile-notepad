@@ -51,7 +51,7 @@ FileExplorerController.prototype.fetch_dropbox_directory = function(options, cal
           folders.push({id:element['path_display'], title:element['name']});
         }
         else {
-          files.push({id:element['path_display'], title:element['name']});
+          files.push({id:element['path_display'].substr(1), title:element['name']});
         }
       }
       var container = self.render_directory("Dropbox", folders, files);

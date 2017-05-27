@@ -116,3 +116,7 @@ CloudFile.prototype.delete = function(){
   application.controllers.google_oauth.execute_request(request, function(response){
   })
 }
+
+CloudFile.prototype.urlId = function(){
+  return this.id;
+}
