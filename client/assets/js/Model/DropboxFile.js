@@ -3,9 +3,7 @@ Class("DropboxFile", ["CloudFile"]);
 DropboxFile.prototype.init = function(options) {
   CloudFile.prototype.init.call(this, options);
 
-  if(this.id[0] != "/") {
-    this.id = "/" + this.id;
-  }
+  this.cleanupId();
 
   this.set("provider", "Dropbox");
   this.oauth_controller = application.controllers.dropbox_oauth;
@@ -58,6 +56,11 @@ DropboxFile.prototype.update_metadata = function(callback) { callback() }
 
 DropboxFile.prototype.update_data = function(new_revision, callback){
   var self = this;
+  
+  this.set("id", this.title);
+  this.cleanupId();
+  this.set("title", this.id);
+
   this.set("_tmp_title_saved", this.title)
   this.set("_tmp_data_saved", this.data)
 
@@ -77,6 +80,12 @@ DropboxFile.prototype.update_data = function(new_revision, callback){
     },
   })
   r.perform();
+}
+
+DropboxFile.prototype.cleanupId = function() {
+  if(this.id && this.id[0] != "/") {
+    this.id = "/" + this.id;
+  }
 }
 
 DropboxFile.prototype.urlId = function(){
