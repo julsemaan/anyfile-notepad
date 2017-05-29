@@ -196,17 +196,7 @@ DropboxOAuthController.prototype.test = function(callback){
     self.do_auth();
   }
 
-  var r = new DropboxRequest({
-    skip_test:true,
-    auth_handler:self,
-    client: self.client,
-    request : self.client.usersGetCurrentAccount(),
-    success : function(response){
-      console.log(response)
-      if(callback) callback(true);
-    },
-  });
-  r.perform();
+  callback(true);
 }
 
 Class("DropboxRequest", ["Model"]);
