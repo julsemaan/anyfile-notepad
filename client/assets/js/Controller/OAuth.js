@@ -233,7 +233,7 @@ DropboxRequest.prototype.handle_error = function(error){
     self.auth_handler.do_auth();
   }
   else {
-    $('#error_modal .additionnal_message').html(i18n("We got this message from Dropbox")+" : "+ JSON.stringify(error.response.error))
+    $('#error_modal .additionnal_message').html(i18n("We got this message from Dropbox")+" : "+ JSON.stringify(error.response.body.error_summary))
     $('#error_modal').modal('show')
   }
 }
