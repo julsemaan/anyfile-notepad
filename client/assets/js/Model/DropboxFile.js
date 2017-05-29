@@ -41,17 +41,14 @@ DropboxFile.prototype.handle_metadata_response = function(response) {
     request : self.client.filesDownload({path:self.id}),
     success : function(response){
       var reader = new FileReader();
-      reader.readAsText(response.fileBlob);
-      reader.addEventListener('loadend', (e) => {
-        var text = e.srcElement.result;
+      reader.onload = function(e) {
+        var text = e.target.result;
         self.set("data", text)
         self.set("data_saved", self.data)
         self.compute_syntax()
         self.loaded()
-  
-        console.log("yes hellooooo", self)
-
-      });
+      };
+      reader.readAsText(response.fileBlob);
     }
   })
   r.perform();
@@ -67,7 +64,7 @@ DropboxFile.prototype.update_data = function(new_revision, callback){
   var r = new DropboxRequest({
     auth_handler:self.oauth_controller,
     client:self.client,
-    request : self.client.filesUpload({path:self.id, contents:self.data}),
+    request : self.client.filesUpload({path:self.id, contents:self.data, mode: {'.tag':'overwrite'}}),
     success : function(response){
       //set id if it's not persisted and set persisted
       if(!self.persisted){
