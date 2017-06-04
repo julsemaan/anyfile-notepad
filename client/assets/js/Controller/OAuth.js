@@ -168,8 +168,7 @@ DropboxOAuthController.prototype.init = function(options){
   // Attempt to restore the token from the cookie
   this.client.setAccessToken(getCookie("dropbox_access_token"));
 
-  //TODO: change this to window.location
-  this.auth_url = this.client.getAuthenticationUrl('http://localhost:8000/app.html');
+  this.auth_url = this.client.getAuthenticationUrl(window.location);
 }
 
 DropboxOAuthController.prototype.do_auth = function(){
