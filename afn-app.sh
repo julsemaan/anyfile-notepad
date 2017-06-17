@@ -165,6 +165,7 @@ function application_js() {
     rm -f $COMPILED_APP/assets/application-*.js
   fi
 
+  add_js_asset node_modules/dropbox/dist/Dropbox-sdk.min.js $APPLICATION_JS
   add_js_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
   add_js_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
   add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS

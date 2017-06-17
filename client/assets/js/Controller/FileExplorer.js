@@ -35,33 +35,30 @@ FileExplorerController.prototype.render_directory = function(provider, folders, 
 FileExplorerController.prototype.fetch_dropbox_directory = function(options, callback){
   var self = this;
 
-  application.controllers.dropbox_oauth.do_auth(function(){
-    var r = new DropboxRequest({
-      auth_handler:application.controllers.dropbox_oauth,
-      client:application.controllers.dropbox_oauth.client,
-      request : function(){
-        var request = this;
-        this.client.stat(options['dir'], {readDir:true}, function(e,r,ls){request.handle_response(e,r,ls)})
-      },
-      success : function(response, ls){
-        var folders = [];
-        var files = [];
-        for(var i in ls){
-          var element = ls[i];
-          if(element.mimeType == "inode/directory"){
-            folders.push({id:element.path.substring(1), title:element.name});
-          }
-          else {
-            files.push({id:element.path.substring(1), title:element.name});
-          }
+  var r = new DropboxRequest({
+    auth_handler:application.controllers.dropbox_oauth,
+    client:application.controllers.dropbox_oauth.client,
+    //NOTE: This request may ask us to continue reading directories if it hasn't sent them all.
+    //      This feature is unimplemented and should be implemented only if necessary. Not sure we'll really want to render so many directories and files in a simple explorer
+    request : application.controllers.dropbox_oauth.client.filesListFolder({path:options['dir']}),
+    success : function(response){
+      console.log("doing dir callback", response)
+      var folders = [];
+      var files = [];
+      for(var i in response.entries){
+        var element = response.entries[i];
+        if(element['.tag'] == "folder"){
+          folders.push({id:element['path_display'], title:element['name']});
         }
-        console.log("doing dir callback")
-        var container = self.render_directory("Dropbox", folders, files);
-        callback(container);
-      },
-    })
-    r.request();
+        else {
+          files.push({id:element['path_display'].substr(1), title:element['name']});
+        }
+      }
+      var container = self.render_directory("Dropbox", folders, files);
+      callback(container);
+    },
   })
+  r.perform();
 }
 
 FileExplorerController.prototype.fetch_drive_directory = function(options, callback){

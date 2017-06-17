@@ -163,53 +163,82 @@ Class("DropboxOAuthController", ["Model"]);
 
 DropboxOAuthController.prototype.init = function(options){
   Model.call(this, options);
-  this.client = new Dropbox.Client({ key: AFN_VARS['dropbox_key']});
-  this.client.authDriver(new Dropbox.AuthDriver.Redirect);
+  this.client = new Dropbox({ clientId: AFN_VARS['dropbox_key']});
+  
+  // Attempt to restore the token from the cookie
+  this.client.setAccessToken(getCookie("dropbox_access_token"));
+
+  this.auth_url = this.client.getAuthenticationUrl(window.location);
 }
 
-DropboxOAuthController.prototype.do_auth = function(callback){
-  this.client.authenticate(function(error, client){
-    callback(error,client);
-  });
+DropboxOAuthController.prototype.do_auth = function(){
+
+  // If this is in the URL, we're currently setting the token
+  if(window.location.hash.match("^#access_token=")) {
+    return
+  }
+
+  window.location = this.auth_url;
+}
+
+DropboxOAuthController.prototype.setTokenFromUrl = function() {
+  var self = this;
+  var token = parseQueryString(window.location.hash).access_token;
+  self.client.setAccessToken(token);
+  setCookie("dropbox_access_token", token);
 }
 
 DropboxOAuthController.prototype.test = function(callback){
   var self = this;
-  self.do_auth(function(){
-    var r = new DropboxRequest({
-      auth_handler:self,
-      client:self.client,
-      request : function(){
-        var request = this;
-        this.client.getAccountInfo(function(e,r){request.handle_response(e,r)})
-      },
-      success : function(response){
-        callback(true);
-      },
-    })
-    r.request();
-  })
+
+  if(!self.client.accessToken) {
+    self.do_auth();
+  }
+
+  callback(true);
 }
 
 Class("DropboxRequest", ["Model"]);
 
 DropboxRequest.prototype.init = function(options){
   Model.call(this, options);
+
+  var self = this;
+  self.todo = function() {
+    self.request.then(function(response){
+      self.handle_success(response)
+    }).catch(function(error){
+      self.handle_error(error)
+    }); 
+  }
 }
 
-DropboxRequest.prototype.handle_response = function(error, response, additionnal_info){
+DropboxRequest.prototype.perform = function() {
   var self = this;
-  if(error){
-    if(error.status == 401){
-      self.client.reset();
-      self.auth_handler.do_auth(function(){self.request()});
-    }
-    else {
-      $('#error_modal .additionnal_message').html(i18n("We got this message from Dropbox")+" : "+ JSON.stringify(error.response.error))
-      $('#error_modal').modal('show')
-    }
+  if(self.skip_test) {
+    self.todo();
   }
+  else {
+    self.auth_handler.test(self.todo);
+  }
+}
 
-  self.success(response, additionnal_info);
+DropboxRequest.prototype.handle_error = function(error){
+  var self = this;
+  console.log("this is an error", error)
+  if(error.status == 401){
+    $('#error_modal .additionnal_message').html(i18n("Your Dropbox authentication has expired. You will be redirected to the Dropbox website to reauthenticate. Your work will NOT BE SAVED. If you have important changes that aren't saved, cancel out this prompt and backup your changes."))
+    $('#error_modal').modal('show');
+    self.auth_handler.do_auth();
+  }
+  else {
+    $('#error_modal .additionnal_message').html(i18n("We got this message from Dropbox")+" : "+ JSON.stringify(error.response.body.error_summary))
+    $('#error_modal').modal('show')
+  }
+}
+
+DropboxRequest.prototype.handle_success = function(response){
+  var self = this;
+  self.success(response);
 }
 

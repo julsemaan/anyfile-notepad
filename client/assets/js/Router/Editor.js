@@ -2,19 +2,24 @@ function EditorRouter(controller){
   var self = this
   this.controller = controller
   
+  this.recordhashUrl();
 
   this.load_models(function(){
     if(self.controller.post_app_load) self.controller.post_app_load()
     $(window).bind('hashchange', function() {
-      // we don't want to record the access token hash
-      if(!window.location.hash.match('^#access_token')){
-        setCookie("last_hash_url", window.location.hash, 1);
-      }
+      self.recordhashUrl();
       self.controller.deactivate_autosave()
       self.route()
     });
     self.route()
   })
+}
+
+EditorRouter.prototype.recordhashUrl = function() {
+  // we don't want to record the access token hash
+  if(!window.location.hash.match('^#access_token')){
+    setCookie("last_hash_url", window.location.hash, 1);
+  }
 }
 
 EditorRouter.prototype.load_models = function(callback){
@@ -106,7 +111,8 @@ EditorRouter.prototype.route = function(){
       }
     },
     handle_dropbox_token: function(transition){
-      console.log("checking token...")
+      console.log("parsing and checking Dropbox token...");
+      application.controllers.dropbox_oauth.setTokenFromUrl();
       application.controllers.dropbox_oauth.test(function(){
         window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
       });
