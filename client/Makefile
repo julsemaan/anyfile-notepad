@@ -14,3 +14,6 @@ tx-push:
 
 clean-locales:
 	find locales/ -type f -exec bash -c 'cat {} | python -m json.tool > /tmp/lo.tmp && mv /tmp/lo.tmp {}' \;
+
+push-en-locale:
+	tx push -s
