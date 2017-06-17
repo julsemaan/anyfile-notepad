@@ -86,7 +86,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       application.setupDevMode();
       application.setupLocaleFlash();
 
-      editor_controller.flash.sticky_success("<a target='_blank' href='/news'>The Dropbox integration of the app might be removed. Read more here.</a>");
+      editor_controller.flash.sticky_success("<a target='_blank' href='/news'>Dropbox is staying!</a>");
 
       new EditorRouter(editor_controller)
       var menu_controller = new MenuController("menu");
