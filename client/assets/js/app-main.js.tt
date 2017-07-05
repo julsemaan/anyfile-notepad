@@ -73,9 +73,14 @@ application.controllers.google_oauth.add_to_queue(function(){
           favorites_pref:ArrayPreference.find("favorites"),
           view: $('ul.favorites'),
         }),
+        'recent_files_controller': new RecentFilesController({
+          preference:ArrayPreference.find("recent_files"),
+          view: $('div.recent-files ul'),
+        }),
       })
       var editor_controller = application.controllers.editor;
       editor_controller.favorites_controller.parent = editor_controller;
+      editor_controller.recent_files_controller.parent = editor_controller;
       editor_controller.preferences_controller = new PreferencesController({});
 
       editor_controller.file_explorer.parent = editor_controller;

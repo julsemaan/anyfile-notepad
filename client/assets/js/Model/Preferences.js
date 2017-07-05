@@ -15,6 +15,7 @@ function Preferences(loaded){
     'show_all_characters' : 'false',
     'show_print_margin' : 'true',
     'tabs_as_spaces' : 'true',
+    'recent_files': "[]",
   }
   
   this.HASH_PREFERENCES = [

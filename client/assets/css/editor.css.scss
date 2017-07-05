@@ -241,6 +241,13 @@ h5.menu_header {
       right:10px;
       z-index:100;
     }
+    a.small.menu_back {
+      width:30px;
+      height:30px;
+      padding-left:5px;
+      padding-top:5px;
+      font-size:20px;
+    }
 
     display:none;
     position:fixed;
@@ -467,6 +474,23 @@ h5.menu_header {
       background-size:25px;
       background-position-x:5px;
       background-position-y:10px;
+    }
+  }
+}
+
+div.recent-files {
+  .menu_back {
+    right:25px !important;
+    top:7px !important;
+  }
+  ul {
+    li:first-child {
+      margin-top:15px !important;
+      padding-left:30px !important;
+      text-transform:uppercase;
+      color:rgba(0, 0, 0, 0.84);
+      border-bottom:2px solid black !important;
+      height:30px;
     }
   }
 }

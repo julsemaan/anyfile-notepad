@@ -1,23 +1,24 @@
 function EditorController(view, options){
   this.editor_view = ace.edit("editor");
   this.$ = $('#'+view);
-  this.$editor = this.$.find('#editor')
+  this.$editor = this.$.find('#editor');
   this.file_id = options["file_id"];
   
-  this.ajax_defered_waiting = {}
+  this.ajax_defered_waiting = {};
   this.safe_to_quit = true;
   
   this.content = null;
   this.content_saved = "";
 
-  this.major_notice_pref = options["major_notice_pref"]
+  this.major_notice_pref = options["major_notice_pref"];
 
-  this.file_explorer = options["file_explorer"]
-  this.favorites_controller = options["favorites_controller"]
+  this.file_explorer = options["file_explorer"];
+  this.favorites_controller = options["favorites_controller"];
+  this.recent_files_controller = options["recent_files_controller"];
 
-  this.menu_width_pref = options["menu_width_pref"]
+  this.menu_width_pref = options["menu_width_pref"];
 
-  this.flash = options["flash"]
+  this.flash = options["flash"];
 
   this.models = {
     'extensions':new RestAdapter({model:Extension}),
