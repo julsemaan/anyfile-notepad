@@ -71,6 +71,7 @@ application.controllers.google_oauth.add_to_queue(function(){
           }),
         'favorites_controller': new FavoritesController({
           favorites_pref:ArrayPreference.find("favorites"),
+          view: $('ul.favorites'),
         }),
       })
       var editor_controller = application.controllers.editor;

@@ -51,8 +51,8 @@ FavoritesController.prototype.sort_favorites = function(a,b){
 
 FavoritesController.prototype.refresh = function(){
   var self = this;
-  if($("ul.favorites")){
-    $("ul.favorites").empty();
+  if(self.view){
+    self.view.empty();
     
     var add_favorite = $('<li><a href="javascript:void(0)">'+i18n("Favorite this file")+'</a></li>');
     add_favorite.click(function(e){
@@ -65,7 +65,7 @@ FavoritesController.prototype.refresh = function(){
         new Popup({ message : i18n("Can't favorite file as it is not saved yet...") });
       }
     })
-    $("ul.favorites").append(add_favorite);
+    self.view.append(add_favorite);
     
     $.each(self.favorites_pref.array, function(i){
       var element = self.favorites_pref.array[i];
@@ -84,7 +84,7 @@ FavoritesController.prototype.refresh = function(){
       var li = $('<li></li>');
       li.append(link);
       link.append(delete_button);
-      $("ul.favorites").append(li);
+      self.view.append(li);
     });
   }
 }
