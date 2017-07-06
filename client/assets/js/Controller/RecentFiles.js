@@ -27,7 +27,7 @@ RecentFilesController.prototype.render = function(){
   var self = this;
   if(self.view){
     self.view.empty();
-    self.view.append($('<li>'+i18n("Recent files")+'</li>'));
+    self.view.append($('<li><h5 class="menu_header">'+i18n("Recent files")+'</h5></li>'));
     $.each(self.preference.array, function(i){
       var element = self.preference.array[i];
       var provider = element.provider || DEFAULT_PROVIDER;

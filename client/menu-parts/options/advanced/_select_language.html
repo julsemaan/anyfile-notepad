@@ -1,6 +1,9 @@
 <script class="template-partial" data-partial-name="moptions-advanced-select-language" type="text/x-handlebars">
-<ul class="menu_list back_btn_padded">
-  <div class="text-center"><a href="javascript:void(0)" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a></div>
+<ul class="menu_list">
+  <div class="text-center"><a href="javascript:void(0)" class="for_menu_header menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a></div>
+  <li>
+    <h5 class="menu_header">{{ i18n "Select language" }}</h5>
+  </li>
   <li><a href="javascript:void(0)" onclick="javascript:application.controllers.editor.select_locale('auto')" data-locale="auto">Auto detected</a></li>
   {{#each locales}}
   <li><a href="javascript:void(0)" onclick="javascript:application.controllers.editor.select_locale('{{@key}}')">{{this}}</a></li>
