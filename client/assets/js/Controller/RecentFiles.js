@@ -6,8 +6,11 @@ RecentFilesController.prototype.init = function(args){
   self.render();
 }
 
-RecentFilesController.prototype.add_file = function(provider, file_id, alias) {
+RecentFilesController.prototype.add_file = function(file) {
   var self = this;
+  var provider = file.provider;
+  var alias = file.title;
+  var file_id = file.id;
   for(var i in self.preference.array){
     if(self.preference.array[i].file_id == file_id){
       self.preference.array.splice(i,1)
