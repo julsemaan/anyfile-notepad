@@ -1,60 +1,29 @@
 <script class="template-partial" data-partial-name="moptions" type="text/x-handlebars">
 <div class="options">
-  {{> moptions-basic-options }}
-
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <a class="big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Accounts" }}</a>
       <div class="menu_content">
         {{> moptions-accounts }}
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+      <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Editor" }}</a>
+      <div class="menu_content">
+        {{> moptions-editor }}
+      </div>
+    </div>
+    <div class="col-md-4">
       <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Advanced" }}</a>
       <div class="menu_content">
-        <a href="{{noaction}}" class="menu_back themes_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
-        <ul class="menu_list back_btn_padded">
-          <li>
-            <a href="{{noaction}}" class="sub_menu_item">{{ i18n "Select theme" }}<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-            <div class="menu_content">
-              {{> moptions-advanced-select-theme }}
-            </div>
-          </li>
-
-          <li>
-            <a href="{{noaction}}" class="sub_menu_item">Select language<span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-            <div class="menu_content">
-              {{> moptions-advanced-select-language }}
-            </div>
-          </li>
-
-          <li>
-            <a href="{{noaction}}">
-              <div class="menu-togglebutton togglebutton">
-                <label>
-                  {{ i18n "Autosave" }} <input type="checkbox" data-pref-widget="AutosaveWidget">
-                </label>
-              </div>
-            </a>
-          </li>
-
-          <li>
-            <a 
-              href="{{noaction}};" 
-              {{{ 
-                m-action-n-close (concat
-                  "user_preferences.reset();"
-                  "new Popup({ message : i18n('You should now restart the app to fully flush your preferences.'), callback : function(result) {if(result) application.controllers.editor.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});")
-              }}} 
-            >
-              {{ i18n "Reset preferences" }}
-            </a>
-          </li>
-
-        </ul>
+        {{> moptions-advanced }}
       </div>
     </div>
   </div>
+
+  <hr>
+
+  {{> moptions-basic-options }}
 
 </div>
 </script>
