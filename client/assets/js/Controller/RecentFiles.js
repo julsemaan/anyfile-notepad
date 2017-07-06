@@ -13,7 +13,7 @@ RecentFilesController.prototype.add_file = function(provider, file_id, alias) {
       self.preference.array.splice(i,1)
     }
   }
-  self.preference.array.push({ file_id:file_id, alias:alias, provider: provider });
+  self.preference.array.unshift({ file_id:file_id, alias:alias, provider: provider });
   self.preference.commit(self.parent, self.parent.show_reauth);
   self.render();
 }
