@@ -3,6 +3,7 @@ Class("RecentFilesController", ["Model"]);
 RecentFilesController.prototype.init = function(args){
   var self = this;
   Model.call(this,args);
+  self.max_size = self.max_size || 5;
   self.render();
 }
 
@@ -17,6 +18,7 @@ RecentFilesController.prototype.add_file = function(file) {
     }
   }
   self.preference.array.unshift({ file_id:file_id, alias:alias, provider: provider });
+  self.preference.array = self.preference.array.splice(0, self.max_size)
   self.preference.commit(self.parent, self.parent.show_reauth);
   self.render();
 }
