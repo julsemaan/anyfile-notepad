@@ -14,31 +14,48 @@ FlashController.prototype.post_init = function(args){
   this.view.append(this.sticky_flash);
   this.view.parent().append(this.notifications);
   this.notification_queue = [];
-  this.count = 0;
+  this.count_since_started = 0;
+  this.set("count", 0);
 
   this.alert_template = Handlebars.compile($('[data-template-name="flash-message"]').html());
 }
 
 FlashController.prototype.get_alert_id = function(){
-  this.count++
-  return "flash_"+this.id+"_"+this.count;
+  this.count_since_started++
+  return "flash_"+this.id+"_"+this.count_since_started;
 }
 
 FlashController.prototype.add = function(text, type, timeout, where){
   var self = this;
 
+  self.set("count", self.count+1);
+
   var alert_id = this.get_alert_id()
   var element = $(self.alert_template({text:text, type:type, timeout:timeout, alert_id:alert_id}));
   var notification = element.clone();
+
+  element.find("button.close").click(function(){
+    self.set("count", self.count-1);
+  });
+
+  // Don't allow to dismiss if it has a timeout
+  if(timeout) {
+    element.find("button.close").hide();
+  }
+
+  // Insert into body
   element.hide()
   where.prepend(element)
   element.slideDown()
+
   if(timeout){
     setTimeout(function(){
-      //$('*[data-flash-id="'+alert_id+'"]').remove();
-      element.slideUp()
+      element.slideUp();
+      self.set("count", self.count-1);
     }, timeout*1000)
   }
+
+  // Show temporary notification
   this.show_notification(notification);
 }
 
