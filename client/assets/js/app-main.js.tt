@@ -65,7 +65,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       application.controllers.editor = new EditorController("editor_app", {
         'major_notice_pref' : IntPreference.find('major_notice'),
         'menu_width_pref' : StringPreference.find('menu_width'),
-        'flash' : new FlashController('editor_flash'),
+        'flash' : new FlashController({view:'editor_flash'}),
         'file_explorer': new FileExplorerController("file_explorer_container", {
           'height_pref' : StringPreference.find('file_explorer_height'),
           }),

@@ -187,6 +187,18 @@ div.g_file_editor{
   z-index:900;
 }
 
+#unread_flash_count {
+  right:10px;
+  bottom:50px;
+  position:fixed;
+  z-index:901;
+  width:25px;
+  height:25px;
+  font-size:15px;
+  padding:2px;
+  font-weight:bold;
+}
+
 div.print_menu {
   padding:10px;
 }

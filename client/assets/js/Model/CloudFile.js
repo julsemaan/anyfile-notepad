@@ -1,9 +1,6 @@
 Class("CloudFile", ["Model"])
 
-CloudFile.prototype.init = function(options){
-  Model.call(this, options);
-  if(!options) return;
-
+CloudFile.prototype.post_init = function(options){
   var self = this;
   this.set("title", "")
   this.set("title_saved", "")

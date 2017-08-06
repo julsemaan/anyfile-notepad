@@ -13,10 +13,14 @@ function Model(ledata){
   for (var key in ledata){
     this.set(key, ledata[key]) 
   }
-  this.init()
+  this.post_init()
 }
 
-Model.prototype.init = function(){}
+Model.prototype.init = function(args){
+  Model.call(this,args);
+}
+
+Model.prototype.post_init = function(){}
 
 Model.prototype.get_backend = function(){
   console.log("get_backend not implemented. are you stupid ?")
@@ -46,13 +50,9 @@ Model.prototype.get = function( attr_name ) {
   return this[ attr_name ];
 }
 
-function RestAdapter(ledata){
-  Model.call(this, ledata)
-}
+Class("RestAdapter", ["Model"]);
 
-RestAdapter.prototype = new Model()
-
-RestAdapter.prototype.init = function(){
+RestAdapter.prototype.post_init = function(){
   this.set("loaded", false) 
 
   if(!this.base_url) this.set("base_url", "") 

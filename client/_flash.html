@@ -1,5 +1,7 @@
 <script class="template-partial" data-partial-name="editor_flash" type="text/x-handlebars">
-<a href="javascript:void(0)" id="show_full_flash" class="btn btn-primary btn-fab btn-raised mdi-social-notifications" onclick="javascript:application.controllers.editor.flash.toggle_maximize()"></a>
+<a href="{{noaction}}" id="show_full_flash" class="btn btn-primary btn-fab btn-raised mdi-social-notifications" onclick="javascript:application.controllers.editor.flash.toggle_maximize()"></a>
+<a href="{{noaction}}" id="unread_flash_count" class="btn btn-danger btn-fab btn-raised" onclick="javascript:application.controllers.editor.flash.toggle_maximize()">1</a>
+
 
 <div class="flash" id="editor_flash" >
 <div class="anchor"></div>
