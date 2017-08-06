@@ -2,8 +2,7 @@ Class("Popup", ["Model"]);
 
 Popup.c = 0;
 
-Popup.prototype.init = function(args) {
-  Model.call(this, args);
+Popup.prototype.post_init = function(args) {
   var self = this;
   if(args) {
     self.callback = self.callback || function(){};

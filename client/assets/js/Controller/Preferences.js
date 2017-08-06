@@ -1,6 +1,6 @@
 Class("PreferencesController", ["Model"]);
 
-PreferencesController.prototype.init = function() {
+PreferencesController.prototype.post_init = function() {
   var self = this;
 
   self.widgets = {

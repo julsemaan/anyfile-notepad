@@ -1,8 +1,7 @@
 Class("FavoritesController", ["Model"]);
 
-FavoritesController.prototype.init = function(args){
+FavoritesController.prototype.post_init = function(args){
   var self = this;
-  Model.call(this,args);
   self.refresh();
 }
 

@@ -1,8 +1,6 @@
 Class("DropboxFile", ["CloudFile"]);
 
-DropboxFile.prototype.init = function(options) {
-  CloudFile.prototype.init.call(this, options);
-
+DropboxFile.prototype.post_init_child = function(options) {
   this.cleanupId();
 
   this.set("provider", "Dropbox");

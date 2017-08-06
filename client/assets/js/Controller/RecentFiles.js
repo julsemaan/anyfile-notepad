@@ -1,8 +1,7 @@
 Class("RecentFilesController", ["Model"]);
 
-RecentFilesController.prototype.init = function(args){
+RecentFilesController.prototype.post_init = function(args){
   var self = this;
-  Model.call(this,args);
   self.max_size = self.max_size || 5;
   self.render();
 }

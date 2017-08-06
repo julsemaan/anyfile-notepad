@@ -16,7 +16,7 @@ locales = {
 }
 %]
 
-var locale_controller = new LocaleController();
+var locale_controller = new LocaleController({});
 
 [% FOREACH id IN locales.keys %]
 [% file = 'locales/_' _ id _ '.json' %]
@@ -38,7 +38,7 @@ for(var i=0; i<3; i++){
   context.themes.unshift("dummy");
 }
 
-var hbrenderer = new HBRenderer();
+var hbrenderer = new HBRenderer({});
 hbrenderer.renderAll(context);
 
 // Shows the 'application is loading' modal

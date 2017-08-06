@@ -1,8 +1,6 @@
 Class("TourController", ["Model"]);
 
-TourController.prototype.init = function(args){
-  var self = this;
-  Model.call(this,args);
+TourController.prototype.post_init = function(args){
 }
 
 TourController.prototype.install_overlay = function() {

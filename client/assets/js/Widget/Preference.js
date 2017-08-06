@@ -1,9 +1,7 @@
 Class("PreferenceWidget", ["Model"]);
 
-PreferenceWidget.prototype.init = function(options){
+PreferenceWidget.prototype.post_init = function(options){
   var self = this;
-  Model.call(this, options);
-  if(!options) return;
 
   self.widgetName = self.constructor.name;
 

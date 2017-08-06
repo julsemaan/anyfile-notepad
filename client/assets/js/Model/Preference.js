@@ -1,10 +1,7 @@
 Class("Preference", ["Model"]);
 
-Preference.prototype.init = function(args){
-  Model.call(this, args);
-  if(args){
-    this.init_child(args);
-  }
+Preference.prototype.post_init = function(args){
+  this.init_child(args);
 }
 
 Preference.prototype.init_child = function(args){}

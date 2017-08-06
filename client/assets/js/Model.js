@@ -13,7 +13,7 @@ function Model(ledata){
   for (var key in ledata){
     this.set(key, ledata[key]) 
   }
-  this.post_init()
+  this.post_init(ledata)
 }
 
 Model.prototype.init = function(args){

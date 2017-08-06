@@ -17,6 +17,8 @@ CloudFile.prototype.post_init = function(options){
     this.compute_syntax() 
   }
 
+  this.post_init_child(options);
+
 }
 
 CloudFile.file_extension = function(filename){
