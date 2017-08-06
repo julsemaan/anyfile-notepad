@@ -10,6 +10,12 @@
     border-right: 10px solid transparent;
     border-top: 10px solid $color;
   }
+  
+  @if $direction == "right" {
+    border-left: 10px solid $color;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+  }
 }
 
 
