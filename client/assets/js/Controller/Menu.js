@@ -79,22 +79,22 @@ MenuController.prototype.setup_sub_menus = function() {
   self.expanded_menu.find('.sub_menu_item').click(function(){
     var link = $(this);
     self.previous_contents.push(self.expanded_menu.children().first().clone(true,true));
-    self.expanded_menu.slideUp(function(){
+    self.expanded_menu.hide('fast', function(){
       var element = link.parent().find('.menu_content').first().clone(true,true);
       self.set_content(element);
 
       //self.setup_sub_menus();
-      self.expanded_menu.slideDown();
+      self.expanded_menu.show();
 
     });
   });
 
   self.expanded_menu.find('.menu_back').click(function(){
     var previous_content = self.previous_contents.pop();
-    self.expanded_menu.slideUp(function(){
+    self.expanded_menu.hide('fast', function(){
       self.set_content(previous_content);
       //self.setup_sub_menus();
-      self.expanded_menu.slideDown();
+      self.expanded_menu.show();
     });
   });
 
