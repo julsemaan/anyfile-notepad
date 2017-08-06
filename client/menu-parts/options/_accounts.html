@@ -5,7 +5,7 @@
     <h5 class="menu_header">{{ i18n "Account options" }}</h5>
   </li>
   <li>
-    <h5 class="menu_header">{{ i18n "Google Drive" }}</h5>
+    <h6 class="menu_header">{{ i18n "Google Drive" }}</h5>
   </li>
   <li>
     <a href="{{noaction}}" {{{ m-action-n-close "window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0')" }}}>{{ i18n "Add account" }}</a>
@@ -14,7 +14,7 @@
     <a href="{{noaction}}" {{{ m-action-n-close "application.controllers.google_oauth.switch_user()" }}}>{{ i18n "Switch user" }}</a>
   </li>
   <li>
-    <h5 class="menu_header">{{ i18n "Dropbox" }}</h5>
+    <h6 class="menu_header">{{ i18n "Dropbox" }}</h5>
   </li>
   <li>
     <a href="{{noaction}}" {{{ m-action-n-close "application.controllers.dropbox_oauth.test(function(){new Popup({message : i18n('Already connected !')})})" }}}>{{ i18n "Connect account" }}</a>
