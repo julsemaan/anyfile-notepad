@@ -30,3 +30,14 @@ PreferencesController.prototype.post_init = function() {
 
 
 }
+
+// Adds a new user-based known combination of extension + mime type
+PreferencesController.prototype.add_known_mt_ext = function(mt_ext) {
+  $(document).trigger('preference-change-in-progress');
+
+  pref = ArrayPreference.find("user_mimetypes");
+  pref.array.push(mt_ext);
+  pref.commit(application.controllers.editor, application.controllers.google_oauth.show_reauth).then(function() {
+    $(document).trigger('preference-change-done');
+  })
+}

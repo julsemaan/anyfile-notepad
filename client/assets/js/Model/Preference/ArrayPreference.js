@@ -9,7 +9,7 @@ ArrayPreference.prototype.init_child = function(args){
 }
 
 ArrayPreference.prototype.commit = function(locker, fail_action){
-  this.refreshAndSet(this.array, locker, fail_action);
+  return this.refreshAndSet(this.array, locker, fail_action);
 }
 
 ArrayPreference.prototype.toString = function() {

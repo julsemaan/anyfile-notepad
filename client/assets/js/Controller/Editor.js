@@ -175,11 +175,10 @@ EditorController.prototype.edit = function(id){
 
 EditorController.prototype.post_file_load = function(){
   var self = this;
-  this.editor_view.getSession().setValue(this.file.data, -1)
+  this.editor_view.getSession().setValue(this.file.data, -1);
 
-  var new_data = this.editor_view.getSession().getValue();
-  if(this.file.data != new_data){
-    this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
+  if(!ArrayPreference.find("user_mimetypes").array.includes(this.file.mime_type+"/"+this.file.extension())){
+    new Popup({ hb_partial: "#unknown_encoding", extension: this.file.extension(), mime_type: this.file.mime_type });
     this.deactivate_autosave();
   }
   else {
