@@ -16,6 +16,8 @@ PreferencesController.prototype.post_init = function() {
     tabsAsSpaces: new TabsAsSpacesWidget({}),
   };
 
+  $('.known-encoding-add').click(function(e) { self.handle_add_known_mt_ext(e) });
+
   $(document).on('preference-change-in-progress', function() {
     for(var k in self.widgets) {
       self.widgets[k].disable();
@@ -29,6 +31,13 @@ PreferencesController.prototype.post_init = function() {
   });
 
 
+}
+
+PreferencesController.prototype.handle_add_known_mt_ext = function(target) {
+  var self = this;
+  target = $(target);
+  self.add_known_mt_ext(target.attr('data-mime-type'), target.attr('data-extension'));
+  target.replaceWith('<i class=\'known-encoding-added material-icons btn-success\'>done</i>');
 }
 
 // Adds a new user-based known combination of extension + mime type
