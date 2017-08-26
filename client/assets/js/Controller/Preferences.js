@@ -33,20 +33,19 @@ PreferencesController.prototype.post_init = function() {
 
 }
 
-PreferencesController.prototype.handle_add_known_mt_ext = function(target) {
+PreferencesController.prototype.handle_add_known_ext = function(target) {
   var self = this;
   target = $(target);
-  self.add_known_mt_ext(target.attr('data-mime-type'), target.attr('data-extension'));
+  self.add_known_ext(target.attr('data-extension'));
   target.replaceWith('<i class=\'known-encoding-added material-icons btn-success\'>done</i>');
 }
 
 // Adds a new user-based known combination of extension + mime type
-PreferencesController.prototype.add_known_mt_ext = function(mime_type, extension) {
-  var mt_ext = mime_type + "/" + extension;
+PreferencesController.prototype.add_known_ext = function(extension) {
   $(document).trigger('preference-change-in-progress');
 
-  pref = ArrayPreference.find("user_mimetypes");
-  pref.array.push(mt_ext);
+  pref = ArrayPreference.find("user_extensions");
+  pref.array.push(extension);
   pref.commit(application.controllers.editor, application.controllers.google_oauth.show_reauth).then(function() {
     $(document).trigger('preference-change-done');
   })
