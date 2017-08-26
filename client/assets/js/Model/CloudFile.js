@@ -2,6 +2,7 @@ Class("CloudFile", ["Model"])
 
 CloudFile.prototype.post_init = function(options){
   var self = this;
+
   this.set("title", "")
   this.set("title_saved", "")
   this.set("data", "")
@@ -9,6 +10,9 @@ CloudFile.prototype.post_init = function(options){
   this.set("_tmp_title_saved", "")
   this.set("_tmp_data_saved", "")
   this.set("_post_update_callback")
+  
+  this.post_init_child(options);
+
   if(this.id){
     this.persisted = true
     this.get_file_data()
@@ -16,9 +20,6 @@ CloudFile.prototype.post_init = function(options){
   else{
     this.compute_syntax() 
   }
-
-  this.post_init_child(options);
-
 }
 
 CloudFile.file_extension = function(filename){

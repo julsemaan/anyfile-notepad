@@ -24,8 +24,6 @@ DropboxFile.prototype.get_file_data = function(){
 DropboxFile.prototype.handle_metadata_response = function(response) {
   var self = this;
 
-  console.log(response)
-
   self.set("mime_type", response.mimeType);
   self.set("title", self.id);
   self.set("folder_id", self.id.split("/").slice(0,-1).join("/"));
