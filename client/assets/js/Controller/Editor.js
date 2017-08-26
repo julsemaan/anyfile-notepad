@@ -177,8 +177,15 @@ EditorController.prototype.post_file_load = function(){
   var self = this;
   this.editor_view.getSession().setValue(this.file.data, -1);
 
-  if(!ArrayPreference.find("user_mimetypes").array.includes(this.file.mime_type+"/"+this.file.extension())){
-    new Popup({ hb_partial: "#unknown_encoding", extension: this.file.extension(), mime_type: this.file.mime_type });
+  if(this.file.persisted && !ArrayPreference.find("user_mimetypes").array.includes(this.file.mime_type+"/"+this.file.extension())){
+    new Popup({ 
+      title: "IMPORTANT NOTE, read closely!", 
+      confirm: true, 
+      hb_partial: "#unknown_encoding", 
+      extension: this.file.extension(), 
+      mime_type: this.file.mime_type, 
+      callback : function(result) {if(!result) window.location.hash = ""},
+    });
     this.deactivate_autosave();
   }
   else {

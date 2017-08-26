@@ -32,7 +32,8 @@ PreferencesController.prototype.post_init = function() {
 }
 
 // Adds a new user-based known combination of extension + mime type
-PreferencesController.prototype.add_known_mt_ext = function(mt_ext) {
+PreferencesController.prototype.add_known_mt_ext = function(mime_type, extension) {
+  var mt_ext = mime_type + "/" + extension;
   $(document).trigger('preference-change-in-progress');
 
   pref = ArrayPreference.find("user_mimetypes");
