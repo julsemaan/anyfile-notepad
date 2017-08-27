@@ -73,6 +73,9 @@ APP_COMMIT_ID=`cd $_GIT_DIR && git rev-parse HEAD | cut -c1-6 ; cd -`
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
+# Delete the cache directory
+rm -fr tmp/cache/
+
 function should_reset() {
   #### NOTE - this uses process returns code so 0 means it should reset while 1 means it doesn't so it fits in the logic of a bash if
   if [ -e $SHOULD_RESET_FILE ]; then
