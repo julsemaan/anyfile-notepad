@@ -177,7 +177,12 @@ EditorController.prototype.post_file_load = function(){
   var self = this;
   this.editor_view.getSession().setValue(this.file.data, -1);
 
-  if(this.file.persisted && !ArrayPreference.find("user_extensions").array.includes(this.file.extension())){
+  // If its a saved file which isn't known to the app or to the user, then we warn him
+  if(
+      this.file.persisted && 
+      !extensions.find({ key: 'name', value: this.file.extension() }) &&
+      !ArrayPreference.find("user_extensions").array.includes(this.file.extension())
+      ){
     new Popup({ 
       title: "IMPORTANT NOTE, read closely!", 
       confirm: true, 
