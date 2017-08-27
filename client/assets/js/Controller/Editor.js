@@ -200,10 +200,11 @@ EditorController.prototype.post_file_load = function(){
   this.allow_saving()
 
   if(this.file.persisted){
-    this.flash.success(i18n("File '"+self.file.title+"' loaded"), 3)
+    this.flash.success(i18n("File '"+self.file.title+"' loaded"));
     document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
+    this.flash.success(i18n("Creating new file in "+self.provider));
     document.title = i18n("New file")+" | Anyfile Notepad";
   }
 
