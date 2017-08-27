@@ -20,6 +20,11 @@ FlashController.prototype.post_init = function(args){
   this.alert_template = Handlebars.compile($('[data-template-name="flash-message"]').html());
 }
 
+FlashController.prototype.update_count = function() {
+  var self = this;
+  self.set("count", self.dynamic_flash.children().size() + self.sticky_flash.children().size());
+}
+
 FlashController.prototype.get_alert_id = function(){
   this.count_since_started++
   return "flash_"+this.id+"_"+this.count_since_started;
@@ -28,14 +33,15 @@ FlashController.prototype.get_alert_id = function(){
 FlashController.prototype.add = function(text, type, timeout, where){
   var self = this;
 
-  self.set("count", self.count+1);
-
   var alert_id = this.get_alert_id()
   var element = $(self.alert_template({text:text, type:type, timeout:timeout, alert_id:alert_id}));
   var notification = element.clone();
 
   element.find("button.close").click(function(){
-    self.set("count", self.count-1);
+    // Give it time to be removed as this handler is called before the DOM is updated
+    setTimeout(function() {
+      self.update_count();
+    }, 100);
   });
 
   // Don't allow to dismiss if it has a timeout
@@ -48,10 +54,12 @@ FlashController.prototype.add = function(text, type, timeout, where){
   where.prepend(element)
   element.slideDown()
 
+  self.update_count();
+
   if(timeout){
     setTimeout(function(){
       element.slideUp();
-      self.set("count", self.count-1);
+      self.update_count();
     }, timeout*1000)
   }
 
@@ -107,7 +115,9 @@ FlashController.prototype.sticky_warning = function(text){
 }
 
 FlashController.prototype.empty = function(){
-  this.dynamic_flash.html("")
+  var self = this;
+  this.dynamic_flash.html("");
+  self.update_count();
 }
 
 FlashController.prototype.toggle_maximize = function(){
