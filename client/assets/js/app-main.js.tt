@@ -1,4 +1,6 @@
 var application = new ApplicationController();
+application.version = "[% APP_VERSION %]";
+application.build_id = "[% APP_COMMIT_ID %]";
 
 [%
 locales = {
@@ -87,13 +89,19 @@ application.controllers.google_oauth.add_to_queue(function(){
       editor_controller.file_explorer.flash = editor_controller.flash;
       editor_controller.file_explorer.load();
 
+      editor_controller.flash.parent = editor_controller;
+
       editor_controller.initialize_html();
       
       application.setupDevMode();
       application.setupLocaleFlash();
 
-      editor_controller.flash.sticky_success("<a target='_blank' href='https://goo.gl/forms/cVpC2svZQqV2Fqbd2'>Click here to answer a short survey and have your word on the app's future!</a>");
-      editor_controller.flash.sticky_success("<a target='_blank' href='/news'>Dropbox is staying!</a>");
+      var msg = "<a target='_blank' href='/news'>Dropbox is staying!</a>";
+      editor_controller.flash.sticky_success(msg, {msg_uid:msg});
+
+      msg = "<a target='_blank' href='https://goo.gl/forms/cVpC2svZQqV2Fqbd2'>Click here to answer a short survey and have your word on the app's future!</a>";
+      editor_controller.flash.sticky_success(msg, {msg_uid:msg});
+
 
       new EditorRouter(editor_controller)
       var menu_controller = new MenuController("menu");

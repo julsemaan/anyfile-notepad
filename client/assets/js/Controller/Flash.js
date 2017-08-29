@@ -17,6 +17,8 @@ FlashController.prototype.post_init = function(args){
   this.count_since_started = 0;
   this.set("count", 0);
 
+  this.flash_dismissed_pref = ArrayPreference.find("flash_dismissed");
+
   this.alert_template = Handlebars.compile($('[data-template-name="flash-message"]').html());
 }
 
@@ -30,14 +32,23 @@ FlashController.prototype.get_alert_id = function(){
   return "flash_"+this.id+"_"+this.count_since_started;
 }
 
-FlashController.prototype.add = function(text, type, timeout, where){
+FlashController.prototype.add = function(text, type, timeout, where, msg_uid){
   var self = this;
 
-  var alert_id = this.get_alert_id()
-  var element = $(self.alert_template({text:text, type:type, timeout:timeout, alert_id:alert_id}));
+  // If the user has previously dismissed this alert UID we early return
+  if(msg_uid && self.flash_dismissed_pref.array.includes(msg_uid)) return;
+
+  var alert_id = this.get_alert_id();
+  var element = $(self.alert_template({text:text, type:type, timeout:timeout, alert_id:alert_id, msg_uid:msg_uid}));
   var notification = element.clone();
 
   element.find("button.close").click(function(){
+    var msg_uid = element.closest('.alert').attr('data-msg-uid');
+    if(msg_uid) {
+      self.flash_dismissed_pref.array.push(msg_uid);
+      self.flash_dismissed_pref.commit(self.parent, self.parent.show_reauth);
+    }
+
     // Give it time to be removed as this handler is called before the DOM is updated
     setTimeout(function() {
       self.update_count();
@@ -90,28 +101,34 @@ FlashController.prototype.show_next_notification = function(){
   }
 }
 
-FlashController.prototype.success = function(text, timeout){
-  this.add(text, 'success' , timeout, this.dynamic_flash)
+FlashController.prototype.success = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'success' , options.timeout, this.dynamic_flash, options.msg_uid);
 }
 
-FlashController.prototype.error = function(text, timeout){
-  this.add(text, 'danger' , timeout, this.dynamic_flash)
+FlashController.prototype.error = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'danger' , options.timeout, this.dynamic_flash, options.msg_uid);
 }
 
-FlashController.prototype.warning = function(text, timeout){
-  this.add(text, 'warning' , timeout, this.dynamic_flash)
+FlashController.prototype.warning = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'warning' , options.timeout, this.dynamic_flash, options.msg_uid);
 }
 
-FlashController.prototype.sticky_success = function(text){
-  this.add(text, 'success' , false, this.sticky_flash)
+FlashController.prototype.sticky_success = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'success' , false, this.sticky_flash, options.msg_uid);
 }
 
-FlashController.prototype.sticky_error = function(text){
-  this.add(text, 'danger' , false, this.sticky_flash)
+FlashController.prototype.sticky_error = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'danger' , false, this.sticky_flash, options.msg_uid);
 }
 
-FlashController.prototype.sticky_warning = function(text){
-  this.add(text, 'warning' , false, this.sticky_flash)
+FlashController.prototype.sticky_warning = function(text, options){
+  if(!options) options = {};
+  this.add(text, 'warning' , false, this.sticky_flash, options.msg_uid);
 }
 
 FlashController.prototype.empty = function(){

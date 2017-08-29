@@ -17,6 +17,7 @@ function Preferences(loaded){
     'tabs_as_spaces' : 'true',
     'recent_files': "[]",
     'user_extensions': "[]",
+    'flash_dismissed': "[]",
   }
   
   this.HASH_PREFERENCES = [
