@@ -150,6 +150,7 @@ function application_css() {
 
   add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
   add_css_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
+  add_css_asset client/public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS
   ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
   if ! is_webdev; then
@@ -174,6 +175,7 @@ function application_js() {
   add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
   add_js_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
   add_js_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
+  add_js_asset client/public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
 
   add_js_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
   add_js_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS

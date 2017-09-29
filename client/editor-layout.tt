@@ -8,10 +8,8 @@
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
 
   <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].min.css" media="all">
-  <link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css" media="all">
 
   <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].min.js"></script>
-  <script type="text/javascript" src="/jqueryFileTree/jqueryFileTree.js"></script>
   <script type="text/javascript" src="/ace.js/ace.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.cookie/1.4.0/jquery.cookie.min.js"></script>
   <script type="text/javascript" src="https://inverse.ca/downloads/Fingerbank/fingerbank-client.js"></script>
