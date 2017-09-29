@@ -50,7 +50,8 @@ ApplicationController.prototype.actOnDevModeSettings = function() {
   var self = this;
   if(self.dev_mode){
     if(self.dev_mode_available) {
-      self.controllers.editor.flash.sticky_warning("<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>");
+      var msg = "<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>"
+      self.controllers.editor.flash.sticky_warning(msg, {msg_uid:msg+self.build_id});
       self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
     }
     else {
