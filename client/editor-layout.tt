@@ -11,8 +11,6 @@
 
   <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].min.js"></script>
   <script type="text/javascript" src="/ace.js/ace.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.cookie/1.4.0/jquery.cookie.min.js"></script>
-  <script type="text/javascript" src="https://inverse.ca/downloads/Fingerbank/fingerbank-client.js"></script>
 
   [% INCLUDE analytics.tt %]
 

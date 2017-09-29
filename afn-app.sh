@@ -176,6 +176,8 @@ function application_js() {
   add_js_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
   add_js_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
   add_js_asset client/public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
+  add_js_asset client/public/jquery.cookie.min.js $APPLICATION_JS
+  add_js_asset client/public/fingerbank-client.js $APPLICATION_JS
 
   add_js_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
   add_js_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS
