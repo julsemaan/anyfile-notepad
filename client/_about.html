@@ -1,6 +1,6 @@
 <script id="about" class="template-partial" type="text/x-handlebars-template">
-  <p><b>{{ i18n "Version" }} : </b>[% APP_VERSION %]</p>
-  <p><b>{{ i18n "Build ID" }} : </b>[% APP_COMMIT_ID %]</p>
+  <p><b>{{ i18n "Version" }} : </b>{{ global_context.application.version }}</p>
+  <p><b>{{ i18n "Build ID" }} : </b>{{ global_context.application.build_id }}</p>
   <p><b>{{ i18n "Ace.js version" }} : </b>{{ global_context.ace.version }}</p>
   {{#if global_context.application.dev_mode}}
   <p><b>{{ i18n "Running development snapshot" }}</b> <a href="javascript:void(0)" onclick="javascript:application.stop_dev_mode()">{{ i18n "use stable version" }}</a></p>
