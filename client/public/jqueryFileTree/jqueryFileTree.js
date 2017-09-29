@@ -92,8 +92,10 @@ if(jQuery) (function($){
 								$(this).parent().removeClass('collapsed').addClass('expanded');
 							} else {
 								// Collapse
-								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
-								$(this).parent().removeClass('expanded').addClass('collapsed');
+								var $this = $(this);
+								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing, complete: function() {
+									$this.parent().removeClass('expanded').addClass('collapsed');
+								}});
 							}
 						} else {
 							//h($(this).attr('rel'));

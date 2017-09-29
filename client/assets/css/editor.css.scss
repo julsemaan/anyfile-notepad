@@ -571,3 +571,13 @@ li a.btn-primary {
   border-radius: 50%;
   padding: 10px;
 }
+
+.jqueryFileTree {
+  .provider.expanded {
+    .provider-btn {
+      padding-bottom:5px;
+      margin-bottom:5px;
+      border-bottom: 3px solid rgb(238, 238, 238);
+    }
+  }
+}
