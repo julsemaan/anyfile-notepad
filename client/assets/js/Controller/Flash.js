@@ -43,10 +43,12 @@ FlashController.prototype.add = function(text, type, timeout, where, msg_uid){
   var notification = element.clone();
 
   element.find("button.close").click(function(){
-    var msg_uid = element.closest('.alert').attr('data-msg-uid');
-    if(msg_uid) {
-      self.flash_dismissed_pref.array.push(msg_uid);
-      self.flash_dismissed_pref.commit(self.parent, self.parent.show_reauth);
+    if($(this).attr("data-dismiss-forever") == "yes") {
+      var msg_uid = element.closest('.alert').attr('data-msg-uid');
+      if(msg_uid) {
+        self.flash_dismissed_pref.array.push(msg_uid);
+        self.flash_dismissed_pref.commit(self.parent, self.parent.show_reauth);
+      }
     }
 
     // Give it time to be removed as this handler is called before the DOM is updated

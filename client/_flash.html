@@ -12,8 +12,13 @@
 <div style='text-align:left' class='alert alert-{{type}}' data-flash-id="{{alert_id}}" data-msg-uid="{{msg_uid}}">
   <div class='anchor anchor-{{type}}'></div>
   <button type='button' class='close' data-dismiss='alert'>
-    <span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
+    <span aria-hidden='true' title="Dismiss now">&times;</span><span class='sr-only'>Close</span>
   </button>
+  {{#if msg_uid}}
+  <button type='button' class='close' data-dismiss-forever="yes" data-dismiss='alert'>
+    <i class="material-icons" title="Dismiss forever" style="font-size:14px">block</i>
+  </button>
+  {{/if}}
   <p>{{{text}}}</p>
 </div>
 </script>
