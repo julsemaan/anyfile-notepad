@@ -12,7 +12,7 @@
   <meta name="propeller" content="3c389a0db8b4faabffbedf1726bb9f0e" />
 
   [% INCLUDE analytics.tt %]
-  
+
 </head>
 <body>
 
