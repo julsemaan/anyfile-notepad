@@ -24,6 +24,9 @@
   src: url("/fonts/Lato-Regular.ttf");
 }
 
+$desktop-ad-margin: 135px;
+$desktop-ad-editor-margin: 125px;
+
 body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
   font-family: "Lato";
   font-weight:bold;
@@ -175,20 +178,20 @@ div.g_file_editor{
   height:500px;
   top:inherit;
   bottom:80px;
-  right:135px;
+  right:10px;
   z-index:900;
 	
 }
 
 #show_full_flash {
-  right:135px;
+  right:10px;
   bottom:10px;
   position:fixed;
   z-index:900;
 }
 
 #unread_flash_count {
-  right:135px;
+  right:10px;
   bottom:50px;
   position:fixed;
   z-index:901;
@@ -380,13 +383,19 @@ h6.menu_header {
 #editor {
   top:60px;
   left:0;
-  right:125px;
+  right:0;
   bottom:0;
   border-right:3px solid #3f51b5;
 }
 
 
 @media (min-width:768px){
+  #show_full_flash {
+    right:$desktop-ad-margin;
+  }
+  #unread_flash_count {
+    right:$desktop-ad-margin;
+  }
   #menu #expanded_menu .options {
     width:700px;
   }
@@ -417,17 +426,21 @@ h6.menu_header {
     }
     position:fixed; 
     width:300px; 
-    right:135px; 
+    right:$desktop-ad-margin; 
     bottom:55px; 
     background-color:transparent; 
     z-index:900;
   }
   #editor_flash {
+    right:$desktop-ad-margin;
     .anchor {
       bottom:-10px;
       right: 17px;
       @include anchor(bottom, white)
     }
+  }
+  #editor {
+    right:$desktop-ad-editor-margin;
   }
 }
 

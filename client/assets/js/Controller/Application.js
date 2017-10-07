@@ -8,6 +8,9 @@ function ApplicationController() {
   if(this.is_mobile()) {
     StatIncrement.record("mobile-device");
   }
+  else {
+    this.display_desktop_ads();
+  }
   if(this.dev_mode) {
     StatIncrement.record("dev-mode");
   }
@@ -72,6 +75,7 @@ ApplicationController.prototype.setupLocaleFlash = function() {
 
 ApplicationController.prototype.is_mobile = function() {
   this._is_mobile = $('#editor_menu .navbar-toggle').is(":visible");
+  return this._is_mobile;
 }
 
 ApplicationController.prototype.set_mode_and_reload = function(mode, force){
@@ -88,4 +92,11 @@ ApplicationController.prototype.set_mode_and_reload = function(mode, force){
       action();
     }
   }});
+}
+
+ApplicationController.prototype.display_desktop_ads = function() {
+  var self = this;
+  setTimeout(function() {
+    if(!self.is_mobile()) $('.desktop-ads').show();
+  }, 1000);
 }
