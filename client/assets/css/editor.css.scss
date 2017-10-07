@@ -175,20 +175,20 @@ div.g_file_editor{
   height:500px;
   top:inherit;
   bottom:80px;
-  right:130px;
+  right:135px;
   z-index:900;
 	
 }
 
 #show_full_flash {
-  right:130px;
+  right:135px;
   bottom:10px;
   position:fixed;
   z-index:900;
 }
 
 #unread_flash_count {
-  right:130px;
+  right:135px;
   bottom:50px;
   position:fixed;
   z-index:901;
@@ -382,6 +382,7 @@ h6.menu_header {
   left:0;
   right:125px;
   bottom:0;
+  border-right:3px solid #3f51b5;
 }
 
 
@@ -416,7 +417,7 @@ h6.menu_header {
     }
     position:fixed; 
     width:300px; 
-    right:130px; 
+    right:135px; 
     bottom:55px; 
     background-color:transparent; 
     z-index:900;
