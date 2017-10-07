@@ -97,7 +97,7 @@ ApplicationController.prototype.set_mode_and_reload = function(mode, force){
 ApplicationController.prototype.display_desktop_ads = function() {
   var self = this;
   setTimeout(function() {
-    if(self.is_mobile()) $('.desktop-ads').remove();
+    if($(window).width() < 768) $('.desktop-ads').remove();
     else $('.desktop-ads').show();
   }, 100);
 }
