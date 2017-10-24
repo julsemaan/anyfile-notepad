@@ -47,7 +47,17 @@
         Click to post on the community
       </a>
     </p>
-    <script data-cfasync='false' type='text/javascript' src='//p248374.clksite.com/adServe/banners?tid=248374_474408_6'></script>
+    <!--<script data-cfasync='false' type='text/javascript' src='//p248374.clksite.com/adServe/banners?tid=248374_474408_6'></script>-->
+    <script type="text/javascript">
+			atOptions = {
+				'key' : '05f9e0100d4c86d32edfc07969f002e8',
+				'format' : 'iframe',
+				'height' : 600,
+				'width' : 160,
+				'params' : {}
+			};
+			document.write('<scr' + 'ipt type="text/javascript" src="http' + (location.protocol === 'https:' ? 's' : '') + '://www.bnserving.com/05f9e0100d4c86d32edfc07969f002e8/invoke.js"></scr' + 'ipt>');
+		</script>
 	</div>
 </div>
 
