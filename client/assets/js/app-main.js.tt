@@ -96,7 +96,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       application.setupDevMode();
       application.setupLocaleFlash();
 
-      var msg = "<a target='_blank' href='/news'>Dropbox is staying!</a>";
+      var msg = "<a target='_blank' href='/news'>Click here to read our short blog post about the release of version 6</a>";
       editor_controller.flash.sticky_success(msg, {msg_uid:msg});
 
       msg = "<a target='_blank' href='https://goo.gl/forms/cVpC2svZQqV2Fqbd2'>Click here to answer a short survey and have your word on the app's future!</a>";
