@@ -1,6 +1,6 @@
 Class("LocaleController", ["Model"]);
 
-LocaleController.prototype.init = function() {
+LocaleController.prototype.post_init = function() {
   var self = this;
   self.nameMap = {};
   self.translations = {};

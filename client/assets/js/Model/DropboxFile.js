@@ -1,8 +1,6 @@
 Class("DropboxFile", ["CloudFile"]);
 
-DropboxFile.prototype.init = function(options) {
-  CloudFile.prototype.init.call(this, options);
-
+DropboxFile.prototype.post_init_child = function(options) {
   this.cleanupId();
 
   this.set("provider", "Dropbox");
@@ -25,8 +23,6 @@ DropboxFile.prototype.get_file_data = function(){
 
 DropboxFile.prototype.handle_metadata_response = function(response) {
   var self = this;
-
-  console.log(response)
 
   self.set("mime_type", response.mimeType);
   self.set("title", self.id);

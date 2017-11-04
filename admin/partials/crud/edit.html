@@ -1,4 +1,5 @@
 <form class="form-horizontal" role="form" ng-submit="updateObject()">
   <div ng-include="'partials/crud/_form_errors.html'"></div>
+  <afn-input type="hidden" field-name="Etag" field-attr='_etag' ng-model-var="object._etag"></afn-input>
   <div ng-include="'partials/'+snake_model_name_pl+'/_form.html'"></div>
 </form>

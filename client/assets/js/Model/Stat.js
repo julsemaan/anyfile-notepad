@@ -1,12 +1,9 @@
 Class("Stat", ["Model"]);
 
 
-Stat.prototype.init = function(args){
-  Model.call(this, args);
-  if(args){
-    if(!args["key"]) throw "Missing key for stat";
-    this.key = "afn.app."+this.key;
-  }
+Stat.prototype.post_init = function(args){
+  if(!args["key"]) throw "Missing key for stat";
+  this.key = "afn.app."+this.key;
 }
 
 Class("StatIncrement", ["Stat"]);

@@ -1,4 +1,6 @@
 var application = new ApplicationController();
+application.version = "[% APP_VERSION %]";
+application.build_id = "[% APP_COMMIT_ID %]";
 
 [%
 locales = {
@@ -16,7 +18,7 @@ locales = {
 }
 %]
 
-var locale_controller = new LocaleController();
+var locale_controller = new LocaleController({});
 
 [% FOREACH id IN locales.keys %]
 [% file = 'locales/_' _ id _ '.json' %]
@@ -38,7 +40,7 @@ for(var i=0; i<3; i++){
   context.themes.unshift("dummy");
 }
 
-var hbrenderer = new HBRenderer();
+var hbrenderer = new HBRenderer({});
 hbrenderer.renderAll(context);
 
 // Shows the 'application is loading' modal
@@ -65,7 +67,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       application.controllers.editor = new EditorController("editor_app", {
         'major_notice_pref' : IntPreference.find('major_notice'),
         'menu_width_pref' : StringPreference.find('menu_width'),
-        'flash' : new FlashController('editor_flash'),
+        'flash' : new FlashController({view:'editor_flash'}),
         'file_explorer': new FileExplorerController("file_explorer_container", {
           'height_pref' : StringPreference.find('file_explorer_height'),
           }),
@@ -73,22 +75,33 @@ application.controllers.google_oauth.add_to_queue(function(){
           favorites_pref:ArrayPreference.find("favorites"),
           view: $('ul.favorites'),
         }),
+        'recent_files_controller': new RecentFilesController({
+          preference:ArrayPreference.find("recent_files"),
+          view: $('div.recent-files ul'),
+        }),
       })
       var editor_controller = application.controllers.editor;
       editor_controller.favorites_controller.parent = editor_controller;
+      editor_controller.recent_files_controller.parent = editor_controller;
       editor_controller.preferences_controller = new PreferencesController({});
 
       editor_controller.file_explorer.parent = editor_controller;
       editor_controller.file_explorer.flash = editor_controller.flash;
       editor_controller.file_explorer.load();
 
+      editor_controller.flash.parent = editor_controller;
+
       editor_controller.initialize_html();
       
       application.setupDevMode();
       application.setupLocaleFlash();
 
-      editor_controller.flash.sticky_success("<a target='_blank' href='https://goo.gl/forms/cVpC2svZQqV2Fqbd2'>Click here to answer a short survey and have your word on the app's future!</a>");
-      editor_controller.flash.sticky_success("<a target='_blank' href='/news'>Dropbox is staying!</a>");
+      var msg = "<a target='_blank' href='/news'>Click here to read our short blog post about the release of version 6</a>";
+      editor_controller.flash.sticky_success(msg, {msg_uid:msg});
+
+      msg = "<a target='_blank' href='https://goo.gl/forms/cVpC2svZQqV2Fqbd2'>Click here to answer a short survey and have your word on the app's future!</a>";
+      editor_controller.flash.sticky_success(msg, {msg_uid:msg});
+
 
       new EditorRouter(editor_controller)
       var menu_controller = new MenuController("menu");

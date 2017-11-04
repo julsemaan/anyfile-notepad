@@ -1,6 +1,6 @@
 Class("UserWidget", ["Model"]);
 
-UserWidget.prototype.init = function(args) {
+UserWidget.prototype.post_init = function(args) {
   var self = this;
 
   var selector = args["selector"];

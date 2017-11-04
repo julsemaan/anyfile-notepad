@@ -1,14 +1,20 @@
 <script class="template-partial" data-partial-name="mfile-select-syntax" type="text/x-handlebars">
 <div class="syntaxes">
-  <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+  <a href="{{noaction}}" class="for_menu_header menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
   <ul class="menu_list">
+    <li>
+      <h5 class="menu_header">{{ i18n "Select syntax" }}</h5>
+    </li>
     {{#each grouped_syntaxes}}
         <li>
         <a href="{{noaction}};" class="sub_menu_item" >{{@key}}</a>
         <div class="menu_content">
           <div class="syntaxes">
-            <a href="{{noaction}}" class="menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
+            <a href="{{noaction}}" class="for_menu_header menu_back btn btn-primary btn-fab btn-raised mdi-navigation-arrow-back"></a>
              <ul class="menu_list syntaxes" data-pref-widget="SelectSyntaxWidget">
+                <li>
+                  <h5 class="menu_header">{{ i18n @key }}</h5>
+                </li>
                 {{#each this}}
                   <li>
                     <a href="{{noaction}};" data-val="{{this.ace_js_mode}}" class="syntax_button">

@@ -1,23 +1,24 @@
 function EditorController(view, options){
   this.editor_view = ace.edit("editor");
   this.$ = $('#'+view);
-  this.$editor = this.$.find('#editor')
+  this.$editor = this.$.find('#editor');
   this.file_id = options["file_id"];
   
-  this.ajax_defered_waiting = {}
+  this.ajax_defered_waiting = {};
   this.safe_to_quit = true;
   
   this.content = null;
   this.content_saved = "";
 
-  this.major_notice_pref = options["major_notice_pref"]
+  this.major_notice_pref = options["major_notice_pref"];
 
-  this.file_explorer = options["file_explorer"]
-  this.favorites_controller = options["favorites_controller"]
+  this.file_explorer = options["file_explorer"];
+  this.favorites_controller = options["favorites_controller"];
+  this.recent_files_controller = options["recent_files_controller"];
 
-  this.menu_width_pref = options["menu_width_pref"]
+  this.menu_width_pref = options["menu_width_pref"];
 
-  this.flash = options["flash"]
+  this.flash = options["flash"];
 
   this.models = {
     'extensions':new RestAdapter({model:Extension}),
@@ -161,7 +162,8 @@ EditorController.prototype.edit = function(id){
         // NOTE: Extension already has a dot at the beginning
         StatIncrement.record("file-edit.extensions"+self.file.extension());
 
-        self.post_file_load()
+        self.post_file_load();
+        self.recent_files_controller.add_file(self.file);
       }
       else{
         self.new("root")
@@ -173,11 +175,21 @@ EditorController.prototype.edit = function(id){
 
 EditorController.prototype.post_file_load = function(){
   var self = this;
-  this.editor_view.getSession().setValue(this.file.data, -1)
+  this.editor_view.getSession().setValue(this.file.data, -1);
 
-  var new_data = this.editor_view.getSession().getValue();
-  if(this.file.data != new_data){
-    this.flash.warning(i18n("This file has an unknown encoding.<br/>Some characters may be corrupted and the file may lose parts of it's encoding when saved.<br/>Autosave has been temporarly disabled."))
+  // If its a saved file which isn't known to the app or to the user, then we warn him
+  if(
+      this.file.persisted && 
+      !extensions.find({ key: 'name', value: this.file.extension() }) &&
+      !ArrayPreference.find("user_extensions").array.includes(this.file.extension())
+      ){
+    new Popup({ 
+      title: "IMPORTANT NOTE, read closely!", 
+      confirm: true, 
+      hb_partial: "#unknown_encoding", 
+      extension: this.file.extension(), 
+      callback : function(result) {if(!result) window.location.hash = ""},
+    });
     this.deactivate_autosave();
   }
   else {
@@ -188,11 +200,11 @@ EditorController.prototype.post_file_load = function(){
   this.allow_saving()
 
   if(this.file.persisted){
-    this.flash.success(i18n("File loaded"), 3)
+    this.flash.success(i18n("File '"+self.file.title+"' loaded"));
     document.title = this.file.title + " | Anyfile Notepad";
   }
   else{
-    this.flash.success(i18n("Creating new file in: "+this.file.provider))
+    this.flash.success(i18n("Creating new file in "+self.provider));
     document.title = i18n("New file")+" | Anyfile Notepad";
   }
 

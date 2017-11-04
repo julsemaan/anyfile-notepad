@@ -1,6 +1,6 @@
 Class("HBRenderer", ["Model"])
 
-HBRenderer.prototype.init = function(args) {
+HBRenderer.prototype.post_init = function(args) {
   var self = this;
 
   self.registerHelpers();

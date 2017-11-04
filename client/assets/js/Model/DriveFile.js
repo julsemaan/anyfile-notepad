@@ -1,7 +1,6 @@
 Class("DriveFile", ["CloudFile"]);
 
-DriveFile.prototype.init = function(options) {
-  CloudFile.prototype.init.call(this, options);
+DriveFile.prototype.post_init_child = function(options) {
   this.set("provider", "GoogleDrive");
 }
 

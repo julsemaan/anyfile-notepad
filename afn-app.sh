@@ -73,6 +73,9 @@ APP_COMMIT_ID=`cd $_GIT_DIR && git rev-parse HEAD | cut -c1-6 ; cd -`
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
+# Delete the cache directory
+rm -fr tmp/cache/
+
 function should_reset() {
   #### NOTE - this uses process returns code so 0 means it should reset while 1 means it doesn't so it fits in the logic of a bash if
   if [ -e $SHOULD_RESET_FILE ]; then
@@ -147,6 +150,7 @@ function application_css() {
 
   add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
   add_css_asset bower_components/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
+  add_css_asset client/public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS
   ./node_modules/.bin/node-sass --include-path client/assets/css/ client/assets/css/editor.css.scss >> $APPLICATION_CSS
 
   if ! is_webdev; then
@@ -171,6 +175,9 @@ function application_js() {
   add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
   add_js_asset bower_components/tether-shepherd/dist/js/tether.js $APPLICATION_JS
   add_js_asset bower_components/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
+  add_js_asset client/public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
+  add_js_asset client/public/jquery.cookie.min.js $APPLICATION_JS
+  add_js_asset client/public/fingerbank-client.js $APPLICATION_JS
 
   add_js_asset client/assets/js/libs/rsvp.min.js $APPLICATION_JS
   add_js_asset client/assets/js/libs/route-recognizer.js $APPLICATION_JS

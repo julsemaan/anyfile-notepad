@@ -1,8 +1,7 @@
 Class("FavoritesController", ["Model"]);
 
-FavoritesController.prototype.init = function(args){
+FavoritesController.prototype.post_init = function(args){
   var self = this;
-  Model.call(this,args);
   self.refresh();
 }
 
@@ -54,6 +53,7 @@ FavoritesController.prototype.refresh = function(){
   if(self.view){
     self.view.empty();
     
+    self.view.append($('<li><h5 class="menu_header">'+i18n("Favorites")+'</h5></li>'));
     var add_favorite = $('<li><a href="javascript:void(0)">'+i18n("Favorite this file")+'</a></li>');
     add_favorite.click(function(e){
       e.preventDefault();
@@ -66,6 +66,8 @@ FavoritesController.prototype.refresh = function(){
       }
     })
     self.view.append(add_favorite);
+
+    self.view.append($("<hr>"));
     
     $.each(self.favorites_pref.array, function(i){
       var element = self.favorites_pref.array[i];

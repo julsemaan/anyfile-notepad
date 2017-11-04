@@ -1,0 +1,28 @@
+<script id="unknown_encoding" class="template-partial" type="text/x-handlebars-template">
+  <div class="unknown-encoding-popup">
+    <p>
+      Files with extension '{{ extension }}' are not known to the app. This is a plain text editor which isn't meant for viewing and editing complex files like Word documents, PDFs, images, etc. If you do not wish to edit this file, press 'CANCEL'.
+    </p>
+    <p>
+     {{ i18n "Proceeding to edit this file may corrypt some characters and it may lose part of it's encoding when saved. For this reason, autosave has been temporarily disabled. Click OK to continue editing this file." }}
+    </p>
+    <p>{{ i18n "For more details about this, " }}<a target="_blank" href="/faq">{{ i18n "read the FAQ" }}</a></p>
+
+    <div class="well">
+      <div>
+        <p>
+        You can add this extension ({{ extension }}) to your known list so that next time you will open a file of this type, this warning won't be shown and autosave will be enabled.
+        </p>
+      </div>
+      <div class="known-encoding-add-container">
+        <a 
+          href="{{noaction}}"
+          class="known-encoding-add btn btn-primary"
+          data-extension="{{ extension }}"
+          onclick="javascript:application.controllers.editor.preferences_controller.handle_add_known_ext(this)">
+          {{ i18n "Add" }}
+        </a>
+      </div>
+    </div>
+  </div>
+</script>

@@ -103,7 +103,7 @@ FileExplorerController.prototype.fetch_directory = function(options, callback){
     };
     for(var provider in providers){
       var info = providers[provider];
-      var folder_element = $("<li class='provider directory collapsed'><a href='#' rel='"+provider+"/"+info.root+"'><img src='"+provider+".png'></a></li>");
+      var folder_element = $("<li class='provider directory collapsed'><a class='provider-btn' href='#' rel='"+provider+"/"+info.root+"'><img src='"+provider+".png'></a></li>");
       container.append(folder_element);
     }
     callback(container);

@@ -1,7 +1,24 @@
 angular.module('afnAdminApp.services', [])
 .factory('$CRUDResource', function($resource, $q, $filter){
   
-  return function CRUDResourceFactory(res) {
+  return function CRUDResourceFactory(url, args1, args2) {
+    args1.id = args1.id || "@id";
+
+    args2.get = args2.get || {};
+    args2.get.transformResponse = function(data, headers){
+      var response = angular.fromJson(data);
+      response._etag = headers().etag;
+      return response;
+    };
+
+    args2.update = args2.update || {};
+    args2.update.method = "PUT";
+    args2.update.headers = {
+      'If-Match':function(c){var val = c.data._etag ; delete c.data._etag ; return val},
+    };
+
+    var res = $resource(url, args1, args2);
+
     res.formatObject = function(object) {
       object["__display_attr__"] = object[object.__proto__.display_attr];
       return object;
@@ -75,12 +92,7 @@ angular.module('afnAdminApp.services', [])
   return res;
 })
 .factory('MimeType', function($resource, $CRUDResource) {
-  var res = $resource(AFN_VARS['api_uri']+'/mime_types/:id', {id: '@id'}, {
-    update: {
-      method: 'PUT'
-    }
-  });
-  res = $CRUDResource(res);
+  var res = $CRUDResource(AFN_VARS['api_uri']+'/mime_types/:id', {}, {});
 
   res.prototype.model_name = "MimeType";
   res.prototype.model_name_pl = "MimeTypes";
@@ -93,12 +105,7 @@ angular.module('afnAdminApp.services', [])
 
   return res;
 }).factory('Syntax', function($resource, $CRUDResource) {
-  var res = $resource(AFN_VARS['api_uri']+'/syntaxes/:id', {id: '@id'}, {
-    update: {
-      method: 'PUT'
-    }
-  });
-  res = $CRUDResource(res);
+  var res = $CRUDResource(AFN_VARS['api_uri']+'/syntaxes/:id', {}, {});
 
   res.prototype.model_name = "Syntax";
   res.prototype.model_name_pl = "Syntaxes";
@@ -109,12 +116,7 @@ angular.module('afnAdminApp.services', [])
   res.prototype.display_attr = "display_name";
   return res;
 }).factory('Extension', function($resource, $CRUDResource, Syntax, MimeType){
-  var res = $resource(AFN_VARS['api_uri']+'/extensions/:id', {id: '@id'}, {
-    update: {
-      method: 'PUT'
-    }
-  });
-  res = $CRUDResource(res);
+  var res = $CRUDResource(AFN_VARS['api_uri']+'/extensions/:id', {}, {});
 
   res.prototype.model_name = "Extension";
   res.prototype.model_name_pl = "Extensions";
@@ -146,12 +148,7 @@ angular.module('afnAdminApp.services', [])
     }
   }
 }).factory('Setting', function($resource, $CRUDResource) {
-  var res = $resource(AFN_VARS['api_uri']+'/settings/:id', {id: '@id'}, {
-    update: {
-      method: 'PUT'
-    }
-  });
-  res = $CRUDResource(res);
+  var res = $CRUDResource(AFN_VARS['api_uri']+'/settings/:id', {}, {});
 
   res.prototype.model_name = "Setting";
   res.prototype.model_name_pl = "Settings";
