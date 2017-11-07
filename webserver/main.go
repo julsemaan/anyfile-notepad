@@ -1,9 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
@@ -14,8 +16,26 @@ import (
 )
 
 var subscriptions = NewSubscriptions()
+var billingRegexp = regexp.MustCompile(`^/billing`)
+
+var billingHandler http.Handler
+var appProdHandler http.Handler
+var appDevHandler http.Handler
+
+var aliasPaths = map[string]string{
+	"/app":            "/app.html",
+	"/news":           "/site/news.html",
+	"/news.html":      "/site/news.html",
+	"/faq":            "/site/faq.html",
+	"/faq.html":       "/site/faq.html",
+	"/help-translate": "/site/help_translate.html",
+}
 
 func main() {
+	prodAppPath := flag.String("prod-app-path", "/tmp", "path to the production application files")
+	devAppPath := flag.String("dev-app-path", "/tmp", "path to the production application files")
+	flag.Parse()
+
 	stripe.Key = os.Getenv("STRIPE_SK")
 
 	go func() {
@@ -26,8 +46,37 @@ func main() {
 	}()
 
 	r := gin.Default()
-	r.POST("/app/upgrade", upgrade)
-	r.Run()
+	r.POST("/billing/upgrade", upgrade)
+	billingHandler = r
+
+	fmt.Println("Serving production application from", *prodAppPath)
+	appProdHandler = http.FileServer(http.Dir(*prodAppPath))
+
+	fmt.Println("Serving development application from", *devAppPath)
+	appDevHandler = http.FileServer(http.Dir(*devAppPath))
+
+	fmt.Println(http.ListenAndServe(":8000", Handler{}))
+}
+
+type Handler struct{}
+
+func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if billingRegexp.MatchString(r.URL.Path) {
+		billingHandler.ServeHTTP(w, r)
+	} else {
+		// Handle alias if applicable
+		if alias, ok := aliasPaths[r.URL.Path]; ok {
+			r.URL.Path = alias
+		}
+
+		// Check if we should send to prod or dev backend
+		var appHandler http.Handler = appProdHandler
+		if devCookie, err := r.Cookie("AFNVersion"); err == nil && devCookie.Value == "dev" {
+			appHandler = appDevHandler
+		}
+
+		appHandler.ServeHTTP(w, r)
+	}
 }
 
 type Upgrade struct {
