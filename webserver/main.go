@@ -15,6 +15,8 @@ import (
 	"github.com/stripe/stripe-go/sub"
 )
 
+var supportEmail = os.Getenv("AFN_SUPPORT_EMAIL")
+
 var subscriptions = NewSubscriptions()
 var billingRegexp = regexp.MustCompile(`^/billing`)
 
@@ -51,6 +53,7 @@ func main() {
 
 	r := gin.Default()
 	r.POST("/billing/upgrade", upgrade)
+	r.POST("/billing/subscription/cancel/:user_id", cancel)
 	billingHandler = r
 
 	fmt.Println("Serving production application from", *prodAppPath)
@@ -110,6 +113,34 @@ type Upgrade struct {
 	StripeToken     string `form:"stripeToken"`
 	StripeTokenType string `form:"stripeTokenType"`
 	StripeEmail     string `form:"stripeEmail"`
+}
+
+func cancel(c *gin.Context) {
+	userId := c.Param("user_id")
+
+	if subscription := subscriptions.GetSubscription(userId); subscription == nil {
+		fmt.Println("Failed to find subscription for", userId)
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
+	} else {
+		if subscription.EndCancel {
+			willEnd := time.Unix(0, 1541631494*int64(time.Second))
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": fmt.Sprintf("This subscription has already been canceled, it will end on %s. Until then, you can continue using the ad-free version of the app.", willEnd),
+			})
+			return
+		}
+
+		updatedSub, err := sub.Cancel(subscription.ID, &stripe.SubParams{EndCancel: true})
+		if err != nil {
+			fmt.Println("Error while canceling subscription for", userId, spew.Sdump(err))
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to cancel the subscription. Please try again or contact " + supportEmail})
+		} else {
+			spew.Dump(updatedSub)
+			fmt.Println("Canceled subscription for", userId)
+			subscriptions.SetSubscription(updatedSub)
+			c.JSON(http.StatusOK, gin.H{"message": "Subscription canceled for user " + userId})
+		}
+	}
 }
 
 func upgrade(c *gin.Context) {

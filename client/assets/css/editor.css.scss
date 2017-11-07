@@ -620,3 +620,16 @@ li a.btn-primary {
     margin-top:0;
   }
 }
+
+[name=cancel-subscription] {
+  .modal-body {
+    padding-bottom:0;
+  }
+  .cancel-btn-container {
+    text-align:center;
+  } 
+  .modal-footer {
+    text-align:center;
+    margin-top:0;
+  }
+}
