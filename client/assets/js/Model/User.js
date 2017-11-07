@@ -39,6 +39,16 @@ User.current_user = function(callback){
     })
     User.set_session_user_id(current_user.user_id);
     application.controllers.google_oauth.current_user = current_user;
-    callback(current_user)
+
+    var previousUser = getCookie("current_google_user_id")
+    setCookie("current_google_user_id", current_user.user_id)
+
+    if(previousUser != current_user.user_id) {
+      $('#app_restart_modal').modal('show');
+      window.location.reload();
+    }
+    else {
+      callback(current_user);
+    }
   }) 
 }
