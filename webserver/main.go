@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
@@ -12,8 +13,17 @@ import (
 	"github.com/stripe/stripe-go/sub"
 )
 
+var subscriptions = NewSubscriptions()
+
 func main() {
 	stripe.Key = os.Getenv("STRIPE_SK")
+
+	go func() {
+		for {
+			subscriptions.Reload()
+			time.Sleep(1 * time.Hour)
+		}
+	}()
 
 	r := gin.Default()
 	r.POST("/app/upgrade", upgrade)
@@ -65,6 +75,8 @@ func upgrade(c *gin.Context) {
 		}
 
 		fmt.Println("Created subscription", spew.Sdump(subscription))
+
+		subscriptions.SetSubscription(subscription)
 
 		c.Redirect(http.StatusFound, form.SuccessUrl)
 	} else {
