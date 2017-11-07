@@ -1,4 +1,4 @@
-<div id="editor_app">
+<div id="editor_app" [% IF WITH_ADS %]class="with-ads"[% END %]>
   [% INCLUDE app.partials %]
   <div id="loading_overlay"></div>
 
