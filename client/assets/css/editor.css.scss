@@ -611,3 +611,10 @@ li a.btn-primary {
     font-size:90%;
   }
 }
+
+[name=upgrade] {
+  .modal-footer {
+    text-align:center;
+    margin-top:0;
+  }
+}

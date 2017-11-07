@@ -14,6 +14,8 @@
   
   <li><a href="/site/privacy_policy.html">{{ i18n "Privacy Policy" }}</a></li>
 
-  <li><a href="{{noaction}}" {{{ m-action-n-close "new Popup({title : i18n('About the app'), hb_partial : '#about'})" }}}>{{ i18n "About" }}</a></li>
+  <li><a href="{{noaction}}" {{{ m-action-n-close "new Popup({title : i18n('Upgrade to Anyfile Notepad ++'), hb_partial : '#upgrade', popup_name: 'upgrade',confirm_btn: 'Cancel'})" }}}>{{ i18n "Upgrade to ad-free version" }}</a></li>
+
+  <li><a href="{{noaction}}" {{{ m-action-n-close "new Popup({ title : i18n('About the app'), hb_partial : '#about' })" }}}>{{ i18n "About" }}</a></li>
 </ul>
 </script>
