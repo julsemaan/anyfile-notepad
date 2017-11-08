@@ -150,7 +150,9 @@ func cancel(c *gin.Context) {
 			spew.Dump(updatedSub)
 			fmt.Println("Canceled subscription for", userId)
 			subscriptions.SetSubscription(updatedSub)
-			c.JSON(http.StatusOK, gin.H{"message": "Subscription canceled for user " + userId})
+			c.JSON(http.StatusOK, gin.H{
+				"message": fmt.Sprintf("Subscription canceled for this user. Will stay valid until %s", time.Unix(0, updatedSub.PeriodEnd*int64(time.Second))),
+			})
 		}
 	}
 }
