@@ -55,6 +55,7 @@ func main() {
 	api := r.Group("/api")
 	api.POST("/billing/subscription", upgrade)
 	api.POST("/billing/subscription/:user_id/cancel", cancel)
+	api.POST("/billing/subscription/:user_id/resume", resume)
 	api.GET("/billing/subscription/:user_id", getSubscription)
 	billingHandler = r
 
@@ -125,6 +126,36 @@ func getSubscription(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
 	} else {
 		c.JSON(http.StatusOK, subscription)
+	}
+}
+
+func resume(c *gin.Context) {
+	userId := c.Param("user_id")
+
+	if subscription := subscriptions.GetSubscription(userId); subscription == nil {
+		fmt.Println("Failed to find subscription for", userId)
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
+	} else {
+		if !subscription.EndCancel {
+			willEnd := time.Unix(0, subscription.PeriodEnd*int64(time.Second))
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": fmt.Sprintf("This subscription is not currently canceled", willEnd),
+			})
+			return
+		}
+
+		updatedSub, err := sub.Update(subscription.ID, &stripe.SubParams{EndCancel: false})
+		if err != nil {
+			fmt.Println("Error while resuming subscription for", userId, spew.Sdump(err))
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to resume the subscription. Please try again or contact " + supportEmail})
+		} else {
+			spew.Dump(updatedSub)
+			fmt.Println("Resumed subscription for", userId)
+			subscriptions.SetSubscription(updatedSub)
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Subscription resumed for this user.",
+			})
+		}
 	}
 }
 

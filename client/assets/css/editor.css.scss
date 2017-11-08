@@ -637,6 +637,7 @@ li a.btn-primary {
 [name=subscription-status] {
   .modal-body {
     padding-bottom:0;
+    padding-top:0;
   }
   .modal-footer {
     text-align:center;
@@ -654,7 +655,11 @@ li a.btn-primary {
       width:40%;
     }
   }
-  .cancel-btn-container {
+  .action-btn-container {
     text-align:center;
   } 
+  p {
+    margin-top:10px;
+    margin-bottom:10px;
+  }
 }

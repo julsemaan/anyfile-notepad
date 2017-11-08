@@ -19,15 +19,15 @@
   <hr>
 
   <div class="cancel-btn-container">
-    <a class="btn btn-danger" href="{{ noaction }}">Cancel my subscription</a>
+    <a class="btn btn-danger" id="cancel-pp-btn" href="{{ noaction }}">Cancel my subscription</a>
   </div>
 
   {{{ concat "<scr" "ipt>" }}}
-    $(".cancel-btn-container").click(function() {
+    $("#cancel-pp-btn").click(function() {
       $.post("/api/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/cancel").always(function(res) {
         var msg = res.responseJSON ? res.responseJSON.message : res.message;
         if(!msg) msg = i18n("Unable to contact the subscription server to perform a cancelation. Please check your internet connection and try again later.");
-        new Popup({title : "Error", message: msg, callback: function() {
+        new Popup({message: msg, callback: function() {
           $(".cancel-btn-container").closest(".modal").modal("hide");
           application.controllers.google_oauth.current_user.loadSubscription();
         }});
