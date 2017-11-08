@@ -18,7 +18,7 @@
 
   <hr>
 
-	<form action="/billing/subscription" method="POST" style="text-align:center">
+	<form action="/api/billing/subscription" method="POST" style="text-align:center">
 		<input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
 		<input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
     <input name="success_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-success.html">

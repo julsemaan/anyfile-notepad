@@ -18,7 +18,7 @@ import (
 var supportEmail = os.Getenv("AFN_SUPPORT_EMAIL")
 
 var subscriptions = NewSubscriptions()
-var billingRegexp = regexp.MustCompile(`^/billing`)
+var apiRegexp = regexp.MustCompile(`^/api`)
 
 var billingHandler http.Handler
 var appProdHandler http.Handler
@@ -52,9 +52,10 @@ func main() {
 	}()
 
 	r := gin.Default()
-	r.POST("/billing/subscription", upgrade)
-	r.POST("/billing/subscription/:user_id/cancel", cancel)
-	r.GET("/billing/subscription/:user_id", getSubscription)
+	api := r.Group("/api")
+	api.POST("/billing/subscription", upgrade)
+	api.POST("/billing/subscription/:user_id/cancel", cancel)
+	api.GET("/billing/subscription/:user_id", getSubscription)
 	billingHandler = r
 
 	fmt.Println("Serving production application from", *prodAppPath)
@@ -69,7 +70,7 @@ func main() {
 type Handler struct{}
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if billingRegexp.MatchString(r.URL.Path) {
+	if apiRegexp.MatchString(r.URL.Path) {
 		billingHandler.ServeHTTP(w, r)
 	} else {
 		// Handle alias if applicable

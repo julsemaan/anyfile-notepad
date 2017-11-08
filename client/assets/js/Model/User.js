@@ -12,7 +12,7 @@ User.prototype.init = function(){
 
 User.prototype.loadSubscription = function() {
   var self = this;
-  $.get("/billing/subscription/"+this.user_id)
+  $.get("/api/billing/subscription/"+this.user_id)
     .done(function(res) {
       self.subscription = res;
     }).fail(function(res) {

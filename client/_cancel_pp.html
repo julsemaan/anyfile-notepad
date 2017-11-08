@@ -24,7 +24,7 @@
 
   {{{ concat "<scr" "ipt>" }}}
     $(".cancel-btn-container").click(function() {
-      $.post("/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/cancel").always(function(res) {
+      $.post("/api/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/cancel").always(function(res) {
         var msg = res.responseJSON ? res.responseJSON.message : res.message;
         if(!msg) msg = "Unable to contact the subscription server to perform a cancelation. Please check your internet connection and try again later.";
         alert(msg)
