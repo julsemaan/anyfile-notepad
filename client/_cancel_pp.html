@@ -26,10 +26,11 @@
     $(".cancel-btn-container").click(function() {
       $.post("/api/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/cancel").always(function(res) {
         var msg = res.responseJSON ? res.responseJSON.message : res.message;
-        if(!msg) msg = "Unable to contact the subscription server to perform a cancelation. Please check your internet connection and try again later.";
-        alert(msg)
-        $(".cancel-btn-container").closest(".modal").modal("hide");
-        application.controllers.google_oauth.current_user.loadSubscription();
+        if(!msg) msg = i18n("Unable to contact the subscription server to perform a cancelation. Please check your internet connection and try again later.");
+        new Popup({title : "Error", message: msg, callback: function() {
+          $(".cancel-btn-container").closest(".modal").modal("hide");
+          application.controllers.google_oauth.current_user.loadSubscription();
+        }});
       });
     });
   {{{ concat "</scr" "ipt>" }}}
