@@ -399,7 +399,7 @@ h6.menu_header {
       border-right:3px solid #3f51b5;
     }
   }
-  :not(.with-ads) {
+  .without-ads {
     #show_full_flash, #unread_flash_count, .flash_notifications, #editor_flash {
       right:10px;
     }
