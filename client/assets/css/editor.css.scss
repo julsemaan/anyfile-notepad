@@ -633,3 +633,28 @@ li a.btn-primary {
     margin-top:0;
   }
 }
+
+[name=subscription-status] {
+  .modal-body {
+    padding-bottom:0;
+  }
+  .modal-footer {
+    text-align:center;
+    margin-top:0;
+  }
+  table {
+    width:100%;
+    tr {
+      padding-bottom:5px;
+    }
+    td:first-child {
+      font-size:110%;
+      text-align:right;
+      padding-right:5px;
+      width:40%;
+    }
+  }
+  .cancel-btn-container {
+    text-align:center;
+  } 
+}

@@ -10,6 +10,21 @@ User.prototype = new Model()
 User.prototype.init = function(){
 }
 
+User.prototype.loadSubscription = function() {
+  var self = this;
+  $.get("/billing/subscription/"+this.user_id)
+    .done(function(res) {
+      self.subscription = res;
+    }).fail(function(res) {
+      // 404 is acceptable
+      if(res.status == 404) {
+        return;
+      }
+
+      new Popup({ message : i18n('Unable to fetch your current subscription. It is advised to restart the application.'), callback : function(result) {if(result) application.controllers.editor.restart_app()}, confirm : true, confirm_btn : i18n('Restart now'), cancel_btn : i18n('Restart later')});
+    });
+}
+
 User.set_session_user_id = function(user_id) {
   if(typeof(Storage) !== "undefined") {
     sessionStorage.current_user_id = user_id;
@@ -48,6 +63,7 @@ User.current_user = function(callback){
       window.location.reload();
     }
     else {
+      current_user.loadSubscription();
       callback(current_user);
     }
   }) 

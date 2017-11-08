@@ -52,8 +52,9 @@ func main() {
 	}()
 
 	r := gin.Default()
-	r.POST("/billing/upgrade", upgrade)
-	r.POST("/billing/subscription/cancel/:user_id", cancel)
+	r.POST("/billing/subscription", upgrade)
+	r.POST("/billing/subscription/:user_id/cancel", cancel)
+	r.GET("/billing/subscription/:user_id", getSubscription)
 	billingHandler = r
 
 	fmt.Println("Serving production application from", *prodAppPath)
@@ -115,6 +116,17 @@ type Upgrade struct {
 	StripeEmail     string `form:"stripeEmail"`
 }
 
+func getSubscription(c *gin.Context) {
+	userId := c.Param("user_id")
+
+	if subscription := subscriptions.GetSubscription(userId); subscription == nil {
+		fmt.Println("Failed to find subscription for", userId)
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
+	} else {
+		c.JSON(http.StatusOK, subscription)
+	}
+}
+
 func cancel(c *gin.Context) {
 	userId := c.Param("user_id")
 
@@ -123,7 +135,7 @@ func cancel(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
 	} else {
 		if subscription.EndCancel {
-			willEnd := time.Unix(0, 1541631494*int64(time.Second))
+			willEnd := time.Unix(0, subscription.PeriodEnd*int64(time.Second))
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": fmt.Sprintf("This subscription has already been canceled, it will end on %s. Until then, you can continue using the ad-free version of the app.", willEnd),
 			})
