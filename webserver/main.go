@@ -57,6 +57,7 @@ func setup() {
 	api := r.Group("/api")
 	subscription := api.Group("/billing/subscription")
 	subscription.Use(LoadSubscription)
+	subscription.Use(LoadGoogleUser)
 	subscription.POST("/", upgrade)
 	subscription.POST("/:user_id/cancel", cancel)
 	subscription.POST("/:user_id/resume", resume)

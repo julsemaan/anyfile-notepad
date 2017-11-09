@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -20,6 +22,45 @@ func LoadSubscription(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
 		} else {
 			c.Set("subscription", subscription)
+		}
+
+	}
+
+	c.Next()
+}
+
+type GoogleUser struct {
+	Id    string
+	Email string
+}
+
+func LoadGoogleUser(c *gin.Context) {
+	if userId := c.Param("user_id"); userId != "" {
+		req, _ := http.NewRequest("GET", "https://content.googleapis.com/oauth2/v2/userinfo", nil)
+		if accessToken, err := c.Request.Cookie("access_token"); err == nil {
+			req.Header.Add("Authorization", "Bearer "+accessToken.Value)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if resp.StatusCode != http.StatusOK || err != nil {
+			respBody, _ := ioutil.ReadAll(resp.Body)
+			fmt.Println("Error getting Google user", resp.StatusCode, string(respBody))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
+		} else {
+			user := GoogleUser{}
+			dec := json.NewDecoder(resp.Body)
+			err := dec.Decode(&user)
+
+			if err != nil {
+				fmt.Println("Error while decoding response body to get Google user", err)
+			}
+
+			if userId != user.Id {
+				fmt.Println("Halting in Google user validation")
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "The subscription you are trying to modify isn't attached to the user you are currently logged in with."})
+			} else {
+				fmt.Println("Passed through Google user validation")
+				c.Set("google_user", &user)
+			}
 		}
 	}
 
