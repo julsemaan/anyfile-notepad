@@ -65,4 +65,10 @@ func TestSubscriptions(t *testing.T) {
 		t.Error("wrong length for subscriptions")
 	}
 
+	// Test emptying
+	s.Empty()
+
+	if len(s.data) != 0 {
+		t.Error("Emptying subscriptions didn't empty the data")
+	}
 }

@@ -21,6 +21,10 @@ func NewSubscriptions() *Subscriptions {
 	}
 }
 
+func (s *Subscriptions) Empty() {
+	s.data = map[string]*stripe.Sub{}
+}
+
 func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
