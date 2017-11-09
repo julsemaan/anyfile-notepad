@@ -101,3 +101,7 @@ ApplicationController.prototype.display_desktop_ads = function() {
     else $('.desktop-ads').show();
   }, 100);
 }
+
+ApplicationController.prototype.popup_upgrade = function() {
+  new Popup({title : i18n('Upgrade to Anyfile Notepad ++'), hb_partial : '#upgrade', popup_name: 'upgrade',confirm_btn: 'Cancel'});
+}

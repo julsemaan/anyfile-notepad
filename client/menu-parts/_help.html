@@ -15,7 +15,7 @@
   <li><a href="/site/privacy_policy.html">{{ i18n "Privacy Policy" }}</a></li>
 
   [% IF WITH_ADS %]
-  <li><a href="{{noaction}}" {{{ m-action-n-close "new Popup({title : i18n('Upgrade to Anyfile Notepad ++'), hb_partial : '#upgrade', popup_name: 'upgrade',confirm_btn: 'Cancel'})" }}}>{{ i18n "Upgrade to ad-free version" }}</a></li>
+  <li><a href="{{noaction}}" {{{ m-action-n-close "application.popup_upgrade()" }}}>{{ i18n "Upgrade to ad-free version" }}</a></li>
   [% ELSE %]
   <li><a href="{{noaction}}" {{{ m-action-n-close "new Popup({hb_partial : '#subscription-status', popup_name: 'subscription-status', confirm_btn: 'Close' })" }}}>{{ i18n "Anyfile Notepad++ subscription" }}</a></li>
   <li><a href="mailto:support@anyfile-notepad.semaan.ca">E-mail support</a></li>
