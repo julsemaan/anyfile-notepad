@@ -275,7 +275,9 @@ if ! is_webdev; then
 fi
 
 function start_server() {
-  go run webserver/*.go -prod-app-path=$COMPILED_APP -dev-app-path=$COMPILED_APP 2>&1 &
+  export AFN_PROD_APP_PATH="$COMPILED_APP"
+  export AFN_DEV_APP_PATH="$COMPILED_APP"
+  find webserver/ -name '*.go' ! -name '*_test.go' | xargs go run 2>&1 &
   WEB_PID=$!
   echo $WEB_PID > $WEB_PID_FILE
 }
