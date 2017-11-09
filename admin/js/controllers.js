@@ -64,10 +64,6 @@ angular.module('afnAdminApp.baseControllers', []).controller('AppController', fu
       if(e.status == 401) {
         $scope.addError("Unauthorized, you need to login to modify stuff...", 5000);
       }
-      else if(e.status == 412) {
-        if(e.data.message) $scope.addError(e.data.message);
-        $scope.addError("This usually means someone did a change at the same time you did. You should restart the edit and redo your changes. Otherwise, you can force the change by saving again but it will overwrite the change that was done prior to yours.");
-      }
       else if(e.status == 422) {
         if(e.data.message) $scope.addError(e.data.message);
 

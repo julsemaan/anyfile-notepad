@@ -145,8 +145,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, If-Match")
-		w.Header().Set("Access-Control-Expose-Headers", "Etag")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		if matched, _ := regexp.MatchString("^/stats", r.URL.Path); matched {
 			log.Print("Allowing without authentication for stats namespace")

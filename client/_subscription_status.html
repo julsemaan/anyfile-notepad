@@ -1,0 +1,64 @@
+<script id="subscription-status" class="template-partial" type="text/x-handlebars-template">
+  <h3>Account: {{ global_context.application.controllers.google_oauth.current_user.email }}</h3>
+
+  <table>
+
+    <tr>
+      <td>Current plan:</td> <td>{{ global_context.application.controllers.google_oauth.current_user.subscription.plan.name }}</td>
+    </tr>
+    
+    <tr>
+      <td>Linked to Google user ID:</td> <td>{{ global_context.application.controllers.google_oauth.current_user.subscription.metadata.user_id }}</td>
+    </tr>
+
+    {{#if global_context.application.controllers.google_oauth.current_user.subscription.cancel_at_period_end}}
+      <tr>
+        <td>Status:</td> <td>canceled</td>
+      </tr>
+
+      <tr>
+        <td>Ends on:</td> <td>{{ epoch-to-date global_context.application.controllers.google_oauth.current_user.subscription.current_period_end }}</td>
+      </tr>
+
+    {{else}}
+      <tr>
+        <td>Status:</td> <td>auto-renewing</td>
+      </tr>
+
+      <tr>
+        <td>Renews on:</td> <td>{{ epoch-to-date global_context.application.controllers.google_oauth.current_user.subscription.current_period_end }}</td>
+      </tr>
+
+    {{/if}}
+
+  </table>
+
+  <div class="action-btn-container">
+  {{#if global_context.application.controllers.google_oauth.current_user.subscription.cancel_at_period_end}}
+    <hr>
+    <p>Your subscription is currently canceled and will not automatically renew. You will keep access to Anyfile Notepad++ until {{ epoch-to-date global_context.application.controllers.google_oauth.current_user.subscription.current_period_end }}. If you want to continue using the ad-free version of the app after that date, you can do so by clicking the button below.</p> 
+    <a class="btn btn-success" id="reactivate-subscription">Reactivate subscription</a>
+  {{else}}
+      <div class="cancel-btn-container">
+        <a class="btn btn-danger" href="{{noaction}}" {{{ m-action-n-close "new Popup({title : i18n('Cancel Anyfile Notepad++ subscription'), hb_partial : '#cancel-pp', popup_name: 'cancel-subscription',confirm_btn: 'I changed my mind, keep me subscribed'})" }}}>{{ i18n "Cancel Anyfile Notepad++ subscription" }}</a>
+      </div>
+  {{/if}}
+  </div>
+
+
+  <hr>
+
+  {{{ concat "<scr" "ipt>" }}}
+    $("#reactivate-subscription").click(function() {
+      $.post("/api/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/resume").always(function(res) {
+        var msg = res.responseJSON ? res.responseJSON.message : res.message;
+        if(!msg) msg = i18n("Unable to contact the subscription server to resume the subscription. Please check your internet connection and try again later.");
+        new Popup({message: msg, callback: function() {
+          $("#reactivate-subscription").closest(".modal").modal("hide");
+          application.controllers.google_oauth.current_user.loadSubscription();
+        }});
+      });
+    });
+  {{{ concat "</scr" "ipt>" }}}
+</script>
+

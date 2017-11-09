@@ -9,6 +9,7 @@ Popup.prototype.post_init = function(args) {
     self.confirm = self.confirm || false;
     if(!self.message && !self.hb_partial) throw "No message or partial specified for popup";
     self.global_context = context;
+    self.global_context.window = window;
 
     if(self.hb_partial) {
       var $hb_source = $(self.hb_partial);
@@ -20,6 +21,8 @@ Popup.prototype.post_init = function(args) {
     self.popup_id = uniqueId();
     self.cancel_id = uniqueId();
     self.confirm_id = uniqueId();
+
+    self.popup_name = self.popup_name || "";
 
     self.confirm_btn = self.confirm_btn || i18n("OK");
     self.cancel_btn = self.cancel_btn || i18n("Cancel");

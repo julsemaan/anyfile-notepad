@@ -65,13 +65,16 @@ foreach my $group (@GROUPS) {
     $SYNTAXES{$letters} = \@tmp;
 }
 
-$tt->process('editor-layout.tt', {
+my $args = {
     APP_VERSION_ID => $APP_VERSION_ID, 
     APP_VERSION => $APP_VERSION, 
     APP_COMMIT_ID => $APP_COMMIT_ID,
     THEMES_JSON => encode_json(\@THEMES),
     SYNTAXES_JSON => encode_json(\%SYNTAXES),
-}, $COMPILED_APP_DIR.'/app.html') || die $tt->error();
+};
+
+$tt->process('editor-layout.tt', {%$args, WITH_ADS => 1}, $COMPILED_APP_DIR.'/app.html') || die $tt->error();
+$tt->process('editor-layout.tt', {%$args, WITH_ADS => 0}, $COMPILED_APP_DIR.'/app-plus-plus.html') || die $tt->error();
 
 
 

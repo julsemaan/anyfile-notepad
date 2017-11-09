@@ -1,0 +1,36 @@
+<script id="upgrade" class="template-partial" type="text/x-handlebars-template">
+	<p>
+    Anyfile Notepad++ offer an ad-free experience of this application. Paid yearly and costing less than a latte at Starbucks, its a good way to improve your experience with the app as well as encouraging the project.
+  </p>
+
+	<p>
+    <h5>This subscription will only be valid for the following Google user account:</h5>
+	  <pre>{{ global_context.application.controllers.google_oauth.current_user.email }}</pre>
+	</p>
+
+  <p>
+    If you want to upgrade another account, you need to connect it in the app before proceeding.
+  </p>
+
+  <p>
+    A yearly subscription costs only 3.99 and can be cancelled before it renews at the end of the year.</p>
+  </p>
+
+  <hr>
+
+	<form action="/api/billing/subscription" method="POST" style="text-align:center">
+		<input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
+		<input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
+    <input name="success_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-success.html">
+    <input name="failure_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-failure.html">
+      {{{ concat "<scr" "ipt" }}}
+				src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+				data-key="pk_test_wd5GkbaroYrTdesoqUZUS3Hc"
+				data-name="Anyfile Notepad ++"
+        data-description="Subscription for {{ global_context.application.controllers.google_oauth.current_user.email }}"
+				data-amount="399"
+				data-label="Pay with Stripe">
+      {{{ concat "</scr" "ipt>" }}}
+	</form>
+</script>
+

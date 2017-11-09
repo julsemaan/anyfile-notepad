@@ -124,7 +124,7 @@ function pages() {
 
   mkdir $COMPILED_APP/site
 
-  for page in home faq news help_translate privacy_policy; do
+  for page in home faq news help_translate privacy_policy payment-success payment-failure; do
     echo "-Building page $page"
 
     if [ "$page" == "home" ]; then
@@ -275,11 +275,11 @@ if ! is_webdev; then
 fi
 
 function start_server() {
-  cd $COMPILED_APP
-  python -m SimpleHTTPServer 2>&1 &
+  export AFN_PROD_APP_PATH="$COMPILED_APP"
+  export AFN_DEV_APP_PATH="$COMPILED_APP"
+  find webserver/ -name '*.go' ! -name '*_test.go' | xargs go run 2>&1 &
   WEB_PID=$!
   echo $WEB_PID > $WEB_PID_FILE
-  cd -
 }
 
 function watch_dir() {
@@ -288,7 +288,7 @@ function watch_dir() {
   OPTIONS=$3
   while true; do
     inotifywait $OPTIONS -r -e create,modify,delete $RUNNING_DIR/$DIR
-    kill $(cat $WEB_PID_FILE)
+    pkill -P $(cat $WEB_PID_FILE)
     for action in $2; do
       eval $action
     done
@@ -298,7 +298,7 @@ function watch_dir() {
 
 function exit_cleanup() {
   echo "Exiting..."
-  kill $(cat $WEB_PID_FILE)
+  pkill -P $(cat $WEB_PID_FILE)
   rm -f $SHOULD_RESET_FILE
 }
 

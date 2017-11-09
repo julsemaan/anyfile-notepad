@@ -1,0 +1,38 @@
+<script id="cancel-pp" class="template-partial" type="text/x-handlebars-template">
+	<p>
+    Before you cancel, we'd like to know why and help you with any issues you may have so that we can keep you as a loyal customer.
+  </p>
+
+  <p>
+    You can always get in touch with our support via <a href="mailto:support@anyfile-notepad.semaan.ca">support@anyfile-notepad.semaan.ca</a> and we'll answer your concerns as fast as possible.
+  </p>
+
+	<p>
+    <h5>Otherwise, continuing will cancel the subscription for the following account:</h5>
+	  <pre>{{ global_context.application.controllers.google_oauth.current_user.email }}</pre>
+	</p>
+
+  <p>
+    Note that cancelling a subscription will keep it active until your full year expires which means that if you subscribed on July 1st of the current year, it will be valid until June 30th of next year even though you cancel it before that date.
+  </p>
+
+  <hr>
+
+  <div class="cancel-btn-container">
+    <a class="btn btn-danger" id="cancel-pp-btn" href="{{ noaction }}">Cancel my subscription</a>
+  </div>
+
+  {{{ concat "<scr" "ipt>" }}}
+    $("#cancel-pp-btn").click(function() {
+      $.post("/api/billing/subscription/{{ global_context.application.controllers.google_oauth.current_user.user_id }}/cancel").always(function(res) {
+        var msg = res.responseJSON ? res.responseJSON.message : res.message;
+        if(!msg) msg = i18n("Unable to contact the subscription server to perform a cancelation. Please check your internet connection and try again later.");
+        new Popup({message: msg, callback: function() {
+          $(".cancel-btn-container").closest(".modal").modal("hide");
+          application.controllers.google_oauth.current_user.loadSubscription();
+        }});
+      });
+    });
+  {{{ concat "</scr" "ipt>" }}}
+</script>
+

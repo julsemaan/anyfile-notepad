@@ -63,4 +63,6 @@ HBRenderer.prototype.registerHelpers = function() {
   Handlebars.registerHelper("le", function(param1, param2) {return param1 <= param2});
   Handlebars.registerHelper("lt", function(param1, param2) {return param1 < param2;});
 
+  Handlebars.registerHelper("epoch-to-date", function(epoch) {return new Date(epoch*1000)});
+
 }
