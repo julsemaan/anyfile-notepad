@@ -31,6 +31,7 @@ func addGoogleTokenToRequest(t *testing.T, req *http.Request) {
 
 func TestGoogleUserAuth(t *testing.T) {
 	h := &Handler{}
+	subscriptions.Empty()
 
 	subscriptions.SetSubscription(&stripe.Sub{
 		Status: "active",
@@ -80,4 +81,41 @@ func TestGoogleUserAuth(t *testing.T) {
 	if resp.StatusCode != http.StatusUnauthorized {
 		t.Error("Request with an invalid Google token is denied")
 	}
+}
+
+func TestLoadSubscription(t *testing.T) {
+	h := &Handler{}
+	subscriptions.Empty()
+
+	// Test user without subscription
+	req, _ := http.NewRequest("GET", "/api/billing/subscription/"+googleTestUserId(t), nil)
+	addGoogleTokenToRequest(t, req)
+
+	recorder := httptest.NewRecorder()
+	h.ServeHTTP(recorder, req)
+	resp := recorder.Result()
+
+	if resp.StatusCode != http.StatusNotFound {
+		t.Error("Request to an inexistant subscription didn't return a not found")
+	}
+
+	subscriptions.SetSubscription(&stripe.Sub{
+		Status: "active",
+		Meta: map[string]string{
+			"user_id": googleTestUserId(t),
+		},
+	})
+
+	// Test a user with a subscription
+	req, _ = http.NewRequest("GET", "/api/billing/subscription/"+googleTestUserId(t), nil)
+	addGoogleTokenToRequest(t, req)
+
+	recorder = httptest.NewRecorder()
+	h.ServeHTTP(recorder, req)
+	resp = recorder.Result()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Error("Request to an existing subscription didn't return an OK")
+	}
+
 }
