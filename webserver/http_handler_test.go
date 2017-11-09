@@ -15,10 +15,11 @@ func init() {
 	cwd, _ := os.Getwd()
 	os.Setenv("AFN_PROD_APP_PATH", cwd+"/testapp/")
 	os.Setenv("AFN_DEV_APP_PATH", cwd+"/testapp/dev")
+
+	setup()
 }
 
 func TestHTTPHandler(t *testing.T) {
-	setup()
 	// testing aliases
 	testGetStaticResource(t, "/app", http.StatusOK, "app.html\n", false, "")
 	testGetStaticResource(t, "/app.html", http.StatusOK, "app.html\n", false, "")
