@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 
@@ -20,11 +21,17 @@ func NewSubscriptions() *Subscriptions {
 	}
 }
 
-func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) {
+func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	fmt.Println("Setting subscription", subscription.ID)
-	s.data[subscription.Meta["user_id"]] = subscription
+
+	if userId := subscription.Meta["user_id"]; userId == "" {
+		return errors.New("Invalid user_id field in the metadata")
+	} else {
+		s.data[subscription.Meta["user_id"]] = subscription
+		return nil
+	}
 }
 
 func (s *Subscriptions) GetSubscription(userId string) *stripe.Sub {
