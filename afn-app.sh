@@ -277,7 +277,7 @@ fi
 function start_server() {
   export AFN_PROD_APP_PATH="$COMPILED_APP"
   export AFN_DEV_APP_PATH="$COMPILED_APP"
-  find webserver/ -name '*.go' ! -name '*_test.go' | xargs go run 2>&1 &
+  find webserver/ -maxdepth 1 -name '*.go' ! -name '*_test.go' | xargs go run 2>&1 &
   WEB_PID=$!
   echo $WEB_PID > $WEB_PID_FILE
 }
