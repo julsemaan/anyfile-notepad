@@ -3,5 +3,6 @@ window.AFN_VARS = {
   google_client_id:"",
   drive_app_id:"",
   dropbox_key:"",
+  stripe_key:"",
 };
 

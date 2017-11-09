@@ -1,0 +1,103 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d",
+			"revisionTime": "2015-11-05T21:09:06Z"
+		},
+		{
+			"checksumSHA1": "QeKwBtN2df+j+4stw3bQJ6yO4EY=",
+			"path": "github.com/gin-contrib/sse",
+			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
+			"revisionTime": "2017-01-09T09:34:21Z"
+		},
+		{
+			"checksumSHA1": "cpELhz30Sco7IBwvI6FyuShnjnQ=",
+			"path": "github.com/gin-gonic/gin",
+			"revision": "d459835d2b077e44f7c9b453505ee29881d5d12d",
+			"revisionTime": "2017-07-02T09:28:26Z"
+		},
+		{
+			"checksumSHA1": "YVt5lqmGq95m5tFdiz5pr2BF1Jo=",
+			"path": "github.com/gin-gonic/gin/binding",
+			"revision": "d459835d2b077e44f7c9b453505ee29881d5d12d",
+			"revisionTime": "2017-07-02T09:28:26Z"
+		},
+		{
+			"checksumSHA1": "M3FwiqpVbXwo9t2FyI5/gKxCDKY=",
+			"path": "github.com/gin-gonic/gin/render",
+			"revision": "d459835d2b077e44f7c9b453505ee29881d5d12d",
+			"revisionTime": "2017-07-02T09:28:26Z"
+		},
+		{
+			"checksumSHA1": "yqF125xVSkmfLpIVGrLlfE05IUk=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "1643683e1b54a9e88ad26d98f81400c8c9d9f4f9",
+			"revisionTime": "2017-10-21T04:39:52Z"
+		},
+		{
+			"checksumSHA1": "y/A5iuvwjytQE2CqVuphQRXR2nI=",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "a5cdd64afdee435007ee3e9f6ed4684af949d568",
+			"revisionTime": "2017-09-25T05:49:04Z"
+		},
+		{
+			"checksumSHA1": "mWDXRM0FGe9BGtsY10vzrgrX2uk=",
+			"path": "github.com/stripe/stripe-go",
+			"revision": "a705fb222df92bba0cbc4c190bcbebf7dfe0b0cc",
+			"revisionTime": "2017-11-02T19:49:50Z"
+		},
+		{
+			"checksumSHA1": "UPcP5J+yPlRtj93LLxJ/fYsU0t4=",
+			"path": "github.com/stripe/stripe-go/customer",
+			"revision": "a705fb222df92bba0cbc4c190bcbebf7dfe0b0cc",
+			"revisionTime": "2017-11-02T19:49:50Z"
+		},
+		{
+			"checksumSHA1": "f3w9bgOzBZozw9qEuPLcQb94EEc=",
+			"path": "github.com/stripe/stripe-go/form",
+			"revision": "a705fb222df92bba0cbc4c190bcbebf7dfe0b0cc",
+			"revisionTime": "2017-11-02T19:49:50Z"
+		},
+		{
+			"checksumSHA1": "y5AD80EvDutFqGuAYsBtcya6ntM=",
+			"path": "github.com/stripe/stripe-go/orderitem",
+			"revision": "a705fb222df92bba0cbc4c190bcbebf7dfe0b0cc",
+			"revisionTime": "2017-11-02T19:49:50Z"
+		},
+		{
+			"checksumSHA1": "PILusX5jFHunLGO9R1i8H2btld0=",
+			"path": "github.com/stripe/stripe-go/sub",
+			"revision": "a705fb222df92bba0cbc4c190bcbebf7dfe0b0cc",
+			"revisionTime": "2017-11-02T19:49:50Z"
+		},
+		{
+			"checksumSHA1": "OSE4/fridCa9z4tallvcUbTHqTI=",
+			"path": "github.com/ugorji/go/codec",
+			"revision": "3c86213f839c6a21d88c21b290e7601cff44dbca",
+			"revisionTime": "2017-11-06T19:04:04Z"
+		},
+		{
+			"checksumSHA1": "uTQtOqR0ePMMcvuvAIksiIZxhqU=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "d75a52659825e75fff6158388dddc6a5b04f9ba5",
+			"revisionTime": "2016-12-14T18:38:57Z"
+		},
+		{
+			"checksumSHA1": "P/k5ZGf0lEBgpKgkwy++F7K1PSg=",
+			"path": "gopkg.in/go-playground/validator.v8",
+			"revision": "5f1438d3fca68893a817e4a66806cea46a9e4ebf",
+			"revisionTime": "2017-07-30T05:02:35Z"
+		},
+		{
+			"checksumSHA1": "RDJpJQwkF012L6m/2BJizyOksNw=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "eb3733d160e74a9c7e442f435eb3bea458e1d19f",
+			"revisionTime": "2017-08-12T16:00:11Z"
+		}
+	],
+	"rootPath": "github.com/julsemaan/anyfile-notepad/webserver"
+}
