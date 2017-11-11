@@ -13,8 +13,11 @@ GoogleOAuthController.prototype.init = function(){
   var self = this;
   setTimeout(function(){self.check_authed()}, 15000)
   this.add_to_queue(function(){
-    User.current_user(function(user){self.current_user = user})
-  })
+    User.current_user(function(user){self.current_user = user});
+  });
+  this.add_to_queue(function() {
+    application.propose_upgrade();
+  });
   this.do_auth();
 }
 

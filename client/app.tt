@@ -56,6 +56,10 @@
 
 <script type="text/javascript">
 [% INCLUDE "assets/js/app-main.js.tt" %]
+
+[% IF WITH_ADS %]
+application.with_ads = true;
+[% END %]
 </script>
 
 [% # vim: syntax=html 

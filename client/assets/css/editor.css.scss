@@ -663,3 +663,20 @@ li a.btn-primary {
     margin-bottom:10px;
   }
 }
+
+[name=propose-upgrade] {
+  .modal-dialog {
+    width:650px;
+  }
+  .modal-footer {
+    display:none;
+    text-align:center;
+    margin:0;
+  }
+  h4 {
+    text-align:center;
+  }
+  .action-btn-container {
+    text-align:center;
+  } 
+}

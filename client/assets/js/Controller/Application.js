@@ -105,3 +105,32 @@ ApplicationController.prototype.display_desktop_ads = function() {
 ApplicationController.prototype.popup_upgrade = function() {
   new Popup({title : i18n('Upgrade to Anyfile Notepad ++'), hb_partial : '#upgrade', popup_name: 'upgrade',confirm_btn: 'Cancel'});
 }
+
+ApplicationController.prototype.propose_upgrade = function() {
+  var self = this;
+
+  if(!self.with_ads) {
+    return;
+  }
+
+  var count = parseInt(getCookie("propose-upgrade-count"));
+  if(!count) {
+    count = 0;
+  }
+  count += 1;
+
+  // If we reach the rotation count, we reset the counter + show the popup
+  // Otherwise, we save the current count
+  if(count % 3 == 0) {
+    setCookie("propose-upgrade-count", 0);
+    new Popup({ 
+      title : i18n('Upgrade!'), 
+      hb_partial : '#propose-upgrade', 
+      popup_name: 'propose-upgrade', 
+      confirm_btn: 'Continue',
+    });
+  }
+  else {
+    setCookie("propose-upgrade-count", count);
+  }
+}
