@@ -109,7 +109,7 @@ ApplicationController.prototype.popup_upgrade = function() {
 ApplicationController.prototype.propose_upgrade = function() {
   var self = this;
 
-  if(!self.with_ads) {
+  if(!self.with_ads || $(window).width() < 768) {
     return;
   }
 
