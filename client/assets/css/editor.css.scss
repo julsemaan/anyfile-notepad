@@ -320,6 +320,7 @@ h6.menu_header {
       padding:0;
 
       li {
+        list-style:none;
         @extend .list-group-item;
         padding:0 0;
         a {
