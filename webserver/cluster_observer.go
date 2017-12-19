@@ -33,8 +33,7 @@ func NewClusterObserver(hosts []string) *ClusterObserver {
 func (co *ClusterObserver) Start() {
 	for _, host := range co.Hosts {
 		fmt.Println("Now observing changes on", host)
-		go func() {
-			host := host
+		go func(host string) {
 			since := time.Now().Unix() * 1000
 			for {
 				pr := co.fetchEvents(host, since)
@@ -51,7 +50,7 @@ func (co *ClusterObserver) Start() {
 					}
 				}
 			}
-		}()
+		}(host)
 	}
 }
 

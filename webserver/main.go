@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -85,7 +86,7 @@ func setup() {
 	eventsHandler = eventsManager.SubscriptionHandler
 
 	go func() {
-		clusterObserver := NewClusterObserver([]string{"http://localhost:8000"})
+		clusterObserver := NewClusterObserver(strings.Split(os.Getenv("AFN_WEBSERVER_PEERS"), ","))
 		clusterObserver.Start()
 	}()
 }
