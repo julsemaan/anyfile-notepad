@@ -101,6 +101,8 @@ func resume(c *gin.Context) {
 		spew.Dump(updatedSub)
 		fmt.Println("Resumed subscription for", userId)
 		subscriptions.SetSubscription(updatedSub)
+		eventsManager.Publish("reload", "now")
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Subscription resumed for this user.",
 		})
@@ -127,6 +129,8 @@ func cancel(c *gin.Context) {
 		spew.Dump(updatedSub)
 		fmt.Println("Canceled subscription for", userId)
 		subscriptions.SetSubscription(updatedSub)
+		eventsManager.Publish("reload", "now")
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": fmt.Sprintf("Subscription canceled for this user. Will stay valid until %s", time.Unix(0, updatedSub.PeriodEnd*int64(time.Second))),
 		})
@@ -170,6 +174,7 @@ func upgrade(c *gin.Context) {
 		fmt.Println("Created subscription", spew.Sdump(subscription))
 
 		subscriptions.SetSubscription(subscription)
+		eventsManager.Publish("reload", "now")
 
 		c.Redirect(http.StatusFound, form.SuccessUrl)
 	} else {

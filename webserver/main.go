@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jcuga/golongpoll"
 	stripe "github.com/stripe/stripe-go"
 )
 
@@ -20,6 +21,8 @@ var apiRegexp = regexp.MustCompile(`^/api`)
 var apiHandler http.Handler
 var appProdHandler http.Handler
 var appDevHandler http.Handler
+var eventsManager *golongpoll.LongpollManager
+var eventsHandler func(http.ResponseWriter, *http.Request)
 
 var aliasPaths = map[string]string{
 	"/app": "/app.html",
@@ -55,6 +58,7 @@ func setup() {
 
 	r := gin.Default()
 	api := r.Group("/api")
+
 	subscription := api.Group("/billing/subscription")
 	subscription.Use(LoadSubscription)
 	subscription.Use(LoadGoogleUser)
@@ -62,6 +66,7 @@ func setup() {
 	subscription.POST("/:user_id/cancel", cancel)
 	subscription.POST("/:user_id/resume", resume)
 	subscription.GET("/:user_id", getSubscription)
+
 	apiHandler = r
 
 	fmt.Println("Serving production application from", *prodAppPath)
@@ -69,4 +74,18 @@ func setup() {
 
 	fmt.Println("Serving development application from", *devAppPath)
 	appDevHandler = http.FileServer(http.Dir(*devAppPath))
+
+	var err error
+	eventsManager, err = golongpoll.StartLongpoll(golongpoll.Options{
+		LoggingEnabled: true,
+	})
+	if err != nil {
+		fmt.Println("Failed to create manager: %q", err)
+	}
+	eventsHandler = eventsManager.SubscriptionHandler
+
+	go func() {
+		clusterObserver := NewClusterObserver([]string{"http://localhost:8000"})
+		clusterObserver.Start()
+	}()
 }
