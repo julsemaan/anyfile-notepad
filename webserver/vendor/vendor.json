@@ -39,10 +39,22 @@
 			"revisionTime": "2017-10-21T04:39:52Z"
 		},
 		{
+			"checksumSHA1": "U1JIboVGIlZQir/LHIN//Jy2ZZQ=",
+			"path": "github.com/jcuga/golongpoll",
+			"revision": "6f70b008d155ed04693bcb8ebe0b693820bebee5",
+			"revisionTime": "2016-08-21T02:51:52Z"
+		},
+		{
 			"checksumSHA1": "y/A5iuvwjytQE2CqVuphQRXR2nI=",
 			"path": "github.com/mattn/go-isatty",
 			"revision": "a5cdd64afdee435007ee3e9f6ed4684af949d568",
 			"revisionTime": "2017-09-25T05:49:04Z"
+		},
+		{
+			"checksumSHA1": "gcLub3oB+u4QrOJZcYmk/y2AP4k=",
+			"path": "github.com/nu7hatch/gouuid",
+			"revision": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3",
+			"revisionTime": "2013-12-21T20:05:32Z"
 		},
 		{
 			"checksumSHA1": "mWDXRM0FGe9BGtsY10vzrgrX2uk=",
