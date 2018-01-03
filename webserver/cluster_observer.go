@@ -18,7 +18,6 @@ func NewClusterObserver(hosts []string) *ClusterObserver {
 func (co *ClusterObserver) Start() {
 	for _, host := range co.Hosts {
 		go func(host string) {
-			fmt.Println("Now observing changes on", host)
 			u, err := url.Parse(host + "/events")
 			if err != nil {
 				fmt.Println("ERROR while parsing cluster URL", u, err)
@@ -29,6 +28,7 @@ func (co *ClusterObserver) Start() {
 
 			for {
 				<-client.EventsChan
+				subscriptions.Reload()
 			}
 		}(host)
 	}
