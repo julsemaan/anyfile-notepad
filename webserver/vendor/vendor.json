@@ -45,6 +45,12 @@
 			"revisionTime": "2016-08-21T02:51:52Z"
 		},
 		{
+			"checksumSHA1": "oZoiQHQZTlQPic3YYDVvjOxHKMw=",
+			"path": "github.com/julsemaan/golongpoll-client",
+			"revision": "98f069af9799ee7dc6dbd3452fb8e8fb2c6fc034",
+			"revisionTime": "2018-01-03T00:51:29Z"
+		},
+		{
 			"checksumSHA1": "y/A5iuvwjytQE2CqVuphQRXR2nI=",
 			"path": "github.com/mattn/go-isatty",
 			"revision": "a5cdd64afdee435007ee3e9f6ed4684af949d568",
