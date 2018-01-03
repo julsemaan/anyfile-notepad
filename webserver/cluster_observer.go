@@ -28,6 +28,7 @@ func (co *ClusterObserver) Start() {
 
 			for {
 				<-client.EventsChan
+				fmt.Println("Received reload signal from host", host)
 				subscriptions.Reload()
 			}
 		}(host)
