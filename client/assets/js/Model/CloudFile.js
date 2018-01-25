@@ -32,13 +32,41 @@ CloudFile.prototype.extension = function(){
   return CloudFile.file_extension(this.title)
 }
 
+// Checks if the file contains a line to override the syntax
+// Line should be something like:
+// afn:syntax=javascript
+CloudFile.prototype.syntax_from_file_line = function() {
+  var self = this;
+  var data = self.data;
+
+  lines = data.split("\n");
+
+  for(var i in lines) {
+    var line = lines[i];
+    match = line.match(/afn:syntax=(.*)/);
+
+    if(match) {
+      return syntaxes.find({key:'ace_js_mode', value:match[1]});
+    }
+  }
+
+  return;
+} 
+
 CloudFile.prototype.compute_syntax = function(){
   var self = this
-  if(this.fuck_syntax) return
+  if(this.fuck_syntax) return;
+
+  // First, attempt to see if the file content overrides the syntax
+  var syntax = self.syntax_from_file_line();
+  if(syntax) {
+    self.set('syntax', syntax);
+    return self.get('syntax');
+  }
 
   syntax_pref = StringPreference.find('syntaxes['+this.extension()+']')
   find_syntax: if(syntax_pref && !syntax_pref.is_empty()){
-    var syntax = syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()});
+    syntax = syntaxes.find({key:'ace_js_mode', value:syntax_pref.getValue()});
     if(syntax){
       self.set('syntax', syntax)
       return self.get('syntax')

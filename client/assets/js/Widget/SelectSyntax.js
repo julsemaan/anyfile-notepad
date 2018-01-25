@@ -10,15 +10,12 @@ SelectSyntaxWidget.prototype.preference = function(acceptVirtual) {
   var self = this;
   var extension = application.controllers.editor.file ? application.controllers.editor.file.extension() : '';
   var p = StringPreference.find("syntaxes["+extension+"]");
-  if(p.getValue()) {
-    return p;
+  if(application.controllers.editor.file) {
+    self.virtualPreference = self.virtualPreference || new StringPreference({key:"virtual_syntax", value:application.controllers.editor.file.ace_js_mode});
+    return self.virtualPreference;
   }
   else if(!acceptVirtual) {
     return p;
-  }
-  else if(application.controllers.editor.file) {
-    self.virtualPreference = self.virtualPreference || new StringPreference({key:"virtual_syntax", value:application.controllers.editor.file.ace_js_mode});
-    return self.virtualPreference;
   }
   else {
     return p;
