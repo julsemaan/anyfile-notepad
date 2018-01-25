@@ -1,7 +1,7 @@
 function Preferences(loaded){
   this.PREFERENCES = {
     'prefers_minimized' : 'false',
-    'ace_js_font_size' : "1em", 
+    'ace_js_font_size' : "16px", 
     'ace_js_tab_size' : '4',
     'theme' : 'ace/theme/github',
     'word_wrap' : 'false',

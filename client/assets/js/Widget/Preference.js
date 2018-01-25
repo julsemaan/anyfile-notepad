@@ -127,16 +127,17 @@ PreferenceWidget.prototype.getReadPreference = function() {
 PreferenceWidget.prototype.refreshFromPreference = function() {
   var self = this;
   var preference = self.getReadPreference();
+  val = self.prefValToWidgetVal(preference.getValue());
   switch(self.inputType) {
     case "checkbox":
-      self.widget().prop('checked', preference.getValue());
+      self.widget().prop('checked', val);
       break;
     case "links":
       self.widget().find('[data-val]').removeClass('btn-primary');
-      self.widget().find('[data-val="'+preference.getValue()+'"]').addClass('btn-primary');
+      self.widget().find('[data-val="'+val+'"]').addClass('btn-primary');
       break;
     default:
-      self.widget().val(preference.getValue());
+      self.widget().val(val);
       break;
   }
   self.refreshFromPreferenceChild();

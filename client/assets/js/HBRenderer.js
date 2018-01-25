@@ -65,4 +65,17 @@ HBRenderer.prototype.registerHelpers = function() {
 
   Handlebars.registerHelper("epoch-to-date", function(epoch) {return new Date(epoch*1000)});
 
+  Handlebars.registerHelper('range', function(n, block) {
+      var accum = '';
+      for(var i = 0; i < n; ++i)
+          accum += block.fn(i);
+      return accum;
+  });
+
+  Handlebars.registerHelper('for', function(from, to, incr, block) {
+      var accum = '';
+      for(var i = from; i <= to; i += incr)
+          accum += block.fn(i);
+      return accum;
+  });
 }

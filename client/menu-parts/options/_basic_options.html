@@ -22,11 +22,21 @@
   <div class="col-md-4">
     {{ i18n "Font size" }} :
     <select class="form-control" data-pref-widget="FontSizeWidget">
-      <option value="0.5em">{{ i18n "Small" }}</option>
-      <option value="1em">{{ i18n "Normal" }}</option>
-      <option value="1.25em">{{ i18n "Medium" }}</option>
-      <option value="1.5em">{{ i18n "Large" }}</option>
-      <option value="2em">{{ i18n "X-large" }}</option>
+      {{#for 8 16 1 }}
+      <option value="{{this}}px">{{this}} px</option>
+      {{/for}}
+      {{#for 18 28 2 }}
+      <option value="{{this}}px">{{this}} px</option>
+      {{/for}}
+      {{#for 32 48 4 }}
+      <option value="{{this}}px">{{this}} px</option>
+      {{/for}}
+      {{#for 54 72 6 }}
+      <option value="{{this}}px">{{this}} px</option>
+      {{/for}}
+      {{#for 80 96 8 }}
+      <option value="{{this}}px">{{this}} px</option>
+      {{/for}}
     </select>
   </div>
 
