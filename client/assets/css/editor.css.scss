@@ -302,6 +302,10 @@ h6.menu_header {
       .big_options_btn {
         display:block;
         width:100%;
+        .material-icons {
+          vertical-align:middle;
+          font-size:14px;
+        }
       }
 
       hr {

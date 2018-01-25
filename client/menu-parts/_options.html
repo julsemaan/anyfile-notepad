@@ -3,19 +3,19 @@
   <h5 class="menu_header">Options</h5>
   <div class="row">
     <div class="col-md-4">
-      <a class="big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Accounts" }}</a>
+      <a class="big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Accounts" }}<i class="material-icons">last_page</i></a>
       <div class="menu_content">
         {{> moptions-accounts }}
       </div>
     </div>
     <div class="col-md-4">
-      <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Editor" }}</a>
+      <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Editor" }}<i class="material-icons">last_page</i></a>
       <div class="menu_content">
         {{> moptions-editor }}
       </div>
     </div>
     <div class="col-md-4">
-      <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Advanced" }}</a>
+      <a class="menu-options-advanced big_options_btn sub_menu_item btn btn-primary" href="{{noaction}}">{{ i18n "Advanced" }}<i class="material-icons">last_page</i></a>
       <div class="menu_content">
         {{> moptions-advanced }}
       </div>
@@ -24,6 +24,7 @@
 
   <hr>
 
+  <h5 class="menu_header">Basic editor options</h5>
   {{> moptions-basic-options }}
 
 </div>
