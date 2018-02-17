@@ -25,6 +25,8 @@ var appDevHandler http.Handler
 var eventsManager *golongpoll.LongpollManager
 var eventsHandler func(http.ResponseWriter, *http.Request)
 
+var plusPlusSessions = make(PlusPlusSessions)
+
 var aliasPaths = map[string]string{
 	"/app": "/app.html",
 	// Catch people who would try to get to the template directly

@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type Handler struct{}
@@ -17,6 +20,16 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h Handler) setupPlusPlusSession(userId string, w http.ResponseWriter) {
+	u := uuid.New().String()
+	plusPlusSessions[u] = NewPlusPlusSession(userId)
+	http.SetCookie(w, &http.Cookie{
+		Name:   "ppsid",
+		Value:  u,
+		MaxAge: int(PLUS_PLUS_SESSION_VALIDITY.Seconds()),
+	})
+}
+
 func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) {
 	// Handle alias if applicable
 	if alias, ok := aliasPaths[r.URL.Path]; ok {
@@ -29,8 +42,25 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 		w.Header().Set("Pragma", "no-cache")
 		w.Header().Set("Expires", "0")
 
-		if userIdCookie, err := r.Cookie("current_google_user_id"); err == nil {
-			userId := userIdCookie.Value
+		var userId string
+		if sessionIdCookie, err := r.Cookie("ppsid"); err == nil {
+			sid := sessionIdCookie.Value
+			// Make sure there is a session and that it is still valid
+			if session, ok := plusPlusSessions[sid]; ok && session.ValidUntil.After(time.Now()) {
+				fmt.Println("Found a valid Plus Plus user session")
+				userId = session.GoogleUserId
+			}
+		}
+
+		// If we have an identifier cookie or if the userId was set above, we enter user validation
+		if userIdCookie, err := r.Cookie("current_google_user_id"); err == nil || userId != "" {
+
+			// Don't set the userId if it was already set
+			if userId == "" {
+				userId = userIdCookie.Value
+				h.setupPlusPlusSession(userId, w)
+			}
+
 			if subscription := subscriptions.GetSubscription(userId); subscription != nil {
 				if subscription.Status != "active" {
 					fmt.Println(userId, "subscription isn't active anymore")
