@@ -41,7 +41,11 @@ var aliasPaths = map[string]string{
 
 func main() {
 	setup()
-	fmt.Println(http.ListenAndServe(":8000", Handler{}))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+	fmt.Println(http.ListenAndServe(":"+port, Handler{}))
 }
 
 func setupSessionsPersistence() {
@@ -114,8 +118,14 @@ func setupSubscriptions() {
 
 func setupClusterObserver() {
 	go func() {
-		clusterObserver := NewClusterObserver(strings.Split(os.Getenv("AFN_WEBSERVER_PEERS"), ","))
-		clusterObserver.Start()
+		peers := os.Getenv("AFN_WEBSERVER_PEERS")
+		if peers == "" {
+			fmt.Println("No peers configured, not setting up clustering")
+		} else {
+			fmt.Println("Will connect to the following peers", peers)
+			clusterObserver := NewClusterObserver(strings.Split(peers, ","))
+			clusterObserver.Start()
+		}
 	}()
 }
 
