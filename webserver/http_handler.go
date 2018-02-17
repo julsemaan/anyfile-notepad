@@ -22,7 +22,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h Handler) setupPlusPlusSession(userId string, w http.ResponseWriter) {
 	u := uuid.New().String()
-	plusPlusSessions[u] = NewPlusPlusSession(userId)
+	plusPlusSessions.Set(u, NewPlusPlusSession(userId))
 	http.SetCookie(w, &http.Cookie{
 		Name:   "ppsid",
 		Value:  u,
@@ -46,7 +46,7 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 		if sessionIdCookie, err := r.Cookie("ppsid"); err == nil {
 			sid := sessionIdCookie.Value
 			// Make sure there is a session and that it is still valid
-			if session, ok := plusPlusSessions[sid]; ok && session.ValidUntil.After(time.Now()) {
+			if session := plusPlusSessions.Get(sid); session != nil && session.ValidUntil.After(time.Now()) {
 				fmt.Println("Found a valid Plus Plus user session")
 				userId = session.GoogleUserId
 			}
@@ -58,7 +58,6 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 			// Don't set the userId if it was already set
 			if userId == "" {
 				userId = userIdCookie.Value
-				h.setupPlusPlusSession(userId, w)
 			}
 
 			if subscription := subscriptions.GetSubscription(userId); subscription != nil {
@@ -67,6 +66,11 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 				} else {
 					fmt.Println(userId, "allowing access to ++ app")
 					r.URL.Path = "/app-plus-plus.html"
+
+					// Setup the session for shared accounts if the current user is the one that has the paid version
+					if userIdCookie.Value == userId {
+						h.setupPlusPlusSession(userId, w)
+					}
 				}
 			}
 		}

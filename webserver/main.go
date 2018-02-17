@@ -25,7 +25,7 @@ var appDevHandler http.Handler
 var eventsManager *golongpoll.LongpollManager
 var eventsHandler func(http.ResponseWriter, *http.Request)
 
-var plusPlusSessions = make(PlusPlusSessions)
+var plusPlusSessions = NewPlusPlusSessions()
 
 var aliasPaths = map[string]string{
 	"/app": "/app.html",
