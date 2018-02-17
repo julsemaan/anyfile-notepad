@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
 	"sync"
 	"time"
 )
@@ -41,4 +43,42 @@ func (pps *PlusPlusSessions) Get(id string) *PlusPlusSession {
 	pps.sem.RLock()
 	defer pps.sem.RUnlock()
 	return pps.data[id]
+}
+
+func (pps *PlusPlusSessions) RestoreFromFile(path string) error {
+	pps.sem.Lock()
+	defer pps.sem.Unlock()
+
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&pps.data)
+	f.Close()
+
+	return err
+}
+
+func (pps *PlusPlusSessions) SaveToFile(path string) error {
+	pps.sem.Lock()
+	defer pps.sem.Unlock()
+
+	tmp, err := os.Create(path + "-tmp")
+	if err != nil {
+		return err
+	}
+
+	enc := json.NewEncoder(tmp)
+	err = enc.Encode(pps.data)
+	tmp.Close()
+
+	if err != nil {
+		return err
+	}
+
+	err = os.Rename(tmp.Name(), path)
+
+	return err
 }

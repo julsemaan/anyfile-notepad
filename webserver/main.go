@@ -25,6 +25,7 @@ var appDevHandler http.Handler
 var eventsManager *golongpoll.LongpollManager
 var eventsHandler func(http.ResponseWriter, *http.Request)
 
+var plusPlusSessionsDb = os.Getenv("PLUS_PLUS_SESSIONS_DB")
 var plusPlusSessions = NewPlusPlusSessions()
 
 var aliasPaths = map[string]string{
@@ -43,21 +44,33 @@ func main() {
 	fmt.Println(http.ListenAndServe(":8000", Handler{}))
 }
 
-func setup() {
+func setupSessionsPersistence() {
+	if plusPlusSessionsDb != "" {
+		fmt.Println("Using sessions DB:", plusPlusSessionsDb)
+
+		err := plusPlusSessions.RestoreFromFile(plusPlusSessionsDb)
+		if err != nil {
+			fmt.Println("ERROR: Failed to restore the sessions from file", plusPlusSessionsDb, "due to error", err)
+		}
+
+		go func() {
+			for {
+				time.Sleep(5 * time.Second)
+				fmt.Println("Saving the sessions")
+				err := plusPlusSessions.SaveToFile(plusPlusSessionsDb)
+				if err != nil {
+					fmt.Println("ERROR: Failed to save the sessions", err)
+				}
+			}
+		}()
+	}
+
+}
+
+func setupHandlers() {
 	prodAppPath := flag.String("prod-app-path", os.Getenv("AFN_PROD_APP_PATH"), "path to the production application files")
 	devAppPath := flag.String("dev-app-path", os.Getenv("AFN_DEV_APP_PATH"), "path to the production application files")
 	flag.Parse()
-
-	stripe.Key = os.Getenv("STRIPE_SK")
-
-	// Reload once synchronously, then start an hourly job to do it
-	subscriptions.Reload()
-	go func() {
-		for {
-			subscriptions.Reload()
-			time.Sleep(1 * time.Hour)
-		}
-	}()
 
 	r := gin.Default()
 	api := r.Group("/api")
@@ -86,9 +99,34 @@ func setup() {
 		fmt.Println("Failed to create manager: %q", err)
 	}
 	eventsHandler = eventsManager.SubscriptionHandler
+}
 
+func setupSubscriptions() {
+	// Reload once synchronously, then start an hourly job to do it
+	subscriptions.Reload()
+	go func() {
+		for {
+			subscriptions.Reload()
+			time.Sleep(1 * time.Hour)
+		}
+	}()
+}
+
+func setupClusterObserver() {
 	go func() {
 		clusterObserver := NewClusterObserver(strings.Split(os.Getenv("AFN_WEBSERVER_PEERS"), ","))
 		clusterObserver.Start()
 	}()
+}
+
+func setup() {
+	setupSessionsPersistence()
+
+	stripe.Key = os.Getenv("STRIPE_SK")
+
+	setupHandlers()
+
+	setupSubscriptions()
+
+	setupClusterObserver()
 }
