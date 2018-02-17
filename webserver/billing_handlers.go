@@ -43,7 +43,7 @@ func LoadGoogleUser(c *gin.Context) {
 		resp, err := http.DefaultClient.Do(req)
 		if resp.StatusCode != http.StatusOK || err != nil {
 			respBody, _ := ioutil.ReadAll(resp.Body)
-			fmt.Println("Error getting Google user", resp.StatusCode, string(respBody))
+			fmt.Println("ERROR getting Google user", resp.StatusCode, string(respBody))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
 		} else {
 			user := GoogleUser{}
@@ -51,7 +51,7 @@ func LoadGoogleUser(c *gin.Context) {
 			err := dec.Decode(&user)
 
 			if err != nil {
-				fmt.Println("Error while decoding response body to get Google user", err)
+				fmt.Println("ERROR while decoding response body to get Google user", err)
 			}
 
 			if userId != user.Id {
@@ -95,7 +95,7 @@ func resume(c *gin.Context) {
 
 	updatedSub, err := sub.Update(subscription.ID, &stripe.SubParams{EndCancel: false})
 	if err != nil {
-		fmt.Println("Error while resuming subscription for", userId, spew.Sdump(err))
+		fmt.Println("ERROR while resuming subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to resume the subscription. Please try again or contact " + supportEmail})
 	} else {
 		spew.Dump(updatedSub)
@@ -123,7 +123,7 @@ func cancel(c *gin.Context) {
 
 	updatedSub, err := sub.Cancel(subscription.ID, &stripe.SubParams{EndCancel: true})
 	if err != nil {
-		fmt.Println("Error while canceling subscription for", userId, spew.Sdump(err))
+		fmt.Println("ERROR while canceling subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to cancel the subscription. Please try again or contact " + supportEmail})
 	} else {
 		spew.Dump(updatedSub)
