@@ -9,6 +9,11 @@ import (
 
 const PLUS_PLUS_SESSION_VALIDITY = 24 * time.Hour
 
+type PlusPlusSessionSync struct {
+	ID  string
+	PPS *PlusPlusSession
+}
+
 type PlusPlusSession struct {
 	GoogleUserId string
 	ValidUntil   time.Time

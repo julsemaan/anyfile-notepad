@@ -22,12 +22,14 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h Handler) setupPlusPlusSession(userId string, w http.ResponseWriter) {
 	u := uuid.New().String()
-	plusPlusSessions.Set(u, NewPlusPlusSession(userId))
+	session := NewPlusPlusSession(userId)
+	plusPlusSessions.Set(u, session)
 	http.SetCookie(w, &http.Cookie{
 		Name:   "ppsid",
 		Value:  u,
 		MaxAge: int(PLUS_PLUS_SESSION_VALIDITY.Seconds()),
 	})
+	eventsManager.Publish("sessions", PlusPlusSessionSync{ID: u, PPS: session})
 }
 
 func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) {
