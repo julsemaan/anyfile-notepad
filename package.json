@@ -3,7 +3,7 @@
   "version" : "0.0.1",
   "dependencies" : 
     { 
-      "minify" : ">0.0.0",
+      "minify" : ">3.0.4",
       "bower" : ">0.0.0",
       "node-sass" : ">0.0.0",
       "dropbox" : "<3.0.0"
