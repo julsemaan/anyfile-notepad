@@ -99,7 +99,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       var msg;
 
       [% IF WITH_ADS %]
-      msg = "<a href='javascript:void(0)' onclick='javascript:application.popup_upgrade()'>A paid ad-free version of the app is not available for 3.99$ per year! Click here to signup!</a>"
+      msg = "<a href='javascript:void(0)' onclick='javascript:application.popup_upgrade()'>A paid ad-free version of the app is available for 3.99$ per year! Click here to signup!</a>"
       editor_controller.flash.sticky_success(msg);
       [% END %]
 
