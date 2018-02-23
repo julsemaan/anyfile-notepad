@@ -1,4 +1,5 @@
 <script id="subscription-status" class="template-partial" type="text/x-handlebars-template">
+  {{#if global_context.application.controllers.google_oauth.current_user.subscription}}
   <h3>Account: {{ global_context.application.controllers.google_oauth.current_user.email }}</h3>
 
   <table>
@@ -46,6 +47,9 @@
   </div>
 
 
+  {{else}}
+    <p style="text-align:center">This account doesn't have a valid subscription. In order to manage your subscription, make sure you use the application with the account that is subscribed to the paid version of the app</p>
+  {{/if}}
   <hr>
 
   {{{ concat "<scr" "ipt>" }}}
