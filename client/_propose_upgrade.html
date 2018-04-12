@@ -7,7 +7,9 @@
     <a class="btn btn-primary" href="{{noaction}}" {{{ m-action-n-close "application.popup_upgrade()" }}}>{{ i18n "Upgrade to Anyfile Notepad++" }}</a>
   </div>
 
-  <!---<iframe style="border:none;width:610px;height:340px;" id="upgrade-frame-ad" src="about:blank"></iframe>-->
+  <div style="text-align:center">
+    <iframe style="border:none;width:500px;height:340px;" id="upgrade-frame-ad" src="about:blank"></iframe>
+  </div>
 
   <div class="propose-upgrade-timer">
     <h4>You can continue in <span id="propose-upgrade-seconds-remaining">5</span> seconds</h4>
@@ -17,10 +19,10 @@
   </div>
   
   {{{ concat "<scr" "ipt>" }}}
-  //var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
-  //doc.open();
-  //doc.write("<html style='overflow-y:hidden'><head><title></title></head><body style='padding:0;margin:0'><scr"+"ipt data-cfasync='false' type='text/javascript' src='//p248374.clksite.com/adServe/banners?tid=248374_474408_10'></scr"+"ipt></body></html>");
-  //doc.close();
+  var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
+  doc.open();
+  doc.write("<html style='overflow-y:hidden'><head><title></title></head><body style='padding:0;margin:0'>"+"<scr"+"ipt src='https://www.googletagservices.com/tag/js/gpt.js'>googletag.pubads().definePassback('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_480x320_1', [480, 320]).display();</scr"+"ipt>"+"</body></html>");
+  doc.close();
 
   var secondsElem = $("#propose-upgrade-seconds-remaining");
   var initial = secondsElem.html();
