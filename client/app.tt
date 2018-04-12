@@ -48,7 +48,9 @@
         Click to post on the community
       </a>
     </p>
-    <script data-cfasync='false' type='text/javascript' src='//p248374.clksite.com/adServe/banners?tid=248374_474408_6'></script>
+<script src='https://www.googletagservices.com/tag/js/gpt.js'>
+    googletag.pubads().definePassback('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_160x600_1', [160, 600]).display();
+</script>
 	</div>
   [% END %]
 </div>
