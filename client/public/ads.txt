@@ -1,0 +1,128 @@
+Monetize.com , 95505 , Direct
+Monetize.com, 87180, Reseller
+appnexus.com, 1613, reseller
+appnexus.com, 3326, reseller
+google.com, pub-1409765517756851, reseller
+google.com, pub-4075894099602271, reseller 
+freewheel.tv, 146081, reseller
+rubiconproject.com, 8861, reseller, 0bfd66d529a55807
+districtm.io, 100769, DIRECT
+appnexus.com, 7944, RESELLER
+appnexus.com, 1908, RESELLER
+openx.com, 126686, RESELLER, a698e2ec38604c6
+openx.com, 537120224, RESELLER, a698e2ec38604c6
+pubmatic.com, 32702, RESELLER, 5d62403b186f2ace
+pubmatic.com, 51048, RESELLER, 5d62403b186f2ace
+pubmatic.com, 116164, RESELLER, 5d62403b186f2ace
+pubmatic.com, 156262, RESELLER, 5d62403b186f2ace
+Sovrn.com, 236947, DIRECT, fafdf38b16bf6b2b
+Lijit.com, 236947, DIRECT, fafdf38b16bf6b2b
+openx.com, 537120960, RESELLER
+openx.com, 83499, RESELLER
+openx.com, 538959099, RESELLER
+pubmatic.com, 137711, RESELLER
+pubmatic.com, 156212, RESELLER
+pubmatic.com, 62483, RESELLER
+contextweb.com, 558511, RESELLER
+contextweb.com, 558571, RESELLER
+contextweb.com, 558393, RESELLER
+contextweb.com, 558395, RESELLER
+contextweb.com, 558570, RESELLER
+smaato.com, 1100001651, RESELLER
+inner-active.com, 206458, DIRECT
+komoona.com, 256093, DIRECT
+memevideoad.com, 247, DIRECT
+whitwise.com, 247, Direct #MemeVideo #Vidoplay
+vidoplay.com, 247, Direct #MemeVideo #Vidoplay
+phenqitaliane.com, 247, Direct #MemeVideo
+spotxchange.com,98033, RESELLER,7842df1d2fe2db34 #Memevideo
+freewheel.tv, 151177, RESELLER #Memevideo
+freewheel.tv, 414097, RESELLER #Memevideo
+tremorhub.com, 726he, RESELLER, 1a4e959a1b50034a #Memevideo
+fyber.com, b8be899491e326b67959391d13550e87, RESELLER #Memevideo
+advertising.com, 8893, RESELLER #Memevideo
+aolcloud.net, 8893, RESELLER #Memevideo
+adtech.com, 8893, RESELLER #Memevideo
+advertising.com, 9833, RESELLER #Memevideo
+spotxchange.com, 103374,RESELLER,7842df1d2fe2db34 
+spotx.tv, 103374,RESELLER,7842df1d2fe2db34
+lkqd.net, 44, RESELLER, 59c49fa9598a0117
+fyber.com, c4f4e0402029d65ad6f0ad0be9963409, RESELLER
+google.com, pub-4983172728561290, RESELLER, f08c47fec0942fa0
+spotxchange.com, 74844, RESELLER, 7842df1d2fe2db34
+tremorhub.com, 0kq41, RESELLER, 1a4e959a1b50034a
+openx.com, 537139983, RESELLER, 6a698e2ec38604c6
+lkqd.com, 74, RESELLER, 59c49fa9598a0117
+Advertising.com, 3500, RESELLER
+contextweb.com, 559992, RESELLER, 89ff185a4c4e857c
+pubmatic.com, 156305, RESELLER, 5d62403b186f2ace
+freewheel.tv, 106849, RESELLER
+google.com, pub-2697483239283649, RESELLER, f08c47fec0942fa0
+spotxchange.com, 83892, RESELLER, 7842df1d2fe2db34
+advertising.com, 6758, RESELLER
+lkqd.net, 69, RESELLER, 59c49fa9598a0117
+tremorhub.com,ntdd5,RESELLER, 1a4e959a1b50034a
+spotxchange.com, 75439, RESELLER
+freewheel.tv, 118529, RESELLER
+atemda.com,498,RESELLER
+smartadserver.com, 2586, RESELLER
+contextweb.com, 560310, RESELLER, 89ff185a4c4e857c
+sekindo.com, 22539, DIRECT
+spotxchange.com, 84294, RESELLER, 7842df1d2fe2db34
+spotx.tv, 84294, RESELLER, 7842df1d2fe2db34
+advertising.com, 7372, RESELLER
+adtech.com, 10397, RESELLER
+aolcloud.net, 10397, RESELLER
+inner-active.com, 206396, RESELLER
+contextweb.com, 560453, RESELLER
+lkqd.net, 244, RESELLER, 59c49fa9598a0117
+lkqd.com, 244, RESELLER, 59c49fa9598a0117
+sovrn.com, 251255, RESELLER, fafdf38b16bf6b2b
+lijit.com, 251255, RESELLER, fafdf38b16bf6b2b
+smartadserver.com, 2137, RESELLER
+tidaltv.com, 23034, RESELLER
+tidaltv.com, 32071, RESELLER
+pubmatic.com, 156380, RESELLER, 5d62403b186f2ace
+appnexus.com, 1940, RESELLER
+appnexus.com, 2764, RESELLER
+fyber.com, f14d40df2568b6df4eed292a5ad93716, RESELLER
+fyber.com, 3238c1661ce2914845a986d98baf7d59, RESELLER
+tremorhub.com, mb9eo-oqsbf, RESELLER, 1a4e959a1b50034a
+vi.ai, 474289066697842, RESELLER
+freewheel.tv, 19129, RESELLER
+freewheel.tv, 19133, RESELLER
+sovrn.com, 243338, DIRECT, fafdf38b16bf6b2b
+lijit.com, 243338, DIRECT, fafdf38b16bf6b2b
+gumgum.com, 11645, RESELLER, ffdef49475d31a9
+openx.com, 537120960, RESELLER
+openx.com, 83499, RESELLER
+openx.com, 538959099, RESELLER
+pubmatic.com, 137711, RESELLER
+pubmatic.com, 156212, RESELLER
+pubmatic.com, 62483, RESELLER
+contextweb.com. 558511, RESELLER
+adtech.com, 10483, RESELLER
+aolcloud.net, 10483, RESELLER
+appnexus.com, 1610, RESELLER, f5ab79cb980f11d1
+appnexus.com, 7874, RESELLER, f5ab79cb980f11d1
+bidfluence.com, 88b55b49-98f5-42e5-ac43-22cff79711a4, DIRECT
+contextweb.com, 508738, RESELLER
+lijit.com, 57529, RESELLER, fafdf38b16bf6b2b
+openx.com, 537124574, RESELLER, 6a698e2ec38604c6
+sonobi.com, 5fa6044d8d, RESELLER
+sovrn.com, 57529, RESELLER, fafdf38b16bf6b2b
+udmserve.net, 11358, DIRECT 
+udmserve.net, 11359, DIRECT
+udmserve.net, 11380, DIRECT
+udmserve.net, 11481, DIRECT
+udmserve.net, 11528, DIRECT
+udmserve.net, 11648, DIRECT
+udmserve.net, 11808, DIRECT
+udmserve.net, 11830, DIRECT
+rhythmone.com,547493497,DIRECT,a670c89d4a324e47
+rhythmone.com,3625668534,DIRECT,a670c89d4a324e47
+rhythmone.com,2401133459,DIRECT,a670c89d4a324e47
+rhythmone.com,497688133,DIRECT,a670c89d4a324e47
+rhythmone.com,3810424198,DIRECT,a670c89d4a324e47
+google.com, pub-9910893758418484, DIRECT
+google.com, pub-8434185908489285, DIRECT
