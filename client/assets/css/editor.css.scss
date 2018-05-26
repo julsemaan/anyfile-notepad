@@ -509,6 +509,9 @@ h6.menu_header {
       display:none;
     }
   }
+}
+
+@media (max-width:768px), (max-height:768px) {
   #expanded_menu {
     overflow-y:scroll;
     position:relative;
