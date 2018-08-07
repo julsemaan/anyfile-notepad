@@ -70,7 +70,7 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 					r.URL.Path = "/app-plus-plus.html"
 
 					// Setup the session for shared accounts if the current user is the one that has the paid version
-					if userIdCookie.Value == userId {
+					if userIdCookie != nil && userIdCookie.Value == userId {
 						h.setupPlusPlusSession(userId, w)
 					}
 				}
