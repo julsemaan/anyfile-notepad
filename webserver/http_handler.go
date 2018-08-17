@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,6 +37,12 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 	// Handle alias if applicable
 	if alias, ok := aliasPaths[r.URL.Path]; ok {
 		r.URL.Path = alias
+	}
+
+	if strings.HasPrefix(r.URL.Path, "/ace.js") {
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
 	}
 
 	// Present app without ads if applicable and ensure no caching headers are set for this resource
