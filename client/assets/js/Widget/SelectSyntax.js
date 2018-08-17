@@ -38,6 +38,7 @@ SelectSyntaxWidget.prototype.refreshFromPreferenceChild = function() {
 
 SelectSyntaxWidget.prototype.setSyntaxMode = function(syntax){
   var self = this;
+  self.virtualPreference().value = syntax;
   self.refreshFromPreference();
 }
 
