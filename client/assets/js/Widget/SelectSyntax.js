@@ -1,38 +1,43 @@
 Class("SelectSyntaxWidget", ["PreferenceWidget"]);
 
-SelectSyntaxWidget.prototype.getReadPreference = function() {
+SelectSyntaxWidget.prototype.virtualPreference = function() {
   var self = this;
-  return self.preference(true);
+  self._virtualPreference = self._virtualPreference || new StringPreference({key:"virtual_syntax"});
+  if(!self._virtualPreference.value && application.controllers.editor.file) {
+    self._virtualPreference.value = application.controllers.editor.file.compute_syntax().ace_js_mode;
+  }
+  return self._virtualPreference;
 }
 
-SelectSyntaxWidget.prototype.preference = function(acceptVirtual) {
-  acceptVirtual = acceptVirtual || false;
+SelectSyntaxWidget.prototype.getReadPreference = function() {
+  var self = this;
+  return self.preference().value ? self.preference() : self.virtualPreference();
+}
+
+SelectSyntaxWidget.prototype.preference = function() {
   var self = this;
   var extension = application.controllers.editor.file ? application.controllers.editor.file.extension() : '';
   var p = StringPreference.find("syntaxes["+extension+"]");
-  if(application.controllers.editor.file) {
-    self.virtualPreference = self.virtualPreference || new StringPreference({key:"virtual_syntax", value:application.controllers.editor.file.ace_js_mode});
-    return self.virtualPreference;
-  }
-  else if(!acceptVirtual) {
-    return p;
-  }
-  else {
-    return p;
-  }
+  
+  return p;
 }
 
 SelectSyntaxWidget.prototype.refreshFromPreferenceChild = function() {
   var self = this;
-  application.controllers.editor.setSyntaxMode(self.preference(true).getValue());
+  if(application.controllers.editor.file) {
+    if(self.preference().value) {
+      self.virtualPreference().value = self.preference().value;
+    }
+    else {
+      self.virtualPreference().value = application.controllers.editor.file.ace_js_mode;
+    }
+  }
+
+  application.controllers.editor.setSyntaxMode(self.virtualPreference().getValue());
 }
 
 SelectSyntaxWidget.prototype.setSyntaxMode = function(syntax){
   var self = this;
-  self.preference(true);
-  if(self.virtualPreference) {
-    self.virtualPreference.value = syntax;
-  }
   self.refreshFromPreference();
 }
 
