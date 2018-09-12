@@ -143,7 +143,8 @@ func upgrade(c *gin.Context) {
 		fmt.Println("Received form", spew.Sdump(form))
 
 		customerParams := &stripe.CustomerParams{
-			Desc: "Customer for Google email: " + form.UserEmail,
+			Desc:  "Customer for Google email: " + form.UserEmail,
+			Email: form.StripeEmail,
 		}
 		customerParams.SetSource(form.StripeToken)
 
