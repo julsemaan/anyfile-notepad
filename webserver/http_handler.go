@@ -14,6 +14,8 @@ type Handler struct{}
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/events" {
 		eventsHandler(w, r)
+	} else if r.URL.Path == "/realtime_events" {
+		realtimeHandler(w, r)
 	} else if apiRegexp.MatchString(r.URL.Path) {
 		apiHandler.ServeHTTP(w, r)
 	} else {
