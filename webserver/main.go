@@ -81,7 +81,8 @@ func setupHandlers() {
 	r := gin.Default()
 	api := r.Group("/api")
 
-	api.POST("/realtime_event/:category", publishRealtimeEvent)
+	collab := api.Group("/collaboration")
+	collab.POST("/realtime_events/:category", publishRealtimeEvent)
 
 	subscription := api.Group("/billing/subscription")
 	subscription.Use(LoadSubscription)

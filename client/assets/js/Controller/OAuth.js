@@ -139,8 +139,11 @@ GoogleOAuthController.prototype.check_authed = function(){
   }
 }
 
-GoogleOAuthController.prototype.execute_request = function(request, callback){
+GoogleOAuthController.prototype.execute_request = function(request, callback, options){
   var self = this
+
+  options = options || {};
+
   request.execute(function(response){
     if(!response.error){
       callback(response)
@@ -152,6 +155,9 @@ GoogleOAuthController.prototype.execute_request = function(request, callback){
     }
     else if(response.error.code == 409){
       console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
+      callback(response);
+    }
+    else if(options["errorOnlyUnauth"]) {
       callback(response);
     }
     else{

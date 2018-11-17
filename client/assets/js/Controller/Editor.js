@@ -375,10 +375,6 @@ EditorController.prototype.content_changed = function(){
     return
   }
 
-  if(this.file.persisted && this.realtime_content){
-    this.realtime_content.setText(this.editor_view.getValue());
-  }
-  
   if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
     if(this.file.did_content_change()){
       this.$.find('.editor_save_button').html(i18n("Save"))
@@ -408,11 +404,7 @@ EditorController.prototype.stop_collaboration = function(){
   self.clear_collaborators();
 
   // remove any previous event listeners, if any
-  if(self.realtime_content){
-    self.realtime_content.removeAllEventListeners();
-    self.realtime_content = undefined;
-  }
-  if(self.realtime_document) self.realtime_document.close();
+  if(self.realtime_document) self.realtime_document.stop_realtime();
   self.realtime_document = undefined;
 }
 
@@ -421,47 +413,34 @@ EditorController.prototype.make_collaborative = function(){
 
   self.stop_collaboration();
 
-  gapi.drive.realtime.load(self.file.id, function(doc){
-    self.realtime_document = doc;
-    try{
-    self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
+  self.realtime_document = self.file;
 
-
-    self.realtime_content.addEventListener(
-      gapi.drive.realtime.EventType.TEXT_INSERTED, 
-      function(evt){
-        self.file_content_added(evt)
-      });
-    
-    self.realtime_content.addEventListener(
-      gapi.drive.realtime.EventType.TEXT_DELETED, 
-      function(evt){
-        self.file_content_deleted(evt)
-      });
-
-    self.realtime_document.addEventListener(
-      gapi.drive.realtime.EventType.COLLABORATOR_JOINED, 
-      function(evt){
-        self.add_collaborator(evt.collaborator);
-      });
-
-    self.realtime_document.addEventListener(
-      gapi.drive.realtime.EventType.COLLABORATOR_LEFT, 
-      function(evt){
-        self.remove_collaborator(evt.collaborator);
-      });
-    
-    self.display_collaborators()
-
-    }catch(e){console.log(e)}
-  }, 
-  function(model) {self.init_collaboration(model)},
-  function(error) {
-    if(error.type == "token_refresh_required"){
-      application.controllers.google_oauth.do_auth();
+  self.editor_view.getSession().getDocument().on('change', function(e){
+    if(!e.remote_change) {
+      e.type = "ace.js";
+      self.realtime_document.publish_event(e);
     }
-  }
-  );
+  });
+
+  self.realtime_document.start_realtime_events(function(e) {
+    console.log("received event", e);
+
+    if(e.category != self.realtime_document.collab_id) {
+      console.log("Discarding event because its not meant for this document", e);
+    }
+
+    switch(e.data.type) {
+      case "ace.js":
+        e.data.remote_change = true;
+        self.editor_view.getSession().getDocument().applyDelta(e.data);
+    }
+
+    // switch type ace.js event
+    // switch type collab join
+    // switch type collab left
+  });
+
+  // Display all collabs
 }
 
 EditorController.prototype.clear_collaborators = function(collaborator){

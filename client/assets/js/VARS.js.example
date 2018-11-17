@@ -4,5 +4,6 @@ window.AFN_VARS = {
   drive_app_id:"",
   dropbox_key:"",
   stripe_key:"",
+  collab_uri:"",
 };
 
