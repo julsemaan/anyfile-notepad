@@ -42,6 +42,7 @@ EditorController.prototype.initialize_html = function(){
   })
 
   $(window).bind('beforeunload',function(){
+    self.publish_realtime_event({'type':'leaved'});
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
@@ -475,6 +476,11 @@ EditorController.prototype.make_collaborative = function(){
           self.ping_realtime();
           self.last_joined_ping = now;
         }
+        else {
+          console.log("Not publishing ping due to rate limiting");
+        }
+      case "leaved":
+        self.remove_collaborator(e);
     }
 
     // switch type ace.js event
@@ -509,7 +515,7 @@ EditorController.prototype.add_collaborator = function(e) {
   self.realtime_collaborators[collaborator_id].clearFunc = setTimeout(function() {
     console.log("Removing unseen collaborator", e.data.google_user_name);
     self.remove_collaborator(e); 
-  }, 20 * 1000)
+  }, 120 * 1000)
 
   var element = $("<span id='collaborator-"+data.google_user_id+"' class='label label-default' style='color:#041e47;background-color:"+niceRandomColor()+"'>"+data.google_user_name+"</span>");
   if(! $('.collaborators').has('#collaborator-'+data.google_user_id).length )
