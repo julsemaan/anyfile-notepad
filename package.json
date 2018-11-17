@@ -4,9 +4,9 @@
   "dependencies" : 
     { 
       "minify" : "2.1.8",
+      "uglify-js": "3.4.7",
       "bower" : ">0.0.0",
       "node-sass" : ">0.0.0",
-      "dropbox" : "<3.0.0",
-      "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony"
+      "dropbox" : "<3.0.0"
     } 
 }
