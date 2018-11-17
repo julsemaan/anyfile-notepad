@@ -210,3 +210,12 @@ function guid() {
         }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+
+function niceRandomColor() {
+  const goldenRatio = 0.618;
+  return rcolor({
+      hue: (Math.random() + goldenRatio) % 1,
+      saturation: 0.5,
+      value: 0.95
+  })
+}
