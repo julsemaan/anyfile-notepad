@@ -12,10 +12,9 @@
   <div class="col-md-4">
     {{ i18n "Tab size" }} : 
     <select class="form-control" data-pref-widget="TabSizeWidget">
-      <option value="2">{{ i18n "2" }}</option>
-      <option value="3">{{ i18n "3" }}</option>
-      <option value="4">{{ i18n "4" }}</option>
-      <option value="5">{{ i18n "5" }}</option>
+      {{#range 16 }}
+      <option value="{{ math this "+" 1 }}">{{ math this "+" 1 }}</option>
+      {{/range}}
     </select>
   </div>
 
