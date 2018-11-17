@@ -184,6 +184,8 @@ CloudFile.prototype.events_since = function(since) {
 
 CloudFile.prototype.get_realtime_events = function(start_at, callback) {
   var self = this;
+  
+  if(!self.id) return;
 
   self.events_since(start_at)
     .success(function(data){
@@ -202,14 +204,18 @@ CloudFile.prototype.get_realtime_events = function(start_at, callback) {
     })
     .fail(function(data){
       if(self._run_realtime) {
-        console.log("Failed to obtain events for realtime collaboration");
-        self.get_realtime_events(start_at, callback);
+        console.error("Failed to obtain events for realtime collaboration, retrying in a second");
+        setTimeout(function() {
+          self.get_realtime_events(start_at, callback);
+        }, 1000);
       }
     });
 }
 
 CloudFile.prototype.start_realtime_events = function(callback) {
   var self = this;
+  if(!self.id) return;
+
   self._run_realtime = true;
   self.get_realtime_events(self.modified_timestamp, callback);
 }

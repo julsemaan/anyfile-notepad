@@ -281,6 +281,7 @@ EditorController.prototype.activate_autosave = function(force){
   var self = this
   this.deactivate_autosave()
   if(force || BooleanPreference.find("autosave").getValue()) {
+    self.autosave_enabled = true;
     $('.autosave-on').show();
     $('.autosave-off').hide();
     self.autosave_interval = setInterval(function(){self.autosave()}, 5000)
@@ -289,7 +290,8 @@ EditorController.prototype.activate_autosave = function(force){
 
 EditorController.prototype.deactivate_autosave = function(){
   var self = this
-  clearInterval(this.autosave_interval)
+  clearInterval(this.autosave_interval);
+  self.autosave_enabled = false;
   $('.autosave-off').show();
   $('.autosave-on').hide();
 }
@@ -415,12 +417,18 @@ EditorController.prototype.stop_collaboration = function(){
 
 EditorController.prototype.publish_realtime_event = function(e){
   var self = this;
-  console.log("publishing event", e);
+
+  if(!self.realtime_document) return;
+
+  console.log("publishing event", e)
+
   e.google_user_id = application.controllers.google_oauth.current_user.user_id;
   e.google_user_name = application.controllers.google_oauth.current_user.name;
   self.realtime_document.publish_event(e).fail(function(){
-    console.error("Error publishing realtime event, will retry");
-    self.publish_realtime_event(e);
+    console.error("Error publishing realtime event, will retry in a second");
+    setTimeout(function() {
+      self.publish_realtime_event(e);
+    }, 1000);
   });
 }
 
@@ -457,30 +465,34 @@ EditorController.prototype.make_collaborative = function(){
   });
 
   self.realtime_document.start_realtime_events(function(e) {
+    console.log("receiving event", e)
+    
     self.add_collaborator(e);
 
     if(e.category != self.realtime_document.collab_id) {
       console.log("Discarding event because its not meant for this document", e);
     }
 
-    switch(e.data.type) {
-      case "ace.js":
-        e.data.remote_change = true;
-        self.editor_view.getSession().getDocument().applyDelta(e.data);
-      case "joined":
-        self.last_joined_ping = self.last_joined_ping || 0;
-        // Don't ping more than once per second
-        var now = new Date().getTime();
-        if(now - self.last_joined_ping > 1 * 1000) {
-          console.log("Someone has joined the collaboration, making ourself visible");
-          self.ping_realtime();
-          self.last_joined_ping = now;
-        }
-        else {
-          console.log("Not publishing ping due to rate limiting");
-        }
-      case "leaved":
-        self.remove_collaborator(e);
+    if(e.data.type == "ace.js") {
+      e.data.remote_change = true;
+      self.editor_view.getSession().getDocument().applyDelta(e.data);
+    }
+    else if(e.data.type == "joined") {
+      console.log(e.data.type)
+      self.last_joined_ping = self.last_joined_ping || 0;
+      // Don't ping more than once per second
+      var now = new Date().getTime();
+      if(now - self.last_joined_ping > 1 * 1000) {
+        console.log("Someone has joined the collaboration, making ourself visible");
+        self.ping_realtime();
+        self.last_joined_ping = now;
+      }
+      else {
+        console.log("Not publishing ping due to rate limiting");
+      }
+    }
+    else if(e.data.type == "leaved") {
+      self.remove_collaborator(e);
     }
 
     // switch type ace.js event
@@ -505,6 +517,17 @@ EditorController.prototype.add_collaborator = function(e) {
   var self = this;
   var data = e.data;
   if(application.controllers.google_oauth.current_user.user_id == data.google_user_id) return;
+
+  if(!self.autosave_enabled && !self.file.warned_autosave_collab) {
+    new Popup({ 
+      message : i18n("Autosave isn't currently enabled and we detected you are collaborating with another user on this file. We suggest enabling autosave, otherwise unexpected issues may occur if the file isn't saved frequently enough."), 
+      confirm_btn: i18n("Enable autosave temporarily"),
+      cancel_btn: i18n("Continue without autosave"),
+      callback : function(result) {if(result) self.activate_autosave(true)}, 
+      confirm : true,
+    });
+    self.file.warned_autosave_collab = true;
+  }
 
   var collaborator_id = data.google_user_id;
   self.realtime_collaborators[collaborator_id] = self.realtime_collaborators[collaborator_id] || {};
