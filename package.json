@@ -6,6 +6,7 @@
       "minify" : "2.1.8",
       "bower" : ">0.0.0",
       "node-sass" : ">0.0.0",
-      "dropbox" : "<3.0.0"
+      "dropbox" : "<3.0.0",
+      "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony"
     } 
 }
