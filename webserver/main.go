@@ -110,7 +110,10 @@ func setupHandlers() {
 	eventsHandler = eventsManager.SubscriptionHandler
 
 	realtimeManager, err = golongpoll.StartLongpoll(golongpoll.Options{
-		LoggingEnabled: true,
+		LoggingEnabled:     true,
+		MaxEventBufferSize: 1000,
+		// Events stay for up to 1 hour
+		EventTimeToLiveSeconds: 3600,
 	})
 	if err != nil {
 		fmt.Println("Failed to create manager: %q", err)
