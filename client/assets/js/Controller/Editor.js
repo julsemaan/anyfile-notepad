@@ -445,6 +445,10 @@ EditorController.prototype.make_collaborative = function(){
 
   self.stop_collaboration();
 
+  if(!self.file.persisted) {
+    return;
+  }
+
   self.realtime_document = self.file;
 
   // Notify we've joined
@@ -494,13 +498,7 @@ EditorController.prototype.make_collaborative = function(){
     else if(e.data.type == "leaved") {
       self.remove_collaborator(e);
     }
-
-    // switch type ace.js event
-    // switch type collab join
-    // switch type collab left
   });
-
-  // Display all collabs
 }
 
 EditorController.prototype.clear_collaborators = function(collaborator){
