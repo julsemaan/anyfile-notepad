@@ -192,7 +192,7 @@ function application_js() {
   find client/assets/js/ -name '*.js' | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
   if ! is_webdev; then
-    cat $APPLICATION_JS | ./node_modules/.bin/uglifyjs -c -m -o `add_min_prefix $APPLICATION_JS`
+    ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
   else
     cp $APPLICATION_JS `add_min_prefix $APPLICATION_JS`
   fi

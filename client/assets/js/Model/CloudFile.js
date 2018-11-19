@@ -161,7 +161,7 @@ CloudFile.prototype.publish_event = function(e) {
   e.publisher_uuid = self._publisher_uuid;
   return $.post(
     AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events/"+self.collab_id,
-    JSON.stringify(e),
+    JSON.stringify(e)
   );
 }
 
