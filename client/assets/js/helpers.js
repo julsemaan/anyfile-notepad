@@ -212,7 +212,7 @@ function guid() {
 }
 
 function niceRandomColor() {
-  const goldenRatio = 0.618;
+  var goldenRatio = 0.618;
   return rcolor({
       hue: (Math.random() + goldenRatio) % 1,
       saturation: 0.5,

@@ -178,7 +178,7 @@ CloudFile.prototype.events_since = function(since) {
 
   return $.get(
     AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events",
-    args,
+    args
   );
 }
 
