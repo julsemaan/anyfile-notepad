@@ -3,8 +3,7 @@
   "version" : "0.0.1",
   "dependencies" : 
     { 
-      "minify" : "2.1.8",
-      "uglify-js": "3.4.7",
+      "uglify-js": ">0.0.0",
       "bower" : ">0.0.0",
       "node-sass" : ">0.0.0",
       "dropbox" : "<3.0.0"
