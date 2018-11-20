@@ -103,7 +103,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       editor_controller.flash.sticky_success(msg);
       [% END %]
 
-      msg = "<a target='_blank' href='https://goo.gl/forms/VpGOOEJlvgnCCL0C3'>Google is deprecating realtime collaboration. Click here to answer a survey about the future of this feature in the app.</a>";
+      msg = "<a target='_blank' href='/news'>A new implementation of realtime collaboration is in BETA right now. Read more here.</a>";
       editor_controller.flash.sticky_success(msg, {msg_uid:msg});
 
       msg = "<a target='_blank' href='/site/privacy_policy.html'>Usage of this application implies agreement with our (short) privacy policy that can be read by clicking here.</a>";
