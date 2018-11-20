@@ -34,15 +34,11 @@ func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) error {
 	if userId := subscription.Meta["user_id"]; userId == "" {
 		return errors.New("Invalid user_id field in the metadata")
 	} else {
-		userId := subscription.Meta["user_id"]
-		if existing := s.data[userId]; existing != nil {
-			if existing.Status == "active" && subscription.Status != "active" {
-				fmt.Println("Not replacing subscription because the one currently set is active")
-				return nil
-			}
+		if subscription.Status == "active" {
+			s.data[subscription.Meta["user_id"]] = subscription
+		} else {
+			fmt.Println("Ignoring non-active subscription", subscription.ID)
 		}
-
-		s.data[subscription.Meta["user_id"]] = subscription
 		return nil
 	}
 }
