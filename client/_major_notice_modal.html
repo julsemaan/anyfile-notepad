@@ -1,31 +1,24 @@
 <script class="template-partial" data-partial-name="major_notice_modal" type="text/x-handlebars">
-<div class="modal fade" id="major_notice_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false" data-version="4">
+<div class="modal fade" id="major_notice_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false" data-version="5">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-        <h4>This version introduces changes to the menus.</h4>
-        <div class="mobile-show">
-          <h5>Overview of the changes:</h5>
-          <ul>
-            <li>The Open menu and the favorites have been moved to the File menu.</li>
-            <li>The syntax selection is now in the File menu</li>
-            <li>There is a new Accounts sub menu in the Options to manage the Google and Dropbox accounts.</li>
-            <li>There is a new Advanced sub menu in the Options to manage the language and theme used by the app</li>
-          </li>
-        </div>
-        <div class="non-mobile-show">
-          <h4>We suggest you take a quick tour to visualize the changes</h4>
-        </div>
+        <h4>Realtime collaboration update (and BETA availability).</h4>
+
+        <p>After getting input from all the users through the survey, we identified the core need for realtime collaboration to stay</p>
+        
+        <p>GOOD NEWS! It is staying and it will stay free and included in the app.</p>
+
+        <p>Your help would be greatly appreciated in testing this new feature by using the BETA version of the app. In the event you hit issues, you can always go back to the stable version of the app. <a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a></p>
+
+        <br>
+        <h4 style="text-align:center">
+          If you want to learn more about the new realtime collaboration, <br><a target="_blank" href="/news">click here for a detailed article</a>
+        </h4>
       </div>
 
       <div class="modal-footer">
-        <div class="non-mobile-show">
-          <button type="button" class="btn btn-primary agree_major_notice">Skip the tour</button>
-          <button type="button" onclick="javascript:application.tour_controller.menu_change_tour()" class="btn btn-primary agree_major_notice">OK! Let's go</button>
-        </div>
-        <div class="mobile-show">
-          <button type="button" class="btn btn-primary agree_major_notice">OK! Let's go</button>
-        </div>
+        <button type="button" class="btn btn-primary agree_major_notice">OK! Let's go</button>
       </div>
     </div>
   </div>
