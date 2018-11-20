@@ -28,17 +28,36 @@ func (s *Subscriptions) Empty() {
 func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
+
 	fmt.Println("Setting subscription", subscription.ID)
 
 	if userId := subscription.Meta["user_id"]; userId == "" {
 		return errors.New("Invalid user_id field in the metadata")
 	} else {
+		userId := subscription.Meta["user_id"]
+		if existing := s.data[userId]; existing != nil {
+			if existing.Status == "active" && subscription.Status != "active" {
+				fmt.Println("Not replacing subscription because the one currently set is active")
+				return nil
+			}
+		}
+
 		s.data[subscription.Meta["user_id"]] = subscription
 		return nil
 	}
 }
 
+func (s *Subscriptions) DelSubscription(userId string) {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
+	delete(s.data, userId)
+}
+
 func (s *Subscriptions) GetSubscription(userId string) *stripe.Sub {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	return s.data[userId]
 }
 
@@ -48,6 +67,7 @@ func (s *Subscriptions) Reload() {
 	i := sub.List(params)
 	for i.Next() {
 		subscription := i.Sub()
+		s.DelSubscription(subscription.Meta["user_id"])
 		s.SetSubscription(subscription)
 	}
 }
