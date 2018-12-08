@@ -14,6 +14,8 @@ type Handler struct{}
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/events" {
 		eventsHandler(w, r)
+	} else if r.URL.Path == "/api/collaboration/realtime_events" {
+		realtimeHandler(w, r)
 	} else if apiRegexp.MatchString(r.URL.Path) {
 		apiHandler.ServeHTTP(w, r)
 	} else {
@@ -70,8 +72,8 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 			}
 
 			if subscription := subscriptions.GetSubscription(userId); subscription != nil {
-				if subscription.Status != "active" {
-					fmt.Println(userId, "subscription isn't active anymore")
+				if !subscriptions.CanHaveAccess(subscription) {
+					fmt.Println(userId, "subscription isn't valid anymore")
 				} else {
 					fmt.Println(userId, "allowing access to ++ app")
 					r.URL.Path = "/app-plus-plus.html"

@@ -29,6 +29,8 @@ function EditorController(view, options){
   this.autosave_interval;
 
   this.detect_device();
+
+  this.realtime_collaborators = {};
 }
 
 EditorController.prototype.initialize_html = function(){
@@ -40,6 +42,7 @@ EditorController.prototype.initialize_html = function(){
   })
 
   $(window).bind('beforeunload',function(){
+    self.publish_realtime_event({'type':'leaved'});
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
@@ -146,10 +149,6 @@ EditorController.prototype.edit = function(id){
     loaded : function(error){
       self.$.find("#file_load_modal").modal('hide');
       if(!error){
-        if(self.provider == "GoogleDrive") {
-          self.make_collaborative()
-        }
-
         // Can't change filename with Dropbox
         if(self.provider == "Dropbox"){
           $('input[data-bind-file="title"]').attr('disabled', 'disabled');
@@ -209,6 +208,10 @@ EditorController.prototype.post_file_load = function(){
   }
 
   self.top_menu.close_mobile_menu();
+
+  if(self.provider == "GoogleDrive") {
+    self.make_collaborative()
+  }
 }
 
 EditorController.prototype.reset_options = function(){
@@ -278,6 +281,7 @@ EditorController.prototype.activate_autosave = function(force){
   var self = this
   this.deactivate_autosave()
   if(force || BooleanPreference.find("autosave").getValue()) {
+    self.autosave_enabled = true;
     $('.autosave-on').show();
     $('.autosave-off').hide();
     self.autosave_interval = setInterval(function(){self.autosave()}, 5000)
@@ -286,7 +290,8 @@ EditorController.prototype.activate_autosave = function(force){
 
 EditorController.prototype.deactivate_autosave = function(){
   var self = this
-  clearInterval(this.autosave_interval)
+  clearInterval(this.autosave_interval);
+  self.autosave_enabled = false;
   $('.autosave-off').show();
   $('.autosave-on').hide();
 }
@@ -375,10 +380,6 @@ EditorController.prototype.content_changed = function(){
     return
   }
 
-  if(this.file.persisted && this.realtime_content){
-    this.realtime_content.setText(this.editor_view.getValue());
-  }
-  
   if(!(this.$.find('.editor_save_button').html() == i18n("Saving")+"...")){
     if(this.file.did_content_change()){
       this.$.find('.editor_save_button').html(i18n("Save"))
@@ -407,13 +408,36 @@ EditorController.prototype.stop_collaboration = function(){
   //Clear out the collaborators area      
   self.clear_collaborators();
 
+  clearInterval(self.realtime_ping_interval);
+
   // remove any previous event listeners, if any
-  if(self.realtime_content){
-    self.realtime_content.removeAllEventListeners();
-    self.realtime_content = undefined;
-  }
-  if(self.realtime_document) self.realtime_document.close();
+  if(self.realtime_document) self.realtime_document.stop_realtime();
   self.realtime_document = undefined;
+}
+
+EditorController.prototype.publish_realtime_event = function(e){
+  var self = this;
+
+  if(!self.realtime_document) return;
+
+  console.log("publishing event", e)
+
+  e.google_user_id = application.controllers.google_oauth.current_user.user_id;
+  e.google_user_name = application.controllers.google_oauth.current_user.name;
+  self.realtime_document.publish_event(e).fail(function(){
+    console.error("Error publishing realtime event, will retry in a second");
+    setTimeout(function() {
+      self.publish_realtime_event(e);
+    }, 1000);
+  });
+}
+
+EditorController.prototype.ping_realtime = function() {
+  var self = this;
+  self.publish_realtime_event({
+    "type": "ping",
+    "timestamp": new Date().getTime(), 
+  });
 }
 
 EditorController.prototype.make_collaborative = function(){
@@ -421,47 +445,60 @@ EditorController.prototype.make_collaborative = function(){
 
   self.stop_collaboration();
 
-  gapi.drive.realtime.load(self.file.id, function(doc){
-    self.realtime_document = doc;
-    try{
-    self.realtime_content = self.realtime_document.getModel().getRoot().get("content");
-
-
-    self.realtime_content.addEventListener(
-      gapi.drive.realtime.EventType.TEXT_INSERTED, 
-      function(evt){
-        self.file_content_added(evt)
-      });
-    
-    self.realtime_content.addEventListener(
-      gapi.drive.realtime.EventType.TEXT_DELETED, 
-      function(evt){
-        self.file_content_deleted(evt)
-      });
-
-    self.realtime_document.addEventListener(
-      gapi.drive.realtime.EventType.COLLABORATOR_JOINED, 
-      function(evt){
-        self.add_collaborator(evt.collaborator);
-      });
-
-    self.realtime_document.addEventListener(
-      gapi.drive.realtime.EventType.COLLABORATOR_LEFT, 
-      function(evt){
-        self.remove_collaborator(evt.collaborator);
-      });
-    
-    self.display_collaborators()
-
-    }catch(e){console.log(e)}
-  }, 
-  function(model) {self.init_collaboration(model)},
-  function(error) {
-    if(error.type == "token_refresh_required"){
-      application.controllers.google_oauth.do_auth();
-    }
+  if(!self.file.persisted) {
+    return;
   }
-  );
+
+  self.realtime_document = self.file;
+
+  // Notify we've joined
+  self.publish_realtime_event({
+    "type":"joined",
+  });
+
+  // Make ourself visible every 10 seconds
+  self.realtime_ping_interval = setInterval(function() {
+    self.ping_realtime();
+  }, 10 * 1000);
+
+  self.editor_view.getSession().getDocument().on('change', function(e){
+    if(!e.remote_change) {
+      e.type = "ace.js";
+      self.publish_realtime_event(e);
+    }
+  });
+
+  self.realtime_document.start_realtime_events(function(e) {
+    console.log("receiving event", e)
+    
+    self.add_collaborator(e);
+
+    if(e.category != self.realtime_document.collab_id) {
+      console.log("Discarding event because its not meant for this document", e);
+    }
+
+    if(e.data.type == "ace.js") {
+      e.data.remote_change = true;
+      self.editor_view.getSession().getDocument().applyDelta(e.data);
+    }
+    else if(e.data.type == "joined") {
+      console.log(e.data.type)
+      self.last_joined_ping = self.last_joined_ping || 0;
+      // Don't ping more than once per second
+      var now = new Date().getTime();
+      if(now - self.last_joined_ping > 1 * 1000) {
+        console.log("Someone has joined the collaboration, making ourself visible");
+        self.ping_realtime();
+        self.last_joined_ping = now;
+      }
+      else {
+        console.log("Not publishing ping due to rate limiting");
+      }
+    }
+    else if(e.data.type == "leaved") {
+      self.remove_collaborator(e);
+    }
+  });
 }
 
 EditorController.prototype.clear_collaborators = function(collaborator){
@@ -469,30 +506,42 @@ EditorController.prototype.clear_collaborators = function(collaborator){
   $('.collaborators').html('');
 }
 
-EditorController.prototype.remove_collaborator = function(collaborator){
+EditorController.prototype.remove_collaborator = function(e){
   var self = this;
-  self.clear_realtime_user(collaborator.userId);
-  $('#collaborator-'+collaborator.userId).remove();
+  $('#collaborator-'+e.data.google_user_id).remove();
 }
 
-EditorController.prototype.add_collaborator = function(collaborator) {
+EditorController.prototype.add_collaborator = function(e) {
   var self = this;
-  if(collaborator.isMe) return;
-  var element = $("<span id='collaborator-"+collaborator.userId+"' class='label label-default' style='background-color:"+collaborator.color+"'>"+collaborator.displayName+"</span>");
-  self.collaborators_colors[collaborator.userId] = collaborator.color;
-  if(! $('.collaborators').has('#collaborator-'+collaborator.userId).length )
+  var data = e.data;
+  if(application.controllers.google_oauth.current_user.user_id == data.google_user_id) return;
+
+  if(!self.autosave_enabled && !self.file.warned_autosave_collab) {
+    new Popup({ 
+      message : i18n("Autosave isn't currently enabled and we detected you are collaborating with another user on this file. We suggest enabling autosave, otherwise unexpected issues may occur if the file isn't saved frequently enough."), 
+      confirm_btn: i18n("Enable autosave temporarily"),
+      cancel_btn: i18n("Continue without autosave"),
+      callback : function(result) {if(result) self.activate_autosave(true)}, 
+      confirm : true,
+    });
+    self.file.warned_autosave_collab = true;
+  }
+
+  var collaborator_id = data.google_user_id;
+  self.realtime_collaborators[collaborator_id] = self.realtime_collaborators[collaborator_id] || {};
+  var clearFunc = self.realtime_collaborators[collaborator_id].clearFunc;
+  if(clearFunc) clearTimeout(clearFunc);
+  
+  // Set an interval to delete the collaborator if he's unseen for 2 minutes
+  self.realtime_collaborators[collaborator_id].clearFunc = setTimeout(function() {
+    console.log("Removing unseen collaborator", e.data.google_user_name);
+    self.remove_collaborator(e); 
+  }, 120 * 1000)
+
+  var element = $("<span id='collaborator-"+data.google_user_id+"' class='label label-default' style='color:#041e47;background-color:"+niceRandomColor()+"'>"+data.google_user_name+"</span>");
+  if(! $('.collaborators').has('#collaborator-'+data.google_user_id).length )
     $('.collaborators').append(element) ;
 
-}
-
-EditorController.prototype.display_collaborators = function(){
-  var self = this;
-  var collaborators = self.realtime_document.getCollaborators();
-  self.collaborators_colors = {}
-  for(var i in collaborators) {
-    var collaborator = collaborators[i];
-    self.add_collaborator(collaborator);
-  }
 }
 
 EditorController.prototype.reset_collaboration = function() {
@@ -501,35 +550,6 @@ EditorController.prototype.reset_collaboration = function() {
     self.stop_collaboration();
     self.init_collaboration();
   }
-}
-
-EditorController.prototype.file_content_added = function(evt){
-  var self = this;
-  if(!evt.isLocal){
-    var start = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
-    self.editor_view.getSession().insert(start, evt.text)
-    var nl_stripped = evt.text.replace('\n', '')
-    if(nl_stripped !== "") {
-      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index+1));
-    }
- }
-  
-}
-
-EditorController.prototype.file_content_deleted = function(evt){
-  var self = this;
-  if(!evt.isLocal){
-    var begin = self.editor_view.getSession().getDocument().indexToPosition(evt.index)
-    var end = self.editor_view.getSession().getDocument().indexToPosition(evt.index+evt.text.length)
-    var range = new Range(begin.row, begin.column, end.row, end.column)
-    self.editor_view.getSession().remove({start:begin, end:end})
-
-    var nl_stripped = evt.text.replace('\n', '')
-    if(nl_stripped !== "") {
-      self.move_realtime_user(evt.userId, self.editor_view.getSession().getDocument().indexToPosition(evt.index));
-    }
-  }
-  
 }
 
 EditorController.prototype.move_realtime_user = function(userId, position){

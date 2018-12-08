@@ -10,7 +10,10 @@ CloudFile.prototype.post_init = function(options){
   this.set("_tmp_title_saved", "")
   this.set("_tmp_data_saved", "")
   this.set("_post_update_callback")
-  
+
+  this.set("_publisher_uuid", guid());
+  this.set("_run_realtime", false);
+
   this.post_init_child(options);
 
   if(this.id){
@@ -147,4 +150,76 @@ CloudFile.prototype.delete = function(){
 
 CloudFile.prototype.urlId = function(){
   return this.id;
+}
+
+CloudFile.prototype.generate_collab_id = function() {
+  return guid();
+}
+
+CloudFile.prototype.publish_event = function(e) {
+  var self = this;
+  e.publisher_uuid = self._publisher_uuid;
+  return $.post(
+    AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events/"+self.collab_id,
+    JSON.stringify(e)
+  );
+}
+
+CloudFile.prototype.events_since = function(since) {
+  var self = this;
+  var args = {
+    category: self.collab_id,
+    timeout: 30,
+  };
+
+  if(since) {
+    args["since_time"] = since;
+  }
+
+  return $.get(
+    AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events",
+    args
+  );
+}
+
+CloudFile.prototype.get_realtime_events = function(start_at, callback) {
+  var self = this;
+  
+  if(!self.id) return;
+
+  self.events_since(start_at)
+    .success(function(data){
+      if(self._run_realtime) {
+        var events = data["events"] || [];
+        if(events.length > 0) {
+          for(var i in events) {
+            var e = events[i];
+            if(e.data.publisher_uuid != self._publisher_uuid) {
+              callback(e);
+            }
+          }
+        }
+        self.get_realtime_events(data.timestamp, callback);
+      }
+    })
+    .fail(function(data){
+      if(self._run_realtime) {
+        console.error("Failed to obtain events for realtime collaboration, retrying in a second");
+        setTimeout(function() {
+          self.get_realtime_events(start_at, callback);
+        }, 1000);
+      }
+    });
+}
+
+CloudFile.prototype.start_realtime_events = function(callback) {
+  var self = this;
+  if(!self.id) return;
+
+  self._run_realtime = true;
+  self.get_realtime_events(self.modified_timestamp, callback);
+}
+
+CloudFile.prototype.stop_realtime = function() {
+  self._run_realtime = false;  
 }

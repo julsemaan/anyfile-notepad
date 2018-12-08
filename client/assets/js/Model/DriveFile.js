@@ -1,45 +1,53 @@
 Class("DriveFile", ["CloudFile"]);
 
 DriveFile.prototype.post_init_child = function(options) {
+  this.set("collabKey", "afnCollabID");
   this.set("provider", "GoogleDrive");
 }
 
 DriveFile.prototype.get_file_data = function(){
   var self = this;
-  var fields = "downloadUrl,id,mimeType,title,fileSize"
-  var request = gapi.client.drive.files.get({
-    'fileId': this.id
+  var fields = "downloadUrl,id,mimeType,title,fileSize,modifiedDate"
+
+  self.get_create_collab_id(function(id) {
+    self.collab_id = id;
+
+    var request = gapi.client.drive.files.get({
+      'fileId': self.id
+    });
+    callback = function(resp) {
+      self.set("mime_type", resp.mimeType);
+      self.set("title", resp.title);
+      self.set("title_saved", self.title);
+      self.set("modified_timestamp", Date.parse(resp.modifiedDate));
+
+      if(!resp.downloadUrl){
+        self.loaded("Can't find your file. This is probably a Google document or another unsupported file.")
+        return
+      }
+
+      $.ajax({
+        url : resp.downloadUrl,
+        headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
+        complete : function(data, status){
+          if(data.status == 200){
+            self.set("data", data.responseText)
+            self.set("data_saved", self.data)
+            self.compute_syntax()
+            self.loaded()
+          }
+          else{
+            console.log(data)
+            self.loaded("Fatal error! The file couldn't load from Google's server. Response was : "+status+". If this happens again, file a bug on the community.");
+            return
+          }
+        },
+      })
+
+    };
+    application.controllers.google_oauth.execute_request(request, callback)
   });
-  callback = function(resp) {
-    self.set("mime_type", resp.mimeType)
-    self.set("title", resp.title)
-    self.set("title_saved", self.title)
 
-    if(!resp.downloadUrl){
-      self.loaded("Can't find your file. This is probably a Google document or another unsupported file.")
-      return
-    }
-
-    $.ajax({
-      url : resp.downloadUrl,
-      headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
-      complete : function(data, status){
-        if(data.status == 200){
-          self.set("data", data.responseText)
-          self.set("data_saved", self.data)
-          self.compute_syntax()
-          self.loaded()
-        }
-        else{
-          console.log(data)
-          self.loaded("Fatal error! The file couldn't load from Google's server. Response was : "+status+". If this happens again, file a bug on the community.");
-          return
-        }
-      },
-    })
-
-  };
-  application.controllers.google_oauth.execute_request(request, callback)
 }
 
 DriveFile.prototype.update_metadata = function(callback){
@@ -58,6 +66,36 @@ DriveFile.prototype.update_metadata = function(callback){
   else{
     callback()
   }
+}
+
+DriveFile.prototype.get_create_collab_id = function(callback) {
+  var self = this;
+  var request;
+
+  request = gapi.client.drive.properties.get({
+    'fileId': self.id,
+    'propertyKey': self.collabKey,
+  });
+  application.controllers.google_oauth.execute_request(request, function(data){
+    if(data.code == 404) {
+      console.log("collab key doesn't exist yet, creating it");
+      var collabID = self.generate_collab_id();
+      request = gapi.client.drive.properties.insert({
+        'fileId': self.id,
+        'resource': {
+          'key': self.collabKey, 
+          'value': collabID,
+        },
+      });
+      application.controllers.google_oauth.execute_request(request, function(data) {
+        callback(data.value);
+      });
+    }
+    else {
+      callback(data.value);
+    }
+  }, {'errorOnlyUnauth': true});
+
 }
 
 DriveFile.prototype.update_data = function(new_revision, callback){

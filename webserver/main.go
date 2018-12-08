@@ -24,6 +24,8 @@ var appProdHandler http.Handler
 var appDevHandler http.Handler
 var eventsManager *golongpoll.LongpollManager
 var eventsHandler func(http.ResponseWriter, *http.Request)
+var realtimeManager *golongpoll.LongpollManager
+var realtimeHandler func(http.ResponseWriter, *http.Request)
 
 var plusPlusSessionsDb = os.Getenv("PLUS_PLUS_SESSIONS_DB")
 var plusPlusSessions = NewPlusPlusSessions()
@@ -79,6 +81,9 @@ func setupHandlers() {
 	r := gin.Default()
 	api := r.Group("/api")
 
+	collab := api.Group("/collaboration")
+	collab.POST("/realtime_events/:category", publishRealtimeEvent)
+
 	subscription := api.Group("/billing/subscription")
 	subscription.Use(LoadSubscription)
 	subscription.Use(LoadGoogleUser)
@@ -103,6 +108,17 @@ func setupHandlers() {
 		fmt.Println("Failed to create manager: %q", err)
 	}
 	eventsHandler = eventsManager.SubscriptionHandler
+
+	realtimeManager, err = golongpoll.StartLongpoll(golongpoll.Options{
+		LoggingEnabled:     true,
+		MaxEventBufferSize: 1000,
+		// Events stay for up to 1 hour
+		EventTimeToLiveSeconds: 3600,
+	})
+	if err != nil {
+		fmt.Println("Failed to create manager: %q", err)
+	}
+	realtimeHandler = realtimeManager.SubscriptionHandler
 }
 
 func setupSubscriptions() {
