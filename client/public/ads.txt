@@ -100,7 +100,7 @@ openx.com, 538959099, RESELLER
 pubmatic.com, 137711, RESELLER
 pubmatic.com, 156212, RESELLER
 pubmatic.com, 62483, RESELLER
-contextweb.com. 558511, RESELLER
+contextweb.com, 558511, RESELLER
 adtech.com, 10483, RESELLER
 aolcloud.net, 10483, RESELLER
 appnexus.com, 1610, RESELLER, f5ab79cb980f11d1
@@ -134,13 +134,16 @@ mobfox.com, 74050, DIRECT
 rhythmone.com, 4000889998, RESELLER
 engagebdr.com, 10081, Reseller
 lockerdome.com, 10966041430035456, DIRECT
-udmserve.net, 2461, 0cf60ed62b5f3e40, DIRECT
+udmserve.net, 2461, DIRECT, 0cf60ed62b5f3e40
 spotxchange.com, 238463, RESELLER, 7842df1d2fe2db34
 spotx.tv, 238463, RESELLER, 7842df1d2fe2db34
 gamoshi.io, 267, RESELLER
 lkqd.net, 531, DIRECT, 59c49fa9598a0117
 teads.tv, 16973, DIRECT, 15a9c44f6d26cbe1
 gamoshi.io, 267, RESELLER
+EMXDGT.com, 993, DIRECT, 1e1d41537f7cad7f
+Appnexus.com, 1356, RESELLER, f5ab79cb980f11d1
+Google.com, pub-5995202563537249, RESELLER, f08c47fec0942fa0
 rhythmone.com,547493497,DIRECT,a670c89d4a324e47
 rhythmone.com,3625668534,DIRECT,a670c89d4a324e47
 rhythmone.com,2401133459,DIRECT,a670c89d4a324e47
