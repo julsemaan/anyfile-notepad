@@ -9,25 +9,14 @@ rubiconproject.com, 8861, reseller, 0bfd66d529a55807
 districtm.io, 100769, DIRECT
 appnexus.com, 7944, RESELLER
 appnexus.com, 1908, RESELLER
-openx.com, 126686, RESELLER, a698e2ec38604c6
-openx.com, 537120224, RESELLER, a698e2ec38604c6
+openx.com, 126686, RESELLER, 6a698e2ec38604c6
+openx.com, 537120224, RESELLER, 6a698e2ec38604c6
 pubmatic.com, 32702, RESELLER, 5d62403b186f2ace
 pubmatic.com, 51048, RESELLER, 5d62403b186f2ace
 pubmatic.com, 116164, RESELLER, 5d62403b186f2ace
 pubmatic.com, 156262, RESELLER, 5d62403b186f2ace
-Sovrn.com, 236947, DIRECT, fafdf38b16bf6b2b
-Lijit.com, 236947, DIRECT, fafdf38b16bf6b2b
-openx.com, 537120960, RESELLER
-openx.com, 83499, RESELLER
-openx.com, 538959099, RESELLER
-pubmatic.com, 137711, RESELLER
-pubmatic.com, 156212, RESELLER
-pubmatic.com, 62483, RESELLER
-contextweb.com, 558511, RESELLER
-contextweb.com, 558571, RESELLER
-contextweb.com, 558393, RESELLER
-contextweb.com, 558395, RESELLER
-contextweb.com, 558570, RESELLER
+rhythmone.com, 3068080230, DIRECT, a670c89d4a324e47
+rhythmone.com, 2058060463, DIRECT, a670c89d4a324e47
 smaato.com, 1100001651, RESELLER
 inner-active.com, 206458, DIRECT
 komoona.com, 256093, DIRECT
