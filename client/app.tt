@@ -48,9 +48,9 @@
         Click to post on the community
       </a>
     </p>
-<script src='https://www.googletagservices.com/tag/js/gpt.js'>
-    googletag.pubads().definePassback('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_160x600_1', [160, 600]).display();
-</script>
+<div id='banner-160x600-1'>
+    <script>googletag.cmd.push(function() { googletag.display('banner-160x600-1'); });</script>
+</div>
 	</div>
   [% END %]
 </div>
