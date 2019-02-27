@@ -106,6 +106,9 @@ application.controllers.google_oauth.add_to_queue(function(){
       msg = "<a target='_blank' href='/site/privacy_policy.html'>Usage of this application implies agreement with our (short) privacy policy that can be read by clicking here.</a>";
       editor_controller.flash.sticky_success(msg, {msg_uid:msg});
 
+      msg = "<a target='_blank' href='http://bit.ly/afn-community-fb'>The users community is moving to Facebook. Click here to access and follow the new community page.</a>";
+      editor_controller.flash.sticky_success(msg, {msg_uid:msg});
+
       new EditorRouter(editor_controller)
       var menu_controller = new MenuController("menu");
       var top_menu_controller = new TopMenuController("menu", { 'flash' : editor_controller.flash, 'editor':editor_controller, 'menu':menu_controller });
