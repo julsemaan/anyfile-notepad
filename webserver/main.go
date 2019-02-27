@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/inverse-inc/packetfence/go/sharedutils"
 	"github.com/jcuga/golongpoll"
 	stripe "github.com/stripe/stripe-go"
 )
@@ -29,6 +30,7 @@ var realtimeHandler func(http.ResponseWriter, *http.Request)
 
 var plusPlusSessionsDb = os.Getenv("PLUS_PLUS_SESSIONS_DB")
 var plusPlusSessions = NewPlusPlusSessions()
+var longPollLogging = (sharedutils.EnvOrDefault("LONG_POLL_LOGGING", "false") == "true")
 
 var aliasPaths = map[string]string{
 	"/app": "/app.html",
@@ -102,7 +104,7 @@ func setupHandlers() {
 
 	var err error
 	eventsManager, err = golongpoll.StartLongpoll(golongpoll.Options{
-		LoggingEnabled: true,
+		LoggingEnabled: longPollLogging,
 	})
 	if err != nil {
 		fmt.Println("Failed to create manager: %q", err)
@@ -110,7 +112,7 @@ func setupHandlers() {
 	eventsHandler = eventsManager.SubscriptionHandler
 
 	realtimeManager, err = golongpoll.StartLongpoll(golongpoll.Options{
-		LoggingEnabled:     true,
+		LoggingEnabled:     longPollLogging,
 		MaxEventBufferSize: 1000,
 		// Events stay for up to 1 hour
 		EventTimeToLiveSeconds: 3600,
