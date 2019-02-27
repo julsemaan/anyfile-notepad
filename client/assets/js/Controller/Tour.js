@@ -78,7 +78,7 @@ TourController.prototype.menu_change_tour = function() {
   });
 
   tour.addStep('present-changes-completed', {
-    text: 'We hope you like those changes, and feel free to provide feedback on how we can make the app better via our Google+ Community.',
+    text: 'We hope you like those changes, and feel free to provide feedback on how we can make the app better via our Facebook Community.',
     attachTo: '#expanded_menu right',
     when: {
       hide: function() {

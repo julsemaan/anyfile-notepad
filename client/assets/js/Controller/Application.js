@@ -55,7 +55,7 @@ ApplicationController.prototype.actOnDevModeSettings = function() {
     if(self.dev_mode_available) {
       var msg = "<a href='javascript:void(0)' onclick='javascript:application.stop_dev_mode()'>You are using the BETA version of the app. Bugs may occur. Click here to go back to the stable version</a>"
       self.controllers.editor.flash.sticky_warning(msg, {msg_uid:msg+self.build_id});
-      self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>Found a bug in the BETA version ?<br/>Click here to report it on the community</a>");
+      self.controllers.editor.flash.sticky_success("<a target='_blank' href='https://github.com/julsemaan/anyfile-notepad/issues'>Found a bug in the BETA version ?<br/>Click here to report it on Github</a>");
     }
     else {
       new Popup({ message : i18n("The BETA version is not available anymore and has become the official release. Next time a BETA is available you will be notified and will have the choice to opt in. Thank you for your participation to the BETA try out. When you will press OK, you will be brought back to the stable version of the app."), callback : function(result) {self.stop_dev_mode(true)} });
@@ -69,7 +69,7 @@ ApplicationController.prototype.actOnDevModeSettings = function() {
 ApplicationController.prototype.setupLocaleFlash = function() {
   var self = this;
   if(!String.locale.match('^en')){
-    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community'>You are using a translated version of the app. Report bad translations by clicking here</a>");
+    self.controllers.editor.flash.sticky_success("<a target='_blank' href='http://bit.ly/afn-community-fb'>You are using a translated version of the app. Report bad translations by clicking here</a>");
   }
 } 
 
