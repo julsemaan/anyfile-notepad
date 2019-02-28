@@ -33,7 +33,8 @@ Preferences.prototype.create_initial = function(){
   this.new_prefs_file = new DriveFile({
     uid: "preferences",
     folder_id: "appfolder",
-    fuck_syntax: true
+    fuck_syntax: true,
+    realtime: false,
   })
   console.log("creating initial preferences");
   this.new_prefs_file.set('title', 'preferences');
@@ -61,7 +62,8 @@ Preferences.prototype.get_from_drive = function(){
           loaded: function(){
             self.post_load()
           },
-          fuck_syntax:true
+          fuck_syntax:true,
+          realtime: false,
         }) 
         return
       }

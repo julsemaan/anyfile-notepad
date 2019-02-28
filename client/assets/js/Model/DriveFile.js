@@ -3,6 +3,8 @@ Class("DriveFile", ["CloudFile"]);
 DriveFile.prototype.post_init_child = function(options) {
   this.set("collabKey", "afnCollabID");
   this.set("provider", "GoogleDrive");
+  options.realtime = options.realtime !== undefined ? options.realtime : true;
+  this.set("realtime", options.realtime);
 }
 
 DriveFile.prototype.get_file_data = function(){
@@ -71,6 +73,11 @@ DriveFile.prototype.update_metadata = function(callback){
 DriveFile.prototype.get_create_collab_id = function(callback) {
   var self = this;
   var request;
+
+  if(!self.realtime) {
+    callback(undefined);
+    return;
+  }
 
   request = gapi.client.drive.properties.get({
     'fileId': self.id,
