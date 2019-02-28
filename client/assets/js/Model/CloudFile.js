@@ -191,15 +191,19 @@ CloudFile.prototype.get_realtime_events = function(start_at, callback) {
     .success(function(data){
       if(self._run_realtime) {
         var events = data["events"] || [];
+        var latest;
         if(events.length > 0) {
           for(var i in events) {
             var e = events[i];
+            if(!latest || e.timestamp > latest) {
+              latest = e.timestamp;
+            }
             if(e.data.publisher_uuid != self._publisher_uuid) {
               callback(e);
             }
           }
         }
-        self.get_realtime_events(data.timestamp, callback);
+        self.get_realtime_events(latest, callback);
       }
     })
     .fail(function(data){
