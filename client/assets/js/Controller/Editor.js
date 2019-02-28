@@ -212,8 +212,10 @@ EditorController.prototype.post_file_load = function(){
   this.editor_view.getSession().setValue(this.file.data, -1);
 
   // If its a saved file which isn't known to the app or to the user, then we warn him
+  // Also the filename must not be equal to the extension (handling cases like .bashrc, .vimrc, etc)
   if(
       this.file.persisted && 
+      this.file.title != this.file.extension() &&
       !extensions.find({ key: 'name', value: this.file.extension() }) &&
       !ArrayPreference.find("user_extensions").array.includes(this.file.extension())
       ){
