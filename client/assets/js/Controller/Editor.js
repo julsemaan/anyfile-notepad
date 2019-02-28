@@ -31,6 +31,41 @@ function EditorController(view, options){
   this.detect_device();
 
   this.realtime_collaborators = {};
+
+  this.last_changed = new Date();
+  this.loop_check_last_changed();
+}
+
+EditorController.prototype.loop_check_last_changed = function() {
+  var self = this;
+  var inactiveMinutes = 60;
+  var checkEverySeconds = 30;
+  var inactiveRestartInterval = new Date((new Date()).getTime() - inactiveMinutes*60000);
+
+  if(inactiveRestartInterval > self.last_changed) {
+    console.log("User has been inactive for too long. Prompting restart of the app");
+
+    new Popup({ 
+      title: "Inactivity timeout", 
+      confirm: true, 
+      hb_partial: "#inactivity_restart", 
+      confirm_btn: "Continue using app",
+      cancel_btn: "Restart app",
+      callback : function(result) {
+        if(result) {
+          clearInterval(window.inactivityRestartInterval);
+          self.last_changed = new Date();
+          self.loop_check_last_changed();
+        }
+        else {
+          window.location.reload() 
+        }
+      },
+    });
+  }
+  else {
+    setTimeout(function(){self.loop_check_last_changed()}, checkEverySeconds * 1000);
+  }
 }
 
 EditorController.prototype.initialize_html = function(){
@@ -374,6 +409,8 @@ EditorController.prototype.show_file_explorer = function(){
 EditorController.prototype.content_changed = function(){
   var self = this;
 
+  self.last_changed = new Date();
+
   this.file.set("data", this.editor_view.getValue());
   if(!this.file.persisted){
     this.$.find('.editor_save_button').html(i18n("Save"))
@@ -420,7 +457,7 @@ EditorController.prototype.publish_realtime_event = function(e){
 
   if(!self.realtime_document) return;
 
-  console.log("publishing event", e)
+  //console.log("publishing event", e)
 
   e.google_user_id = application.controllers.google_oauth.current_user.user_id;
   e.google_user_name = application.controllers.google_oauth.current_user.name;
@@ -469,7 +506,7 @@ EditorController.prototype.make_collaborative = function(){
   });
 
   self.realtime_document.start_realtime_events(function(e) {
-    console.log("receiving event", e)
+    //console.log("receiving event", e)
     
     self.add_collaborator(e);
 
