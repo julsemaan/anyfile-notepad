@@ -20,6 +20,20 @@ rhythmone.com, 2058060463, DIRECT, a670c89d4a324e47
 smaato.com, 1100001651, RESELLER
 inner-active.com, 206458, DIRECT
 komoona.com, 256093, DIRECT
+imonomy.com, 2189 ,DIRECT
+google.com, pub-7169237679086737, RESELLER, f08c47fec0942fa0
+openx.com, 537104839, RESELLER, 6a698e2ec38604c6
+openx.com, 540299346, RESELLER, 6a698e2ec38604c6
+openx.com, 540606043, RESELLER, 6a698e2ec38604c6 
+33across.com,0013300001qFpAmAAK, RESELLER  ,bbea06d9c4d2853c 
+rubiconproject.com,16414,RESELLER,0bfd66d529a55807
+rubiconproject.com, 18230, RESELLER,
+openx.com, 537120224, RESELLER, 6a698e2ec38604c6 
+pubmatic.com, 32702, RESELLER, 5d62403b186f2ace
+pubmatic.com, 51048, RESELLER, 5d62403b186f2ace
+pubmatic.com, 116164, RESELLER, 5d62403b186f2ace
+pubmatic.com, 156262, RESELLER, 5d62403b186f2ace
+inner-active.com, 206458, RESELLER
 memevideoad.com, 247, DIRECT
 whitwise.com, 247, Direct #MemeVideo #Vidoplay
 vidoplay.com, 247, Direct #MemeVideo #Vidoplay
@@ -124,6 +138,8 @@ Appnexus.com, 1356, RESELLER, f5ab79cb980f11d1
 Google.com, pub-5995202563537249, RESELLER, f08c47fec0942fa0
 udmserve.net, ​2461, DIRECT, 0cf60ed62b5f3e40
 advertising.com, 28251, reseller
+pubmatic.com, 158142, RESELLER, 5d62403b186f2ace
+rhythmone.com, 964214154, RESELLER
 rhythmone.com,547493497,DIRECT,a670c89d4a324e47
 rhythmone.com,3625668534,DIRECT,a670c89d4a324e47
 rhythmone.com,2401133459,DIRECT,a670c89d4a324e47
