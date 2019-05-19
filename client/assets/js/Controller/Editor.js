@@ -34,6 +34,8 @@ function EditorController(view, options){
 
   this.last_changed = new Date();
   this.loop_check_last_changed();
+
+  this.last_save_wanted = new Date();
 }
 
 EditorController.prototype.loop_check_last_changed = function() {
@@ -272,10 +274,12 @@ EditorController.prototype.print = function(){
 
 EditorController.prototype.save = function(){
   var self = this;
-  this.block_saving()
+  var save_time = new Date();
+  self.last_save_wanted = save_time;
+  self.saving_in_progress()
 
   if(this.file.title == ""){
-      this.flash.error(i18n("Filename can't be empty"), 5);
+      self.flash.error(i18n("Filename can't be empty"), 5);
       self.allow_saving()
       return false
   }
@@ -296,8 +300,12 @@ EditorController.prototype.save = function(){
       self.file.update(true, function(response){
         if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.urlId();
         self.editor_view.focus();
-        self.allow_saving()
+        self.allow_saving();
         $("#file_being_saved").modal('hide');
+        if(save_time < self.last_save_wanted) {
+          console.log("User requested save after the process started, saving again");
+          self.save();
+        }
       })
   }, 500)
   return false;
@@ -378,7 +386,7 @@ EditorController.prototype.is_ready_to_submit = function(){
   return true
 }
 
-EditorController.prototype.block_saving = function(){
+EditorController.prototype.saving_in_progress = function(){
   var self = this;
   this.$.find('.editor_save_button').html(i18n("Saving")+"...")
   this.$.find('.editor_save_button').unbind('click')
@@ -386,7 +394,7 @@ EditorController.prototype.block_saving = function(){
   $(window).off('keydown.save')
   $(window).on('keydown.save', function(event) {
     if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
-    self.flash.warning(i18n("This file is already being saved. Calm down."), 3)
+    self.last_save_wanted = new Date();
     event.preventDefault();
     return false;
   });  
