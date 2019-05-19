@@ -272,28 +272,34 @@ EditorController.prototype.print = function(){
 
 EditorController.prototype.save = function(){
   var self = this;
-  if(!self.can_save){
-    this.flash.warning(i18n("This file is already being saved. Calm down."), 5);
-    return;
-  }
   this.block_saving()
-  var length = this.editor_view.getValue().length
-  self.editor_view.focus()
+
   if(this.file.title == ""){
       this.flash.error(i18n("Filename can't be empty"), 5);
       self.allow_saving()
       return false
   }
-  else{
-    // give a small time for everything to show.
-    setTimeout(function(){
-        self.file.update(true, function(response){
-          if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.urlId();
-          self.editor_view.focus();
-          self.allow_saving()
-        })
-    }, 500)
+
+  if(!self.file.persisted) {
+    new Popup({ 
+      message : i18n("Your file is currently being saved, you will be redirected shortly."), 
+      popup_id : 'file_being_saved',
+      ok_btn : false,
+    });
   }
+
+  var length = this.editor_view.getValue().length
+  self.editor_view.focus()
+
+  // give a small time for everything to show.
+  setTimeout(function(){
+      self.file.update(true, function(response){
+        if(response && !response.error) window.location.hash="#edit/"+self.provider+"/"+self.file.urlId();
+        self.editor_view.focus();
+        self.allow_saving()
+        $("#file_being_saved").modal('hide');
+      })
+  }, 500)
   return false;
 }
 

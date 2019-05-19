@@ -18,11 +18,12 @@ Popup.prototype.post_init = function(args) {
       self.content = template(self);
     }
 
-    self.popup_id = uniqueId();
+    self.popup_id = self.popup_id || uniqueId();
     self.cancel_id = uniqueId();
     self.confirm_id = uniqueId();
 
     self.popup_name = self.popup_name || "";
+    self.ok_btn = (self.ok_btn !== undefined) ? self.ok_btn : true;
 
     self.confirm_btn = self.confirm_btn || i18n("OK");
     self.cancel_btn = self.cancel_btn || i18n("Cancel");
