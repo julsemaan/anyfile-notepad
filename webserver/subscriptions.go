@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/sub"
@@ -69,6 +70,13 @@ func (s *Subscriptions) Reload() {
 	params := &stripe.SubListParams{}
 	params.Filters.AddFilter("limit", "", "100")
 	i := sub.List(params)
+
+	if i.Err() != nil {
+		fmt.Println("ERROR: Unable to reload subscriptions, retrying in 10 seconds")
+		time.Sleep(10 * time.Second)
+		s.Reload()
+		return
+	}
 
 	newdata := map[string]*stripe.Sub{}
 	for i.Next() {
