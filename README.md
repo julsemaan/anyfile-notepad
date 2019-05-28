@@ -1,4 +1,6 @@
 # Anyfile Notepad
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjulsemaan%2Fanyfile-notepad.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjulsemaan%2Fanyfile-notepad?ref=badge_shield)
+
 
 Anyfile Notepad is a Google Drive compatible app that let's you open any type of files on Google Drive and Dropbox.
 
@@ -123,3 +125,6 @@ Report any issues using the [Google community](http://bit.ly/afn-community)
 # Licence
 
 GPL
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjulsemaan%2Fanyfile-notepad.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjulsemaan%2Fanyfile-notepad?ref=badge_large)
