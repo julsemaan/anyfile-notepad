@@ -121,8 +121,7 @@ ApplicationController.prototype.propose_upgrade = function() {
 
   // If we reach the rotation count, we reset the counter + show the popup
   // Otherwise, we save the current count
-  //if(count % 3 == 0) {
-    alert("ADS!");
+  if(count % 3 == 0) {
     setCookie("propose-upgrade-count", 0);
     new Popup({ 
       title : i18n('Upgrade!'), 
@@ -130,8 +129,8 @@ ApplicationController.prototype.propose_upgrade = function() {
       popup_name: 'propose-upgrade', 
       confirm_btn: 'Continue',
     });
-  //}
-  //else {
-  //  setCookie("propose-upgrade-count", count);
-  //}
+  }
+  else {
+    setCookie("propose-upgrade-count", count);
+  }
 }
