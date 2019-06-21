@@ -652,13 +652,13 @@ EditorController.prototype.browser_check = function() {
     self.flash.error(i18n("The browser you are using is completely untested with this app. Consider using another browser."));
   }
   else if(isFirefox || isSafari){
-    self.flash.warning(i18n("The browser you are using is not officialy tested. The app should work but your milleage may vary."));
+    self.flash.warning(i18n("The browser you are using is not officially tested. The app should work but your mileage may vary."));
   }
   else if(isChrome){
     // All good :)
   }
   else {
-    self.flash.error(i18n("Couldn't detect which browser you are using. The app should work but your milleage may vary."));
+    self.flash.error(i18n("Couldn't detect which browser you are using. The app should work but your mileage may vary."));
   }
 }
 
