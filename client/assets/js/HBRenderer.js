@@ -78,4 +78,8 @@ HBRenderer.prototype.registerHelpers = function() {
           accum += block.fn(i);
       return accum;
   });
+  
+  Handlebars.registerHelper('script_tag', function(){ return "<script>" })
+  Handlebars.registerHelper('script_open', function(){ return "<script" })
+  Handlebars.registerHelper('script_close', function(){ return "</script>" })
 }
