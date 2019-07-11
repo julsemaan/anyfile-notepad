@@ -5,6 +5,62 @@ DriveFile.prototype.post_init_child = function(options) {
   this.set("provider", "GoogleDrive");
   options.realtime = options.realtime !== undefined ? options.realtime : true;
   this.set("realtime", options.realtime);
+
+  this.set("_app_folder", "Anyfile Notepad Files")
+  this.compute_app_folder_id();
+}
+
+DriveFile.prototype.try_get_app_folder_id = function(callback) {
+  var self = this;
+
+  var request = gapi.client.drive.files.list({
+    'q': 'title = \''+self._app_folder+'\''
+  });
+
+  application.controllers.google_oauth.execute_request(request, function(data){
+    var files = data.items;
+    for(var i=0; i<files.length;i++){
+      var file = files[i];
+      if(!file.labels.trashed) {
+        callback(file.id);
+        return;
+      }
+    }
+
+    callback(undefined);
+  });
+}
+
+DriveFile.prototype.create_app_folder_id = function(callback) {
+  var self = this;
+
+  var request = gapi.client.drive.files.insert({
+    'resource': {
+      'mimeType': "application/vnd.google-apps.folder",
+      'title': self._app_folder,
+    },
+    'fields': 'id'
+  });
+  application.controllers.google_oauth.execute_request(request, function(data){
+    callback(data.id);
+  });
+}
+
+DriveFile.prototype.compute_app_folder_id = function() {
+  var self = this;
+
+  self.try_get_app_folder_id(function(folder_id) {
+    if(!folder_id) {
+      console.log("App folder ID doesn't exist yet, creating it")
+      self.create_app_folder_id(function(folder_id) {
+        self.set("_app_folder_id", folder_id);
+      });
+    }
+    else {
+      console.log("Found app folder ID", folder_id);
+      self.set("_app_folder_id", folder_id);
+    }
+  })
 }
 
 DriveFile.prototype.get_file_data = function(){
@@ -124,8 +180,13 @@ DriveFile.prototype.update_data = function(new_revision, callback){
     self.check_for_unknown_mime_type(contentType)
 
     var metadata = {fileId : self.id, title : self.title}
+
     if(self.folder_id){
       metadata['parents'] = [{id:self.folder_id}]
+    }
+    else if(!self.persisted) {
+      console.log("File isn't persisted (new file), will save it in the app folder directory");
+      metadata['parents'] = [{id:self._app_folder_id}];
     }
 
     var base64Data = btoa(reader.result);
