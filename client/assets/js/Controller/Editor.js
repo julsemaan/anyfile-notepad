@@ -676,3 +676,4 @@ EditorController.prototype.detect_device = function(){
     $('#current_device').html(endpoint.name);
   });
 }
+

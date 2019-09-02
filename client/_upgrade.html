@@ -22,6 +22,10 @@
 
   <hr>
 
+  <p style="font-weight:bold;font-size:110%;text-align:center;">
+  Subscription to this service implies acceptance of our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/privacy_policy.html">Privacy Policy</a> and our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/terms-of-service.html">Terms of service<a>
+  </p>
+
   <form action="/api/billing/subscription" method="POST" style="text-align:center">
     <input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
     <input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
