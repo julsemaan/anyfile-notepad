@@ -1,0 +1,12 @@
+github.com/julsemaan/rest-layer-file v0.0.0-20160721013623-3fd936157a3b h1:YQ587w086SD06rXh5zPS1GPprhzwSxVGbPV9SG5vVzo=
+github.com/julsemaan/rest-layer-file v0.0.0-20160721013623-3fd936157a3b/go.mod h1:uaV1s4vYYNcC5nWNZ84eyvVyTUZPiKf6aBFuMoPQ0YI=
+github.com/rs/rest-layer v0.0.0-20160924170201-5f71d116613a h1:G0n1L85WLySu3PZQsVIQUBZL39XAdRmxqrDva0Iq+Pc=
+github.com/rs/rest-layer v0.0.0-20160924170201-5f71d116613a/go.mod h1:AI368UUpyRmsQaiHpaDKEIR0M7abM/uufTwZHz6LOTY=
+github.com/rs/xid v0.0.0-20160315140658-057f3c928c20 h1:LmTpYT16FipgP/CqaCSX0Pv4hkULvvNwwEDslLBeVRY=
+github.com/rs/xid v0.0.0-20160315140658-057f3c928c20/go.mod h1:+uKXf+4Djp6Md1KODXJxgGQPKngRmWyn10oCKFzNHOQ=
+golang.org/x/crypto v0.0.0-20171106163040-687d4b818545 h1:aZtuVMwGePbyT70SaS4+sM4UBm0EeKciOK9K3DBU+/E=
+golang.org/x/crypto v0.0.0-20171106163040-687d4b818545/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
+golang.org/x/net v0.0.0-20171102191033-01c190206fbd h1:CLQSRrSDQMOMkogMxky7XOkERftMegAnxjT2re4E66M=
+golang.org/x/net v0.0.0-20171102191033-01c190206fbd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+gopkg.in/alexcesaro/statsd.v2 v2.0.0 h1:FXkZSCZIH17vLCO5sO2UucTHsH9pc+17F6pl3JVCwMc=
+gopkg.in/alexcesaro/statsd.v2 v2.0.0/go.mod h1:i0ubccKGzBVNBpdGV5MocxyA/XlLUJzA7SLonnE4drU=
