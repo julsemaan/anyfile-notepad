@@ -1,0 +1,29 @@
+<script id="inactivity_restart" class="template-partial" type="text/x-handlebars-template">
+  <p>You have been inactive in the app for too long.</p>
+  <p>The app will restart automatically unless an action is taken</p>
+  <div class="auto-restart-timer">
+    <h4>The app will restart in <span id="auto-restart-seconds-remaining">60</span> seconds</h4>
+    <div class="progress">
+      <div class="progress-bar progress-bar-info" style="width:100%"></div>
+    </div>
+  </div>
+  
+  {{{ concat "<scr" "ipt>" }}}
+  
+  var secondsElem = $("#auto-restart-seconds-remaining");
+  var initial = secondsElem.html();
+  window.inactivityRestartInterval = setInterval(function() {
+    var remaining = parseInt(secondsElem.html());
+    remaining -= 1;
+    secondsElem.html(remaining);
+
+    secondsElem.closest(".auto-restart-timer").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
+
+    if(remaining <= 0) {
+      clearInterval(i);
+      window.location.reload();
+    }
+  }, 1000)
+
+  {{{ concat "</scr" "ipt>" }}}
+</script>
