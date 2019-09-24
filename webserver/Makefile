@@ -1,0 +1,3 @@
+
+webserver:
+	go build
