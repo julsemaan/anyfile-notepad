@@ -624,6 +624,12 @@ EditorController.prototype.clear_realtime_user = function(userId){
 
 EditorController.prototype.open_share_modal = function() {
   var self = this;
+
+  if(self.file.provider != "GoogleDrive") {
+    new Popup({message : i18n("This feature is only available for Google Drive files.")});
+    return;
+  }
+
   if(self.file.persisted){
     application.controllers.google_oauth.share_client.setItemIds([self.file.id]);
     application.controllers.google_oauth.share_client.showSettingsDialog();
