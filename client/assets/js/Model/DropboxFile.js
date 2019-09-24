@@ -8,6 +8,12 @@ DropboxFile.prototype.post_init_child = function(options) {
   this.client = this.oauth_controller.client;
 }
 
+DropboxFile.prototype.extension = function(){
+  var last = this.title.split('/').pop();
+  return CloudFile.file_extension(last);
+}
+
+
 DropboxFile.prototype.get_file_data = function(){
   var self = this;
 
