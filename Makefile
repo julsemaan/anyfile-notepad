@@ -1,3 +1,9 @@
+
+all-golang:
+	cd webserver && make webserver && cd ..
+	cd api && make afn-rest-32 && cd ..
+	cd api && make afn-rest-64 && cd ..
+
 client-dist.tgz:
 	make client/dist
 	echo "Press any key to launch archive build." && read dummy
