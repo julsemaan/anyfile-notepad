@@ -147,6 +147,7 @@ func upgrade(c *gin.Context) {
 			Email: form.StripeEmail,
 		}
 		customerParams.SetSource(form.StripeToken)
+		customerParams.AddMeta("google_email", form.UserEmail)
 
 		customer, err := customer.New(customerParams)
 
