@@ -79,11 +79,15 @@ func (s *Subscriptions) Reload() {
 	}
 
 	newdata := map[string]*stripe.Sub{}
+	count := 0
 	for i.Next() {
+		count += 1
 		subscription := i.Sub()
 		fmt.Println("Updating subscription", subscription.ID)
 		newdata[s.ExtractUserId(subscription)] = subscription
 	}
+
+	fmt.Printf("Reloaded %d subscriptions \n", count)
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
