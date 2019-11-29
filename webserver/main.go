@@ -94,6 +94,8 @@ func setupHandlers() {
 	subscription.POST("/:user_id/resume", resume)
 	subscription.GET("/:user_id", getSubscription)
 
+	api.POST("/billing/stripe-hook", stripeHook)
+
 	apiHandler = r
 
 	fmt.Println("Serving production application from", *prodAppPath)

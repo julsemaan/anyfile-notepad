@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
@@ -13,6 +16,7 @@ import (
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/sub"
+	"github.com/stripe/stripe-go/webhook"
 )
 
 func LoadSubscription(c *gin.Context) {
@@ -191,4 +195,78 @@ func upgradeError(c *gin.Context, err error, failureUrl string) {
 	fmt.Println("Failed to process Stripe subscription")
 	spew.Dump(err)
 	c.Redirect(http.StatusFound, failureUrl)
+}
+
+func stripeHook(c *gin.Context) {
+	d, _ := c.GetRawData()
+
+	endpointSecret := os.Getenv("STRIPE_WEBHOOK_SECRET")
+	e, err := webhook.ConstructEvent(d, c.Request.Header.Get("Stripe-Signature"),
+		endpointSecret)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid signature"})
+		return
+	}
+
+	fmt.Println(string(d))
+
+	if e.Type != "invoice.upcoming" {
+		fmt.Println("ERROR: Unsupported event type", e.Type)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	obj := struct {
+		Customer string
+	}{}
+	json.Unmarshal(e.Data.Raw, &obj)
+
+	cus, err := customer.Get(obj.Customer, nil)
+
+	if err != nil {
+		fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	emails := []string{}
+	if email := cus.Meta["google_email"]; email != "" {
+		emails = append(emails, email)
+	}
+	if email := cus.Email; email != "" {
+		emails = append(emails, email)
+	}
+
+	//TODO: remove this after testing
+	emails = []string{"afn-support@semaan.ca"}
+
+	fmt.Println("Sending renewal notification email to", emails)
+
+	msgTemplate, _ := template.New("renewal-email").Parse(`Subject: Your Anyfile Notepad subscription is about to renew
+To: {{.Emails}}
+Greetings from Anyfile Notepad,
+
+Your $3.99 yearly subscription to the application https://anyfile-notepad.semaan.ca will automatically renew in less than 30 days.
+
+The subscription was registered with the following Google account: {{.GoogleEmail}} 
+
+If you do not wish to stay subscribed to the application, please reply to this message requesting cancellation of your subscription.
+
+In the event your credit card cannot be billed your subscription will be automatically cancelled. You can then subscribe again inside the app.
+
+Cheers!
+
+The Anyfile Notepad team
+`)
+
+	var msgBytes bytes.Buffer
+	msgTemplate.Execute(&msgBytes, struct {
+		GoogleEmail string
+		Emails      string
+	}{GoogleEmail: cus.Meta["google_email"], Emails: strings.Join(emails, ";")})
+	msg, _ := ioutil.ReadAll(&msgBytes)
+	sendEmail(emails, msg)
+
+	c.JSON(http.StatusOK, gin.H{})
 }
