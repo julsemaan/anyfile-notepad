@@ -218,28 +218,40 @@ func stripeHook(c *gin.Context) {
 	}
 
 	obj := struct {
-		Customer string
+		Customer      string
+		CustomerEmail string `json:"customer_email"`
 	}{}
 	json.Unmarshal(e.Data.Raw, &obj)
 
-	cus, err := customer.Get(obj.Customer, nil)
+	var googleEmail string
+	var customerEmail string
 
-	if err != nil {
-		fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		return
+	if obj.Customer == "cus_00000000000000" {
+		googleEmail = obj.CustomerEmail
+		customerEmail = obj.CustomerEmail
+	} else {
+		cus, err := customer.Get(obj.Customer, nil)
+
+		if err != nil {
+			fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+
+		googleEmail = cus.Meta["google_email"]
+		customerEmail = cus.Email
 	}
 
 	emails := []string{}
-	if email := cus.Meta["google_email"]; email != "" {
-		emails = append(emails, email)
+	if googleEmail != "" {
+		emails = append(emails, googleEmail)
 	}
-	if email := cus.Email; email != "" {
-		emails = append(emails, email)
+	if customerEmail != "" {
+		emails = append(emails, customerEmail)
 	}
 
 	//TODO: remove this after testing
-	emails = []string{"afn-support@semaan.ca"}
+	emails = append(emails, "support@semaan.ca")
 
 	fmt.Println("Sending renewal notification email to", emails)
 
@@ -264,7 +276,7 @@ The Anyfile Notepad team
 	msgTemplate.Execute(&msgBytes, struct {
 		GoogleEmail string
 		Emails      string
-	}{GoogleEmail: cus.Meta["google_email"], Emails: strings.Join(emails, ";")})
+	}{GoogleEmail: googleEmail, Emails: strings.Join(emails, ";")})
 	msg, _ := ioutil.ReadAll(&msgBytes)
 	sendEmail(emails, msg)
 
