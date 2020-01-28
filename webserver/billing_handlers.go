@@ -250,9 +250,6 @@ func stripeHook(c *gin.Context) {
 		emails = append(emails, customerEmail)
 	}
 
-	//TODO: remove this after testing
-	emails = append(emails, "support@semaan.ca")
-
 	fmt.Println("Sending renewal notification email to", emails)
 
 	msgTemplate, _ := template.New("renewal-email").Parse(`Subject: Your Anyfile Notepad subscription is about to renew
