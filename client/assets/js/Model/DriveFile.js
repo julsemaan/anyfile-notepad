@@ -85,7 +85,7 @@ DriveFile.prototype.get_file_data = function(){
       }
 
       $.ajax({
-        url : resp.downloadUrl,
+        url : "https://www.googleapis.com/drive/v2/files/"+self.id+"?alt=media",
         headers : { 'Authorization' : 'Bearer '+gapi.auth.getToken().access_token },
         complete : function(data, status){
           if(data.status == 200){
