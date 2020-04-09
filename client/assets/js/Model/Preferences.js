@@ -24,6 +24,8 @@ function Preferences(loaded){
     'syntaxes'
   ]
 
+  this.cache = new Cache({namespace:"preferences"});
+
   this.ready = false 
   this.loaded = loaded || function(){}
   this.get_from_drive()
@@ -42,8 +44,26 @@ Preferences.prototype.create_initial = function(){
   this.post_load()
 }
 
+Preferences.prototype.build_from_file_id = function(file_id) {
+  var self = this;
+  self.new_prefs_file = new DriveFile({
+    id:file_id, 
+    uid:"preferences",
+    loaded: function(){
+      self.post_load()
+    },
+    fuck_syntax:true,
+    realtime: false,
+  });
+}
+
 Preferences.prototype.get_from_drive = function(){
   var self = this
+
+  if(self.cache.get_cache("file_id")) {
+    return self.build_from_file_id(self.cache.get_cache("file_id"));
+  }
+
   var request = gapi.client.drive.files.list({
     'q': '\'appfolder\' in parents'
   });
@@ -56,15 +76,8 @@ Preferences.prototype.get_from_drive = function(){
     }
     for(var i=0; i<files.length;i++){
       if(files[i].title == "preferences"){
-        self.new_prefs_file = new DriveFile({
-          id:files[i].id, 
-          uid:"preferences",
-          loaded: function(){
-            self.post_load()
-          },
-          fuck_syntax:true,
-          realtime: false,
-        }) 
+        self.build_from_file_id(files[i].id);
+        self.cache.cache("file_id", files[i].id);
         return
       }
     }
@@ -90,11 +103,13 @@ Preferences.prototype.get_hash = function(){
     console.log(e)
     if(!this.warned){
       new Popup({ message : i18n("Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.") });
+      this.cache.cache("file_id", undefined);
       this.warned = true;
     }
     // we replace the commit method by a warning
     this.commit = function(){
       new Popup({ message : i18n("Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.") });
+      this.cache.cache("file_id", undefined);
     }
     this.set_hash({})
   }

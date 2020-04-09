@@ -4,7 +4,7 @@ function Cache(ledata){
 
 Cache.prototype = new Model()
 
-Cache.prototype.init = function(){
+Cache.prototype.post_init = function(){
   var self = this;
 
   if(!this.namespace) throw "No namespace specified for cache. That fucks it up."
