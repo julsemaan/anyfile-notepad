@@ -31,7 +31,7 @@
     </div>
 
     <div class="g_file_editor">
-      <div id="editor" class="page-content" contenteditable="true"></div>
+      <div id="editor" class="page-content" contenteditable="true" spellcheck="true"></div>
     </div>
         
     [% INCLUDE 'user.tt' %]
