@@ -60,8 +60,8 @@ Preferences.prototype.build_from_file_id = function(file_id) {
 Preferences.prototype.get_from_drive = function(){
   var self = this
 
-  if(self.cache.get_cache("file_id")) {
-    return self.build_from_file_id(self.cache.get_cache("file_id"));
+  if(self.cache.get_cache(getCookie("current_google_user_id")+"file_id")) {
+    return self.build_from_file_id(self.cache.get_cache(getCookie("current_google_user_id")+"file_id"));
   }
 
   var request = gapi.client.drive.files.list({
@@ -77,7 +77,7 @@ Preferences.prototype.get_from_drive = function(){
     for(var i=0; i<files.length;i++){
       if(files[i].title == "preferences"){
         self.build_from_file_id(files[i].id);
-        self.cache.cache("file_id", files[i].id);
+        self.cache.cache(getCookie("current_google_user_id")+"file_id", files[i].id);
         return
       }
     }
@@ -103,13 +103,13 @@ Preferences.prototype.get_hash = function(){
     console.log(e)
     if(!this.warned){
       new Popup({ message : i18n("Your preferences could not be loaded. This is likely due to a Google server error. Please try restarting the app and file a bug if it persists.") });
-      this.cache.cache("file_id", undefined);
+      this.cache.cache(getCookie("current_google_user_id")+"file_id", undefined);
       this.warned = true;
     }
     // we replace the commit method by a warning
     this.commit = function(){
       new Popup({ message : i18n("Can't commit your preferences because they weren't loaded properly. It is advised to restart the app.") });
-      this.cache.cache("file_id", undefined);
+      this.cache.cache(getCookie("current_google_user_id")+"file_id", undefined);
     }
     this.set_hash({})
   }
