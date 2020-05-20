@@ -1,4 +1,4 @@
-<div id="print_content" style="display:none">
+<div id="print_content" class="hide">
   <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].css" media="all">
 
   <div class="print_menu print_hide">

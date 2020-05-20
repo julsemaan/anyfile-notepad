@@ -640,6 +640,10 @@ li a.btn-primary {
     text-align:center;
     margin-top:0;
   }
+
+  .invalid-subscription {
+    text-align:center;
+  }
 }
 
 [name=subscription-status] {
@@ -687,4 +691,32 @@ li a.btn-primary {
   .action-btn-container {
     text-align:center;
   } 
+}
+
+[name=upgrade] {
+  .agrees-terms {
+    font-weight:bold;
+    font-size:110%;
+    text-align:center;
+  }
+
+  form {
+    text-align:center;
+  }
+}
+
+#current_user {
+  a {
+    color:#2137aa;
+  }
+
+  #logged_in_as {
+    font-weight:bold;
+  }
+}
+
+.auto-restart-timer {
+  .progress-bar {
+    width:100%;
+  }
 }

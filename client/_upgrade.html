@@ -1,44 +1,46 @@
 <script id="upgrade" class="template-partial" type="text/x-handlebars-template">
-  <p>
-    Anyfile Notepad++ offer an ad-free experience of this application. Paid yearly and costing less than a latte at Starbucks, its a good way to improve your experience with the app as well as encouraging the project.
-  </p>
+  <div class="upgrade-content">
+    <p>
+      Anyfile Notepad++ offer an ad-free experience of this application. Paid yearly and costing less than a latte at Starbucks, its a good way to improve your experience with the app as well as encouraging the project.
+    </p>
 
-  <p>
-    <h5>This subscription will only be valid for the following Google user account:</h5>
-    <pre>{{ global_context.application.controllers.google_oauth.current_user.email }}</pre>
-  </p>
+    <p>
+      <h5>This subscription will only be valid for the following Google user account:</h5>
+      <pre>{{ global_context.application.controllers.google_oauth.current_user.email }}</pre>
+    </p>
 
-  <p>
-    If you want to upgrade another account, you need to connect it in the app before proceeding.
-  </p>
+    <p>
+      If you want to upgrade another account, you need to connect it in the app before proceeding.
+    </p>
 
-  <p>
-    A yearly subscription costs only 3.99$ and can be cancelled before it renews at the end of the year but the year will still be billed in full (3.99$) even if it is cancelled immediately after subscribing.</p>
-  </p>
+    <p>
+      A yearly subscription costs only 3.99$ and can be cancelled before it renews at the end of the year but the year will still be billed in full (3.99$) even if it is cancelled immediately after subscribing.</p>
+    </p>
 
-  <p>
-    Using the paid version of the app also provides access to e-mail support (available in the Help menu).
-  </p>
+    <p>
+      Using the paid version of the app also provides access to e-mail support (available in the Help menu).
+    </p>
 
-  <hr>
+    <hr>
 
-  <p style="font-weight:bold;font-size:110%;text-align:center;">
-  Subscription to this service implies acceptance of our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/privacy_policy.html">Privacy Policy</a> and our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/terms-of-service.html">Terms of service<a>
-  </p>
+    <p class="agrees-terms">
+    Subscription to this service implies acceptance of our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/privacy_policy.html">Privacy Policy</a> and our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/terms-of-service.html">Terms of service<a>
+    </p>
 
-  <form action="/api/billing/subscription" method="POST" style="text-align:center">
-    <input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
-    <input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
-    <input name="success_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-success.html">
-    <input name="failure_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-failure.html">
-      {{{ concat "<scr" "ipt" }}}
-        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-        data-key="{{ global_context.window.AFN_VARS.stripe_key }}"
-        data-name="Anyfile Notepad ++"
-        data-description="Subscription for {{ global_context.application.controllers.google_oauth.current_user.email }}"
-        data-amount="399"
-        data-label="Click to subscribe for 3.99$ USD">
-      {{{ concat "</scr" "ipt>" }}}
-  </form>
+    <form action="/api/billing/subscription" method="POST">
+      <input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
+      <input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
+      <input name="success_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-success.html">
+      <input name="failure_url" type="hidden" value="{{ global_context.window.location.protocol }}//{{ global_context.window.location.host }}/site/payment-failure.html">
+        {{{ concat "<scr" "ipt" }}}
+          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="{{ global_context.window.AFN_VARS.stripe_key }}"
+          data-name="Anyfile Notepad ++"
+          data-description="Subscription for {{ global_context.application.controllers.google_oauth.current_user.email }}"
+          data-amount="399"
+          data-label="Click to subscribe for 3.99$ USD">
+        {{{ concat "</scr" "ipt>" }}}
+    </form>
+  </div>
 </script>
 
