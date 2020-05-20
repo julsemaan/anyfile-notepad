@@ -2,12 +2,20 @@
 <div id="current_user" class="alert alert-success">
   <div style="display:inline-block">
   <span class="details" style="display:none;">
+      <span id="logged_in_as">
       {{ i18n "Logged in as" }}
       <span data-bind-current_user="name"></span>
+      </span>
+
       <br>
-      <a style="color:blue" href="javascript:void(0)" onclick="javascript:application.controllers.google_oauth.switch_user()">{{ i18n "Switch user" }}</a>
+      <a href="javascript:void(0)" onclick="javascript:application.controllers.google_oauth.switch_user()">{{ i18n "Switch user" }}</a>
       |
-      <a style="color:blue" href="https://accounts.google.com/AddSession" onclick="javascript:void window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">{{ i18n "Add account" }}</a>
+      <a href="https://accounts.google.com/AddSession" onclick="javascript:void window.open('https://accounts.google.com/AddSession','1461625036769','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">{{ i18n "Add account" }}</a>
+
+      [% IF ! WITH_ADS %]
+      |
+      <a href="{{noaction}}" {{{ m-action-n-close "new Popup({hb_partial : '#subscription-status', popup_name: 'subscription-status', confirm_btn: 'Close' })" }}}>{{ i18n "Subscription status" }}</a>
+      [% END %]
   </span>
   </div>
   <img data-bind-current_user="picture_url" style="float:right;margin:3px;width:35px;height:35px;" src="">
