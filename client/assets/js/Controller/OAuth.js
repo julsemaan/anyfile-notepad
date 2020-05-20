@@ -92,7 +92,7 @@ GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
     setCookie('access_token', auth_result['access_token'], 1)
-    gapi.load('auth:client,drive-realtime,drive-share', function(){
+    gapi.load('auth:client,drive-share', function(){
       gapi.client.load('oauth2', 'v2', function() {
         gapi.client.load('drive', 'v2', function(){
           self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
