@@ -40,7 +40,19 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
 
 GoogleOAuthController.prototype.do_auth = function(){
   var self = this
+  var isBack = false;
+
+  setTimeout(function() {
+    if(!isBack) {
+      $('#auth_modal').modal('show')
+      $('#start_g_oauth').click(function(){
+        self.auth_popup()
+      })
+    }
+  }, 1000);
+
   gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
+    isBack = true;
     if(auth_result["error"] != "immediate_failed"){
       self.post_auth(auth_result)
     }
