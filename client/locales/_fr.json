@@ -1,4 +1,6 @@
 {
+  " : require(": " : require(",
+  ", ": ", ",
   "2": "2",
   "3": "3",
   "4": "4",
@@ -124,6 +126,7 @@
   "Switch user": "Changer d'utilisateur",
   "Tab size": "Taille de tabulation",
   "Tabs as spaces": "Tabulations en espace",
+  "The BETA version is not available anymore and has become the official release. Next time a BETA is available you will be notified and will have the choice to opt in. Thank you for your participation to the BETA try out. When you will press OK, you will be brought back to the stable version of the app.": "La version BETA n'est plus disponible à présent et est devenue la version officielle. La prochaine fois qu'une version BETA est disponible, vous serez notifié et vous aurez le choix d'y participer. Merci pour votre participation dans l'essai BETA de l'application. Lorsque vous appuirez sur OK, vous retournerez à la version stable de l'application.",
   "The app flow will still continue but unexpected behavior may occur. When in doubt restart the app.": "L'application va continuer mais certains probl\u00e8mes peuvent survenir. Dans le doute, red\u00e9marrez l'app.",
   "The app is being restarted, please wait.": "L'application red\u00e9marre, veuillez patienter.",
   "The authentication failed with Google": "L'authentification Google a \u00e9chou\u00e9e",
