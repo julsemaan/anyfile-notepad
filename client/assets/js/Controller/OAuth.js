@@ -58,7 +58,7 @@ GoogleOAuthController.prototype.do_auth = function(){
   gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
     console.log("AUTH RESULT", auth_result);
     isBack = true;
-    if(!auth_result["error"] || auth_result["error"].search("immediate_failed") != -1){
+    if(!auth_result["error"] uth|| auth_result["error"].search("immediate_failed") == -1){
       self.post_auth(auth_result)
     }
     else{
