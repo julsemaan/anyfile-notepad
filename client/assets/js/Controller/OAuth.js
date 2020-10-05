@@ -43,16 +43,20 @@ GoogleOAuthController.prototype.do_auth = function(){
   var isBack = false;
 
   setTimeout(function() {
-    console.log("Failed to come back from auth. Triggering auth popup again.");
     if(!isBack) {
+      console.log("Failed to come back from auth. Triggering auth popup again.");
       $('#auth_modal').modal('show')
       $('#start_g_oauth').click(function(){
         self.auth_popup()
       })
     }
+    else {
+      console.log("Auth came back")
+    }
   }, 3000);
 
   gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
+    console.log("AUTH RESULT", auth_result);
     isBack = true;
     if(auth_result["error"] != "immediate_failed"){
       self.post_auth(auth_result)
