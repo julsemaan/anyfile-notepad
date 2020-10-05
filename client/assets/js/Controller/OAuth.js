@@ -43,13 +43,14 @@ GoogleOAuthController.prototype.do_auth = function(){
   var isBack = false;
 
   setTimeout(function() {
+    console.log("Failed to come back from auth. Triggering auth popup again.");
     if(!isBack) {
       $('#auth_modal').modal('show')
       $('#start_g_oauth').click(function(){
         self.auth_popup()
       })
     }
-  }, 1000);
+  }, 3000);
 
   gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
     isBack = true;
