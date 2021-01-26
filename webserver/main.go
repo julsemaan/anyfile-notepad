@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"regexp"
 	"strings"
@@ -45,6 +46,11 @@ var aliasPaths = map[string]string{
 
 func main() {
 	setup()
+
+	go func() {
+		fmt.Println(http.ListenAndServe("localhost:6061", nil))
+	}()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
