@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Handler struct{}
@@ -24,15 +22,19 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) setupPlusPlusSession(userId string, w http.ResponseWriter) {
-	u := uuid.New().String()
+	sessionID, err := plusPlusSessions.GenerateSessionID()
+	if err != nil {
+		fmt.Println("ERROR: Unable to generate a session ID", err)
+		return
+	}
 	session := NewPlusPlusSession(userId)
-	plusPlusSessions.Set(u, session)
+	plusPlusSessions.Set(sessionID, session)
 	http.SetCookie(w, &http.Cookie{
 		Name:   "ppsid",
-		Value:  u,
+		Value:  sessionID,
 		MaxAge: int(PLUS_PLUS_SESSION_VALIDITY.Seconds()),
 	})
-	eventsManager.Publish("sessions", PlusPlusSessionSync{ID: u, PPS: session})
+	eventsManager.Publish("sessions", PlusPlusSessionSync{ID: sessionID, PPS: session})
 }
 
 func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) {

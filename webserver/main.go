@@ -70,7 +70,8 @@ func setupSessionsPersistence() {
 		go func() {
 			for {
 				time.Sleep(5 * time.Second)
-				fmt.Println("Saving the sessions")
+				fmt.Println("Maintenance + saving the sessions")
+				plusPlusSessions.Maintenance()
 				err := plusPlusSessions.SaveToFile(plusPlusSessionsDb)
 				if err != nil {
 					fmt.Println("ERROR: Failed to save the sessions", err)

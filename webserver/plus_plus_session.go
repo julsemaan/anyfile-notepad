@@ -1,7 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"os"
 	"sync"
 	"time"
@@ -38,6 +42,23 @@ func NewPlusPlusSessions() *PlusPlusSessions {
 	}
 }
 
+func (pps *PlusPlusSessions) GenerateSessionID() (string, error) {
+	tokenLength := 32
+	b := make([]byte, tokenLength)
+	l, err := rand.Read(b)
+
+	if l != tokenLength {
+		return "", errors.New("Didn't generate a token of the right length")
+	} else if err != nil {
+		return "", err
+	} else {
+		tokenBytes := make([]byte, hex.EncodedLen(len(b)))
+		hex.Encode(tokenBytes, b)
+
+		return string(tokenBytes), nil
+	}
+}
+
 func (pps *PlusPlusSessions) Set(id string, s *PlusPlusSession) {
 	pps.sem.Lock()
 	defer pps.sem.Unlock()
@@ -48,6 +69,24 @@ func (pps *PlusPlusSessions) Get(id string) *PlusPlusSession {
 	pps.sem.RLock()
 	defer pps.sem.RUnlock()
 	return pps.data[id]
+}
+
+func (pps *PlusPlusSessions) Maintenance() {
+	pps.sem.Lock()
+	defer pps.sem.Unlock()
+	now := time.Now()
+	toDel := []string{}
+	for id, session := range pps.data {
+		if session.ValidUntil.Before(now) {
+			fmt.Println("Session", id, "has expired. Was valid until", session.ValidUntil)
+			toDel = append(toDel, id)
+		}
+	}
+
+	for _, id := range toDel {
+		fmt.Println("Deleting session", id)
+		delete(pps.data, id)
+	}
 }
 
 func (pps *PlusPlusSessions) RestoreFromFile(path string) error {
