@@ -10,3 +10,4 @@
 /public/pages/*.markdown
 /bower_components
 /node_modules
+test-server.sh
