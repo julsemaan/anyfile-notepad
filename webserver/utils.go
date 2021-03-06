@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"net/smtp"
 	"os"
@@ -18,4 +20,14 @@ func sendEmail(to []string, msg []byte) error {
 	}
 
 	return nil
+}
+
+func secureRandomString(c int) string {
+	b := make([]byte, c)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Println("ERROR: unable to generate a secure random string", err)
+		return ""
+	}
+	return hex.EncodeToString(b)
 }

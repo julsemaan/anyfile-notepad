@@ -66,6 +66,19 @@ func (s *Subscriptions) GetSubscription(userId string) *stripe.Sub {
 	return s.data[userId]
 }
 
+func (s *Subscriptions) GetSubscriptionByCustomer(cusId string) *stripe.Sub {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
+	for _, s := range s.data {
+		if s.Customer.ID == cusId {
+			return s
+		}
+	}
+
+	return nil
+}
+
 func (s *Subscriptions) Reload() {
 	params := &stripe.SubListParams{}
 	params.Filters.AddFilter("limit", "", "100")

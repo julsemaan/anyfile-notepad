@@ -81,11 +81,11 @@ type Upgrade struct {
 	StripeEmail     string `form:"stripeEmail"`
 }
 
-func getSubscription(c *gin.Context) {
+func handleSubscriptionRead(c *gin.Context) {
 	c.JSON(http.StatusOK, c.Value("subscription"))
 }
 
-func resume(c *gin.Context) {
+func handleSubscriptionResume(c *gin.Context) {
 	userId := c.Param("user_id")
 
 	subscription := c.Value("subscription").(*stripe.Sub)
@@ -113,10 +113,11 @@ func resume(c *gin.Context) {
 	}
 }
 
-func cancel(c *gin.Context) {
-	userId := c.Param("user_id")
-
+func handleSubscriptionCancel(c *gin.Context) {
 	subscription := c.Value("subscription").(*stripe.Sub)
+
+	userId := subscription.Meta["user_id"]
+
 	if subscription.EndCancel {
 		willEnd := time.Unix(0, subscription.PeriodEnd*int64(time.Second))
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -141,7 +142,7 @@ func cancel(c *gin.Context) {
 	}
 }
 
-func upgrade(c *gin.Context) {
+func handleSubscriptionUpgrade(c *gin.Context) {
 	var form Upgrade
 	if err := c.Bind(&form); err == nil {
 		fmt.Println("Received form", spew.Sdump(form))
@@ -197,7 +198,32 @@ func upgradeError(c *gin.Context, err error, failureUrl string) {
 	c.Redirect(http.StatusFound, failureUrl)
 }
 
-func stripeHook(c *gin.Context) {
+func handleLinkCancel(c *gin.Context) {
+	cus, err := customer.Get(c.Param("cus_id"), nil)
+	if err != nil {
+		fmt.Println("ERROR: Unable to retreive customer", c.Param("cus_id"))
+		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to retreive customer information"})
+		return
+	}
+
+	if cus.Meta["cancel_link_id"] != c.Param("cancel_link_id") {
+		fmt.Println("ERROR: Unable to validate the cancel link ID while doing a link cancelation. Either this is broken, someone used an outdated link or someone is trying to brute force the endpoint.", c.Param("cus_id"))
+		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to validate information"})
+		return
+	}
+
+	s := subscriptions.GetSubscriptionByCustomer(cus.ID)
+	if s == nil {
+		fmt.Println("ERROR: Unable to find a subscription for this customer ID", c.Param("cus_id"))
+		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to retreive subscription"})
+		return
+	}
+
+	c.Set("subscription", s)
+	handleSubscriptionCancel(c)
+}
+
+func handleStripeHook(c *gin.Context) {
 	d, _ := c.GetRawData()
 
 	endpointSecret := os.Getenv("STRIPE_WEBHOOK_SECRET")
@@ -227,19 +253,29 @@ func stripeHook(c *gin.Context) {
 	var customerEmail string
 
 	if obj.Customer == "cus_00000000000000" {
-		googleEmail = obj.CustomerEmail
-		customerEmail = obj.CustomerEmail
-	} else {
-		cus, err := customer.Get(obj.Customer, nil)
+		obj.Customer = os.Getenv("STRIPE_INVOICE_UPCOMING_WEBHOOK_TEST_CUSTOMER_ID")
+	}
 
-		if err != nil {
-			fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-			return
-		}
+	cus, err := customer.Get(obj.Customer, nil)
 
-		googleEmail = cus.Meta["google_email"]
-		customerEmail = cus.Email
+	if err != nil {
+		fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	googleEmail = cus.Meta["google_email"]
+	customerEmail = cus.Email
+
+	params := &stripe.CustomerParams{}
+	cancelLinkId := secureRandomString(16)
+	params.AddMeta("cancel_link_id", cancelLinkId)
+
+	_, err = customer.Update(cus.ID, params)
+	if err != nil {
+		fmt.Println("ERROR: Unable to update cancel link ID for", cus.ID)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
 	}
 
 	emails := []string{}
@@ -260,7 +296,10 @@ Your $3.99 yearly subscription to the application https://anyfile-notepad.semaan
 
 The subscription was registered with the following Google account: {{.GoogleEmail}} 
 
-If you do not wish to stay subscribed to the application, please reply to this message requesting cancellation of your subscription.
+If you do not wish to stay subscribed to the application, click the following link:
+https://anyfile-notepad.semaan.ca/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}.
+
+You can also reply to this email to request the cancelation of your subscription.
 
 In the event your credit card cannot be billed your subscription will be automatically cancelled. You can then subscribe again inside the app.
 
@@ -271,9 +310,16 @@ The Anyfile Notepad team
 
 	var msgBytes bytes.Buffer
 	msgTemplate.Execute(&msgBytes, struct {
-		GoogleEmail string
-		Emails      string
-	}{GoogleEmail: googleEmail, Emails: strings.Join(emails, ";")})
+		GoogleEmail  string
+		Emails       string
+		CustomerID   string
+		CancelLinkID string
+	}{
+		GoogleEmail:  googleEmail,
+		Emails:       strings.Join(emails, ";"),
+		CustomerID:   cus.ID,
+		CancelLinkID: cancelLinkId,
+	})
 	msg, _ := ioutil.ReadAll(&msgBytes)
 	sendEmail(emails, msg)
 
