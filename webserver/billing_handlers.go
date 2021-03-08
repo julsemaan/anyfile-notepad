@@ -206,6 +206,12 @@ func handleLinkCancel(c *gin.Context) {
 		return
 	}
 
+	if cus.Meta["cancel_link_id"] == "" || c.Param("cancel_link_id") == "" {
+		fmt.Println("ERROR: Trying to do a link cancel but the cancel_link_id is empty")
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Missing information to use the link cancelation."})
+		return
+	}
+
 	if cus.Meta["cancel_link_id"] != c.Param("cancel_link_id") {
 		fmt.Println("ERROR: Unable to validate the cancel link ID while doing a link cancelation. Either this is broken, someone used an outdated link or someone is trying to brute force the endpoint.", c.Param("cus_id"))
 		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to validate information"})
