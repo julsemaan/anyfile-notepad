@@ -227,6 +227,26 @@ func handleLinkCancel(c *gin.Context) {
 
 	c.Set("subscription", s)
 	handleSubscriptionCancel(c)
+
+	if c.Writer.Status() == http.StatusOK {
+		msgTemplate, _ := template.New("cancelation-notification").Parse(`Subject: A subscription has been canceled through a renewal email
+To: {{.Emails}}
+Customer {{.CustomerEmail}} has just canceled his Anyfile Notepad subscription through an email link.
+
+Cheers!
+`)
+
+		var msgBytes bytes.Buffer
+		msgTemplate.Execute(&msgBytes, struct {
+			Emails        string
+			CustomerEmail string
+		}{
+			Emails:        supportEmail,
+			CustomerEmail: cus.Email,
+		})
+		msg, _ := ioutil.ReadAll(&msgBytes)
+		sendEmail([]string{supportEmail}, msg)
+	}
 }
 
 func handleStripeHook(c *gin.Context) {
