@@ -292,6 +292,10 @@ func handleStripeHook(c *gin.Context) {
 		emails = append(emails, customerEmail)
 	}
 
+	if supportEmail != "" {
+		emails = append(emails, supportEmail)
+	}
+
 	fmt.Println("Sending renewal notification email to", emails)
 
 	msgTemplate, _ := template.New("renewal-email").Parse(`Subject: Your Anyfile Notepad subscription is about to renew
@@ -303,7 +307,7 @@ Your $3.99 yearly subscription to the application https://anyfile-notepad.semaan
 The subscription was registered with the following Google account: {{.GoogleEmail}} 
 
 If you do not wish to stay subscribed to the application, click the following link:
-https://anyfile-notepad.semaan.ca/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}.
+https://anyfile-notepad.semaan.ca/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}
 
 You can also reply to this email to request the cancelation of your subscription.
 
