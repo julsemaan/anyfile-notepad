@@ -96,12 +96,14 @@ func setupHandlers() {
 	subscription := api.Group("/billing/subscription")
 	subscription.Use(LoadSubscription)
 	subscription.Use(LoadGoogleUser)
-	subscription.POST("/", upgrade)
-	subscription.POST("/:user_id/cancel", cancel)
-	subscription.POST("/:user_id/resume", resume)
-	subscription.GET("/:user_id", getSubscription)
+	subscription.POST("/", handleSubscriptionUpgrade)
+	subscription.POST("/:user_id/cancel", handleSubscriptionCancel)
+	subscription.POST("/:user_id/resume", handleSubscriptionResume)
+	subscription.GET("/:user_id", handleSubscriptionRead)
 
-	api.POST("/billing/stripe-hook", stripeHook)
+	api.POST("/billing/link_cancel/:cus_id/:cancel_link_id", handleLinkCancel)
+
+	api.POST("/billing/stripe-hook", handleStripeHook)
 
 	apiHandler = r
 
