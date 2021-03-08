@@ -273,15 +273,19 @@ func handleStripeHook(c *gin.Context) {
 	googleEmail = cus.Meta["google_email"]
 	customerEmail = cus.Email
 
-	params := &stripe.CustomerParams{}
 	cancelLinkId := secureRandomString(16)
-	params.AddMeta("cancel_link_id", cancelLinkId)
+	if cus.Meta["cancel_link_id"] == "" {
+		params := &stripe.CustomerParams{}
+		params.AddMeta("cancel_link_id", cancelLinkId)
 
-	_, err = customer.Update(cus.ID, params)
-	if err != nil {
-		fmt.Println("ERROR: Unable to update cancel link ID for", cus.ID)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		return
+		_, err = customer.Update(cus.ID, params)
+		if err != nil {
+			fmt.Println("ERROR: Unable to update cancel link ID for", cus.ID)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	} else {
+		cancelLinkId = cus.Meta["cancel_link_id"]
 	}
 
 	emails := []string{}
