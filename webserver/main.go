@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -48,33 +47,33 @@ func main() {
 	setup()
 
 	go func() {
-		fmt.Println(http.ListenAndServe("localhost:6061", nil))
+		InfoPrint(http.ListenAndServe("localhost:6061", nil))
 	}()
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
-	fmt.Println(http.ListenAndServe(":"+port, Handler{}))
+	InfoPrint(http.ListenAndServe(":"+port, Handler{}))
 }
 
 func setupSessionsPersistence() {
 	if plusPlusSessionsDb != "" {
-		fmt.Println("Using sessions DB:", plusPlusSessionsDb)
+		InfoPrint("Using sessions DB:", plusPlusSessionsDb)
 
 		err := plusPlusSessions.RestoreFromFile(plusPlusSessionsDb)
 		if err != nil {
-			fmt.Println("ERROR: Failed to restore the sessions from file", plusPlusSessionsDb, "due to error", err)
+			ErrPrint("Failed to restore the sessions from file", plusPlusSessionsDb, "due to error", err)
 		}
 
 		go func() {
 			for {
 				time.Sleep(5 * time.Second)
-				fmt.Println("Maintenance + saving the sessions")
+				InfoPrint("Maintenance + saving the sessions")
 				plusPlusSessions.Maintenance()
 				err := plusPlusSessions.SaveToFile(plusPlusSessionsDb)
 				if err != nil {
-					fmt.Println("ERROR: Failed to save the sessions", err)
+					ErrPrint("Failed to save the sessions", err)
 				}
 			}
 		}()
@@ -107,10 +106,10 @@ func setupHandlers() {
 
 	apiHandler = r
 
-	fmt.Println("Serving production application from", *prodAppPath)
+	InfoPrint("Serving production application from", *prodAppPath)
 	appProdHandler = http.FileServer(http.Dir(*prodAppPath))
 
-	fmt.Println("Serving development application from", *devAppPath)
+	InfoPrint("Serving development application from", *devAppPath)
 	appDevHandler = http.FileServer(http.Dir(*devAppPath))
 
 	var err error
@@ -118,7 +117,7 @@ func setupHandlers() {
 		LoggingEnabled: longPollLogging,
 	})
 	if err != nil {
-		fmt.Println("Failed to create manager: %q", err)
+		InfoPrint("Failed to create manager: %q", err)
 	}
 	eventsHandler = eventsManager.SubscriptionHandler
 
@@ -129,7 +128,7 @@ func setupHandlers() {
 		EventTimeToLiveSeconds: 3600,
 	})
 	if err != nil {
-		fmt.Println("Failed to create manager: %q", err)
+		ErrPrint("Failed to create manager: %q", err)
 	}
 	realtimeHandler = realtimeManager.SubscriptionHandler
 }
@@ -155,9 +154,9 @@ func setupClusterObserver() {
 	go func() {
 		peers := os.Getenv("AFN_WEBSERVER_PEERS")
 		if peers == "" {
-			fmt.Println("No peers configured, not setting up clustering")
+			InfoPrint("No peers configured, not setting up clustering")
 		} else {
-			fmt.Println("Will connect to the following peers", peers)
+			InfoPrint("Will connect to the following peers", peers)
 			clusterObserver := NewClusterObserver(strings.Split(peers, ","))
 			clusterObserver.Start()
 		}
