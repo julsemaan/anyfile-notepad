@@ -106,3 +106,17 @@ func (s *Subscriptions) Reload() {
 	defer s.lock.Unlock()
 	s.data = newdata
 }
+
+func (s *Subscriptions) Maintenance() {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	for _, asub := range s.data {
+		if asub.Status == "past_due" {
+			fmt.Println("Canceling past due subscription", asub.ID)
+			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
+			if err != nil {
+				fmt.Println("ERROR: Unable to cancel subscription", asub.ID)
+			}
+		}
+	}
+}

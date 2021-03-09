@@ -135,12 +135,18 @@ func setupHandlers() {
 }
 
 func setupSubscriptions() {
-	// Reload once synchronously, then start an hourly job to do it
-	subscriptions.Reload()
+	todo := func() {
+		subscriptions.Maintenance()
+		subscriptions.Reload()
+	}
+
+	// Maintenance + reload once synchronously, then start an hourly job to do it
+	todo()
+
 	go func() {
 		for {
-			subscriptions.Reload()
 			time.Sleep(1 * time.Hour)
+			todo()
 		}
 	}()
 }
