@@ -326,12 +326,12 @@ func handleStripeHook(c *gin.Context) {
 To: {{.Emails}}
 Greetings from Anyfile Notepad,
 
-Your $3.99 yearly subscription to the application https://anyfile-notepad.semaan.ca will automatically renew in less than 30 days.
+Your $3.99 yearly subscription to the application {{.BaseURL}} will automatically renew in less than 30 days.
 
 The subscription was registered with the following Google account: {{.GoogleEmail}} 
 
 If you do not wish to stay subscribed to the application, click the following link:
-https://anyfile-notepad.semaan.ca/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}
+{{.BaseURL}}/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}
 
 You can also reply to this email to request the cancelation of your subscription.
 
@@ -348,11 +348,13 @@ The Anyfile Notepad team
 		Emails       string
 		CustomerID   string
 		CancelLinkID string
+		BaseURL      string
 	}{
 		GoogleEmail:  googleEmail,
 		Emails:       strings.Join(emails, ";"),
 		CustomerID:   cus.ID,
 		CancelLinkID: cancelLinkId,
+		BaseURL:      appBaseURL,
 	})
 	msg, _ := ioutil.ReadAll(&msgBytes)
 	sendEmail(emails, msg)

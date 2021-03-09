@@ -16,6 +16,7 @@ import (
 )
 
 var supportEmail = os.Getenv("AFN_SUPPORT_EMAIL")
+var appBaseURL = EnvOrDefault("APP_BASE_URL", "https://anyfile-notepad.semaan.ca")
 
 var subscriptions = NewSubscriptions()
 var apiRegexp = regexp.MustCompile(`^/api`)

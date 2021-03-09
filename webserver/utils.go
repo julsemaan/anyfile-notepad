@@ -41,3 +41,11 @@ func ErrPrint(a ...interface{}) {
 	a = append([]interface{}{"ERROR:"}, a...)
 	fmt.Println(a...)
 }
+
+func EnvOrDefault(varName, defaultVal string) string {
+	if val := os.Getenv(varName); val != "" {
+		return val
+	} else {
+		return defaultVal
+	}
+}
