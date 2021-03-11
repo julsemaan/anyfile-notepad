@@ -135,6 +135,7 @@ func setupHandlers() {
 }
 
 func setupSubscriptions() {
+	subscriptions.Reload()
 	todo := func() {
 		subscriptions.Maintenance()
 		subscriptions.Reload()
