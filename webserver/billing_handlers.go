@@ -22,7 +22,7 @@ import (
 func LoadSubscription(c *gin.Context) {
 	if userId := c.Param("user_id"); userId != "" {
 		if subscription := subscriptions.GetSubscription(userId); subscription == nil {
-			fmt.Println("Failed to find subscription for", userId)
+			InfoPrint("Failed to find subscription for", userId)
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Cannot find subscription for this user."})
 		} else {
 			c.Set("subscription", subscription)
@@ -47,7 +47,7 @@ func LoadGoogleUser(c *gin.Context) {
 		resp, err := http.DefaultClient.Do(req)
 		if resp.StatusCode != http.StatusOK || err != nil {
 			respBody, _ := ioutil.ReadAll(resp.Body)
-			fmt.Println("ERROR getting Google user", resp.StatusCode, string(respBody))
+			ErrPrint("Failed getting Google user", resp.StatusCode, string(respBody))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
 		} else {
 			user := GoogleUser{}
@@ -55,14 +55,14 @@ func LoadGoogleUser(c *gin.Context) {
 			err := dec.Decode(&user)
 
 			if err != nil {
-				fmt.Println("ERROR while decoding response body to get Google user", err)
+				ErrPrint("Failed decoding response body to get Google user", err)
 			}
 
 			if userId != user.Id {
-				fmt.Println("Halting in Google user validation")
+				InfoPrint("Halting in Google user validation")
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "The subscription you are trying to modify isn't attached to the user you are currently logged in with."})
 			} else {
-				fmt.Println("Passed through Google user validation")
+				InfoPrint("Passed through Google user validation")
 				c.Set("google_user", &user)
 			}
 		}
@@ -99,11 +99,11 @@ func handleSubscriptionResume(c *gin.Context) {
 
 	updatedSub, err := sub.Update(subscription.ID, &stripe.SubParams{EndCancel: false})
 	if err != nil {
-		fmt.Println("ERROR while resuming subscription for", userId, spew.Sdump(err))
+		ErrPrint("Failed resuming subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to resume the subscription. Please try again or contact " + supportEmail})
 	} else {
 		spew.Dump(updatedSub)
-		fmt.Println("Resumed subscription for", userId)
+		InfoPrint("Resumed subscription for", userId)
 		subscriptions.SetSubscription(updatedSub)
 		eventsManager.Publish("reload", "now")
 
@@ -128,11 +128,11 @@ func handleSubscriptionCancel(c *gin.Context) {
 
 	updatedSub, err := sub.Cancel(subscription.ID, &stripe.SubParams{EndCancel: true})
 	if err != nil {
-		fmt.Println("ERROR while canceling subscription for", userId, spew.Sdump(err))
+		ErrPrint("Failed canceling subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to cancel the subscription. Please try again or contact " + supportEmail})
 	} else {
 		spew.Dump(updatedSub)
-		fmt.Println("Canceled subscription for", userId)
+		InfoPrint("Canceled subscription for", userId)
 		subscriptions.SetSubscription(updatedSub)
 		eventsManager.Publish("reload", "now")
 
@@ -145,7 +145,7 @@ func handleSubscriptionCancel(c *gin.Context) {
 func handleSubscriptionUpgrade(c *gin.Context) {
 	var form Upgrade
 	if err := c.Bind(&form); err == nil {
-		fmt.Println("Received form", spew.Sdump(form))
+		InfoPrint("Received form", spew.Sdump(form))
 
 		customerParams := &stripe.CustomerParams{
 			Desc:  "Customer for Google email: " + form.UserEmail,
@@ -161,7 +161,7 @@ func handleSubscriptionUpgrade(c *gin.Context) {
 			return
 		}
 
-		fmt.Println("Created customer", spew.Sdump(customer))
+		InfoPrint("Created customer", spew.Sdump(customer))
 		subParams := &stripe.SubParams{
 			Customer: customer.ID,
 			Items: []*stripe.SubItemsParams{
@@ -178,7 +178,7 @@ func handleSubscriptionUpgrade(c *gin.Context) {
 			return
 		}
 
-		fmt.Println("Created subscription", spew.Sdump(subscription))
+		InfoPrint("Created subscription", spew.Sdump(subscription))
 
 		subscriptions.SetSubscription(subscription)
 		eventsManager.Publish("reload", "now")
@@ -193,7 +193,7 @@ func handleSubscriptionUpgrade(c *gin.Context) {
 
 func upgradeError(c *gin.Context, err error, failureUrl string) {
 	// If we're here then we failed, so its not good....
-	fmt.Println("Failed to process Stripe subscription")
+	InfoPrint("Failed to process Stripe subscription")
 	spew.Dump(err)
 	c.Redirect(http.StatusFound, failureUrl)
 }
@@ -201,26 +201,26 @@ func upgradeError(c *gin.Context, err error, failureUrl string) {
 func handleLinkCancel(c *gin.Context) {
 	cus, err := customer.Get(c.Param("cus_id"), nil)
 	if err != nil {
-		fmt.Println("ERROR: Unable to retreive customer", c.Param("cus_id"))
+		ErrPrint("Unable to retreive customer", c.Param("cus_id"))
 		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to retreive customer information"})
 		return
 	}
 
 	if cus.Meta["cancel_link_id"] == "" || c.Param("cancel_link_id") == "" {
-		fmt.Println("ERROR: Trying to do a link cancel but the cancel_link_id is empty")
+		ErrPrint("Trying to do a link cancel but the cancel_link_id is empty")
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Missing information to use the link cancelation."})
 		return
 	}
 
 	if cus.Meta["cancel_link_id"] != c.Param("cancel_link_id") {
-		fmt.Println("ERROR: Unable to validate the cancel link ID while doing a link cancelation. Either this is broken, someone used an outdated link or someone is trying to brute force the endpoint.", c.Param("cus_id"))
+		ErrPrint("Unable to validate the cancel link ID while doing a link cancelation. Either this is broken, someone used an outdated link or someone is trying to brute force the endpoint.", c.Param("cus_id"))
 		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to validate information"})
 		return
 	}
 
 	s := subscriptions.GetSubscriptionByCustomer(cus.ID)
 	if s == nil {
-		fmt.Println("ERROR: Unable to find a subscription for this customer ID", c.Param("cus_id"))
+		ErrPrint("Unable to find a subscription for this customer ID", c.Param("cus_id"))
 		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to retreive subscription"})
 		return
 	}
@@ -261,10 +261,10 @@ func handleStripeHook(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(string(d))
+	InfoPrint(string(d))
 
 	if e.Type != "invoice.upcoming" {
-		fmt.Println("ERROR: Unsupported event type", e.Type)
+		ErrPrint("Unsupported event type", e.Type)
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
@@ -285,7 +285,7 @@ func handleStripeHook(c *gin.Context) {
 	cus, err := customer.Get(obj.Customer, nil)
 
 	if err != nil {
-		fmt.Println("ERROR: Unable to get customer", obj.Customer, err)
+		ErrPrint("Unable to get customer", obj.Customer, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
@@ -300,7 +300,7 @@ func handleStripeHook(c *gin.Context) {
 
 		_, err = customer.Update(cus.ID, params)
 		if err != nil {
-			fmt.Println("ERROR: Unable to update cancel link ID for", cus.ID)
+			ErrPrint("Unable to update cancel link ID for", cus.ID)
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
@@ -320,18 +320,18 @@ func handleStripeHook(c *gin.Context) {
 		emails = append(emails, supportEmail)
 	}
 
-	fmt.Println("Sending renewal notification email to", emails)
+	InfoPrint("Sending renewal notification email to", emails)
 
 	msgTemplate, _ := template.New("renewal-email").Parse(`Subject: Your Anyfile Notepad subscription is about to renew
 To: {{.Emails}}
 Greetings from Anyfile Notepad,
 
-Your $3.99 yearly subscription to the application https://anyfile-notepad.semaan.ca will automatically renew in less than 30 days.
+Your $3.99 yearly subscription to the application {{.BaseURL}} will automatically renew in less than 30 days.
 
 The subscription was registered with the following Google account: {{.GoogleEmail}} 
 
 If you do not wish to stay subscribed to the application, click the following link:
-https://anyfile-notepad.semaan.ca/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}
+{{.BaseURL}}/site/email-cancel.html?cus_id={{.CustomerID}}&cancel_link_id={{.CancelLinkID}}
 
 You can also reply to this email to request the cancelation of your subscription.
 
@@ -348,11 +348,13 @@ The Anyfile Notepad team
 		Emails       string
 		CustomerID   string
 		CancelLinkID string
+		BaseURL      string
 	}{
 		GoogleEmail:  googleEmail,
 		Emails:       strings.Join(emails, ";"),
 		CustomerID:   cus.ID,
 		CancelLinkID: cancelLinkId,
+		BaseURL:      appBaseURL,
 	})
 	msg, _ := ioutil.ReadAll(&msgBytes)
 	sendEmail(emails, msg)

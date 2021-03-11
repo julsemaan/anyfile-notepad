@@ -33,7 +33,7 @@ func (s *Subscriptions) CanHaveAccess(subscription *stripe.Sub) bool {
 func (s *Subscriptions) ExtractUserId(subscription *stripe.Sub) string {
 	userId := subscription.Meta["user_id"]
 	if userId == "" {
-		fmt.Println("ERROR: can't extract user ID out of subscription", subscription.ID)
+		ErrPrint("can't extract user ID out of subscription", subscription.ID)
 	}
 	return userId
 }
@@ -42,7 +42,7 @@ func (s *Subscriptions) SetSubscription(subscription *stripe.Sub) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	fmt.Println("Setting subscription", subscription.ID)
+	InfoPrint("Setting subscription", subscription.ID)
 
 	if userId := subscription.Meta["user_id"]; userId == "" {
 		return errors.New("Invalid user_id field in the metadata")
@@ -85,7 +85,7 @@ func (s *Subscriptions) Reload() {
 	i := sub.List(params)
 
 	if i.Err() != nil {
-		fmt.Println("ERROR: Unable to reload subscriptions, retrying in 10 seconds")
+		ErrPrint("Unable to reload subscriptions, retrying in 10 seconds")
 		time.Sleep(10 * time.Second)
 		s.Reload()
 		return
@@ -96,7 +96,7 @@ func (s *Subscriptions) Reload() {
 	for i.Next() {
 		count += 1
 		subscription := i.Sub()
-		fmt.Println("Updating subscription", subscription.ID)
+		InfoPrint("Updating subscription", subscription.ID)
 		newdata[s.ExtractUserId(subscription)] = subscription
 	}
 
@@ -105,4 +105,18 @@ func (s *Subscriptions) Reload() {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	s.data = newdata
+}
+
+func (s *Subscriptions) Maintenance() {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	for _, asub := range s.data {
+		if asub.Status == "past_due" {
+			InfoPrint("Canceling past due subscription", asub.ID)
+			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
+			if err != nil {
+				ErrPrint("Unable to cancel subscription", asub.ID)
+			}
+		}
+	}
 }

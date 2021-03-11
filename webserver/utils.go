@@ -31,3 +31,21 @@ func secureRandomString(c int) string {
 	}
 	return hex.EncodeToString(b)
 }
+
+func InfoPrint(a ...interface{}) {
+	a = append([]interface{}{"INFO:"}, a...)
+	fmt.Println(a...)
+}
+
+func ErrPrint(a ...interface{}) {
+	a = append([]interface{}{"ERROR:"}, a...)
+	fmt.Println(a...)
+}
+
+func EnvOrDefault(varName, defaultVal string) string {
+	if val := os.Getenv(varName); val != "" {
+		return val
+	} else {
+		return defaultVal
+	}
+}

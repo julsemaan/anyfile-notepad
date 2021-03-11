@@ -13,13 +13,15 @@ func publishRealtimeEvent(c *gin.Context) {
 	if err := c.BindJSON(&event); err == nil {
 		err := realtimeManager.Publish(category, event)
 		if err != nil {
-			msg := "ERROR: Failed to publish event: " + err.Error()
+			msg := "Failed to publish event: " + err.Error()
+			ErrPrint(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"message": msg})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"message": "ok"})
 		}
 	} else {
-		msg := "ERROR: Failed to decode JSON body: " + err.Error()
+		msg := "Failed to decode JSON body: " + err.Error()
+		ErrPrint(msg)
 		c.JSON(http.StatusOK, gin.H{"message": msg})
 	}
 }
