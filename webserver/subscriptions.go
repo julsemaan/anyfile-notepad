@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/sub"
 )
@@ -115,7 +116,8 @@ func (s *Subscriptions) Maintenance() {
 			InfoPrint("Canceling past due subscription", asub.ID)
 			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
 			if err != nil {
-				ErrPrint("Unable to cancel subscription", asub.ID)
+				ErrPrint("Unable to cancel subscription", asub.ID, err)
+				spew.Dump(err)
 			}
 		}
 	}
