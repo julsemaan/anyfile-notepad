@@ -21,7 +21,7 @@ func publishRealtimeEvent(c *gin.Context) {
 		}
 	} else {
 		msg := "Failed to decode JSON body: " + err.Error()
-		ErrPrint(msg)
+		InfoPrint(msg)
 		c.JSON(http.StatusOK, gin.H{"message": msg})
 	}
 }
