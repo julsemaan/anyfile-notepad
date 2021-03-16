@@ -13,6 +13,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
+	"github.com/inverse-inc/packetfence/go/sharedutils"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/sub"
@@ -316,8 +317,10 @@ func handleStripeHook(c *gin.Context) {
 		emails = append(emails, customerEmail)
 	}
 
-	if supportEmail != "" {
-		emails = append(emails, supportEmail)
+	if sharedutils.IsEnabled(sharedutils.EnvOrDefault("COPY_RENEWAL_TO_SUPPORT_EMAIL", "disabled")) {
+		if supportEmail != "" {
+			emails = append(emails, supportEmail)
+		}
 	}
 
 	InfoPrint("Sending renewal notification email to", emails)
