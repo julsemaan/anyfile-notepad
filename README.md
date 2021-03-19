@@ -4,8 +4,9 @@ Anyfile Notepad is a Google Drive compatible app that let's you open any type of
 
 This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app and is composed of 3 services:
 - First and foremost, the client code which encapsulates the application code
-- Second, an API (api.anyfile-notepad.semaan.ca) to serve the data that backs the application (syntaxes, extensions and mime types configuration)
-- Third, a simple administrative interface to manage the three resources above (admin.anyfile-notepad.semaan.ca)
+- Second, a webserver that serves the client code and encapsulates the paid subscriptions logic
+- Third, an API (api.anyfile-notepad.semaan.ca) to serve the data that backs the application (syntaxes, extensions and mime types configuration)
+- Fourth, a simple administrative interface to manage the three resources above (admin.anyfile-notepad.semaan.ca)
 
 ## Building the client side app
 
@@ -74,7 +75,7 @@ The app will then be compiled into static pages and assets that can be served us
 
 ### Using the integrated development server
 
-Should you want to serve files using the build script, you will need to have python 2+ and `inotifywait` installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
+You can run the Golang webserver directly from the build script but you will need to have Golang and `inotifywait` installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
 
 ```
 # apt-get install python inotify-tools
@@ -114,11 +115,7 @@ Once you've setup the Drive integration, rebuild the application using `afn-app.
 
 Should any issue arise in the app boot, make sure to look at the Javascript console for any error.
 
-If you were brave enough to reach the end of the setup and are having issues setting it up, feel free to reach out on the [Google community](http://bit.ly/afn-community).
-
-## Issues
-
-Report any issues using the [Google community](http://bit.ly/afn-community)
+If you were brave enough to reach the end of the setup and are having issues setting it up, feel free to open an issue in this repository.
 
 # Licence
 
