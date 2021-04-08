@@ -116,7 +116,7 @@ func (s *Subscriptions) Maintenance() {
 			InfoPrint("Canceling past due subscription", asub.ID)
 			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
 			serr, isStripeErr := err.(*stripe.Error)
-			if isStripeErr && serr.Type == "resource_missing" {
+			if isStripeErr && serr.Code == "resource_missing" {
 				ErrPrint("Unable to cancel subscription as it was already canceled", asub.ID)
 			} else if err != nil {
 				ErrPrint("Unable to cancel subscription", asub.ID, err)
