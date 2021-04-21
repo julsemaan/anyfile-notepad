@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -40,6 +41,10 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 	// Handle alias if applicable
 	if alias, ok := aliasPaths[r.URL.Path]; ok {
 		r.URL.Path = alias
+	}
+
+	if os.Getenv("REPORT_TO") != "" {
+		w.Header().Set("Report-To", os.Getenv("REPORT_TO"))
 	}
 
 	if strings.HasPrefix(r.URL.Path, "/ace.js") {
