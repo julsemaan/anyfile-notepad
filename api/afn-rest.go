@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -123,6 +124,7 @@ func main() {
 				"contact_email": {
 					Required:   true,
 					Filterable: true,
+					Validator:  &emailValidator{},
 				},
 				"message": {
 					Required:   true,
@@ -276,4 +278,16 @@ Reply-To: {{.ReplyTo}}
 		utils.SendEmail(emails, msg)
 	}
 
+}
+
+type emailValidator struct {
+}
+
+func (emailValidator) Validate(value interface{}) (interface{}, error) {
+	email := value.(string)
+	if res, _ := regexp.MatchString(`\S+@\S+`, email); !res {
+		return email, errors.New("Invalid email format")
+	} else {
+		return email, nil
+	}
 }
