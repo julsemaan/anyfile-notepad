@@ -2,3 +2,4 @@ afn-rest-32
 afn-rest-64
 db/
 vendor/*/
+test-server.sh

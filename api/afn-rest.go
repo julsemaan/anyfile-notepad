@@ -11,7 +11,10 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"text/template"
 
+	"github.com/davecgh/go-spew/spew"
+	"github.com/julsemaan/anyfile-notepad/utils"
 	"github.com/julsemaan/rest-layer-file"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
@@ -121,6 +124,10 @@ func main() {
 					Required:   true,
 					Filterable: true,
 				},
+				"message": {
+					Required:   true,
+					Filterable: true,
+				},
 			},
 		}
 	)
@@ -149,9 +156,10 @@ func main() {
 		AllowedModes: resource.ReadWrite,
 	})
 
-	index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, "contact_requests", []string{"id"}), resource.Conf{
+	contactRequests := index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, "contact_requests", []string{"id"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
+	contactRequests.Use(resource.InsertedEventHandlerFunc(insertedContactRequestHook))
 
 	// Create API HTTP handler for the resource graph
 	api, err := rest.NewHandler(index)
@@ -245,5 +253,27 @@ func authenticate(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func insertedContactRequestHook(ctx context.Context, items []*resource.Item, err *error) {
-	fmt.Println("inserted habib")
+	spew.Dump(items)
+	emails := []string{os.Getenv("AFN_SUPPORT_EMAIL")}
+	for _, item := range items {
+		msgTemplate, _ := template.New("contact-email").Parse(`Subject: Anyfile Notepad - Message from {{.ReplyTo}}
+To: {{.Emails}}
+Reply-To: {{.ReplyTo}}
+
+{{.Message}}
+`)
+		var msgBytes bytes.Buffer
+		msgTemplate.Execute(&msgBytes, struct {
+			Emails  string
+			Message string
+			ReplyTo string
+		}{
+			Emails:  strings.Join(emails, ";"),
+			Message: item.Payload["message"].(string),
+			ReplyTo: item.Payload["contact_email"].(string),
+		})
+		msg, _ := ioutil.ReadAll(&msgBytes)
+		utils.SendEmail(emails, msg)
+	}
+
 }
