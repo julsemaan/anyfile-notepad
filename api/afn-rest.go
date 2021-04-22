@@ -13,15 +13,19 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
+	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/julsemaan/anyfile-notepad/utils"
 	"github.com/julsemaan/rest-layer-file"
+	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
 	"github.com/rs/rest-layer/schema"
 	"gopkg.in/alexcesaro/statsd.v2"
 )
+
+var contactRequestsCache = cache.New(24*time.Hour, 1*time.Minute)
+var maxContactRequestsPerDay = 10
 
 var statsdConn, _ = statsd.New(statsd.Address(os.Getenv("AFN_STATSD_URI")))
 
@@ -161,6 +165,7 @@ func main() {
 	contactRequests := index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, "contact_requests", []string{"id"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
+	contactRequests.Use(resource.InsertEventHandlerFunc(insertContactRequestHook))
 	contactRequests.Use(resource.InsertedEventHandlerFunc(insertedContactRequestHook))
 
 	// Create API HTTP handler for the resource graph
@@ -169,27 +174,13 @@ func main() {
 		log.Fatalf("Invalid API configuration: %s", err)
 	}
 
-	// Bind the API under /api/ path
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		if matched, _ := regexp.MatchString("^/stats", r.URL.Path); matched {
-			log.Print("Allowing without authentication for stats namespace")
-			if statsRequest, err := parseStatsPayload(w, r); err == nil {
-				statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
-				log.Printf("Stats request from %s", statsRequest["ip"])
-				switch statsRequest["type"] {
-				case "increment":
-					log.Printf("Incrementing %s", statsRequest["key"])
-					statsdConn.Increment(statsRequest["key"])
-				}
-				w.Write([]byte("OK"))
-				return
-			} else {
-				return
-			}
+			handleStats(w, r)
 		} else if isOpenResource(r) {
 			// pass
 		} else if !authenticate(w, r) {
@@ -254,8 +245,23 @@ func authenticate(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+func insertContactRequestHook(ctx context.Context, items []*resource.Item) error {
+	if contactRequestsCache.ItemCount() >= maxContactRequestsPerDay {
+		return errors.New("Too many contact requests, try again later")
+	} else {
+		for _, item := range items {
+			contactRequestsCache.SetDefault(item.ID.(string), item.ID)
+		}
+		return nil
+	}
+}
+
 func insertedContactRequestHook(ctx context.Context, items []*resource.Item, err *error) {
-	spew.Dump(items)
+	if *err != nil {
+		log.Println("Not sending contact request email because there was an error saving the contact request")
+		return
+	}
+
 	emails := []string{os.Getenv("AFN_SUPPORT_EMAIL")}
 	for _, item := range items {
 		msgTemplate, _ := template.New("contact-email").Parse(`Subject: Anyfile Notepad - Message from {{.ReplyTo}}
@@ -289,5 +295,22 @@ func (emailValidator) Validate(value interface{}) (interface{}, error) {
 		return email, errors.New("Invalid email format")
 	} else {
 		return email, nil
+	}
+}
+
+func handleStats(w http.ResponseWriter, r *http.Request) {
+	log.Print("Allowing without authentication for stats namespace")
+	if statsRequest, err := parseStatsPayload(w, r); err == nil {
+		statsdConn.Increment(fmt.Sprintf("afn.stats-hits.%s", strings.Replace(statsRequest["ip"], ".", "_", -1)))
+		log.Printf("Stats request from %s", statsRequest["ip"])
+		switch statsRequest["type"] {
+		case "increment":
+			log.Printf("Incrementing %s", statsRequest["key"])
+			statsdConn.Increment(statsRequest["key"])
+		}
+		w.Write([]byte("OK"))
+		return
+	} else {
+		return
 	}
 }
