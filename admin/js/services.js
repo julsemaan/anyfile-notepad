@@ -163,5 +163,22 @@ angular.module('afnAdminApp.services', [])
 
 
   return res;
+}).factory('ContactRequest', function($resource, $CRUDResource) {
+  var res = $resource(AFN_VARS['api_uri']+'/contact_requests/:id', {id: '@id'}, {
+    update: {
+      method: 'PUT'
+    }
+  });
+  res = $CRUDResource(res);
+
+  res.prototype.model_name = "ContactRequest";
+  res.prototype.model_name_pl = "ContactRequests";
+
+  res.prototype.snake_model_name = "contact_request";
+  res.prototype.snake_model_name_pl = "contact_requests";
+
+  res.prototype.display_attr = "contact_email";
+
+  return res;
 });
 

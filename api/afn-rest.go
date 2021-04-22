@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -109,6 +110,19 @@ func main() {
 				},
 			},
 		}
+
+		contactRequest = schema.Schema{
+			Description: "Represents a contact request",
+			Fields: schema.Fields{
+				"id":         schema.IDField,
+				"created_at": schema.CreatedField,
+				"updated_at": schema.UpdatedField,
+				"contact_email": {
+					Required:   true,
+					Filterable: true,
+				},
+			},
+		}
 	)
 
 	// Create a REST API resource index
@@ -132,6 +146,10 @@ func main() {
 	})
 
 	index.Bind("settings", setting, filestore.NewHandler(directory, "settings", []string{"var_name"}), resource.Conf{
+		AllowedModes: resource.ReadWrite,
+	})
+
+	index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, "contact_requests", []string{"id"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 
@@ -202,4 +220,8 @@ func authenticate(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 	return true
+}
+
+func insertedContactRequestHook(ctx context.Context, items []*resource.Item, err *error) {
+	fmt.Println("inserted habib")
 }

@@ -203,4 +203,18 @@ angular.module('afnAdminApp.controllers', [])
 }).controller('SettingEditController', function($scope, $controller, $stateParams, Setting) {
   $scope.crud_model = Setting;
   $controller('CRUDEditController', {$scope: $scope});
+})
+// ContactRequests
+.controller('ContactRequestListController', function($scope, $controller, ContactRequest) {
+  $scope.crud_model = ContactRequest;
+  $controller('CRUDListController', {$scope: $scope});
+}).controller('ContactRequestViewController', function($scope, $controller, $stateParams, ContactRequest) {
+  $scope.crud_model = ContactRequest;
+  $controller('CRUDViewController', {$scope: $scope});
+}).controller('ContactRequestCreateController', function($scope, $controller, $state, $stateParams, ContactRequest) {
+  $scope.crud_model = ContactRequest;
+  $controller('CRUDCreateController', {$scope: $scope});
+}).controller('ContactRequestEditController', function($scope, $controller, $stateParams, ContactRequest) {
+  $scope.crud_model = ContactRequest;
+  $controller('CRUDEditController', {$scope: $scope});
 });
