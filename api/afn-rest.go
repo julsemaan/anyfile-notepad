@@ -180,8 +180,8 @@ func main() {
 			} else {
 				return
 			}
-		} else if r.Method == "GET" || r.Method == "OPTIONS" {
-			log.Print("Allowing without authentication for namespace that don't modify resources")
+		} else if isOpenResource(r) {
+			// pass
 		} else if !authenticate(w, r) {
 			return
 		}
@@ -210,6 +210,28 @@ func parseStatsPayload(w http.ResponseWriter, r *http.Request) (map[string]strin
 		s["ip"] = re.FindAllStringSubmatch(r.RemoteAddr, 1)[0][1]
 	}
 	return s, nil
+}
+
+func isOpenResource(r *http.Request) bool {
+	if r.Method == "OPTIONS" {
+		return true
+	}
+
+	if strings.HasPrefix(r.URL.Path, "/contact_requests") {
+		if r.Method == "POST" {
+			log.Print("Allowing without authentication for creating a contact request")
+			return true
+		} else {
+			return false
+		}
+	}
+
+	if r.Method == "GET" {
+		log.Print("Allowing without authentication for namespace that don't modify resources")
+		return true
+	}
+
+	return false
 }
 
 func authenticate(w http.ResponseWriter, r *http.Request) bool {
