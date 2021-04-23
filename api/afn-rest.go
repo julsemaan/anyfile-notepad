@@ -133,6 +133,9 @@ func main() {
 				"message": {
 					Required:   true,
 					Filterable: true,
+					Validator: &schema.String{
+						MaxLen: 2000,
+					},
 				},
 			},
 		}
