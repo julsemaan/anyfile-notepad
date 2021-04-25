@@ -184,6 +184,7 @@ func main() {
 
 		if matched, _ := regexp.MatchString("^/stats", r.URL.Path); matched {
 			handleStats(w, r)
+			return
 		} else if isOpenResource(r) {
 			// pass
 		} else if !authenticate(w, r) {
