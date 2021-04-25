@@ -73,6 +73,24 @@ angular.module('afnAdminApp').config(function($stateProvider) {
     url: '/settings/:id/edit',
     templateUrl: 'partials/crud/edit.html',
     controller: 'SettingEditController'
+  })
+  // ContactRequests
+  .state('ContactRequest', {
+    url: '/contact_requests',
+    templateUrl: 'partials/crud/index.html',
+    controller: 'ContactRequestListController',
+  }).state('viewContactRequest', { //state for showing single mime type
+    url: '/contact_requests/:id/view',
+    templateUrl: 'partials/crud/view.html',
+    controller: 'ContactRequestViewController'
+  }).state('newContactRequest', { //state for adding a new mime_type
+    url: '/contact_requests/new',
+    templateUrl: 'partials/crud/add.html',
+    controller: 'ContactRequestCreateController'
+  }).state('editContactRequest', { //state for updating a mime_type
+    url: '/contact_requests/:id/edit',
+    templateUrl: 'partials/crud/edit.html',
+    controller: 'ContactRequestEditController'
   });
 }).run(function($state) {
   $state.go('MimeType'); //make a transition to mime_types state when app starts

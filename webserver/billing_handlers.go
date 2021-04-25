@@ -14,6 +14,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/inverse-inc/packetfence/go/sharedutils"
+	"github.com/julsemaan/anyfile-notepad/utils"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/sub"
@@ -246,7 +247,7 @@ Cheers!
 			CustomerEmail: cus.Email,
 		})
 		msg, _ := ioutil.ReadAll(&msgBytes)
-		sendEmail([]string{supportEmail}, msg)
+		utils.SendEmail([]string{supportEmail}, msg)
 	}
 }
 
@@ -360,7 +361,7 @@ The Anyfile Notepad team
 		BaseURL:      appBaseURL,
 	})
 	msg, _ := ioutil.ReadAll(&msgBytes)
-	sendEmail(emails, msg)
+	utils.SendEmail(emails, msg)
 
 	c.JSON(http.StatusOK, gin.H{})
 }
