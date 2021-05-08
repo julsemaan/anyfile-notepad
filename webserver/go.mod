@@ -10,7 +10,7 @@ require (
 	github.com/golang/protobuf v0.0.0-20171021043952-1643683e1b54 // indirect
 	github.com/inverse-inc/packetfence v0.0.0-20190923130955-9b9996e89548
 	github.com/jcuga/golongpoll v0.0.0-20160821025152-6f70b008d155
-	github.com/julsemaan/anyfile-notepad/utils v0.0.0
+	github.com/julsemaan/anyfile-notepad/utils v0.0.0-20210425191401-71dd3eee9ad4
 	github.com/julsemaan/golongpoll-client v0.0.0-20180103015249-b46ad1561d82
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.0-20170925054904-a5cdd64afdee // indirect
@@ -27,5 +27,3 @@ require (
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v2 v2.0.0-20170812160011-eb3733d160e7 // indirect
 )
-
-replace github.com/julsemaan/anyfile-notepad/utils => ../utils

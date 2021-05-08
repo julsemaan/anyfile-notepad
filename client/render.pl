@@ -18,7 +18,7 @@ GetOptions(
     "SYNTAX_DB=s" => \$SYNTAX_DB,
 ) or die("Error in command line arguments\n");;
 
-my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, 'client/']}); 
+my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, '.']}); 
 
 my @THEMES;
 
