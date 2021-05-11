@@ -30,7 +30,7 @@ RecentFilesController.prototype.render = function(){
     $.each(self.preference.array, function(i){
       var element = self.preference.array[i];
       var provider = element.provider || DEFAULT_PROVIDER;
-      var link = $('<a href="#edit/'+provider+"/"+element.file_id+'">'+element.alias+" ("+element.provider+")"+'</a>');
+      var link = $('<a href="#edit/'+provider+"/"+element.file_id+'">'+sanitize(element.alias)+" ("+element.provider+")"+'</a>');
       link.click(function(){
         application.controllers.editor.top_menu.menu.hide_menu();
       });

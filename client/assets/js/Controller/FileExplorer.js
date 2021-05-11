@@ -16,14 +16,14 @@ FileExplorerController.prototype.render_directory = function(provider, folders, 
   var container = $("<ul class='jqueryFileTree' style='display: none;'></ul>")
   for(var i in folders){
     var folder = folders[i];
-    var folder_element = $("<li class='directory collapsed'><a href='#' rel='"+provider+"/"+folder.id+"/'>"+folder.title+"</a></li>")      ;
+    var folder_element = $("<li class='directory collapsed'><a href='#' rel='"+provider+"/"+folder.id+"/'>"+sanitize(folder.title)+"</a></li>")      ;
     container.append(folder_element);
   }
 
   for(var i in files){
     var file = files[i];
     var file_element = $("<li></li>");
-    var file_link = $("<a href='#edit/"+provider+"/"+file.id+"'>"+file.title+"</a>");
+    var file_link = $("<a href='#edit/"+provider+"/"+file.id+"'>"+sanitize(file.title)+"</a>");
     file_element.addClass("file ext_"+CloudFile.file_extension(file.title).substr(1))
     file_element.append(file_link);
     file_link.attr('onclick', "javascript:application.controllers.editor.top_menu.menu.hide_menu();window.location='#edit/"+provider+"/"+file.id+"'")

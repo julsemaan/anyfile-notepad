@@ -28,10 +28,23 @@ function DataBinder( object_id ) {
         $bound.attr("src", new_val);
       }
       else {
-        $bound.html( new_val );
+        $bound.html( sanitize(new_val) );
       }
     });
   });
 
   return pubSub;
+}
+
+function sanitize(s) {
+  s += ""
+  s = s.replaceAll('&', '&amp;')
+  s = s.replaceAll('<', '&lt;')
+  s = s.replaceAll('>', '&gt;')
+  s = s.replaceAll('"', '&quot;')
+  s = s.replaceAll("'", '&#x27;')
+  s = s.replaceAll("/", '&#x2F;')
+  s = s.replaceAll("`", '&grave;')
+  console.log("after", s)
+  return s;
 }

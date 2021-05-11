@@ -22,5 +22,6 @@ LocaleController.prototype.findLocale = function() {
 }
 
 LocaleController.prototype.i18n = function(string) {
+  string = sanitize(string);
   return string.toLocaleString();
 }
