@@ -45,6 +45,5 @@ function sanitize(s) {
   s = s.replaceAll("'", '&#x27;')
   s = s.replaceAll("/", '&#x2F;')
   s = s.replaceAll("`", '&grave;')
-  console.log("after", s)
   return s;
 }
