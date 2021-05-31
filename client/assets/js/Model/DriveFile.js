@@ -7,7 +7,6 @@ DriveFile.prototype.post_init_child = function(options) {
   this.set("realtime", options.realtime);
 
   this.set("_app_folder", "Anyfile Notepad Files")
-  this.compute_app_folder_id();
 }
 
 DriveFile.prototype.try_get_app_folder_id = function(callback) {
@@ -46,7 +45,7 @@ DriveFile.prototype.create_app_folder_id = function(callback) {
   });
 }
 
-DriveFile.prototype.compute_app_folder_id = function() {
+DriveFile.prototype.compute_app_folder_id = function(callback) {
   var self = this;
 
   self.try_get_app_folder_id(function(folder_id) {
@@ -54,11 +53,13 @@ DriveFile.prototype.compute_app_folder_id = function() {
       console.log("App folder ID doesn't exist yet, creating it")
       self.create_app_folder_id(function(folder_id) {
         self.set("_app_folder_id", folder_id);
+        callback()
       });
     }
     else {
       console.log("Found app folder ID", folder_id);
       self.set("_app_folder_id", folder_id);
+      callback()
     }
   })
 }
@@ -164,10 +165,6 @@ DriveFile.prototype.get_create_collab_id = function(callback) {
 DriveFile.prototype.update_data = function(new_revision, callback){
   var self = this
 
-  var boundary = '-------314159265358979323846';
-  var delimiter = "\r\n--" + boundary + "\r\n";
-  var close_delim = "\r\n--" + boundary + "--";
-
   this.set("_tmp_title_saved", this.title)
   this.set("_tmp_data_saved", this.data)
 
@@ -176,60 +173,75 @@ DriveFile.prototype.update_data = function(new_revision, callback){
   var reader = new FileReader();
   reader.readAsBinaryString(data_blob);
   reader.onload = function(e) {
-    var contentType = self.mime_type || self.mime_type_from_extension();
-    self.check_for_unknown_mime_type(contentType)
-
     var metadata = {fileId : self.id, title : self.title}
 
     if(self.folder_id){
       metadata['parents'] = [{id:self.folder_id}]
+      self.doSave(new_revision, reader, metadata, callback)
     }
     else if(!self.persisted) {
       console.log("File isn't persisted (new file), will save it in the app folder directory");
-      metadata['parents'] = [{id:self._app_folder_id}];
+      self.compute_app_folder_id(function() {
+        metadata['parents'] = [{id:self._app_folder_id}];
+        self.doSave(new_revision, reader, metadata, callback)
+      });
+    }
+    else {
+      self.doSave(new_revision, reader, metadata, callback)
     }
 
-    var base64Data = btoa(reader.result);
-    var multipartRequestBody =
-        delimiter +
-        'Content-Type: application/json\r\n\r\n' +
-        JSON.stringify(metadata) +
-        delimiter +
-        'Content-Type: ' + contentType + '\r\n' +
-        'Content-Transfer-Encoding: base64\r\n' +
-        '\r\n' +
-        base64Data +
-        close_delim;
-
-    var url = self.persisted ? '/upload/drive/v2/files/' + self.id : '/upload/drive/v2/files/'
-    var method = self.persisted ? "PUT" : "POST"
-
-    var request = gapi.client.request({
-        'path': url,
-        'method': method,
-        'params': { uploadType : 'multipart', alt : 'json', newRevision : new_revision, fileId : self.id},
-        'headers': {
-          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-        },
-        'body': multipartRequestBody});
-    if (!callback) {
-      callback = function(file) {
-        console.log(file)
-      };
-    }
-    application.controllers.google_oauth.execute_request(request, function(file){
-      if(!file.error){
-        //set id if it's not persisted and set persisted
-        if(!self.persisted){
-          self.set("persisted", true)
-          self.set("id", file.id)
-        }
-        self.set("title_saved", self._tmp_title_saved)
-        self.set("data_saved", self._tmp_data_saved)
-      }
-      callback(file)
-    });
   }
+}
+
+DriveFile.prototype.doSave = function (new_revision, reader, metadata, callback) {
+  var self = this;
+  var contentType = self.mime_type || self.mime_type_from_extension();
+  self.check_for_unknown_mime_type(contentType)
+
+  var boundary = '-------314159265358979323846';
+  var delimiter = "\r\n--" + boundary + "\r\n";
+  var close_delim = "\r\n--" + boundary + "--";
+
+  var base64Data = btoa(reader.result);
+  var multipartRequestBody =
+      delimiter +
+      'Content-Type: application/json\r\n\r\n' +
+      JSON.stringify(metadata) +
+      delimiter +
+      'Content-Type: ' + contentType + '\r\n' +
+      'Content-Transfer-Encoding: base64\r\n' +
+      '\r\n' +
+      base64Data +
+      close_delim;
+
+  var url = self.persisted ? '/upload/drive/v2/files/' + self.id : '/upload/drive/v2/files/'
+  var method = self.persisted ? "PUT" : "POST"
+
+  var request = gapi.client.request({
+      'path': url,
+      'method': method,
+      'params': { uploadType : 'multipart', alt : 'json', newRevision : new_revision, fileId : self.id},
+      'headers': {
+        'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+      },
+      'body': multipartRequestBody});
+  if (!callback) {
+    callback = function(file) {
+      console.log(file)
+    };
+  }
+  application.controllers.google_oauth.execute_request(request, function(file){
+    if(!file.error){
+      //set id if it's not persisted and set persisted
+      if(!self.persisted){
+        self.set("persisted", true)
+        self.set("id", file.id)
+      }
+      self.set("title_saved", self._tmp_title_saved)
+      self.set("data_saved", self._tmp_data_saved)
+    }
+    callback(file)
+  });
 }
 
 function ab2str(buf) {
