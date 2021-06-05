@@ -262,3 +262,36 @@ function build_all() {
 
 build_all
 
+if ! is_webdev; then
+  exit
+fi
+
+function watch_dir() {
+  DIR=$1
+  ACTION=$2
+  OPTIONS=$3
+  while true; do
+    inotifywait $OPTIONS -r -e create,modify,delete $RUNNING_DIR/$DIR
+    for action in $2; do
+      eval $action
+    done
+  done
+}
+
+function exit_cleanup() {
+  echo "Exiting..."
+  rm -f $SHOULD_RESET_FILE
+}
+
+trap exit_cleanup EXIT
+
+watch_dir . build_all &
+
+echo "1" > $SHOULD_RESET_FILE
+
+while true; do
+  sleep 1
+done
+
+
+
