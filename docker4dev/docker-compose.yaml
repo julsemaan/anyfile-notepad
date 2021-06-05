@@ -15,11 +15,14 @@ services:
     command:
       - -c
       - |
-        cp -a /src/client/output/* /var/www/client/
+        cp -a /src/node_modules /src/client/
+        cp -a /src/bower_components /src/client/
+        ./afn-app.sh webdev
     build:
       context: ../client/
     volumes:
-      - client:/var/www/client
+      - ../client/:/src/client/
+      - client:/src/client/output/
 
 volumes:
   client:
