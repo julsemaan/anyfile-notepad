@@ -134,6 +134,7 @@ func main() {
 					Required:   true,
 					Filterable: true,
 					Validator: &schema.String{
+						MinLen: 10,
 						MaxLen: 2000,
 					},
 				},
