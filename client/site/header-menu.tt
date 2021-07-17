@@ -9,9 +9,11 @@
             <div class="col-md-10 col-centered">
               <a class="btn btn-success" href="/app">Launch app <img src="/logo.png" width="25" height="25" ></a>
             </div>
+            <!--
             <div class="col-md-10 col-centered">
               <a class="btn btn-primary" target="_blank" href="http://bit.ly/afn-community-fb">Find us on <img src="/fb.png" width="15" height="15" ></a>
             </div>
+            -->
             <!--
             <div class="col-md-10 col-centered">
               <a class="btn btn-primary" target="_blank" href="https://chrome.google.com/webstore/detail/anyfile-notepad/ghlichmdnegmcpafgmmlpkegmcndlndi">Download in Chrome Store <img src="/chrome_store.jpg" width="15" height="15" ></a>
