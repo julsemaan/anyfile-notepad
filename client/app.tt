@@ -14,6 +14,7 @@
     {{> file_info }}
     {{> major_notice_modal }}
     {{> terms }}
+    {{> agree_privacy }}
     {{> editor_flash }}
   </script>
 

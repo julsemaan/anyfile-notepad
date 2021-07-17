@@ -114,6 +114,15 @@ EditorController.prototype.initialize_html = function(){
     })
   }
 
+  if(!BooleanPreference.find('agree_privacy').getValue()){
+    $("#agree_privacy_modal").modal({'show':true,backdrop: true,backdrop: 'static', keyboard:false});
+    $('.modal-backdrop.fade.in').css('opacity', '1.0')
+    $('#agree_privacy').click(function(){
+      $("#agree_privacy_modal").modal('hide')
+      BooleanPreference.find("agree_privacy").refreshAndSet(true, self, self.show_reauth)
+    })
+  }
+
   if(self.major_notice_pref.getValue() < parseInt($('#major_notice_modal').attr('data-version')) ){
     $('#major_notice_modal').modal('show');
     $('.agree_major_notice').click(function(){

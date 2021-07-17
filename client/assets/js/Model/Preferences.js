@@ -9,6 +9,7 @@ function Preferences(loaded){
     'file_explorer_height' : "300px", 
     'major_notice' : '6',
     'agree_terms' : 'false',
+    'agree_privacy' : 'false',
     'keybinding' : 'normal',
     'favorites' : "[]",
     'autosave' : 'true',
