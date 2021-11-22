@@ -9,9 +9,8 @@ require (
 	github.com/gin-gonic/gin v0.0.0-20170702092826-d459835d2b07
 	github.com/golang/protobuf v0.0.0-20171021043952-1643683e1b54 // indirect
 	github.com/inverse-inc/packetfence v0.0.0-20190923130955-9b9996e89548
-	github.com/jcuga/golongpoll v0.0.0-20160821025152-6f70b008d155
+	github.com/jcuga/golongpoll v1.1.1-0.20180711123949-939e3befd837
 	github.com/julsemaan/anyfile-notepad/utils v0.0.0
-	github.com/julsemaan/golongpoll-client v0.0.0-20180103015249-b46ad1561d82
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.0-20170925054904-a5cdd64afdee // indirect
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect

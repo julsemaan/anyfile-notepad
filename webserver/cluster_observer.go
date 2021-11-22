@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"os"
 
-	"github.com/julsemaan/golongpoll-client"
+	"github.com/jcuga/golongpoll/go-client/glpclient"
 )
 
 type ClusterObserver struct {
@@ -24,12 +25,23 @@ func (co *ClusterObserver) hostURL(host string) *url.URL {
 	return u
 }
 
+func (co *ClusterObserver) glpclient(host, category string) *glpclient.Client {
+	u := co.hostURL(host)
+	c := glpclient.NewClient(u, category)
+	if username := os.Getenv("CLUSTER_OBSERVER_USERNAME"); username != "" {
+		c.BasicAuthUsername = username
+	}
+	if password := os.Getenv("CLUSTER_OBSERVER_PASSWORD"); password != "" {
+		c.BasicAuthPassword = password
+	}
+	return c
+}
+
 func (co *ClusterObserver) Start() {
 	for _, host := range co.Hosts {
 		go func(host string) {
 			go func() {
-				u := co.hostURL(host)
-				reloadClient := glpclient.NewClient(u, "reload")
+				reloadClient := co.glpclient(host, "reload")
 				reloadClient.Start()
 
 				for {
@@ -40,14 +52,13 @@ func (co *ClusterObserver) Start() {
 			}()
 
 			go func() {
-				u := co.hostURL(host)
-				sessionsClient := glpclient.NewClient(u, "sessions")
+				sessionsClient := co.glpclient(host, "sessions")
 				sessionsClient.Start()
 
 				for {
-					sessionJSON := <-sessionsClient.EventsChan
+					sessionEvent := <-sessionsClient.EventsChan
 					session := &PlusPlusSessionSync{}
-					err := json.Unmarshal(sessionJSON, session)
+					err := json.Unmarshal(sessionEvent.Data, session)
 					if err != nil {
 						fmt.Println("ERROR: Failed to decode the session received from a peer", err)
 						continue
