@@ -1,10 +1,6 @@
-FROM node:16-buster AS build
+FROM ghcr.io/julsemaan/anyfile-notepad/client/builder:latest
 
 WORKDIR /src/client
-
-RUN apt-get update -yqq
-RUN apt-get install -yqq perl gcc curl make inotify-tools
-RUN cpan Template Getopt::Long JSON File::Slurp Tie::IxHash
 
 COPY package.json .
 COPY bower.json .
