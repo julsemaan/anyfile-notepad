@@ -1,0 +1,19 @@
+name: Docker Image client/builder
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ 'client/builder' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: make -C client/builder/ ghcr.io/julsemaan/anyfile-notepad/client/builder
