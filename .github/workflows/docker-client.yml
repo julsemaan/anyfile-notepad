@@ -20,7 +20,7 @@ jobs:
         with:
           context: client/
           push: true
-          tags: :latest
+          tags: julsemaan/anyfile-notepad/client:latest
           cache-from: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache
           cache-to: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache,mode=max
 
