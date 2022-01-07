@@ -3,6 +3,8 @@ name: Docker Image client/builder
 on:
   push:
     paths: [ 'client/builder/**' ]
+  workflow_dispatch:
+    branches: ['**']
 
 jobs:
 
