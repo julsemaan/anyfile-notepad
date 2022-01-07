@@ -7,12 +7,16 @@ on:
     branches: ['**']
 
 jobs:
-
-  build:
-
+  docker:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: make -C client/builder/ ghcr.io/julsemaan/anyfile-notepad/client/builder
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          registry: docker.pkg.github.com
+          image: client-builder
+          password: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+          cache_registry: cache
+          path: client/builder/
