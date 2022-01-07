@@ -17,7 +17,8 @@ jobs:
         with:
           registry: docker.pkg.github.com
           image: client-builder
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.GH_PERSO_TOKEN_USERNAME }}
+          password: ${{ secrets.GH_PERSO_TOKEN }}
           cache: true
           cache_registry: cache
           path: client/
