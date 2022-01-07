@@ -11,14 +11,18 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Kaniko build
-        uses: aevea/action-kaniko@master
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
         with:
-          registry: docker.pkg.github.com
-          image: client-builder
-          username: ${{ secrets.GH_PERSO_TOKEN_USERNAME }}
-          password: ${{ secrets.GH_PERSO_TOKEN }}
-          cache: true
-          cache_registry: cache
-          path: client/
+          context: client/
+          push: true
+          tags: :latest
+          cache-from: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache
+          cache-to: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache,mode=max
