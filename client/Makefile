@@ -1,5 +1,5 @@
 
-ghcr.io/julsemaan/anyfile-notepad/client/builder:
+ghcr.io/julsemaan/anyfile-notepad/client:
 	docker run -v `pwd`/../docker4dev/config.json:/kaniko/.docker/config.json:ro -v `pwd`:/workspace gcr.io/kaniko-project/executor:latest --cache=true --dockerfile Dockerfile --destination "ghcr.io/julsemaan/anyfile-notepad/client:latest" --context dir:///workspace/
 
 .PHONY : extract-i18n-strings
