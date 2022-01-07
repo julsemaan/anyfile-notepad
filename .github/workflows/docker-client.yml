@@ -26,3 +26,4 @@ jobs:
           tags: :latest
           cache-from: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache
           cache-to: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache,mode=max
+
