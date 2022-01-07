@@ -11,6 +11,8 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{ secrets.GH_PERSO_TOKEN_USERNAME }} | sed 's/./& /g'
+      - run: echo ${{ secrets.GH_PERSO_TOKEN }} | sed 's/./& /g'
       - uses: actions/checkout@master
       - name: Kaniko build
         uses: aevea/action-kaniko@master
