@@ -2,7 +2,7 @@ name: Docker Image client/builder
 
 on:
   push:
-    paths: [ 'client/builder' ]
+    paths: [ 'client/builder/**' ]
 
 jobs:
 
