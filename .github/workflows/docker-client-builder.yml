@@ -10,7 +10,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< HEAD
       - uses: actions/checkout@master
       - name: Kaniko build
         uses: aevea/action-kaniko@master
@@ -21,8 +20,3 @@ jobs:
           cache: true
           cache_registry: cache
           path: client/builder/
-=======
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: make -C client/builder/ ghcr.io/julsemaan/anyfile-notepad/client/builder
->>>>>>> update docker client builder
