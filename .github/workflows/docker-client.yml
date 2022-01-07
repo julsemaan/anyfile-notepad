@@ -29,7 +29,7 @@ jobs:
         with:
           context: client/
           push: true
-          tags: julsemaan/anyfile-notepad/client:latest
-          cache-from: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache
-          cache-to: type=registry,ref=julsemaan/anyfile-notepad/client:buildcache,mode=max
+          tags: ghcr.io/julsemaan/anyfile-notepad/client:latest
+          cache-from: type=registry,ref=ghcr.io/julsemaan/anyfile-notepad/client:buildcache
+          cache-to: type=registry,ref=ghcr.io/julsemaan/anyfile-notepad/client:buildcache,mode=max
 
