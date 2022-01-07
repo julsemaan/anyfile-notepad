@@ -21,3 +21,4 @@ jobs:
           cache: true
           cache_registry: cache
           path: client/builder/
+          extra_args: --push-retry 5
