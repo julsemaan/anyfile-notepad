@@ -18,7 +18,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           registry: docker.pkg.github.com
-          image: client
+          image: webserver
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: cache
