@@ -26,3 +26,6 @@ require (
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v2 v2.0.0-20170812160011-eb3733d160e7 // indirect
 )
+
+// Uncomment this to use local directory for utils
+// replace github.com/julsemaan/anyfile-notepad/utils => ../utils
