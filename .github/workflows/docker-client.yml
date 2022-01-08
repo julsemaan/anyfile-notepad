@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup VARS.js
-        run: 'printf $AFN_VARS > assets/js/VARS.js'
+        run: 'printf $AFN_VARS > client/assets/js/VARS.js'
         env:
           AFN_VARS : ${{secrets.AFN_VARS}}
 
