@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/julsemaan/anyfile-notepad/client-base:latest AS full
+FROM docker.pkg.github.com/julsemaan/anyfile-notepad/client:latest AS full
 
 FROM alpine as light
 
