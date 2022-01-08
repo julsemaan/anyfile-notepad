@@ -6,7 +6,7 @@ on:
     paths: 
       - 'client/**'
       - '.github/workflows/docker-client.yml'
-    paths-ignore: [ 'client/builder/**' ]
+      - '!client/builder/**'
   workflow_dispatch:
     branches: ['**']
 
