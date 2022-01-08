@@ -1,0 +1,27 @@
+name: Docker Image webserver
+
+on:
+  push:
+    branches: ['**']
+    paths: 
+      - 'webserver/**'
+      - '.github/workflows/docker-webserver.yml'
+  workflow_dispatch:
+    branches: ['**']
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          registry: docker.pkg.github.com
+          image: client
+          password: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+          cache_registry: cache
+          path: webserver/
+          extra_args: --push-retry 5
+
