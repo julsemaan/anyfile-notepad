@@ -22,7 +22,7 @@ jobs:
           AFN_VARS : ${{secrets.AFN_VARS}}
 
       - name: cat VARS.js
-        run: cat assets/js/VARS.js
+        run: 'cat client/assets/js/VARS.js'
 
       - name: Kaniko build
         uses: aevea/action-kaniko@master
