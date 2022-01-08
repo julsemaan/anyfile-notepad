@@ -21,7 +21,7 @@ jobs:
         env:
           AFN_VARS : ${{secrets.AFN_VARS}}
 
-      - name: Kaniko build
+      - name: Kaniko build full
         uses: aevea/action-kaniko@master
         with:
           registry: docker.pkg.github.com
@@ -31,3 +31,15 @@ jobs:
           cache_registry: cache
           path: client/
           extra_args: --push-retry 5
+      
+      - name: Kaniko build light
+        uses: aevea/action-kaniko@master
+        with:
+          registry: docker.pkg.github.com
+          image: client-light
+          password: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+          cache_registry: cache
+          path: client/light/
+          extra_args: --push-retry 5
+
