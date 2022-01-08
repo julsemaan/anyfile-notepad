@@ -1,11 +1,11 @@
-name: Docker Image client/builder
+name: Docker Image client/base
 
 on:
   push:
     branches: ['**']
     paths: 
-      - 'client/builder/**'
-      - '.github/workflows/docker-client-builder.yml'
+      - 'client/base/**'
+      - '.github/workflows/docker-client-base.yml'
   workflow_dispatch:
     branches: ['**']
 
@@ -18,9 +18,9 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           registry: docker.pkg.github.com
-          image: client-builder
+          image: client-base
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: cache
-          path: client/builder/
+          path: client/base/
           extra_args: --push-retry 5

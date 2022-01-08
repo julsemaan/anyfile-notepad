@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/julsemaan/anyfile-notepad/client-builder:latest
+FROM docker.pkg.github.com/julsemaan/anyfile-notepad/client-base:latest
 
 WORKDIR /src/client
 
