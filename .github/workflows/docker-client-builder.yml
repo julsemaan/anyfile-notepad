@@ -3,7 +3,9 @@ name: Docker Image client/builder
 on:
   push:
     branches: ['**']
-    paths: [ 'client/builder/**' ]
+    paths: 
+      - 'client/builder/**'
+      - '.github/workflows/docker-client-builder.yml'
   workflow_dispatch:
     branches: ['**']
 
