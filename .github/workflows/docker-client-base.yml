@@ -21,6 +21,6 @@ jobs:
           image: julsemaan/anyfile-notepad/client-base
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
-          cache_registry: ghcr.io/julsemaan/anyfile-notepad/cache
+          cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-base/cache
           path: client/base/
           extra_args: --push-retry 5
