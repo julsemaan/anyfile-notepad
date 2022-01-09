@@ -21,7 +21,7 @@ jobs:
           image: julsemaan/anyfile-notepad/webserver
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
-          cache_registry: ghcr.io/julsemaan/anyfile-notepad/cache
+          cache_registry: ghcr.io/julsemaan/anyfile-notepad/webserver/cache
           path: webserver/
           extra_args: --push-retry 5
 
