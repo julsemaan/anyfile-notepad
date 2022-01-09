@@ -24,7 +24,7 @@ jobs:
       - name: Kaniko build full
         uses: aevea/action-kaniko@master
         with:
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           image: client
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
@@ -35,7 +35,7 @@ jobs:
       - name: Kaniko build light
         uses: aevea/action-kaniko@master
         with:
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           image: client-light
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true

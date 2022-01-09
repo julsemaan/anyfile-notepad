@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/julsemaan/anyfile-notepad/client-base:latest
+FROM ghcr.io/julsemaan/anyfile-notepad/client-base:latest
 
 WORKDIR /src/client
 
