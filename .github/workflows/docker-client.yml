@@ -36,7 +36,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           registry: ghcr.io
-          image: julsemaan/anyfile-notepad/client
+          image: julsemaan/anyfile-notepad/client-light
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-light/cache
