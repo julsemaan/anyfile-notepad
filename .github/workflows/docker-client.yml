@@ -43,3 +43,27 @@ jobs:
           path: client/light/
           extra_args: --push-retry 5
 
+  deploy:
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production-'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Use staging target servers if necessary
+        run: |
+          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }} >> $GITHUB_ENV"
+        if: github.ref == 'refs/heads/staging'
+
+      - name: Use production target servers if necessary
+        run: |
+          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }} >> $GITHUB_ENV"
+        if: github.ref == 'refs/heads/production'
+
+      - name: Deploy app
+        uses: appleboy/ssh-action@master
+        host: ${{ secrets.AFN_MANAGER_HOST }}
+        username: ${{ secrets.AFN_MANAGER_USERNAME }}
+        key: ${{ secrets.AFN_MANAGER_KEY }}
+        port: ${{ secrets.AFN_MANAGER_PORT }}
+        script: |
+          ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${GITHUB_REF##*/} $TARGET_SERVERS
+
