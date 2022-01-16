@@ -54,16 +54,20 @@ jobs:
 
       - name: Use staging target servers if necessary
         run: |
-          echo "::set-output TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }}"
-          echo "::set-output TARGET_IMAGE=staging"
+          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }}" >> $GITHUB_ENV
+          echo "TARGET_IMAGE=staging" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/staging'
-        id: deploy-env
 
       - name: Use production target servers if necessary
         run: |
-          echo "::set-output TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }}"
-          echo "::set-output TARGET_IMAGE=production"
+          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }}" >> $GITHUB_ENV
+          echo "TARGET_IMAGE=production" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/production'
+
+      - name: Setup deploy-env
+        run: |
+          echo "::set-output TARGET_SERVERS=$TARGET_SERVERS"
+          echo "::set-output TARGET_IMAGE=$TARGET_IMAGE"
         id: deploy-env
 
       - name: Deploy app
