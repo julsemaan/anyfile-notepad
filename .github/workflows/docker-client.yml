@@ -26,6 +26,7 @@ jobs:
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-full
+          tag_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-full/cache
@@ -37,6 +38,7 @@ jobs:
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-light
+          tag_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-light/cache
@@ -52,13 +54,17 @@ jobs:
 
       - name: Use staging target servers if necessary
         run: |
-          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }} >> $GITHUB_ENV"
+          echo "::set-output TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }}"
+          echo "::set-output TARGET_IMAGE=staging"
         if: github.ref == 'refs/heads/staging'
+        id: deploy-env
 
       - name: Use production target servers if necessary
         run: |
-          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }} >> $GITHUB_ENV"
+          echo "::set-output TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }}"
+          echo "::set-output TARGET_IMAGE=production"
         if: github.ref == 'refs/heads/production'
+        id: deploy-env
 
       - name: Deploy app
         uses: appleboy/ssh-action@master
@@ -68,5 +74,5 @@ jobs:
           key: ${{ secrets.AFN_MANAGER_KEY }}
           port: ${{ secrets.AFN_MANAGER_PORT }}
           script: |
-            ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${GITHUB_REF##*/} $TARGET_SERVERS
+            ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${{ steps.deploy-env.outputs.TARGET_IMAGE }} ${{ steps.deploy-env.outputs.TARGET_SERVERS }}
 
