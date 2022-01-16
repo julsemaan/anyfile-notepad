@@ -61,10 +61,11 @@ jobs:
 
       - name: Deploy app
         uses: appleboy/ssh-action@master
-        host: ${{ secrets.AFN_MANAGER_HOST }}
-        username: ${{ secrets.AFN_MANAGER_USERNAME }}
-        key: ${{ secrets.AFN_MANAGER_KEY }}
-        port: ${{ secrets.AFN_MANAGER_PORT }}
-        script: |
-          ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${GITHUB_REF##*/} $TARGET_SERVERS
+        with:
+          host: ${{ secrets.AFN_MANAGER_HOST }}
+          username: ${{ secrets.AFN_MANAGER_USERNAME }}
+          key: ${{ secrets.AFN_MANAGER_KEY }}
+          port: ${{ secrets.AFN_MANAGER_PORT }}
+          script: |
+            ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${GITHUB_REF##*/} $TARGET_SERVERS
 
