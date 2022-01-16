@@ -66,8 +66,8 @@ jobs:
 
       - name: Setup deploy-env
         run: |
-          echo "::set-output TARGET_SERVERS=$TARGET_SERVERS"
-          echo "::set-output TARGET_IMAGE=$TARGET_IMAGE"
+          echo "::set-output name=TARGET_SERVERS::$TARGET_SERVERS"
+          echo "::set-output name=TARGET_IMAGE::$TARGET_IMAGE"
         id: deploy-env
 
       - name: Deploy app
