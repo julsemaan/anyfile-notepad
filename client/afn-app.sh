@@ -59,7 +59,8 @@ SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
 WEB_PID_FILE="$RUNNING_DIR/tmp/web.pid"
 
 APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
-APP_COMMIT_ID=${INPUT_REGISTRY:-"N/A"}
+APP_VERSION="dyn"
+APP_COMMIT_ID=${APP_COMMIT_ID:-"N/A"}
 
 APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
 APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
