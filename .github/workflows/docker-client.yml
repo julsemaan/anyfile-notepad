@@ -26,7 +26,7 @@ jobs:
           echo "IMG_TAG=$(echo ${GITHUB_REF} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
 
       - name: Kaniko build full
-        uses: aevea/action-kaniko@master
+        uses: julsemaan/action-kaniko@master
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-full
