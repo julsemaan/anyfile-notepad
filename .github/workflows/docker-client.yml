@@ -38,6 +38,7 @@ jobs:
           path: client/
           extra_args: >-
             --push-retry 5
+            --build-arg=AFN_BUILD_ID=gha-${{ GITHUB_RUN_ID }}
       
       - name: Kaniko build light
         uses: aevea/action-kaniko@master
