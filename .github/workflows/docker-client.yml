@@ -25,6 +25,10 @@ jobs:
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_REF} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
 
+      - name: debug IMG_TAG
+        run: |
+          echo "IMG_TAG IS $IMG_TAG"
+
       - name: Kaniko build full
         uses: aevea/action-kaniko@master
         with:
