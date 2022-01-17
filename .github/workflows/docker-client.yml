@@ -25,16 +25,12 @@ jobs:
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_REF} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
 
-      - name: debug IMG_TAG
-        run: |
-          echo "IMG_TAG IS $IMG_TAG"
-
       - name: Kaniko build full
         uses: aevea/action-kaniko@master
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-full
-          tag: $IMG_TAG
+          tag: ${{ env.IMG_TAG }}
           tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
@@ -48,7 +44,7 @@ jobs:
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-light
-          tag: $IMG_TAG
+          tag: ${{ env.IMG_TAG }}
           tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
@@ -56,7 +52,7 @@ jobs:
           path: client/light/
           extra_args: >-
             --push-retry 5
-            --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:$IMG_TAG
+            --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:${{ env.IMG_TAG }}
 
   deploy:
     needs: docker
