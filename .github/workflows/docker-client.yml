@@ -21,12 +21,17 @@ jobs:
         env:
           AFN_VARS : ${{secrets.AFN_VARS}}
 
+      - name: Compute image tag
+        run: |
+          echo "IMG_TAG=$(echo ${GITHUB_REF} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
+
       - name: Kaniko build full
         uses: aevea/action-kaniko@master
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-full
-          tag_latest: false
+          tag: $IMG_TAG
+          tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-full/cache
@@ -39,14 +44,15 @@ jobs:
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-light
-          tag_latest: false
+          tag: $IMG_TAG
+          tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-light/cache
           path: client/light/
           extra_args: >-
             --push-retry 5
-            --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:$GITHUB_REF_NAME
+            --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:$IMG_TAG
 
   deploy:
     needs: docker
