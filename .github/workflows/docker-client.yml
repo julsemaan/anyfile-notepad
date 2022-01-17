@@ -41,7 +41,7 @@ jobs:
             --build-arg=AFN_BUILD_ID=gha-${{ github.run_id }}
       
       - name: Kaniko build light
-        uses: aevea/action-kaniko@master
+        uses: julsemaan/action-kaniko@master
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/client-light

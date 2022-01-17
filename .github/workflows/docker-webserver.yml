@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Kaniko build
-        uses: aevea/action-kaniko@master
+        uses: julsemaan/action-kaniko@master
         with:
           registry: ghcr.io
           image: julsemaan/anyfile-notepad/webserver
