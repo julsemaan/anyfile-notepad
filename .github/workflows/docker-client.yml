@@ -31,7 +31,8 @@ jobs:
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-full/cache
           path: client/
-          extra_args: --push-retry 5
+          extra_args: >-
+            --push-retry 5
       
       - name: Kaniko build light
         uses: aevea/action-kaniko@master
@@ -43,7 +44,9 @@ jobs:
           cache: true
           cache_registry: ghcr.io/julsemaan/anyfile-notepad/client-light/cache
           path: client/light/
-          extra_args: --push-retry 5
+          extra_args: >-
+            --push-retry 5
+            --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:$GITHUB_REF_NAME
 
   deploy:
     needs: docker

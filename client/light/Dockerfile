@@ -1,4 +1,6 @@
-FROM ghcr.io/julsemaan/anyfile-notepad/client-full:latest AS full
+ARG SRC_IMAGE
+
+FROM $SRC_IMAGE AS full
 
 FROM alpine as light
 
