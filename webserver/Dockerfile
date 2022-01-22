@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine AS build
+FROM golang:1.16-bullseye AS build
 
 WORKDIR /src/webserver
 
