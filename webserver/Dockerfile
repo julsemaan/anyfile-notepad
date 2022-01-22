@@ -9,7 +9,9 @@ RUN go mod download
 COPY . .
 RUN go build -o /out/webserver
 
-FROM alpine as bin
+FROM debian:bullseye as bin
+
+RUN apt update && apt install ca-certificates -yqq
 
 COPY --from=build /out/webserver /
 
