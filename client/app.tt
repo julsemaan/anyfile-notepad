@@ -42,13 +42,6 @@
     
   [% IF WITH_ADS %]
 	<div class="desktop-ads">
-    <p>
-      <a href="http://bit.ly/afn-community-fb" target="_blank" style="color:white">
-        Seeing innapropriate ads ?<br>
-        Or have comments on them ?<br>
-        Click to post on the community
-      </a>
-    </p>
 <div id='banner-160x600-1'>
     <script>googletag.cmd.push(function() { googletag.display('banner-160x600-1'); });</script>
 </div>
