@@ -1,7 +1,7 @@
 <script id="upgrade" class="template-partial" type="text/x-handlebars-template">
   <div class="upgrade-content">
     <p>
-      Anyfile Notepad++ offer an ad-free experience of this application. Paid yearly and costing less than a latte at Starbucks, its a good way to improve your experience with the app as well as encouraging the project.
+      Anyfile Notepad++ offers an ad-free experience of this application. Paid yearly and costing less than a latte at Starbucks, its a good way to improve your experience with the app as well as encouraging the project.
     </p>
 
     <p>
@@ -24,9 +24,15 @@
     <hr>
 
     <p class="agrees-terms">
-    Subscription to this service implies acceptance of our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/privacy_policy.html">Privacy Policy</a> and our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/terms-of-service.html">Terms of service<a>
+    Subscription to this service implies acceptance of our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/privacy_policy.html">Privacy Policy</a> and our <a target="_blank" href="https://anyfile-notepad.semaan.ca/site/terms-of-service.html">Terms of service</a>
     </p>
+    
+    <hr>
 
+    <p class="agrees-terms">
+    Subscribing to the app will not allow you to open more types of files. It will only remove the ads and offer priority access to support.
+    </p>
+    
     <form action="/api/billing/subscription" method="POST">
       <input name="user_id" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.user_id }}">
       <input name="user_email" type="hidden" value="{{ global_context.application.controllers.google_oauth.current_user.email }}">
