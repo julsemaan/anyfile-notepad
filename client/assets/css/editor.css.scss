@@ -184,6 +184,10 @@ div.g_file_editor{
 	
 }
 
+#unread_flash_count[data-binder-value="0"] { 
+  display:none; 
+}
+
 #show_full_flash {
   right:10px;
   bottom:10px;
