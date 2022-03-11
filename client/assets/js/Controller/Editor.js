@@ -28,8 +28,6 @@ function EditorController(view, options){
 
   this.autosave_interval;
 
-  this.detect_device();
-
   this.realtime_collaborators = {};
 
   this.last_changed = new Date();
@@ -690,13 +688,5 @@ EditorController.prototype.select_locale = function(locale){
   setCookie("locale", locale, 365)
   
   new Popup({ message : i18n("Requires to restart the application to be effective. Proceed with restart?"), callback : function(result) {if(result) window.location.reload()}, confirm : true });
-}
-
-EditorController.prototype.detect_device = function(){
-  var self = this;
-  var client = new FingerbankClient();
-  client.endpointFromCurrentUserAgent(function(endpoint){
-    $('#current_device').html(endpoint.name);
-  });
 }
 

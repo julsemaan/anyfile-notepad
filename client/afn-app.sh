@@ -169,7 +169,6 @@ function application_js() {
   add_js_asset node_modules/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
   add_js_asset public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
   add_js_asset public/jquery.cookie.min.js $APPLICATION_JS
-  add_js_asset public/fingerbank-client.js $APPLICATION_JS
 
   add_js_asset assets/js/libs/rsvp.min.js $APPLICATION_JS
   add_js_asset assets/js/libs/route-recognizer.js $APPLICATION_JS
