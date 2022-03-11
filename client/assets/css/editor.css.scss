@@ -739,3 +739,17 @@ li a.btn-primary {
   }
 }
 
+#leave_review_modal {
+  .leave_review_prompt {
+    text-align:center;
+    
+    button {
+      min-width: 200px;
+      margin:3px;;
+    }
+  }
+
+  div.review_positive, div.review_negative{
+    text-align:center;
+  }
+}

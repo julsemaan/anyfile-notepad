@@ -13,6 +13,7 @@
 
     {{> file_info }}
     {{> major_notice_modal }}
+    {{> leave_review_modal }}
     {{> terms }}
     {{> agree_privacy }}
     {{> editor_flash }}

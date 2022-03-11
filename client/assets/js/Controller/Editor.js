@@ -139,10 +139,54 @@ EditorController.prototype.initialize_html = function(){
     })
   }
 
+  // Calling this via setTimeout so that any error doesn't propagate to this call stack
+  setTimeout(function() {
+    self.setup_review_modal();
+  }, 100);
+
   self.editor_view.on("change", function(){self.content_changed()});
 }
 
+EditorController.prototype.setup_review_modal = function() {
+  $('button.review_positive').click(function() {
+    $('.leave_review_prompt').hide();
+    $('div.review_positive').show();
+  });
 
+  $('button.review_negative').click(function() {
+    $('.leave_review_prompt').hide();
+    $('div.review_negative').show();
+  });
+
+  var startedDateStr = getCookie("started-date");
+  var startedDate;
+  if(startedDateStr) {
+    startedDate = new Date(startedDateStr);
+  }
+  else {
+    startedDate = new Date();
+    setCookie("started-date", startedDate.toISOString());
+  }
+
+  var askedReviewDateStr = getCookie("asked-review-date");
+  var askedReviewDate;
+  if(askedReviewDateStr) {
+    askedReviewDate = new Date(askedReviewDateStr);
+  }
+
+  var daysOfUsage = (new Date() - startedDate) / (24 * 60 * 60 * 1000);
+  var daysSinceLastAsk = (new Date() - askedReviewDate) / (24 * 60 * 60 * 1000);
+
+  // Don't ask under 7 days of usage
+  if(daysOfUsage > 7) {
+    // Only ask once every 90 days or ask the first time the minimum days of usage is exceeded
+    if(Number.isNaN(daysSinceLastAsk) || daysSinceLastAsk > 90){
+      $('#leave_review_modal').modal('show');
+      askedReviewDate = new Date();
+      setCookie("asked-review-date", askedReviewDate.toISOString());
+    }
+  }
+}
 
 EditorController.prototype.post_app_load = function(){
   var self = this
