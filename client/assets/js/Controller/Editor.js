@@ -73,10 +73,12 @@ EditorController.prototype.loop_check_last_changed = function() {
 EditorController.prototype.initialize_html = function(){
   var self = this;
 
-  self.$editor.css('top', self.$.find('#menu').height() + "px");
-  $(window).resize(function(){
+  var set_size_f = function() {
     self.$editor.css('top', self.$.find('#menu').height() + "px");
-  })
+    $('#file_title_field').css('max-width', ($(window).width()-475) + "px");
+  }
+  set_size_f();
+  $(window).resize(set_size_f);
 
   $(window).bind('beforeunload',function(){
     self.publish_realtime_event({'type':'leaved'});
@@ -162,7 +164,7 @@ EditorController.prototype.new = function(folder_id){
 
   var create_new = function() {
     // Should always be able to edit the title of a new file
-    $('input[data-bind-file="title"]').removeAttr('disabled');
+    self.set_title_editable(true);
 
     self.flash.empty()
     self.file = self.file_object_from_provider({
@@ -182,6 +184,16 @@ EditorController.prototype.new = function(folder_id){
 
 }
 
+EditorController.prototype.set_title_editable = function(editable) {
+  if(editable) {
+    $('[data-bind-file="title"]').attr('contenteditable', 'true');
+    $('[data-bind-file="title"]').removeAttr('disabled');
+  } else {
+    $('[data-bind-file="title"]').attr('disabled', 'disabled');
+    $('[data-bind-file="title"]').removeAttr('contenteditable');
+  }
+}
+
 EditorController.prototype.edit = function(id){
   var self = this
   this.flash.empty()
@@ -197,10 +209,10 @@ EditorController.prototype.edit = function(id){
       if(!error){
         // Can't change filename with Dropbox
         if(self.provider == "Dropbox"){
-          $('input[data-bind-file="title"]').attr('disabled', 'disabled');
+          self.set_title_editable(false);
         }
         else {
-          $('input[data-bind-file="title"]').removeAttr('disabled');
+          self.set_title_editable(true);
         }
 
         StatIncrement.record("file-edit."+self.provider);

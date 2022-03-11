@@ -259,6 +259,20 @@ h6.menu_header {
       height:28px;
     }
 
+    #file_title_field[contenteditable]:empty::before {
+      content: 'Untitled file';
+      display: inline-block;
+      cursor:text;
+    }
+
+    #file_title_field {
+      min-width:200px;
+      max-width:350px;
+      height:auto;
+      overflow:hidden;
+      white-space:pre;
+    }
+
     a {
       vertical-align:bottom;
       padding-bottom:8px;
@@ -720,3 +734,4 @@ li a.btn-primary {
     width:100%;
   }
 }
+

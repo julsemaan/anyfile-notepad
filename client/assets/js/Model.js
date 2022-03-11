@@ -35,7 +35,7 @@ Model.prototype.install_binder = function(){
   // Subscribe to the PubSub
   binder.on( this.uid + ":change", function( evt, attr_name, new_val, initiator ) {
     if ( initiator !== self ) {
-      self.set( attr_name, new_val );
+      self[attr_name] = new_val;
     }
   });
 }
