@@ -407,6 +407,11 @@ EditorController.prototype.is_ready_to_submit = function(){
   return true
 }
 
+EditorController.prototype.event_is_kb_save = function(event) {
+  var ctrlMeta = (event.metaKey || event.ctrlKey);
+  return ( (String.fromCharCode(event.which).toLowerCase() == 's' && ctrlMeta) || event.which == 19 );
+}
+
 EditorController.prototype.saving_in_progress = function(){
   var self = this;
   this.$.find('.editor_save_button').html(i18n("Saving")+"...")
@@ -414,7 +419,7 @@ EditorController.prototype.saving_in_progress = function(){
   this.safe_to_quit = false
   $(window).off('keydown.save')
   $(window).on('keydown.save', function(event) {
-    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+    if (!self.event_is_kb_save(event)) return true;
     self.last_save_wanted = new Date();
     event.preventDefault();
     return false;
@@ -430,7 +435,7 @@ EditorController.prototype.allow_saving = function(){
   this.safe_to_quit = true
   $(window).off('keydown.save')
   $(window).on('keydown.save', function(event) {
-    if (!( String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) return true;
+    if (!self.event_is_kb_save(event)) return true;
     self.save()
     event.preventDefault();
     return false;
