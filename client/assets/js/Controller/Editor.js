@@ -78,6 +78,14 @@ EditorController.prototype.initialize_html = function(){
   set_size_f();
   $(window).resize(set_size_f);
 
+  $('#file_title_field').keypress(function(e){ 
+    if(e.which != 13) return true;
+
+    self.$editor.focus();
+    self.save();
+    return false;
+  });
+
   $(window).bind('beforeunload',function(){
     self.publish_realtime_event({'type':'leaved'});
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){

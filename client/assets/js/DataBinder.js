@@ -18,7 +18,7 @@ function DataBinder( object_id ) {
   jQuery( document ).on( "blur keyup paste input", "[contenteditable][data-" + data_attr + "]", function( evt ) {
     var $input = jQuery( this );
 
-    pubSub.trigger( message, [ $input.data( data_attr ), $input.html(), $input ] );
+    pubSub.trigger( message, [ $input.data( data_attr ), unsanitize($input.html()), $input ] );
   });
 
   // PubSub propagates changes to all bound elements, setting value of
@@ -37,7 +37,11 @@ function DataBinder( object_id ) {
       else if($bound.is("img")){
         $bound.attr("src", new_val);
       }
+      else if($bound.is("[contenteditable]")) {
+        $bound.html(sanitize(new_val))
+      }
       else {
+        $bound.attr("data-binder-value", new_val);
         $bound.html( sanitize(new_val) );
       }
     });
@@ -55,5 +59,17 @@ function sanitize(s) {
   s = s.replaceAll("'", '&#x27;')
   s = s.replaceAll("/", '&#x2F;')
   s = s.replaceAll("`", '&grave;')
+  return s;
+}
+
+function unsanitize(s) {
+  s += ""
+  s = s.replaceAll('&amp;', '&')
+  s = s.replaceAll('&lt;', '<')
+  s = s.replaceAll('&gt;', '>')
+  s = s.replaceAll('&quot;', '"')
+  s = s.replaceAll('&#x27;', "'")
+  s = s.replaceAll('&#x2F;', "/")
+  s = s.replaceAll('&grave;', "`")
   return s;
 }
