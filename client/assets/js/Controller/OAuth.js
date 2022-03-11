@@ -5,6 +5,7 @@ function GoogleOAuthController(options){
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
+  this.client = undefined;
   //this.init()
   this.queue = [];
 }
@@ -25,7 +26,8 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
   var self = this;
   var base = {
     client_id: self.client_id,
-    scope: self.scopes,
+    scope: self.scopes.join(" "),
+    ux_mode: 'popup',
   };
 
   if(User.get_session_user_id()){
@@ -34,6 +36,8 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
   }
 
   for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
+
+  console.log(base)
 
   return base;
 }
@@ -55,7 +59,7 @@ GoogleOAuthController.prototype.do_auth = function(){
     }
   }, 3000);
 
-  gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
+  google.accounts.oauth2.initCodeClient(self.authorize_params({callback: function(auth_result){
     console.log("AUTH RESULT", auth_result);
     isBack = true;
     if(!auth_result["error"] || auth_result["error"].search("immediate_failed") == -1){
@@ -68,7 +72,7 @@ GoogleOAuthController.prototype.do_auth = function(){
       })
     }
   
-  });
+  }}));
 
 
 }
@@ -76,18 +80,19 @@ GoogleOAuthController.prototype.do_auth = function(){
 GoogleOAuthController.prototype.auth_popup = function(){
   var self = this
   //Do it without the immediate
-  gapi.auth.authorize(self.authorize_params(), function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
+  this.client = google.accounts.oauth2.initCodeClient(self.authorize_params({callback: function(auth_result){self.post_auth(auth_result)}}))
+  this.client.requestCode();
 }
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
+  google.accounts.oauth2.initCodeClient(self.authorize_params({authuser: -1, user_id : user_id, callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
     User.current_user(function(){
       self.post_auth(auth_result);
       callback();
     });
-  });
+  }}));
 }
 
 GoogleOAuthController.prototype.switch_user = function() {
@@ -107,6 +112,7 @@ GoogleOAuthController.prototype.switch_user = function() {
 
 GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
+  console.log(auth_result)
   if (auth_result && !auth_result.error) {
     setCookie('access_token', auth_result['access_token'], 1)
     gapi.load('auth:client,drive-share', function(){
