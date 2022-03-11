@@ -116,7 +116,7 @@ function pages() {
 
   mkdir $COMPILED_APP/site
 
-  for page in home faq news help_translate privacy_policy payment-success payment-failure terms-of-service email-cancel contact; do
+  for page in home faq news help_translate privacy_policy payment-success payment-failure terms-of-service email-cancel contact blocked_user; do
     echo "-Building page $page"
 
     if [ "$page" == "home" ]; then

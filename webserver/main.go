@@ -32,6 +32,8 @@ var realtimeHandler func(http.ResponseWriter, *http.Request)
 var plusPlusSessionsDb = os.Getenv("PLUS_PLUS_SESSIONS_DB")
 var plusPlusSessions = NewPlusPlusSessions()
 var longPollLogging = (sharedutils.EnvOrDefault("LONG_POLL_LOGGING", "false") == "true")
+var blockedUsers = strings.Split(sharedutils.EnvOrDefault("BLOCKED_USER_IDS", ""), ",")
+var blockedUsersMap = map[string]bool{}
 
 var aliasPaths = map[string]string{
 	"/app": "/app.html",
@@ -165,7 +167,15 @@ func setupClusterObserver() {
 	}()
 }
 
+func setupBlockedUsersMap() {
+	for _, uid := range blockedUsers {
+		blockedUsersMap[uid] = true
+	}
+}
+
 func setup() {
+	setupBlockedUsersMap()
+
 	setupSessionsPersistence()
 
 	stripe.Key = os.Getenv("STRIPE_SK")

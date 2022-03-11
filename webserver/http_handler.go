@@ -77,7 +77,10 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 				userId = userIdCookie.Value
 			}
 
-			if subscription := subscriptions.GetSubscription(userId); subscription != nil {
+			if _, blocked := blockedUsersMap[userId]; blocked {
+				InfoPrint(userId, "is currently blocked. Denying access to the app.")
+				r.URL.Path = "/site/blocked_user.html"
+			} else if subscription := subscriptions.GetSubscription(userId); subscription != nil {
 				if !subscriptions.CanHaveAccess(subscription) {
 					InfoPrint(userId, "subscription isn't valid anymore")
 				} else {
