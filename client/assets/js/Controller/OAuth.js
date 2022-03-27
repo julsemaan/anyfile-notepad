@@ -44,8 +44,6 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
 
   for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
 
-  console.log(base)
-
   return base;
 }
 
@@ -71,9 +69,7 @@ GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
   this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : user_id, callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
-    console.log("before post_auth");
     self.post_auth(auth_result);
-    console.log("after post_auth");
     callback();
   }}));
   this.client.requestAccessToken({login_hint:user_id});
@@ -91,7 +87,6 @@ GoogleOAuthController.prototype.switch_user = function() {
 
 GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
-  console.log(auth_result)
   if (auth_result && !auth_result.error) {
     if(auth_result['access_token']) {
       setCookie('access_token', auth_result['access_token'], 1)
