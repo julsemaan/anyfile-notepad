@@ -69,7 +69,7 @@ GoogleOAuthController.prototype.auth_popup = function(){
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : "anyfilenotepad@gmail.com", callback: function(auth_result){
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : user_id, callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
     self.post_auth(auth_result);
     User.current_user(function(){
