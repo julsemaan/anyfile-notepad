@@ -71,10 +71,10 @@ GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
   this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : user_id, callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
+    console.log("before post_auth");
     self.post_auth(auth_result);
-    User.current_user(function(){
-      callback();
-    });
+    console.log("after post_auth");
+    callback();
   }}));
   this.client.requestAccessToken({login_hint:user_id});
 }
@@ -83,14 +83,9 @@ GoogleOAuthController.prototype.switch_user = function() {
   var self = this;
   var previous_user = self.current_user;
   self.auth_with_user(undefined, function(){
-    if(self.current_user.user_id != previous_user.user_id){
-      $('#app_restart_modal').modal('show'); 
-      window.location.hash = '#new' ; 
-      window.location.reload()
-    }
-    else {
-      new Popup({message : i18n("User was not changed. Remember you can add accounts via the 'Add Account' button so they are available in the app.")});
-    }
+    $('#app_restart_modal').modal('show'); 
+    window.location.hash = '#new' ; 
+    window.location.reload()
   })
 }
 
