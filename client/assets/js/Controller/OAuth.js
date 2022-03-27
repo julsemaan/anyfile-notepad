@@ -19,7 +19,15 @@ GoogleOAuthController.prototype.init = function(){
   this.add_to_queue(function() {
     application.propose_upgrade();
   });
-  this.do_auth();
+
+  gapi.client.setToken({"access_token": getCookie("access_token")});
+
+  gapi.client.load('oauth2', 'v2', function() {
+    gapi.client.load('drive', 'v2', function(){
+      var request = gapi.client.oauth2.userinfo.get();
+      application.controllers.google_oauth.execute_request(request, function(response){self.post_auth(true)})
+    })
+  })
 }
 
 GoogleOAuthController.prototype.authorize_params = function(to_add) {
@@ -32,7 +40,6 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
 
   if(User.get_session_user_id()){
     base["user_id"] = User.get_session_user_id();
-    base["authuser"] = -1;
   }
 
   for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
@@ -42,57 +49,34 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
   return base;
 }
 
+
 GoogleOAuthController.prototype.do_auth = function(){
   var self = this
   var isBack = false;
 
-  setTimeout(function() {
-    if(!isBack) {
-      console.log("Failed to come back from auth. Triggering auth popup again.");
-      $('#auth_modal').modal('show')
-      $('#start_g_oauth').click(function(){
-        self.auth_popup()
-      })
-    }
-    else {
-      console.log("Auth came back")
-    }
-  }, 3000);
-
-  google.accounts.oauth2.initCodeClient(self.authorize_params({callback: function(auth_result){
-    console.log("AUTH RESULT", auth_result);
-    isBack = true;
-    if(!auth_result["error"] || auth_result["error"].search("immediate_failed") == -1){
-      self.post_auth(auth_result)
-    }
-    else{
-      $('#auth_modal').modal('show')
-      $('#start_g_oauth').click(function(){
-        self.auth_popup()
-      })
-    }
-  
-  }}));
-
-
+  $('#auth_modal').modal('show')
+  $('#start_g_oauth').click(function(){
+    self.auth_popup()
+  })
 }
 
 GoogleOAuthController.prototype.auth_popup = function(){
   var self = this
   //Do it without the immediate
-  this.client = google.accounts.oauth2.initCodeClient(self.authorize_params({callback: function(auth_result){self.post_auth(auth_result)}}))
-  this.client.requestCode();
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({callback: function(auth_result){self.post_auth(auth_result)}}))
+  this.client.requestAccessToken();
 }
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  google.accounts.oauth2.initCodeClient(self.authorize_params({authuser: -1, user_id : user_id, callback: function(auth_result){
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : "anyfilenotepad@gmail.com", callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
+    self.post_auth(auth_result);
     User.current_user(function(){
-      self.post_auth(auth_result);
       callback();
     });
   }}));
+  this.client.requestAccessToken({login_hint:user_id});
 }
 
 GoogleOAuthController.prototype.switch_user = function() {
@@ -114,17 +98,11 @@ GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   console.log(auth_result)
   if (auth_result && !auth_result.error) {
-    setCookie('access_token', auth_result['access_token'], 1)
-    gapi.load('auth:client,drive-share', function(){
-      gapi.client.load('oauth2', 'v2', function() {
-        gapi.client.load('drive', 'v2', function(){
-          self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
-          self.share_client.setOAuthToken(auth_result['access_token']);
-          self.ready()
-        })
-      });
-    });
-    
+    if(auth_result['access_token']) {
+      setCookie('access_token', auth_result['access_token'], 1)
+      gapi.client.setToken({"access_token":auth_result['access_token']});
+    }
+    self.ready()
     $('#auth_modal').modal('hide')
     //cool it worked
   }
