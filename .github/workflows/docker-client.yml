@@ -57,7 +57,7 @@ jobs:
 
   deploy:
     needs: docker
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production' || github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -66,18 +66,28 @@ jobs:
         run: |
           echo "TARGET_SERVERS=${{ secrets.ANSIBLE_STAGING_TARGET }}" >> $GITHUB_ENV
           echo "TARGET_IMAGE=staging" >> $GITHUB_ENV
+          echo "TARGET_APP_ENV=production" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/staging'
 
       - name: Use production target servers if necessary
         run: |
           echo "TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }}" >> $GITHUB_ENV
           echo "TARGET_IMAGE=production" >> $GITHUB_ENV
+          echo "TARGET_APP_ENV=production" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/production'
+
+      - name: Use test target servers if necessary
+        run: |
+          echo "TARGET_SERVERS=${{ secrets.ANSIBLE_PRODUCTION_TARGET }}" >> $GITHUB_ENV
+          echo "TARGET_IMAGE=test" >> $GITHUB_ENV
+          echo "TARGET_APP_ENV=development" >> $GITHUB_ENV
+        if: github.ref == 'refs/heads/test'
 
       - name: Setup deploy-env
         run: |
           echo "::set-output name=TARGET_SERVERS::$TARGET_SERVERS"
           echo "::set-output name=TARGET_IMAGE::$TARGET_IMAGE"
+          echo "::set-output name=TARGET_APP_ENV::$TARGET_APP_ENV"
         id: deploy-env
 
       - name: Deploy app
@@ -88,5 +98,5 @@ jobs:
           key: ${{ secrets.AFN_MANAGER_KEY }}
           port: ${{ secrets.AFN_MANAGER_PORT }}
           script: |
-            ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${{ steps.deploy-env.outputs.TARGET_IMAGE }} ${{ steps.deploy-env.outputs.TARGET_SERVERS }}
+            ${{ secrets.AFN_MANAGER_DEPLOY_CLIENT_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/client-light:${{ steps.deploy-env.outputs.TARGET_IMAGE }} ${{ steps.deploy-env.outputs.TARGET_SERVERS }} ${{ steps.deploy-env.outputs.TARGET_APP_ENV }}
 
