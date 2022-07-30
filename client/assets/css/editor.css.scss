@@ -195,6 +195,17 @@ div.g_file_editor{
   z-index:900;
 }
 
+#line_column {
+  background-color: #495bc0;
+  right:80px;
+  bottom:25px;
+  padding:5px;
+  position:fixed;
+  z-index:900;
+  border-radius:5px;
+  color:white;
+}
+
 #unread_flash_count {
   right:10px;
   bottom:50px;

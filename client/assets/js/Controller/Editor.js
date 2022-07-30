@@ -15,6 +15,7 @@ function EditorController(view, options){
   this.file_explorer = options["file_explorer"];
   this.favorites_controller = options["favorites_controller"];
   this.recent_files_controller = options["recent_files_controller"];
+  this.editor_model_bind_controller = options["editor_model_bind_controller"];
 
   this.menu_width_pref = options["menu_width_pref"];
 
@@ -145,6 +146,11 @@ EditorController.prototype.initialize_html = function(){
   }, 100);
 
   self.editor_view.on("change", function(){self.content_changed()});
+
+  self.editor_view.getSession().selection.on('changeCursor', function(e){
+    self.editor_model_bind_controller.set('line', self.editor_view.getSession().selection.getCursor().row);
+    self.editor_model_bind_controller.set('column', self.editor_view.getSession().selection.getCursor().column);
+  })
 }
 
 EditorController.prototype.setup_review_modal = function() {

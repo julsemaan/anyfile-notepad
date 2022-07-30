@@ -17,6 +17,7 @@
     {{> terms }}
     {{> agree_privacy }}
     {{> editor_flash }}
+    {{> line_column }}
   </script>
 
   [% INCLUDE 'print.tt' %]

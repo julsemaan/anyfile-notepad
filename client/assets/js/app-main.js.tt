@@ -79,6 +79,7 @@ application.controllers.google_oauth.add_to_queue(function(){
           preference:ArrayPreference.find("recent_files"),
           view: $('div.recent-files ul'),
         }),
+        'editor_model_bind_controller': new EditorModelBindController({}),
       })
       var editor_controller = application.controllers.editor;
       editor_controller.favorites_controller.parent = editor_controller;

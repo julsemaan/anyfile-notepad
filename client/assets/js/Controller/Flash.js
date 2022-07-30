@@ -2,7 +2,6 @@ Class("FlashController", ["Model"]);
 
 FlashController.prototype.post_init = function(args){
   var self = this;
-  console.log(this)
 
   var view = self.view;
   this.id = view;
