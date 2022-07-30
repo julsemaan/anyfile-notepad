@@ -139,8 +139,6 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
 
   options = options || {};
   
-  console.log(request)
-
   // Definitely not the right way to do it but when we obtain a new access token and try to execute the same request again,
   // it doesn't include the token at all.
   // There is no way to copy the request or re-init it...
@@ -169,7 +167,7 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
       }
     }
     else if(response.error.code == 409){
-      console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
+      console.error("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
       callback(response);
     }
     else if(options["errorOnlyUnauth"]) {
@@ -249,7 +247,7 @@ DropboxRequest.prototype.perform = function() {
 
 DropboxRequest.prototype.handle_error = function(error){
   var self = this;
-  console.log("this is an error", error)
+  console.error("ERROR in DropboxRequest.prototype.handle_error", error)
   if(error.status == 401){
     $('#error_modal .additionnal_message').html(i18n("Your Dropbox authentication has expired. You will be redirected to the Dropbox website to reauthenticate. Your work will NOT BE SAVED. If you have important changes that aren't saved, cancel out this prompt and backup your changes."))
     $('#error_modal').modal('show');
