@@ -48,20 +48,24 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
 }
 
 
-GoogleOAuthController.prototype.do_auth = function(){
+GoogleOAuthController.prototype.do_auth = function(user_id){
   var self = this
   var isBack = false;
 
   $('#auth_modal').modal('show')
   $('#start_g_oauth').click(function(){
-    self.auth_popup()
+    self.auth_popup(user_id)
   })
 }
 
-GoogleOAuthController.prototype.auth_popup = function(){
+GoogleOAuthController.prototype.auth_popup = function(user_id){
   var self = this
   //Do it without the immediate
-  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({callback: function(auth_result){self.post_auth(auth_result)}}))
+  var params = {callback: function(auth_result){self.post_auth(auth_result)}};
+  if(user_id) {
+    params["hint"] = user_id;
+  }
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params(params))
   this.client.requestAccessToken();
 }
 
@@ -142,7 +146,12 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
     else if(response.error.code == 401 || response.error.code == 403){
       self.queue.push(function(){self.execute_request(request, callback)})
       self.authed = false
-      self.do_auth()
+      if(self.current_user && self.current_user.user_id) {
+        self.do_auth(self.current_user.user_id)
+      }
+      else {
+        self.do_auth()
+      }
     }
     else if(response.error.code == 409){
       console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
