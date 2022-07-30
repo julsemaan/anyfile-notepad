@@ -138,6 +138,18 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
   var self = this
 
   options = options || {};
+  
+  console.log(request)
+
+  // Definitely not the right way to do it but when we obtain a new access token and try to execute the same request again,
+  // it doesn't include the token at all.
+  // There is no way to copy the request or re-init it...
+  // Will this work for good or will these internal variables change name? Time will tell
+  // If this doesn't exist, when the token expires, the user will be caught in an endless loop
+  // TODO: add some telemetry here so we can know it happened
+  if(request.rb && request.rb.Lh && request.rb.Lh.headers) {
+    request.rb.Lh.headers["Authorization"] = "Bearer "+getCookie("access_token");
+  }
 
   request.execute(function(response){
     if(!response.error){
