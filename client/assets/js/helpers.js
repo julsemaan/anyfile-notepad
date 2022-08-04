@@ -219,3 +219,19 @@ function niceRandomColor() {
       value: 0.95
   })
 }
+
+function findNestedHashKey(o, k) {
+  if(o instanceof Object) {
+    for(var prop in o) {
+      if(prop == k) {
+        return o[prop];
+      }
+      if(o[prop] instanceof Object) {
+        var res = findNestedHashKey(o[prop], k);
+        if(res) {
+          return res;
+        }
+      }
+    }
+  }
+}

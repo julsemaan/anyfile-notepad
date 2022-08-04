@@ -144,8 +144,9 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
   // There is no way to copy the request or re-init it...
   // Will this work for good or will these internal variables change name? Time will tell
   // If this doesn't exist, when the token expires, the user will be caught in an endless loop
-  if(request.rb && request.rb.Lh && request.rb.Lh.headers) {
-    request.rb.Lh.headers["Authorization"] = "Bearer "+getCookie("access_token");
+  var headers = findNestedHashKey(request, 'headers');
+  if(headers) {
+    headers["Authorization"] = "Bearer "+getCookie("access_token");
   }
   else {
     // This will trigger a monit alert by being logged in the syslog of the app server
