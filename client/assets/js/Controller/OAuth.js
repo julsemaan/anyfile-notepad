@@ -20,7 +20,14 @@ GoogleOAuthController.prototype.init = function(){
     application.propose_upgrade();
   });
 
-  gapi.client.setToken({"access_token": getCookie("access_token")});
+  if(!sessionStorage.access_token) {
+    sessionStorage.access_token = getCookie("access_token");
+  }
+  else {
+    setCookie("access_token", sessionStorage.access_token, 1);
+  }
+
+  gapi.client.setToken({"access_token": sessionStorage.access_token});
 
   gapi.client.load('oauth2', 'v2', function() {
     gapi.client.load('drive', 'v2', function(){
@@ -94,6 +101,7 @@ GoogleOAuthController.prototype.post_auth = function(auth_result){
   if (auth_result && !auth_result.error) {
     if(auth_result['access_token']) {
       setCookie('access_token', auth_result['access_token'], 1)
+      sessionStorage.access_token = auth_result['access_token'];
       gapi.client.setToken({"access_token":auth_result['access_token']});
     }
     self.ready()
@@ -146,7 +154,7 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
   // If this doesn't exist, when the token expires, the user will be caught in an endless loop
   var headers = findNestedHashKey(request, 'headers');
   if(headers) {
-    headers["Authorization"] = "Bearer "+getCookie("access_token");
+    headers["Authorization"] = "Bearer "+sessionStorage.access_token;
   }
   else {
     // This will trigger a monit alert by being logged in the syslog of the app server
