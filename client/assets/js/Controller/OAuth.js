@@ -18,6 +18,7 @@ GoogleOAuthController.prototype.init = function(){
   });
   this.add_to_queue(function() {
     application.propose_upgrade();
+    self.keep_token_alive();
   });
 
   if(!sessionStorage.access_token) {
@@ -190,6 +191,15 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
       $('#error_modal').modal('show')
       callback(response)
     }
+  });
+}
+
+GoogleOAuthController.prototype.keep_token_alive = function() {
+  var self = this;
+  var request = gapi.client.oauth2.userinfo.get();
+  application.controllers.google_oauth.execute_request(request, function(response){
+    console.log(new Date(), "token alive");
+    setTimeout(function() { self.keep_token_alive() }, 60000);
   });
 }
 
