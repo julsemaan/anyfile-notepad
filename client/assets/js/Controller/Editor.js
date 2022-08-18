@@ -32,7 +32,7 @@ function EditorController(view, options){
   this.realtime_collaborators = {};
 
   this.last_changed = new Date();
-  this.loop_check_last_changed();
+  //this.loop_check_last_changed();
 
   this.last_save_wanted = new Date();
 }
