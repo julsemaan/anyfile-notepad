@@ -171,6 +171,9 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
       if(self.current_user && self.current_user.user_id) {
         self.do_auth(self.current_user.user_id)
       }
+      else if (User.get_session_user_id()) {
+        self.do_auth(User.get_session_user_id())
+      }
       else {
         self.do_auth()
       }
