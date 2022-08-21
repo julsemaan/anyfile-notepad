@@ -111,9 +111,19 @@ FileExplorerController.prototype.fetch_directory = function(options, callback){
   else {
     var parts = options['dir'].split("/");
     if(parts[0] == "GoogleDrive"){
-      parts.splice(0,1);
-      options['dir'] = parts.join("/");
-      self.fetch_drive_directory(options, callback)
+      var picker = new google.picker.PickerBuilder()
+            .addView(google.picker.ViewId.DOCS)
+            .setOAuthToken(gapi.client.getToken()["access_token"])
+            .setDeveloperKey(AFN_VARS['google_picker_api_key'])
+            .setCallback(function(response){
+              if(response.action == "picked") {
+                window.location.href = "#edit/GoogleDrive/"+response.docs[0].id
+              }
+            })
+            .build();
+      picker.setVisible(true);
+      application.controllers.editor.top_menu.menu.hide_menu();
+      //callback();
     }
     else if(parts[0] == "Dropbox"){
       parts.splice(0,1);

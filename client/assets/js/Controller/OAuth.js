@@ -32,8 +32,10 @@ GoogleOAuthController.prototype.init = function(){
 
   gapi.client.load('oauth2', 'v2', function() {
     gapi.client.load('drive', 'v2', function(){
-      var request = gapi.client.oauth2.userinfo.get();
-      application.controllers.google_oauth.execute_request(request, function(response){self.post_auth(true)})
+      gapi.load('picker', function() {
+        var request = gapi.client.oauth2.userinfo.get();
+        application.controllers.google_oauth.execute_request(request, function(response){self.post_auth(true)})
+      })
     })
   })
 }
