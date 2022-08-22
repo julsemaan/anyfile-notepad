@@ -114,6 +114,7 @@ FileExplorerController.prototype.fetch_directory = function(options, callback){
       var picker = new google.picker.PickerBuilder()
             .addView(google.picker.ViewId.DOCS)
             .setOAuthToken(gapi.client.getToken()["access_token"])
+            .setAppId(AFN_VARS['google_client_id'])
             .setDeveloperKey(AFN_VARS['google_picker_api_key'])
             .setCallback(function(response){
               if(response.action == "picked") {
