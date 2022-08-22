@@ -142,15 +142,17 @@ EditorRouter.prototype.check_for_drive = function() {
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
     console.log(state['userId'], application.controllers.google_oauth.current_user.user_id)
-    if(application.controllers.google_oauth.current_user.user_id != state['userId']){
-      $('#user_auth_modal').modal('show');
-      $('#switch_user').click(function() {
-        application.controllers.google_oauth.auth_with_user(state['userId'], function(){
-            self.handle_drive_params(state);
-            window.location.reload();
+    if(state['userId']) {
+      if(application.controllers.google_oauth.current_user.user_id != state['userId']){
+        $('#user_auth_modal').modal('show');
+        $('#switch_user').click(function() {
+          application.controllers.google_oauth.auth_with_user(state['userId'], function(){
+              self.handle_drive_params(state);
+              window.location.reload();
+          });
+          $('#user_auth_modal').modal('hide');
         });
-        $('#user_auth_modal').modal('hide');
-      });
+      }
     }
     else {
       self.handle_drive_params(state);
