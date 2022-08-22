@@ -124,7 +124,6 @@ FileExplorerController.prototype.fetch_directory = function(options, callback){
             .build();
       picker.setVisible(true);
       application.controllers.editor.top_menu.menu.hide_menu();
-      //callback();
     }
     else if(parts[0] == "Dropbox"){
       parts.splice(0,1);
