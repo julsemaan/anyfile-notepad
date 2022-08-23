@@ -153,6 +153,9 @@ EditorRouter.prototype.check_for_drive = function() {
           $('#user_auth_modal').modal('hide');
         });
       }
+      else {
+        self.handle_drive_params(state);
+      }
     }
     else {
       self.handle_drive_params(state);
