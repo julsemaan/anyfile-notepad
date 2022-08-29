@@ -5,6 +5,7 @@ function GoogleOAuthController(options){
   this.scopes = options["scopes"]
   this.authed = false
   this.current_user = undefined
+  this.client = undefined;
   //this.init()
   this.queue = [];
 }
@@ -17,20 +18,38 @@ GoogleOAuthController.prototype.init = function(){
   });
   this.add_to_queue(function() {
     application.propose_upgrade();
+    self.keep_token_alive();
   });
-  this.do_auth();
+
+  if(!sessionStorage.access_token) {
+    sessionStorage.access_token = getCookie("access_token");
+  }
+  else {
+    setCookie("access_token", sessionStorage.access_token, 1);
+  }
+
+  gapi.client.setToken({"access_token": sessionStorage.access_token});
+
+  gapi.client.load('oauth2', 'v2', function() {
+    gapi.client.load('drive', 'v2', function(){
+      gapi.load('picker', function() {
+        var request = gapi.client.oauth2.userinfo.get();
+        application.controllers.google_oauth.execute_request(request, function(response){self.post_auth(true)})
+      })
+    })
+  })
 }
 
 GoogleOAuthController.prototype.authorize_params = function(to_add) {
   var self = this;
   var base = {
     client_id: self.client_id,
-    scope: self.scopes,
+    scope: self.scopes.join(" "),
+    ux_mode: 'popup',
   };
 
   if(User.get_session_user_id()){
     base["user_id"] = User.get_session_user_id();
-    base["authuser"] = -1;
   }
 
   for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
@@ -38,87 +57,57 @@ GoogleOAuthController.prototype.authorize_params = function(to_add) {
   return base;
 }
 
-GoogleOAuthController.prototype.do_auth = function(){
+
+GoogleOAuthController.prototype.do_auth = function(user_id){
   var self = this
   var isBack = false;
 
-  setTimeout(function() {
-    if(!isBack) {
-      console.log("Failed to come back from auth. Triggering auth popup again.");
-      $('#auth_modal').modal('show')
-      $('#start_g_oauth').click(function(){
-        self.auth_popup()
-      })
-    }
-    else {
-      console.log("Auth came back")
-    }
-  }, 3000);
-
-  gapi.auth.authorize(self.authorize_params({immediate : true}), function(auth_result){
-    console.log("AUTH RESULT", auth_result);
-    isBack = true;
-    if(!auth_result["error"] || auth_result["error"].search("immediate_failed") == -1){
-      self.post_auth(auth_result)
-    }
-    else{
-      $('#auth_modal').modal('show')
-      $('#start_g_oauth').click(function(){
-        self.auth_popup()
-      })
-    }
-  
-  });
-
-
+  $('#auth_modal').modal('show')
+  $('#start_g_oauth').click(function(){
+    self.auth_popup(user_id)
+  })
 }
 
-GoogleOAuthController.prototype.auth_popup = function(){
+GoogleOAuthController.prototype.auth_popup = function(user_id){
   var self = this
   //Do it without the immediate
-  gapi.auth.authorize(self.authorize_params(), function(auth_result_without_immediate){self.post_auth(auth_result_without_immediate)})
+  var params = {callback: function(auth_result){self.post_auth(auth_result)}};
+  if(user_id) {
+    params["hint"] = user_id;
+  }
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params(params))
+  this.client.requestAccessToken();
 }
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  gapi.auth.authorize(self.authorize_params({authuser: -1, user_id : user_id}), function(auth_result){
+  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : user_id, callback: function(auth_result){
     application.controllers.editor.reset_collaboration();
-    User.current_user(function(){
-      self.post_auth(auth_result);
-      callback();
-    });
-  });
+    self.post_auth(auth_result);
+    callback();
+  }}));
+  this.client.requestAccessToken({login_hint:user_id});
 }
 
 GoogleOAuthController.prototype.switch_user = function() {
   var self = this;
   var previous_user = self.current_user;
   self.auth_with_user(undefined, function(){
-    if(self.current_user.user_id != previous_user.user_id){
-      $('#app_restart_modal').modal('show'); 
-      window.location.hash = '#new' ; 
-      window.location.reload()
-    }
-    else {
-      new Popup({message : i18n("User was not changed. Remember you can add accounts via the 'Add Account' button so they are available in the app.")});
-    }
+    $('#app_restart_modal').modal('show'); 
+    window.location.hash = '#new' ; 
+    window.location.reload()
   })
 }
 
 GoogleOAuthController.prototype.post_auth = function(auth_result){
   var self = this;
   if (auth_result && !auth_result.error) {
-    setCookie('access_token', auth_result['access_token'], 1)
-    gapi.load('auth:client,drive-share', function(){
-      gapi.client.load('oauth2', 'v2', function() {
-        gapi.client.load('drive', 'v2', function(){
-          self.share_client = new gapi.drive.share.ShareClient(self.drive_app_id);
-          self.share_client.setOAuthToken(auth_result['access_token']);
-          self.ready()
-        })
-      });
-    });
-    
+    if(auth_result['access_token']) {
+      setCookie('access_token', auth_result['access_token'], 1)
+      sessionStorage.access_token = auth_result['access_token'];
+      gapi.client.setToken({"access_token":auth_result['access_token']});
+    }
+    self.ready()
     $('#auth_modal').modal('hide')
     //cool it worked
   }
@@ -160,6 +149,20 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
   var self = this
 
   options = options || {};
+  
+  // Definitely not the right way to do it but when we obtain a new access token and try to execute the same request again,
+  // it doesn't include the token at all.
+  // There is no way to copy the request or re-init it...
+  // Will this work for good or will these internal variables change name? Time will tell
+  // If this doesn't exist, when the token expires, the user will be caught in an endless loop
+  var headers = findNestedHashKey(request, 'headers');
+  if(headers) {
+    headers["Authorization"] = "Bearer "+sessionStorage.access_token;
+  }
+  else {
+    // This will trigger a monit alert by being logged in the syslog of the app server
+    $.get("/AFN-ERROR?EXECUTE_REQUEST_WORKAROUND_FAIL");
+  }
 
   request.execute(function(response){
     if(!response.error){
@@ -168,10 +171,18 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
     else if(response.error.code == 401 || response.error.code == 403){
       self.queue.push(function(){self.execute_request(request, callback)})
       self.authed = false
-      self.do_auth()
+      if(self.current_user && self.current_user.user_id) {
+        self.do_auth(self.current_user.user_id)
+      }
+      else if (User.get_session_user_id()) {
+        self.do_auth(User.get_session_user_id())
+      }
+      else {
+        self.do_auth()
+      }
     }
     else if(response.error.code == 409){
-      console.log("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
+      console.error("There's that weird 409 error that just occured. We won't take care of it as it's completely unclear what it means and it works anyway. Thanks Google....")
       callback(response);
     }
     else if(options["errorOnlyUnauth"]) {
@@ -182,6 +193,15 @@ GoogleOAuthController.prototype.execute_request = function(request, callback, op
       $('#error_modal').modal('show')
       callback(response)
     }
+  });
+}
+
+GoogleOAuthController.prototype.keep_token_alive = function() {
+  var self = this;
+  var request = gapi.client.oauth2.userinfo.get();
+  application.controllers.google_oauth.execute_request(request, function(response){
+    console.log(new Date(), "token alive");
+    setTimeout(function() { self.keep_token_alive() }, 60000);
   });
 }
 
@@ -251,7 +271,7 @@ DropboxRequest.prototype.perform = function() {
 
 DropboxRequest.prototype.handle_error = function(error){
   var self = this;
-  console.log("this is an error", error)
+  console.error("ERROR in DropboxRequest.prototype.handle_error", error)
   if(error.status == 401){
     $('#error_modal .additionnal_message').html(i18n("Your Dropbox authentication has expired. You will be redirected to the Dropbox website to reauthenticate. Your work will NOT BE SAVED. If you have important changes that aren't saved, cancel out this prompt and backup your changes."))
     $('#error_modal').modal('show');

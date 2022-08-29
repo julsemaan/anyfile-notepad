@@ -8,7 +8,7 @@
     {{> modal id="file_load_modal" title="Your file is being loaded" message="Depending on the file size, this can be long." with_bar=true }}
     {{> modal id="auth_failed_modal" title="The authentication failed with Google" message="You need to enable the popups in your browser, then login in your Google account and accept the app's authorization requests." button_id="restart_app" button_text="Restart app" }}
     {{> modal id="error_modal" title="An unexpected error occurred with the provider server" message="The app flow will still continue but unexpected behavior may occur. When in doubt restart the app." dismiss=true }}
-    {{> modal id="auth_modal" title="You need to authorize this app to access your Google Drive" message="Without this the app is useless to you." button_id="start_g_oauth" button_text="Authorize!" }}
+    {{> modal id="auth_modal" title="You need to authorize this app to access your Google Drive" message="Make sure you grant access (check the boxes) for all the permissions the app needs in the next screen." button_id="start_g_oauth" button_text="Authorize!" }}
     {{> modal id="user_auth_modal" title="Switch user" message="In order to open this file, you need to switch user." button_id="switch_user" button_text="Switch user" }}
 
     {{> file_info }}

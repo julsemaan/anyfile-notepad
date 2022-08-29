@@ -52,10 +52,10 @@ User.current_user = function(callback){
       total_space_used : "N/A GB",
       total_space_available : "N/A GB",
     })
+    var previousUser = User.get_session_user_id();
+
     User.set_session_user_id(current_user.user_id);
     application.controllers.google_oauth.current_user = current_user;
-
-    var previousUser = getCookie("current_google_user_id")
     setCookie("current_google_user_id", current_user.user_id)
 
     if(previousUser != current_user.user_id) {

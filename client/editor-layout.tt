@@ -46,12 +46,20 @@
   [% INCLUDE app.tt %]
 
   <script>
-    function oauth_loaded(){
-      application.controllers.google_oauth.init()
+    var _gsi_loaded = false;
+    var _gapi_loaded = false;
+    function gsi_loaded(){
+      _gsi_loaded = true;
+      if(_gapi_loaded) application.controllers.google_oauth.init()
+    }
+    function gapi_loaded(){
+      _gapi_loaded = true;
+      if(_gapi_loaded) application.controllers.google_oauth.init()
     }
   </script>
 
-  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=oauth_loaded"></script>
+  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=gapi_loaded"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="gsi_loaded()" async defer></script>
 
     <script>
       $(document).ready(function() {
