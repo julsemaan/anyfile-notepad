@@ -162,6 +162,20 @@ angular.module('afnAdminApp.controllers', [])
   $scope.crud_model = MimeType;
   $controller('CRUDEditController', {$scope: $scope});
 })
+// Mime types to integrate
+.controller('MimeTypeToIntegrateListController', function($scope, $controller, MimeTypeToIntegrate) {
+  $scope.crud_model = MimeTypeToIntegrate;
+  $controller('CRUDListController', {$scope: $scope});
+}).controller('MimeTypeToIntegrateViewController', function($scope, $controller, $stateParams, MimeTypeToIntegrate) {
+  $scope.crud_model = MimeTypeToIntegrate;
+  $controller('CRUDViewController', {$scope: $scope});
+}).controller('MimeTypeToIntegrateCreateController', function($scope, $controller, $state, $stateParams, MimeTypeToIntegrate) {
+  $scope.crud_model = MimeTypeToIntegrate;
+  $controller('CRUDCreateController', {$scope: $scope});
+}).controller('MimeTypeToIntegrateEditController', function($scope, $controller, $stateParams, MimeTypeToIntegrate) {
+  $scope.crud_model = MimeTypeToIntegrate;
+  $controller('CRUDEditController', {$scope: $scope});
+})
 // Syntaxes
 .controller('SyntaxListController', function($scope, $controller, Syntax) {
   $scope.crud_model = Syntax;

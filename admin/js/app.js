@@ -20,6 +20,24 @@ angular.module('afnAdminApp').config(function($stateProvider) {
     templateUrl: 'partials/crud/edit.html',
     controller: 'MimeTypeEditController'
   })
+  // Mime types to integrate
+  .state('MimeTypeToIntegrate', { // state for showing all mime types
+    url: '/mime_types_to_integrate',
+    templateUrl: 'partials/crud/index.html',
+    controller: 'MimeTypeToIntegrateListController'
+  }).state('viewMimeTypeToIntegrate', { //state for showing single mime type
+    url: '/mime_types_to_integrate/:id/view',
+    templateUrl: 'partials/crud/view.html',
+    controller: 'MimeTypeToIntegrateViewController'
+  }).state('newMimeTypeToIntegrate', { //state for adding a new mime_type
+    url: '/mime_types_to_integrate/new',
+    templateUrl: 'partials/crud/add.html',
+    controller: 'MimeTypeToIntegrateCreateController'
+  }).state('editMimeTypeToIntegrate', { //state for updating a mime_type
+    url: '/mime_types_to_integrate/:id/edit',
+    templateUrl: 'partials/crud/edit.html',
+    controller: 'MimeTypeToIntegrateEditController'
+  })
   // Syntaxes
   .state('Syntax', {
     url: '/syntaxes',

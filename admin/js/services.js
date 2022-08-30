@@ -73,8 +73,7 @@ angular.module('afnAdminApp.services', [])
 
 
   return res;
-})
-.factory('MimeType', function($resource, $CRUDResource) {
+}).factory('MimeType', function($resource, $CRUDResource) {
   var res = $resource(AFN_VARS['api_uri']+'/mime_types/:id', {id: '@id'}, {
     update: {
       method: 'PUT'
@@ -87,6 +86,24 @@ angular.module('afnAdminApp.services', [])
 
   res.prototype.snake_model_name = "mime_type";
   res.prototype.snake_model_name_pl = "mime_types";
+
+  res.prototype.display_attr = "type_name";
+
+
+  return res;
+}).factory('MimeTypeToIntegrate', function($resource, $CRUDResource) {
+  var res = $resource(AFN_VARS['api_uri']+'/mime_types/:id', {id: '@id', filter: '{"integrated":false}'}, {
+    update: {
+      method: 'PUT'
+    }
+  });
+  res = $CRUDResource(res);
+
+  res.prototype.model_name = "MimeTypeToIntegrate";
+  res.prototype.model_name_pl = "MimeTypesToIntegrate";
+
+  res.prototype.snake_model_name = "mime_type_to_integrate";
+  res.prototype.snake_model_name_pl = "mime_types_to_integrate";
 
   res.prototype.display_attr = "type_name";
 
