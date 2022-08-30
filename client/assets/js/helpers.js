@@ -45,7 +45,8 @@ String.prototype.toCamel = function(){
  
 function notify_unknown_mime_type(mime_type){
   $.ajax({
-    url : "/mime_types/submit_unknown",
+    method: "POST",
+    url : "/api/record_mime_type",
     data: {mime_type:mime_type},
   })
 

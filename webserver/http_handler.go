@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct{}
@@ -103,4 +107,41 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 	}
 
 	appHandler.ServeHTTP(w, r)
+}
+
+func handleRecordMimeType(c *gin.Context) {
+	mt := c.PostForm("mime_type")
+	InfoPrint("Recording mime_type", mt)
+
+	buf := bytes.NewBuffer([]byte{})
+	err := json.NewEncoder(buf).Encode(struct {
+		TypeName   string `json:"type_name"`
+		Integrated bool   `json:"integrated"`
+	}{
+		TypeName:   mt,
+		Integrated: false,
+	})
+	if err != nil {
+		ErrPrint("Unable to encode mime type payload into JSON", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	req, err := http.NewRequest("POST", os.Getenv("AFN_API_URL")+"/mime_types", buf)
+	req.SetBasicAuth(os.Getenv("AFN_REST_USERNAME"), os.Getenv("AFN_REST_PASSWORD"))
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		ErrPrint("Unable to call AFN API", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	if res.StatusCode != http.StatusCreated {
+		ErrPrint("Unable to create mime type", mt, ". Received status code", res.StatusCode)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }

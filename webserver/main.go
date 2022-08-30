@@ -107,6 +107,8 @@ func setupHandlers() {
 
 	api.POST("/billing/stripe-hook", handleStripeHook)
 
+	api.POST("/record_mime_type", handleRecordMimeType)
+
 	apiHandler = r
 
 	InfoPrint("Serving production application from", *prodAppPath)
