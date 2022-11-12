@@ -4,15 +4,16 @@ application.build_id = "[% APP_COMMIT_ID %]";
 
 [%
 locales = {
-  "nl"    = "Dutch",
-  "en"    = "English",
-  "fr"    = "French",
   "de"    = "German",
+  "en"    = "English",
+  "es"    = "Spanish",
+  "fr"    = "French",
   "it"    = "Italian",
   "ja"    = "Japanese",
+  "ms"    = "Malay",
+  "nl"    = "Dutch",
   "pl"    = "Polish",
   "pt_BR" = "Portuguese (BR)",
-  "es"    = "Spanish",
   "ro"    = "Romanian",
   "tr"    = "Turkish",
 }
