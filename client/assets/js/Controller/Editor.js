@@ -1,5 +1,10 @@
 function EditorController(view, options){
+  ace.require("ace/ext/language_tools");
   this.editor_view = ace.edit("editor");
+  this.editor_view.setOptions({
+    enableBasicAutocompletion: true
+  });
+  
   this.$ = $('#'+view);
   this.$editor = this.$.find('#editor');
   this.file_id = options["file_id"];
@@ -36,6 +41,7 @@ function EditorController(view, options){
 
   this.last_save_wanted = new Date();
 }
+
 
 EditorController.prototype.loop_check_last_changed = function() {
   var self = this;
@@ -105,6 +111,8 @@ EditorController.prototype.initialize_html = function(){
           return true;
         case 'v':
           return true;
+        case 'o':
+          self.editor_view.execCommand("startAutocomplete");
       }
       event.preventDefault();
       return false;

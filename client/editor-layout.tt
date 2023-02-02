@@ -11,6 +11,7 @@
 
   <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].min.js"></script>
   <script type="text/javascript" src="/ace.js/ace.js"></script>
+  <script src="/ace.js/ext-language_tools.js"></script>
 
   [% INCLUDE analytics.tt %]
 
