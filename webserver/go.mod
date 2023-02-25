@@ -19,8 +19,7 @@ require (
 	github.com/stripe/stripe-go v28.6.1+incompatible
 	github.com/tinylib/msgp v1.1.5 // indirect
 	github.com/ugorji/go v0.0.0-20171106190404-3c86213f839c // indirect
-	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/net v0.7.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
