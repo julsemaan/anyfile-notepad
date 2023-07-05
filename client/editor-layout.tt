@@ -16,26 +16,18 @@
   [% INCLUDE analytics.tt %]
 
   <!-- BEGIN section -->
-  <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js" async></script>
-  <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"></script>
+    <script async src="//www.googletagservices.com/tag/js/gpt.js"></script>
+    <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js" async></script>
+    <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"></script>
 
-  <script>
-      (function () {
-          var gads = document.createElement('script');
-          gads.async = true;
-          gads.type = 'text/javascript';
-          var useSSL = 'https:' == document.location.protocol;
-          gads.src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';
-          var node = document.getElementsByTagName('script')[0];
-          node.parentNode.insertBefore(gads, node);
-      })();
+    <script>
 
-      googletag.cmd.push(function() {
-          googletag.defineSlot('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_160x600_1', [160, 600], 'banner-160x600-1').addService(googletag.pubads());
-          googletag.pubads().collapseEmptyDivs(true);
-          googletag.enableServices();
-      });
-  </script>
+        googletag.cmd.push(function() {
+            googletag.defineSlot('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_160x600_1', [160, 600], 'banner-160x600-1').addService(googletag.pubads());
+            googletag.pubads().collapseEmptyDivs(true);
+            googletag.enableServices();
+        });
+    </script>
   <!-- END section -->
 
 
