@@ -16,8 +16,8 @@
   [% INCLUDE analytics.tt %]
 
   <!-- BEGIN section -->
-    <script async src="//www.googletagservices.com/tag/js/gpt.js"></script>
-    <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js" async></script>
+    <script src="//www.googletagservices.com/tag/js/gpt.js"></script>
+    <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js"></script>
     <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"></script>
 
     <script>
