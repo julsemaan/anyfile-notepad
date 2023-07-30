@@ -42,7 +42,7 @@ ApplicationController.prototype.setupDevMode = function() {
     self.dev_mode_available = (setting["value"] == "true");
     self.actOnDevModeSettings();
   }, function(error) {
-    console.log("Cannot find beta-available variable to display BETA access.", error);
+    console.error("Cannot find beta-available variable to display BETA access.", error);
     //Assume its available if we can't reach the API
     self.dev_mode_available = true;
     self.actOnDevModeSettings();

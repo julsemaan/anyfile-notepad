@@ -42,7 +42,7 @@ FileExplorerController.prototype.fetch_dropbox_directory = function(options, cal
     //      This feature is unimplemented and should be implemented only if necessary. Not sure we'll really want to render so many directories and files in a simple explorer
     request : application.controllers.dropbox_oauth.client.filesListFolder({path:options['dir']}),
     success : function(response){
-      console.log("doing dir callback", response)
+      console.debug("doing dir callback", response)
       var folders = [];
       var files = [];
       for(var i in response.entries){
@@ -92,7 +92,7 @@ FileExplorerController.prototype.fetch_drive_directory = function(options, callb
 
 FileExplorerController.prototype.fetch_directory = function(options, callback){
   var self = this;
-  console.log(options)
+  console.debug("fetch_directory options", options)
 
   if(options['dir'] == "AFN_ROOT"){
 

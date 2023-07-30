@@ -50,14 +50,14 @@ DriveFile.prototype.compute_app_folder_id = function(callback) {
 
   self.try_get_app_folder_id(function(folder_id) {
     if(!folder_id) {
-      console.log("App folder ID doesn't exist yet, creating it")
+      console.debug("App folder ID doesn't exist yet, creating it")
       self.create_app_folder_id(function(folder_id) {
         self.set("_app_folder_id", folder_id);
         callback()
       });
     }
     else {
-      console.log("Found app folder ID", folder_id);
+      console.debug("Found app folder ID", folder_id);
       self.set("_app_folder_id", folder_id);
       callback()
     }
@@ -96,7 +96,7 @@ DriveFile.prototype.get_file_data = function(){
             self.loaded()
           }
           else{
-            console.log(data)
+            console.error(data)
             self.loaded("Fatal error! The file couldn't load from Google's server. Response was : "+status+". If this happens again, file a bug on the community.");
             return
           }
@@ -142,7 +142,7 @@ DriveFile.prototype.get_create_collab_id = function(callback) {
   });
   application.controllers.google_oauth.execute_request(request, function(data){
     if(data.code == 404) {
-      console.log("collab key doesn't exist yet, creating it");
+      console.debug("collab key doesn't exist yet, creating it");
       var collabID = self.generate_collab_id();
       request = gapi.client.drive.properties.insert({
         'fileId': self.id,
@@ -180,7 +180,7 @@ DriveFile.prototype.update_data = function(new_revision, callback){
       self.doSave(new_revision, reader, metadata, callback)
     }
     else if(!self.persisted) {
-      console.log("File isn't persisted (new file), will save it in the app folder directory");
+      console.debug("File isn't persisted (new file), will save it in the app folder directory");
       self.compute_app_folder_id(function() {
         metadata['parents'] = [{id:self._app_folder_id}];
         self.doSave(new_revision, reader, metadata, callback)

@@ -50,7 +50,7 @@ EditorController.prototype.loop_check_last_changed = function() {
   var inactiveRestartInterval = new Date((new Date()).getTime() - inactiveMinutes*60000);
 
   if(inactiveRestartInterval > self.last_changed) {
-    console.log("User has been inactive for too long. Prompting restart of the app");
+    console.debug("User has been inactive for too long. Prompting restart of the app");
 
     new Popup({ 
       title: "Inactivity timeout", 
@@ -388,7 +388,7 @@ EditorController.prototype.save = function(){
         self.allow_saving();
         $("#file_being_saved").modal('hide');
         if(save_time < self.last_save_wanted) {
-          console.log("User requested save after the process started, saving again");
+          console.debug("User requested save after the process started, saving again");
           self.save();
         }
       })
@@ -457,7 +457,7 @@ EditorController.prototype.setSyntaxMode = function(syntax) {
     this.editor_view.getSession().setMode("ace/mode/"+syntax);
   }
   else {
-    console.log("syntaxes aren't initialized...")
+    console.debug("syntaxes aren't initialized...")
   }
 }
 
@@ -543,7 +543,7 @@ EditorController.prototype.init_collaboration = function(model){
   try{
   var content = model.createString(self.file.data);
   model.getRoot().set("content", content);
-  }catch(e){console.log("Error in collaboration init : "+e)}
+  }catch(e){console.error("Error in collaboration init : "+e)}
 }
 
 EditorController.prototype.stop_collaboration = function(){
@@ -563,7 +563,7 @@ EditorController.prototype.publish_realtime_event = function(e){
 
   if(!self.realtime_document) return;
 
-  //console.log("publishing event", e)
+  //console.debug("publishing event", e)
 
   e.google_user_id = application.controllers.google_oauth.current_user.user_id;
   e.google_user_name = application.controllers.google_oauth.current_user.name;
@@ -612,12 +612,12 @@ EditorController.prototype.make_collaborative = function(){
   });
 
   self.realtime_document.start_realtime_events(function(e) {
-    //console.log("receiving event", e)
+    //console.debug("receiving event", e)
     
     self.add_collaborator(e);
 
     if(e.category != self.realtime_document.collab_id) {
-      console.log("Discarding event because its not meant for this document", e);
+      console.debug("Discarding event because its not meant for this document", e);
     }
 
     if(e.data.type == "ace.js") {
@@ -625,17 +625,17 @@ EditorController.prototype.make_collaborative = function(){
       self.editor_view.getSession().getDocument().applyDelta(e.data);
     }
     else if(e.data.type == "joined") {
-      console.log(e.data.type)
+      console.debug(e.data.type)
       self.last_joined_ping = self.last_joined_ping || 0;
       // Don't ping more than once per second
       var now = new Date().getTime();
       if(now - self.last_joined_ping > 1 * 1000) {
-        console.log("Someone has joined the collaboration, making ourself visible");
+        console.debug("Someone has joined the collaboration, making ourself visible");
         self.ping_realtime();
         self.last_joined_ping = now;
       }
       else {
-        console.log("Not publishing ping due to rate limiting");
+        console.debug("Not publishing ping due to rate limiting");
       }
     }
     else if(e.data.type == "leaved") {
@@ -677,7 +677,7 @@ EditorController.prototype.add_collaborator = function(e) {
   
   // Set an interval to delete the collaborator if he's unseen for 2 minutes
   self.realtime_collaborators[collaborator_id].clearFunc = setTimeout(function() {
-    console.log("Removing unseen collaborator", e.data.google_user_name);
+    console.debug("Removing unseen collaborator", e.data.google_user_name);
     self.remove_collaborator(e); 
   }, 120 * 1000)
 

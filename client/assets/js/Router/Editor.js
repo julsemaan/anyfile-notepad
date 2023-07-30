@@ -94,7 +94,7 @@ EditorRouter.prototype.route = function(){
 
   var transition = router.handleURL(window.location.hash);
 
-  console.log(transition);
+  console.debug(transition);
 
   var actions = {
     edit: function(transition){
@@ -111,7 +111,7 @@ EditorRouter.prototype.route = function(){
       }
     },
     handle_dropbox_token: function(transition){
-      console.log("parsing and checking Dropbox token...");
+      console.debug("parsing and checking Dropbox token...");
       application.controllers.dropbox_oauth.setTokenFromUrl();
       application.controllers.dropbox_oauth.test(function(){
         window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
@@ -141,7 +141,7 @@ EditorRouter.prototype.check_for_drive = function() {
   // Special handling for Google Drive
   if(this.params['state']){
     state = JSON.parse(decodeURI(this.params['state']))
-    console.log(state['userId'], application.controllers.google_oauth.current_user.user_id)
+    console.debug(state['userId'], application.controllers.google_oauth.current_user.user_id)
     if(state['userId']) {
       if(application.controllers.google_oauth.current_user.user_id != state['userId']){
         $('#user_auth_modal').modal('show');

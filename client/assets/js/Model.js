@@ -23,7 +23,7 @@ Model.prototype.init = function(args){
 Model.prototype.post_init = function(){}
 
 Model.prototype.get_backend = function(){
-  console.log("get_backend not implemented. are you stupid ?")
+  console.error("get_backend not implemented. are you stupid ?")
 }
 
 Model.prototype.install_binder = function(){

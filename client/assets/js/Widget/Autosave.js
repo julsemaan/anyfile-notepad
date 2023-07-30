@@ -12,7 +12,7 @@ AutosaveWidget.prototype.refreshFromPreferenceChild = function() {
   else {
     application.controllers.editor.deactivate_autosave()
   }
-  console.log(application.controllers.editor.autosave_enabled);
+  console.debug("autosave enabled", application.controllers.editor.autosave_enabled);
 }
 
 

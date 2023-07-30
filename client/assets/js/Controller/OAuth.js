@@ -200,7 +200,7 @@ GoogleOAuthController.prototype.keep_token_alive = function() {
   var self = this;
   var request = gapi.client.oauth2.userinfo.get();
   application.controllers.google_oauth.execute_request(request, function(response){
-    console.log(new Date(), "token alive");
+    console.debug(new Date(), "token alive");
     setTimeout(function() { self.keep_token_alive() }, 60000);
   });
 }
