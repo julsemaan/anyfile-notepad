@@ -5,7 +5,7 @@ on:
     branches: ['**']
     paths: 
       - 'admin/**'
-      - '.github/workflows/docker-admin.yml'
+      - '.github/workflows/docker-admin.yaml'
   workflow_dispatch:
     branches: ['**']
 
