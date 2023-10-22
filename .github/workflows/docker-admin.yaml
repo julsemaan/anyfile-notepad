@@ -1,0 +1,38 @@
+name: Docker Image admin
+
+on:
+  push:
+    branches: ['**']
+    paths: 
+      - 'admin/**'
+      - '.github/workflows/docker-admin.yml'
+  workflow_dispatch:
+    branches: ['**']
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup VARS.js
+        run: 'printf "$ADMIN_VARS" > admin/js/VARS.js'
+        env:
+          ADMIN_VARS: ${{env.ADMIN_VARS}}
+
+      - name: Compute image tag
+        run: |
+          echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Kaniko build
+        uses: julsemaan/action-kaniko@master
+        with:
+          registry: ghcr.io
+          image: julsemaan/anyfile-notepad/admin
+          tag: ${{ env.IMG_TAG }}
+          tag_with_latest: false
+          password: ${{ secrets.GITHUB_TOKEN }}
+          path: admin/
+          extra_args: >-
+            --push-retry 5
+      
