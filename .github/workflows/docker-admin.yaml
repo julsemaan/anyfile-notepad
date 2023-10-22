@@ -18,7 +18,7 @@ jobs:
       - name: Setup VARS.js
         run: 'printf "$ADMIN_VARS" > admin/js/VARS.js'
         env:
-          ADMIN_VARS: ${{env.ADMIN_VARS}}
+          ADMIN_VARS: ${{secrets.ADMIN_VARS}}
 
       - name: Compute image tag
         run: |
