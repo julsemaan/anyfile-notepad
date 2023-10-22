@@ -5,7 +5,7 @@ on:
     branches: ['**']
     paths: 
       - 'pages/**'
-      - '.github/workflows/docker-pages.yml'
+      - '.github/workflows/docker-pages.yaml'
   workflow_dispatch:
     branches: ['**']
 
