@@ -1,5 +1,5 @@
 FROM alpine
 
-WORKDIR /src/pages
+WORKDIR /src/admin
 
 COPY . .
