@@ -361,7 +361,11 @@ The Anyfile Notepad team
 		BaseURL:      appBaseURL,
 	})
 	msg, _ := ioutil.ReadAll(&msgBytes)
-	utils.SendEmail(emails, msg)
+	err = utils.SendEmail(emails, msg)
 
-	c.JSON(http.StatusOK, gin.H{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+	} else {
+		c.JSON(http.StatusOK, gin.H{})
+	}
 }
