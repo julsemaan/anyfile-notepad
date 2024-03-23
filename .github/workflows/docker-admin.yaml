@@ -58,10 +58,7 @@ jobs:
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
 
-      - name: Install yq
-        run: |
-          apt update
-          apt install yq -y
+      - uses: chrisdickinson/setup-yq@latest
 
       - name: Stage changes in new branch
         env:
