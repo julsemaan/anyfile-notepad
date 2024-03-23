@@ -52,4 +52,6 @@ jobs:
       - name: Get IMG_TAG
         run: |
           echo $IMG_TAG
+        env:
+          IMG_TAG: ${{needs.docker.outputs.img_tag}}
       
