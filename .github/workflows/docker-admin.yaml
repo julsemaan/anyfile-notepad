@@ -68,10 +68,11 @@ jobs:
           CHANGE_TYPE: admin
         run: |
           BRANCH_ID=`date "+%Y%m%d"`
+          BRANCH_NAME=tmp/$BRANCH_ID
 
           # Checkout the remote ref if it already exist, otherwise, start from main
-          git checkout origin/tmp/$BRANCH_ID || true
-          git checkout -b tmp/$BRANCH_ID
+          git checkout origin/$BRANCH_NAME || true
+          git checkout -b $BRANCH_NAME
 
           yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
@@ -80,6 +81,6 @@ jobs:
           git commit --allow-empty -a -m "bump $CHANGE_TYPE to $IMG_TAG"
           git push origin HEAD
 
-          (gh pr list --state open --limit 1 --head tmp/$BRANCH_ID | grep tmp/$BRANCH_ID) || \
-            gh pr create -B main -H tmp/$BRANCH_ID --title "Update images $BRANCH_ID" --body 'Created by Github action'
+          (gh pr list --state open --limit 1 --head $BRANCH_NAME | grep $BRANCH_NAME) || \
+            gh pr create -B main -H $BRANCH_NAME --title "Update images $BRANCH_ID" --body 'Created by Github action'
 
