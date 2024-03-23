@@ -68,7 +68,7 @@ jobs:
         run: |
           BRANCH_ID=`date "+%Y%m%d"`
 
-          git checkout -b tmp/$BRANCH_ID
+          git checkout tmp/$BRANCH_ID || git checkout -b tmp/$BRANCH_ID
 
           yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
