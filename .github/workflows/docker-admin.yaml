@@ -12,8 +12,10 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    outputs:
+      img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
 
       - name: Setup VARS.js
         run: 'printf "$ADMIN_VARS" > admin/js/VARS.js'
@@ -23,6 +25,11 @@ jobs:
       - name: Compute image tag
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Preserve image tag
+        id: preserve_img_tag
+        run: |
+          echo "img_tag=${{ env.IMG_TAG }}" >> $GITHUB_OUTPUT
 
       - name: Kaniko build
         uses: julsemaan/action-kaniko@master
@@ -35,4 +42,43 @@ jobs:
           path: admin/
           extra_args: >-
             --push-retry 5
+
+  pr_afn_k8s:
+    concurrency:
+      group: prs-to-afn-k8s
+      cancel-in-progress: false
+    needs: docker
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: julsemaan/afn-k8s
+          token: ${{ secrets.GHA_REPO_TOKEN }}
+          fetch-depth: 0
       
+      - uses: frenck/action-setup-yq@v1
+
+      - name: PR tag change to afn-k8s
+        env:
+          IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
+          CHANGE_TYPE: admin
+        run: |
+          BRANCH_ID=`date "+%Y%m%d"`
+          BRANCH_NAME=tmp/$BRANCH_ID
+
+          # Checkout the remote ref if it already exist, otherwise, start from main
+          git checkout origin/$BRANCH_NAME || true
+          git checkout -b $BRANCH_NAME
+
+          yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
+
+          git config --global user.email "devnull@semaan.ca"
+          git config --global user.name "Semaan Bot"
+          git commit --allow-empty -a -m "bump $CHANGE_TYPE to $IMG_TAG"
+          git push origin HEAD
+
+          (gh pr list --state open --limit 1 --head $BRANCH_NAME | grep $BRANCH_NAME) || \
+            gh pr create -B main -H $BRANCH_NAME --title "Update images $BRANCH_ID" --body 'Created by Github action'
+
