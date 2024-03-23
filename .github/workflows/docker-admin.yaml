@@ -66,6 +66,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
         run: |
           git checkout -b tmp/admin-$IMG_TAG
+
+          yq e -i '.lb.admin.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
+
           git config --global user.email "devnull@semaan.ca"
           git config --global user.name "Semaan Bot"
           git commit --allow-empty -a -m "bump admin to $IMG_TAG"
