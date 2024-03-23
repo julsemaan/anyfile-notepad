@@ -48,7 +48,7 @@ jobs:
       group: prs-to-afn-k8s
       cancel-in-progress: false
     needs: docker
-    #if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
