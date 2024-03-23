@@ -15,7 +15,7 @@ jobs:
     outputs:
       img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
 
       - name: Setup VARS.js
         run: 'printf "$ADMIN_VARS" > admin/js/VARS.js'
@@ -47,10 +47,11 @@ jobs:
     needs: docker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
         with:
           repository: julsemaan/afn-k8s
           token: ${{ secrets.GHA_REPO_TOKEN }}
+          fetch-depth: 0
       
       - name: Get IMG_TAG
         run: |
