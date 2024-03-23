@@ -35,4 +35,13 @@ jobs:
           path: admin/
           extra_args: >-
             --push-retry 5
+
+  pr_afn_k8s:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      
+      - name: Get IMG_TAG
+        run: |
+          echo $IMG_TAG
       
