@@ -61,6 +61,7 @@ jobs:
       - name: Stage changes in new branch
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
         run: |
           git checkout -b tmp/admin-$IMG_TAG
           git config --global user.email "devnull@semaan.ca"
