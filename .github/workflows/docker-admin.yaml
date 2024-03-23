@@ -68,7 +68,9 @@ jobs:
         run: |
           BRANCH_ID=`date "+%Y%m%d"`
 
-          git checkout tmp/$BRANCH_ID || git checkout -b tmp/$BRANCH_ID
+          # Checkout the remote ref if it already exist, otherwise, start from main
+          git checkout origin/tmp/$BRANCH_ID || true
+          git checkout -b tmp/$BRANCH_ID
 
           yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
