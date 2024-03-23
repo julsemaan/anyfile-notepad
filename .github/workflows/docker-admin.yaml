@@ -64,13 +64,14 @@ jobs:
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
+          CHANGE_TYPE: admin
         run: |
           git checkout -b tmp/admin-$IMG_TAG
 
-          yq -i '.lb.admin.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
+          yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
           git config --global user.email "devnull@semaan.ca"
           git config --global user.name "Semaan Bot"
-          git commit --allow-empty -a -m "bump admin to $IMG_TAG"
+          git commit --allow-empty -a -m "bump $CHANGE_TYPE to $IMG_TAG"
           git push origin HEAD
-          gh pr create -B main -H tmp/admin-$IMG_TAG --title 'Update admin image' --body 'Created by Github action'
+          gh pr create -B main -H tmp/admin-$IMG_TAG --title "Update $CHANGE_TYPE image" --body 'Created by Github action'
