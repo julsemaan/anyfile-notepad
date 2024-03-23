@@ -1,11 +1,11 @@
-name: Docker Image webserver
+name: Docker Image admin
 
 on:
   push:
     branches: ['**']
     paths: 
-      - 'webserver/**'
-      - '.github/workflows/docker-webserver.yml'
+      - 'admin/**'
+      - '.github/workflows/docker-admin.yaml'
   workflow_dispatch:
     branches: ['**']
 
@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Setup VARS.js
+        run: 'printf "$ADMIN_VARS" > admin/js/VARS.js'
+        env:
+          ADMIN_VARS: ${{secrets.ADMIN_VARS}}
+
       - name: Compute image tag
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
@@ -23,11 +28,11 @@ jobs:
         uses: julsemaan/action-kaniko@master
         with:
           registry: ghcr.io
-          image: julsemaan/anyfile-notepad/webserver
+          image: julsemaan/anyfile-notepad/admin
           tag: ${{ env.IMG_TAG }}
+          tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
-          cache: true
-          cache_registry: ghcr.io/julsemaan/anyfile-notepad/webserver/cache
-          path: webserver/
-          extra_args: --push-retry 5
-
+          path: admin/
+          extra_args: >-
+            --push-retry 5
+      

@@ -1,11 +1,11 @@
-name: Docker Image webserver
+name: Docker Image pages
 
 on:
   push:
     branches: ['**']
     paths: 
-      - 'webserver/**'
-      - '.github/workflows/docker-webserver.yml'
+      - 'pages/**'
+      - '.github/workflows/docker-pages.yaml'
   workflow_dispatch:
     branches: ['**']
 
@@ -19,15 +19,15 @@ jobs:
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
 
-      - name: Kaniko build
+      - name: Kaniko build full
         uses: julsemaan/action-kaniko@master
         with:
           registry: ghcr.io
-          image: julsemaan/anyfile-notepad/webserver
+          image: julsemaan/anyfile-notepad/pages
           tag: ${{ env.IMG_TAG }}
+          tag_with_latest: false
           password: ${{ secrets.GITHUB_TOKEN }}
-          cache: true
-          cache_registry: ghcr.io/julsemaan/anyfile-notepad/webserver/cache
-          path: webserver/
-          extra_args: --push-retry 5
-
+          path: pages/
+          extra_args: >-
+            --push-retry 5
+      
