@@ -53,15 +53,9 @@ jobs:
           token: ${{ secrets.GHA_REPO_TOKEN }}
           fetch-depth: 0
       
-      - name: Get IMG_TAG
-        run: |
-          echo $IMG_TAG
-        env:
-          IMG_TAG: ${{needs.docker.outputs.img_tag}}
-
       - uses: frenck/action-setup-yq@v1
 
-      - name: Stage changes in new branch
+      - name: PR tag change to afn-k8s
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
