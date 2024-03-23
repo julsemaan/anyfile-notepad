@@ -58,6 +58,11 @@ jobs:
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
 
+      - name: Install yq
+        run: |
+          apt update
+          apt install yq
+
       - name: Stage changes in new branch
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
@@ -68,4 +73,4 @@ jobs:
           git config --global user.name "Semaan Bot"
           git commit --allow-empty -a -m "bump admin to $IMG_TAG"
           git push origin HEAD
-          gh pr create -B main -H tmp/admin-$IMG_TAG --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+          gh pr create -B main -H tmp/admin-$IMG_TAG --title 'Update admin image' --body 'Created by Github action'
