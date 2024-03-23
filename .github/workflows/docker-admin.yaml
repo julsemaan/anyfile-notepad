@@ -79,5 +79,7 @@ jobs:
           git config --global user.name "Semaan Bot"
           git commit --allow-empty -a -m "bump $CHANGE_TYPE to $IMG_TAG"
           git push origin HEAD
-          gh pr create -B main -H tmp/$BRANCH_ID --title "Update images $BRANCH_ID" --body 'Created by Github action'
+
+          (gh pr list --state open --limit 1 --head tmp/$BRANCH_ID | grep tmp/$BRANCH_ID) || \
+            gh pr create -B main -H tmp/$BRANCH_ID --title "Update images $BRANCH_ID" --body 'Created by Github action'
 
