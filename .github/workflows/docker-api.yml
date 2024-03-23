@@ -13,7 +13,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - name: Kaniko build
         uses: julsemaan/action-kaniko@master
         with:
@@ -30,7 +30,7 @@ jobs:
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
 
       - name: Use staging target servers if necessary
         run: |
