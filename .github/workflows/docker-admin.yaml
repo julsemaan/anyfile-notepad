@@ -62,6 +62,8 @@ jobs:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
         run: |
           git checkout -b tmp/admin-$IMG_TAG
+          git config --global user.email "devnull@semaan.ca"
+          git config --global user.name "Semaan Bot"
           git commit -a -m "bump admin to $IMG_TAG"
           git push origin HEAD
       
