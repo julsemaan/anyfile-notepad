@@ -13,6 +13,8 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    outputs:
+      img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
     steps:
       - uses: actions/checkout@master
 
@@ -24,6 +26,11 @@ jobs:
       - name: Compute image tag
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Preserve image tag
+        id: preserve_img_tag
+        run: |
+          echo "img_tag=${{ env.IMG_TAG }}" >> $GITHUB_OUTPUT
 
       - name: Kaniko build full
         uses: julsemaan/action-kaniko@master
@@ -100,9 +107,8 @@ jobs:
           BRANCH_ID=`date "+%Y%m%d"`
           BRANCH_NAME=tmp/$BRANCH_ID
 
-          # Checkout the remote ref if it already exist, otherwise, start from main
-          git checkout origin/$BRANCH_NAME || true
-          git checkout -b $BRANCH_NAME
+          # The branch already exists from the previous step
+          git checkout $BRANCH_NAME
 
           yq -i '.backend.'$CHANGE_TYPE'.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
