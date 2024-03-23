@@ -58,7 +58,7 @@ jobs:
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
 
-      - uses: chrisdickinson/setup-yq@latest
+      - uses: frenck/action-setup-yq@v1
 
       - name: Stage changes in new branch
         env:
