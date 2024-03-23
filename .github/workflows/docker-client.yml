@@ -16,7 +16,7 @@ jobs:
     outputs:
       img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
 
       - name: Setup VARS.js
         run: 'printf "$AFN_VARS" > client/assets/js/VARS.js'
