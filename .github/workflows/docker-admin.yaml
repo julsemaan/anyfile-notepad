@@ -9,9 +9,6 @@ on:
   workflow_dispatch:
     branches: ['**']
 
-concurrency:
-  group: prs-to-afn-k8s
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -47,6 +44,9 @@ jobs:
             --push-retry 5
 
   pr_afn_k8s:
+    concurrency:
+      group: prs-to-afn-k8s
+      cancel-in-progress: false
     needs: docker
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
