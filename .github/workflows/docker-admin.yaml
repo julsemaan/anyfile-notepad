@@ -66,7 +66,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
           CHANGE_TYPE: admin
         run: |
-          git checkout -b tmp/admin-$IMG_TAG
+          BRANCH_ID=`date "+%Y%m%d"`
+
+          git checkout -b tmp/$BRANCH_ID
 
           yq -i '.lb.'$CHANGE_TYPE'.image.tag = "'$IMG_TAG'"' charts/afn/values.yaml
 
@@ -74,4 +76,5 @@ jobs:
           git config --global user.name "Semaan Bot"
           git commit --allow-empty -a -m "bump $CHANGE_TYPE to $IMG_TAG"
           git push origin HEAD
-          gh pr create -B main -H tmp/admin-$IMG_TAG --title "Update $CHANGE_TYPE image" --body 'Created by Github action'
+          gh pr create -B main -H tmp/$BRANCH_ID --title "Update images $BRANCH_ID" --body 'Created by Github action'
+
