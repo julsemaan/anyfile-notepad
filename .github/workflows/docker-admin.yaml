@@ -12,6 +12,8 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    outputs:
+      img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
     steps:
       - uses: actions/checkout@master
 
@@ -23,6 +25,11 @@ jobs:
       - name: Compute image tag
         run: |
           echo "IMG_TAG=$(echo ${GITHUB_SHA} | sed -E 's/refs\/(heads|tags)\///g' | sed -e 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Preserve image tag
+        id: preserve_img_tag
+        run: |
+          echo "img_tag=${{ env.IMG_TAG }}" >> $GITHUB_OUTPUT
 
       - name: Kaniko build
         uses: julsemaan/action-kaniko@master
