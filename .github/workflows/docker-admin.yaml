@@ -61,7 +61,7 @@ jobs:
       - name: Install yq
         run: |
           apt update
-          apt install yq
+          apt install yq -y
 
       - name: Stage changes in new branch
         env:
