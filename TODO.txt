@@ -1,0 +1,3 @@
+- Implement auto-detection of dark mode
+- Use JWT instead of session ID for afn-pp session (no need to sync sessions after)
+- Create sliding pane with adflare ad instead of infolinks
