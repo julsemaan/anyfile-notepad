@@ -1,4 +1,5 @@
-- Implement auto-detection of dark mode
+X Implement auto-detection of dark mode
+- Implement dark mode in menus and for the header
 - Use JWT instead of session ID for afn-pp session (no need to sync sessions after)
 - Create sliding pane with adflare ad instead of infolinks
 - Debounce SUBMIT on contact form
