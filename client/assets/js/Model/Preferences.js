@@ -3,7 +3,7 @@ function Preferences(loaded){
     'prefers_minimized' : 'false',
     'ace_js_font_size' : "16px", 
     'ace_js_tab_size' : '4',
-    'theme' : 'ace/theme/github',
+    'theme' : '__default__',
     'word_wrap' : 'false',
     'cache_file_explorer_enabled' : 'false',
     'file_explorer_height' : "300px", 
