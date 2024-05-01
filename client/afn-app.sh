@@ -215,7 +215,7 @@ function app() {
   fi
 
   cp editor-layout.tt $COMPILED_APP/editor-layout.tt
-  perl render.pl --WEBDEV=$WEBDEV --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
+  perl render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
 }
 
 function public_assets() {
