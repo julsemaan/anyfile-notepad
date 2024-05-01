@@ -9,13 +9,14 @@ use JSON;
 use File::Slurp qw(read_file);
 use Tie::IxHash;
 
-my ($COMPILED_APP_DIR, $APP_VERSION_ID, $APP_VERSION, $APP_COMMIT_ID, $SYNTAX_DB);
+my ($COMPILED_APP_DIR, $APP_VERSION_ID, $APP_VERSION, $APP_COMMIT_ID, $SYNTAX_DB, $WEBDEV);
 GetOptions(
     "COMPILED_APP_DIR=s" => \$COMPILED_APP_DIR,
     "APP_VERSION_ID=s" => \$APP_VERSION_ID, 
     "APP_VERSION=s" => \$APP_VERSION, 
     "APP_COMMIT_ID=s" => \$APP_COMMIT_ID,
     "SYNTAX_DB=s" => \$SYNTAX_DB,
+    "WEBDEV=s" => \$WEBDEV,
 ) or die("Error in command line arguments\n");;
 
 my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, '.']}); 
@@ -71,6 +72,7 @@ my $args = {
     APP_COMMIT_ID => $APP_COMMIT_ID,
     THEMES_JSON => encode_json(\@THEMES),
     SYNTAXES_JSON => encode_json(\%SYNTAXES),
+    WEBDEV => $WEBDEV,
 };
 
 $tt->process('editor-layout.tt', {%$args, WITH_ADS => 1}, $COMPILED_APP_DIR.'/app.html') || die $tt->error();

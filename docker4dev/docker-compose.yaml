@@ -22,6 +22,7 @@ services:
       context: ../client/
     volumes:
       - ../client/:/src/client/
+      - ../pages/:/src/pages/
       - client:/src/client/output/
 
 volumes:
