@@ -1,7 +1,13 @@
 <script>
+  [% pages_url = "https://pages.anyfile-notepad.semaan.ca" %]
+
+  [% IF WEBDEV %]
+  [% pages_url = "http://localhost:8000/pages" %]
+  [% END %]
+
   $(function(){
       var m = new MDRenderer({
-        url : getQueryParam("test") ? 'https://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].test.markdown' : 'https://pages.anyfile-notepad.semaan.ca/[% PAGE_KEY %].markdown', 
+        url : getQueryParam("test") ? '[% pages_url %]/[% PAGE_KEY %].test.markdown' : '[% pages_url %]/[% PAGE_KEY %].markdown', 
         columns : [% COLUMNS %],
         destination : '.home_content',
       });

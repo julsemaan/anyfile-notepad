@@ -125,10 +125,14 @@ function pages() {
       COLUMNS=1
     fi
 
-    perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', '.']}) ; \$tt->process('site/layout.tt', {APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID', PAGE_KEY => '$page', COLUMNS => $COLUMNS}, '$COMPILED_APP/site/$page.html') || die \$tt->error()"
+    perl -MTemplate -e "\$tt = Template->new({INCLUDE_PATH => ['$COMPILED_APP', '.']}) ; \$tt->process('site/layout.tt', {WEBDEV => '$WEBDEV', APP_VERSION_ID => '$APP_VERSION_ID', APP_VERSION => '$APP_VERSION', APP_COMMIT_ID => '$APP_COMMIT_ID', PAGE_KEY => '$page', COLUMNS => $COLUMNS}, '$COMPILED_APP/site/$page.html') || die \$tt->error()"
   done 
 
   cp $COMPILED_APP/site/home.html $COMPILED_APP/index.html
+  
+  if is_webdev; then
+    cp -a pages $COMPILED_APP/
+  fi
 }
 
 function application_css() {
@@ -211,7 +215,7 @@ function app() {
   fi
 
   cp editor-layout.tt $COMPILED_APP/editor-layout.tt
-  perl render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
+  perl render.pl --WEBDEV=$WEBDEV --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
 }
 
 function public_assets() {
