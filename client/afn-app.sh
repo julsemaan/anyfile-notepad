@@ -131,7 +131,7 @@ function pages() {
   cp $COMPILED_APP/site/home.html $COMPILED_APP/index.html
   
   if is_webdev; then
-    cp -a /src/pages $COMPILED_APP/
+    cp -a pages $COMPILED_APP/
   fi
 }
 
