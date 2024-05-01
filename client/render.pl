@@ -20,7 +20,7 @@ GetOptions(
 
 my $tt = Template->new({INCLUDE_PATH => [$COMPILED_APP_DIR, '.']}); 
 
-my @THEMES;
+my @THEMES = ({theme_name => "__default__", theme_display_name => "Default"});
 
 opendir(my $ace_dir, "$COMPILED_APP_DIR/ace.js") or die("Can't open themes dir : $!");
 while(my $file = readdir $ace_dir) {
