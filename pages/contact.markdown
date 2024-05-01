@@ -57,6 +57,7 @@ $(function(){
   }
   $('form').submit(function(e){
     $("#invalid_input").addClass("hide");
+    $('button').prop('disabled', true);
     e.preventDefault();
     $.ajax({
       type: "POST",
