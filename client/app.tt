@@ -43,11 +43,6 @@
   </script>
     
   [% IF WITH_ADS %]
-	<div class="desktop-ads">
-    <div id='banner-160x600-1'>
-        <script>googletag.cmd.push(function() { googletag.display('banner-160x600-1'); });</script>
-    </div>
-	</div>
   <script class="template" type="text/x-handlebars">
     {{> sliding-ad }}
   </script>
