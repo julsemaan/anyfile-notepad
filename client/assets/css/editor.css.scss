@@ -637,18 +637,7 @@ li a.btn-primary {
 }
 
 .desktop-ads {
-  position:fixed;
-  right:0;
-  top:65px;
   display:none;
-
-  p {
-    width:$desktop-ad-width;
-    text-align:center;
-    background-color:#3f51b5;
-    padding:5px;
-    font-size:90%;
-  }
 }
 
 [name=upgrade] {
