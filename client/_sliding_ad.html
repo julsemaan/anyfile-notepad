@@ -1,17 +1,21 @@
 <script data-partial-name="sliding-ad" class="template-partial" type="text/x-handlebars-template">
 
 <div class="sliding-ad">
+  <div class="progress">
+    <div class="progress-bar progress-bar-info" style="width:100%"></div>
+  </div>
   <a class="btn btn-primary btn-fab btn-raised mdi-action-schedule"></a>
   <div id="banner-480x320-1">
   {{{script_tag}}}googletag.cmd.push(function() { googletag.display("banner-480x320-1"); });{{{script_close}}}
   </div>
-  <span id="sliding-ad-seconds-remaining">5</span>
+  <span id="sliding-ad-seconds-remaining">10</span>
 </div>
 
 {{{script_tag}}}
 
 var slidingAdsFunc = function() {
   var secondsElem = $("#sliding-ad-seconds-remaining");
+  var initial = secondsElem.html();
   var btn = secondsElem.closest(".sliding-ad").find(".btn");
   btn.prop("disabled", true);
 
@@ -19,6 +23,8 @@ var slidingAdsFunc = function() {
     var remaining = parseInt(secondsElem.html());
     remaining -= 1;
     secondsElem.html(remaining);
+      
+    secondsElem.closest(".sliding-ad").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
 
     if(remaining <= 0) {
       clearInterval(slidingAdsInterval);
