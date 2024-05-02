@@ -764,3 +764,25 @@ li a.btn-primary {
     text-align:center;
   }
 }
+
+div.sliding-ad {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width: 500px;
+  height: 340px;
+  z-index:1000;
+  background-color: red;
+  
+  a.btn {
+    position: absolute;
+    top:-15px;
+    right:-15px;
+    border-radius:100%;
+    width: 30px;
+    height: 30px;
+    padding-left: 5px;
+    padding-top: 5px;
+    font-size: 20px;
+  }
+}
