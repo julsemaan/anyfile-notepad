@@ -1,18 +1,42 @@
 <script data-partial-name="sliding-ad" class="template-partial" type="text/x-handlebars-template">
 
 <div class="sliding-ad">
-  <a class="btn btn-primary btn-fab btn-raised mdi-navigation-close"></a>
+  <a class="btn btn-primary btn-fab btn-raised mdi-action-schedule"></a>
   <div id="banner-480x320-1">
   {{{script_tag}}}googletag.cmd.push(function() { googletag.display("banner-480x320-1"); });{{{script_close}}}
   </div>
+  <span id="sliding-ad-seconds-remaining">5</span>
 </div>
 
 {{{script_tag}}}
-$('.sliding-ad .btn').click(function(e){
-  e.preventDefault();
-  $('.sliding-ad').fadeOut();
-  return false;
-});
+
+var slidingAdsFunc = function() {
+  var secondsElem = $("#sliding-ad-seconds-remaining");
+  var btn = secondsElem.closest(".sliding-ad").find(".btn");
+  btn.prop("disabled", true);
+
+  var slidingAdsInterval = setInterval(function() {
+    var remaining = parseInt(secondsElem.html());
+    remaining -= 1;
+    secondsElem.html(remaining);
+
+    if(remaining <= 0) {
+      clearInterval(slidingAdsInterval);
+      btn.addClass("mdi-navigation-close");
+      btn.prop("disabled", false);
+
+      $('.sliding-ad .btn').click(function(e){
+        e.preventDefault();
+        $('.sliding-ad').fadeOut();
+        return false;
+      });
+
+    }
+  }, 1000)
+}
+
+slidingAdsFunc();
+
 {{{script_close}}}
 
 </script>
