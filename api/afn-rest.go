@@ -310,7 +310,7 @@ func handleStats(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Stats request from %s", statsRequest["ip"])
 		switch statsRequest["type"] {
 		case "increment":
-			log.Printf("Incrementing %s", statsRequest["key"])
+			log.Printf("afn.stats-hits.%s from %s", statsRequest["key"], statsRequest["ip"])
 			statsdConn.Increment(statsRequest["key"])
 		}
 		w.Write([]byte("OK"))
