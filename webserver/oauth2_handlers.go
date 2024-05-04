@@ -18,7 +18,7 @@ func getGoogleOauth2Conf(opts googleOauth2ConfOptions) *oauth2.Config {
 	var googleOauth2Conf = &oauth2.Config{
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-		RedirectURL:  os.Getenv("APP_BASE_URL") + "/api/oauth2/google/callback",
+		RedirectURL:  appBaseURL + "/api/oauth2/google/callback",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/drive.file",
 			"https://www.googleapis.com/auth/userinfo.email",
