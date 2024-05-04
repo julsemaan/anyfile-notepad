@@ -45,31 +45,27 @@
   </div>
   
   {{{ concat "<scr" "ipt>" }}}
+  var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
+  doc.open();
+  var ads = Handlebars.compile($('#upgrade-ads').html());
+  doc.write(ads());
+  doc.close();
 
-  var proposeUpgradeFunc = function() {
-    var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
-    doc.open();
-    var ads = Handlebars.compile($('#upgrade-ads').html());
-    doc.write(ads());
-    doc.close();
+  var secondsElem = $("#propose-upgrade-seconds-remaining");
+  var initial = secondsElem.html();
+  var i = setInterval(function() {
+    var remaining = parseInt(secondsElem.html());
+    remaining -= 1;
+    secondsElem.html(remaining);
 
-    var secondsElem = $("#propose-upgrade-seconds-remaining");
-    var initial = secondsElem.html();
-    var i = setInterval(function() {
-      var remaining = parseInt(secondsElem.html());
-      remaining -= 1;
-      secondsElem.html(remaining);
+    secondsElem.closest(".propose-upgrade-timer").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
 
-      secondsElem.closest(".propose-upgrade-timer").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
-
-      if(remaining <= 0) {
-        clearInterval(i);
-        secondsElem.closest(".propose-upgrade-timer").hide();
-        secondsElem.closest(".modal").find(".modal-footer").show();
-      }
-    }, 1000)
-  }
-  proposeUpgradeFunc();
+    if(remaining <= 0) {
+      clearInterval(i);
+      secondsElem.closest(".propose-upgrade-timer").hide();
+      secondsElem.closest(".modal").find(".modal-footer").show();
+    }
+  }, 1000)
 
   {{{ concat "</scr" "ipt>" }}}
 
