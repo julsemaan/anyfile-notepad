@@ -79,6 +79,7 @@ jobs:
       - uses: frenck/action-setup-yq@v1
 
       - name: PR tag change to afn-k8s
+        if: github.ref != 'refs/heads/beta'
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
@@ -101,8 +102,8 @@ jobs:
           (gh pr list --state open --limit 1 --head $BRANCH_NAME | grep $BRANCH_NAME) || \
             gh pr create -B main -H $BRANCH_NAME --title "Update images $BRANCH_ID" --body 'Created by Github action'
 
-      #TODO: shouldn´t be pushing the same image for prod/dev client
       - name: PR tag change to afn-k8s
+        if: github.ref == 'refs/heads/beta'
         env:
           IMG_TAG: ${{needs.docker.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
