@@ -107,6 +107,10 @@ func setupHandlers() {
 
 	api.POST("/billing/stripe-hook", handleStripeHook)
 
+	googleOauth2Group := api.Group("/oauth2/google")
+	googleOauth2Group.GET("/authorize", handleGoogleOauth2Authorize)
+	googleOauth2Group.GET("/callback", handleGoogleOauth2Callback)
+
 	apiHandler = r
 
 	InfoPrint("Serving production application from", *prodAppPath)

@@ -1,4 +1,4 @@
-FROM golang:1.16-bullseye AS build
+FROM golang:1.22-bullseye AS build
 
 WORKDIR /src/webserver
 
@@ -7,7 +7,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN go build -o /out/webserver
+RUN --mount=type=cache,target=/root/.cache/go-build go build -v -o /out/webserver
 
 FROM debian:bullseye as bin
 
