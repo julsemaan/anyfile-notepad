@@ -43,9 +43,12 @@
   </script>
     
   [% IF WITH_ADS %]
-  <script class="template" type="text/x-handlebars">
-    {{> sliding-ad }}
-  </script>
+	<div class="desktop-ads">
+<div id='banner-160x600-1'>
+    <script>googletag.cmd.push(function() { googletag.display('banner-160x600-1'); });</script>
+</div>
+	</div>
+  <script type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
   [% END %]
 </div>
 

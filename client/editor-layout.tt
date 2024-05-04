@@ -23,7 +23,7 @@
     <script>
 
         googletag.cmd.push(function() {
-            googletag.defineSlot("/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_480x320_1", [480, 320], "banner-480x320-1").addService(googletag.pubads());
+            googletag.defineSlot('/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_160x600_1', [160, 600], 'banner-160x600-1').addService(googletag.pubads());
             googletag.pubads().collapseEmptyDivs(true);
             googletag.enableServices();
         });
