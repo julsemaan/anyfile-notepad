@@ -23,6 +23,30 @@ services:
       - client:/var/www/client
       - ../webserver/:/src/webserver/
       - /root/.cache/go-build:/root/.cache/go-build
+  api:
+    entrypoint: bash
+    command:
+      - -c
+      - |
+        apt update && apt install -y inotify-tools
+        while true; do
+          cd /src/api
+          ./api &
+          inotifywait -r -e create,modify,delete .
+          pkill -9 -f api
+          make
+        done
+    build:
+      context: ../api/
+      target: build
+    ports:
+      - 8001:8080
+    env_file:
+      - .env
+    volumes:
+      - api:/var/www/api
+      - ../api/:/src/api/
+      - /root/.cache/go-build:/root/.cache/go-build
   client:
     entrypoint: bash
     command:
@@ -39,5 +63,6 @@ services:
       - client:/src/client/output/
 
 volumes:
+  api:
   client:
 
