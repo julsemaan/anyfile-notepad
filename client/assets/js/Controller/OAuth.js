@@ -12,7 +12,6 @@ function GoogleOAuthController(options){
 
 GoogleOAuthController.prototype.init = function(){
   var self = this;
-  setTimeout(function(){self.check_authed()}, 15000)
   this.add_to_queue(function(){
     User.current_user(function(user){self.current_user = user});
   });
@@ -47,12 +46,6 @@ GoogleOAuthController.prototype.init = function(){
 
 GoogleOAuthController.prototype.do_auth = function(user_id){
   var self = this
-  var isBack = false;
-
-  self.go_google_auth(user_id);
-}
-
-GoogleOAuthController.prototype.go_google_auth = function(user_id) {
   sessionStorage.google_auth_return_to = window.location;
   var url = "/api/oauth2/google/authorize";
   if(user_id) {
@@ -63,25 +56,18 @@ GoogleOAuthController.prototype.go_google_auth = function(user_id) {
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  self.go_google_auth(user_id);
+  self.do_auth(user_id);
 }
 
 GoogleOAuthController.prototype.switch_user = function() {
   var self = this;
-  self.go_google_auth();
+  self.do_auth();
 }
 
 GoogleOAuthController.prototype.setToken = function(token) {
   setCookie('access_token', token, 1);
   sessionStorage.access_token = token;
   gapi.client.setToken({"access_token":token});
-}
-
-GoogleOAuthController.prototype.post_auth = function(token, callback){
-  var self = this;
-  self.setToken(token);
-  self.ready()
-  callback();
 }
 
 GoogleOAuthController.prototype.ready = function(){
@@ -99,18 +85,8 @@ GoogleOAuthController.prototype.add_to_queue = function(to_do){
 }
 
 GoogleOAuthController.prototype.show_reauth = function(){
-  $('#reauthenticate_modal').modal('show')
-}
-
-GoogleOAuthController.prototype.auth_failed = function(){
-  //$('#auth_failed_modal').modal('show')
-
-}
-
-GoogleOAuthController.prototype.check_authed = function(){
-  if(!this.authed){
-    this.auth_failed()
-  }
+  StatIncrement.record("GoogleOAuthController.prototype.show_reauth");
+  new Popup({ message : i18n('Failed to communicate with Google servers. Please restart the app.'), callback : function(result) {if(result) application.controllers.editor.restart_app(true)}, confirm_btn : i18n('Restart now')});
 }
 
 GoogleOAuthController.prototype.execute_request = function(request, callback, options){
