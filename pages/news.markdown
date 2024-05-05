@@ -1,6 +1,6 @@
 # Realtime collaboration is staying with a new in-house implementation
 
-## TLDR (Too long don't read)
+## TLDRR (Too long don't read)
 
 After Google has announced the end of the Google Drive realtime API, we were pretty sure we would have to remove support for realtime collaboration. Thanks to the new revenue streams (ads and subscriptions), we were able to replace this with an in-house implementation and offer it to all users free of charge.
 

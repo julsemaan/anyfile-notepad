@@ -1,28 +1,17 @@
 services:
-  webserver:
+  admin:
+    image: python:3
     entrypoint: bash
     command:
       - -c
       - |
-        apt update && apt install -y inotify-tools
-        while true; do
-          cd /src/webserver
-          ./webserver &
-          inotifywait -r -e create,modify,delete .
-          pkill -9 -f webserver
-          make
-        done
-    build:
-      context: ../webserver/
-      target: build
+        cd /src/admin
+        python3 -m http.server 8002
     ports:
-      - 8000:8000
-    env_file:
-      - .env
+      - 8002:8002
     volumes:
-      - client:/var/www/client
-      - ../webserver/:/src/webserver/
-      - /root/.cache/go-build:/root/.cache/go-build
+      - ../admin/:/src/admin/
+
   api:
     entrypoint: bash
     command:
@@ -49,6 +38,7 @@ services:
       - api:/var/www/api
       - ../api/:/src/api/
       - /root/.cache/go-build:/root/.cache/go-build
+
   client:
     entrypoint: bash
     command:
@@ -64,6 +54,31 @@ services:
       - ../pages/:/src/client/pages/
       - ../admin/:/src/client/admin/
       - client:/src/client/output/
+
+  webserver:
+    entrypoint: bash
+    command:
+      - -c
+      - |
+        apt update && apt install -y inotify-tools
+        while true; do
+          cd /src/webserver
+          ./webserver &
+          inotifywait -r -e create,modify,delete .
+          pkill -9 -f webserver
+          make
+        done
+    build:
+      context: ../webserver/
+      target: build
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    volumes:
+      - client:/var/www/client
+      - ../webserver/:/src/webserver/
+      - /root/.cache/go-build:/root/.cache/go-build
 
 volumes:
   api:
