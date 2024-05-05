@@ -274,7 +274,7 @@ fi
 function watch_dir() {
   DIR=$1
   ACTION=$2
-  OPTIONS=$3
+  OPTIONS=${3:-}
   while true; do
     inotifywait $OPTIONS -r -e create,modify,delete $RUNNING_DIR/$DIR
     for action in $2; do
