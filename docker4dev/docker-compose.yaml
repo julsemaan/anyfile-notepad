@@ -52,7 +52,6 @@ services:
     volumes:
       - ../client/:/src/client/
       - ../pages/:/src/client/pages/
-      - ../admin/:/src/client/admin/
       - client:/src/client/output/
 
   webserver:
