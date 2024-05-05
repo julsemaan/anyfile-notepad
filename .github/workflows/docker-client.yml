@@ -113,7 +113,7 @@ jobs:
           BRANCH_NAME=tmp/$BRANCH_ID
 
           # The branch already exists from the previous step
-          git checkout $BRANCH_NAME
+          git checkout $BRANCH_NAME || true
           git checkout -b $BRANCH_NAME
 
           yq -i '.backend.'$CHANGE_TYPE'.tag = "'$IMG_TAG'"' charts/afn/values.yaml
