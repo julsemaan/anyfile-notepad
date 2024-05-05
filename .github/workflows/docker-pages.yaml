@@ -10,7 +10,7 @@ on:
     branches: ['**']
 
 jobs:
-  docker:
+  docker-pages:
     runs-on: ubuntu-latest
     outputs:
       img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
@@ -39,7 +39,7 @@ jobs:
             --push-retry 5
       
   pr_afn_k8s:
-    needs: docker
+    needs: docker-pages
     concurrency:
       group: prs-to-afn-k8s
       cancel-in-progress: false
@@ -56,7 +56,7 @@ jobs:
 
       - name: PR tag change to afn-k8s
         env:
-          IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          IMG_TAG: ${{needs.docker-pages.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
           CHANGE_TYPE: pages
         run: |

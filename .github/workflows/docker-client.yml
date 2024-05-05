@@ -13,7 +13,7 @@ on:
     branches: ['**']
 
 jobs:
-  docker:
+  docker-client:
     runs-on: ubuntu-latest
     outputs:
       img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
@@ -65,7 +65,7 @@ jobs:
             --build-arg=SRC_IMAGE=ghcr.io/julsemaan/anyfile-notepad/client-full:${{ env.IMG_TAG }}
 
   pr_afn_k8s:
-    needs: docker
+    needs: docker-client
     concurrency:
       group: prs-to-afn-k8s
       cancel-in-progress: false
@@ -83,7 +83,7 @@ jobs:
       - name: PR tag change to afn-k8s
         if: github.ref != 'refs/heads/beta'
         env:
-          IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          IMG_TAG: ${{needs.docker-client.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
           CHANGE_TYPE: appProdImage
         run: |
@@ -107,7 +107,7 @@ jobs:
       - name: PR tag change to afn-k8s
         if: github.ref == 'refs/heads/beta'
         env:
-          IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          IMG_TAG: ${{needs.docker-client.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
           CHANGE_TYPE: appDevImage
         run: |

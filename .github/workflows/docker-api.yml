@@ -10,7 +10,7 @@ on:
     branches: ['**']
 
 jobs:
-  docker:
+  docker-api:
     runs-on: ubuntu-latest
     outputs:
       img_tag: ${{ steps.preserve_img_tag.outputs.img_tag }}
@@ -39,7 +39,7 @@ jobs:
           extra_args: --push-retry 5
 
   deploy:
-    needs: docker
+    needs: docker-api
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +74,7 @@ jobs:
             ${{ secrets.AFN_MANAGER_DEPLOY_API_SCRIPT }} ghcr.io/julsemaan/anyfile-notepad/api:${{ steps.deploy-env.outputs.TARGET_IMAGE }} ${{ steps.deploy-env.outputs.TARGET_SERVERS }}
 
   pr_afn_k8s:
-    needs: docker
+    needs: docker-api
     concurrency:
       group: prs-to-afn-k8s
       cancel-in-progress: false
@@ -91,7 +91,7 @@ jobs:
 
       - name: PR tag change to afn-k8s
         env:
-          IMG_TAG: ${{needs.docker.outputs.img_tag}}
+          IMG_TAG: ${{needs.docker-api.outputs.img_tag}}
           GH_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
         run: |
           BRANCH_ID=`date "+%Y%m%d"`
