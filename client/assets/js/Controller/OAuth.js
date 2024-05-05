@@ -6,7 +6,6 @@ function GoogleOAuthController(options){
   this.authed = false
   this.current_user = undefined
   this.client = undefined;
-  //this.init()
   this.queue = [];
 }
 
