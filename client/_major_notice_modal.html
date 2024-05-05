@@ -1,3 +1,10 @@
+<script>
+function newGoogleAuthBetaTry() {
+  application.controllers.editor.major_notice_pref.refreshAndSet(parseInt($('#major_notice_modal').attr('data-version')), application.controllers.editor, application.controllers.editor.show_reauth)
+  application.try_dev_mode();
+}
+</script>
+        
 <script class="template-partial" data-partial-name="major_notice_modal" type="text/x-handlebars">
 <div class="modal fade" id="major_notice_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false" data-version="8">
   <div class="modal-dialog">
@@ -6,8 +13,8 @@
         <h4>New BETA version available for early adoption</h4>
 
         <p>The new version includes a major improvement around Google Authentication to prevent the frequent "Authorize" prompts.</p>
-        
-        <a href='javascript:void(0)' onclick='javascript:application.try_dev_mode()'>Click here to try out the BETA version!</a>
+
+        <a href='javascript:void(0)' onclick='javascript:newGoogleAuthBetaTry()'>Click here to try out the BETA version!</a>
           
         <hr>
 
