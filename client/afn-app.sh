@@ -1,6 +1,8 @@
 #!/bin/bash
 
-WEBDEV="$1"
+set -o nounset -o pipefail -o errexit
+
+WEBDEV="${1:-}"
 function is_webdev() {
   if [ "$WEBDEV" == "webdev" ]; then
     return 0
