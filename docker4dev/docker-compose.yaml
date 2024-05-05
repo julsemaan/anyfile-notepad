@@ -43,6 +43,8 @@ services:
       - 8001:8080
     env_file:
       - .env
+    environment:
+      AFN_REST_DATA_DIR: /var/www/api
     volumes:
       - api:/var/www/api
       - ../api/:/src/api/
@@ -60,6 +62,7 @@ services:
     volumes:
       - ../client/:/src/client/
       - ../pages/:/src/client/pages/
+      - ../admin/:/src/client/admin/
       - client:/src/client/output/
 
 volumes:
