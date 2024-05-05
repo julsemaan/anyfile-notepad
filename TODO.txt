@@ -1,10 +1,10 @@
 X Implement auto-detection of dark mode
 X Debounce SUBMIT on contact form
 X Create sliding pane with adflare ad instead of infolinks
+X Have branch + GHA flow for BETA JS app
+- Prevent Authorize prompt from always coming up
 - afn-app.sh needs exit on fail, pipe fail, etc
-- Have branch + GHA flow for BETA JS app
+- Implement stats monitoring via API with Prometheus
 - Implement dark mode in menus and for the header
 - Use JWT instead of session ID for afn-pp session (no need to sync sessions after)
-- Prevent Authorize prompt from always coming up
-- Implement stats monitoring via API
 
