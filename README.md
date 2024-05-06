@@ -2,87 +2,39 @@
 
 Anyfile Notepad is a Google Drive compatible app that let's you open any type of files on Google Drive and Dropbox.
 
-This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app and is composed of 3 services:
+This repository hosts the code that powers https://anyfile-notepad.semaan.ca/app and is composed of 4 services:
 - First and foremost, the client code which encapsulates the application code
 - Second, a webserver that serves the client code and encapsulates the paid subscriptions logic
 - Third, an API (api.anyfile-notepad.semaan.ca) to serve the data that backs the application (syntaxes, extensions and mime types configuration)
 - Fourth, a simple administrative interface to manage the three resources above (admin.anyfile-notepad.semaan.ca)
 
-## Building the client side app
+## Dev environment setup
 
-> NOTE: These instructions are made for Linux and were tested on Debian 8
+NOTE: The instructions were tested on Ubuntu but will work with some adjustments on any machine that has `docker` and `docker-compose`
 
-### Templating setup
+### Install docker and docker-compose
 
-First, install `perl`, `cpan`, `gcc`, `curl` and `make` from your distribution repository. Then install these packages from CPAN:
+Install docker using these instructions: https://docs.docker.com/engine/install/ubuntu/
 
-```
-# apt-get install perl gcc curl make
-# cpan Template Getopt::Long JSON File::Slurp Tie::IxHash
-```
-
-### Assets package manager setup
-
-Next, install `npm`.
+Ensure you then install the docker compose plugin:
 
 ```
-# apt-get install npm
-# ln -s /usr/bin/nodejs /usr/bin/node
+# apt-get install docker-compose-plugin
 ```
 
-### Setting up the app dependencies
+### Cloning the repo
 
-Then, clone the repo, and launch the install of the assets of the app.
-
+First, clone the repo and cd into its directory
 ```
-# git clone https://github.com/julsemaan/anyfile-notepad.git
+# git clone https://github.com/julsemaan/anyfile-notepad
 # cd anyfile-notepad
-# npm install
-# ./node_modules/.bin/bower install
 ```
 
-### Basic configuration and initial launch
-
-After that, you need to setup the variables that are proper to your setup via `client/assets/js/VARS.js.example` (for now, the defaults should do it).
+Next, setup the empty vars file (you will be editing these afterwards)
 
 ```
-# cp client/assets/js/VARS.js.example client/assets/js/VARS.js
+# make dev-vars
 ```
-
-Then, launch the build script and ensure no error or warning shows.
-
-```
-# ./afn-app.sh 
-...
-A lot of output to build ace.js the first time
-...
-Building pages.css
-Building site pages
--Building page home
--Building page faq
--Building page news
--Building page help_translate
-Building application.css
-Building application.js
-Fetching extensions.json
-Fetching syntaxes.json
-Fetching mime_types.json
-Building app.partials
-Building app
-```
-
-The app will then be compiled into static pages and assets that can be served using any basic hosting service. These files will be in `tmp/app-compiled/`
-
-### Using the integrated development server
-
-You can run the Golang webserver directly from the build script but you will need to have Golang and `inotifywait` installed. You will then be able to use the following command to serve the files locally and rebuild the app on changes in the `client/` directory.
-
-```
-# apt-get install python inotify-tools
-# ./afn-app.sh webdev
-```
-
-The application will then be available through `http://localhost:8000`.
 
 ### Setting up Google Drive for the app
 
@@ -94,7 +46,7 @@ Here are some tips on how to configure it:
  * You will be calling the API using a *Web application / Javascript*
  * You will require access to the user data
  * The authorized javascript origin should be `http://localhost:8000` if using the local dev server that is included with the app build script.
- * The authorized URI should be `http://localhost:8000/app.html` if using the local dev server that is included with the app build script.
+ * The authorized URI should be `http://localhost:8000/api/oauth2/google/callback` if using the local dev server that is included with the app build script.
 
 Once your application and credentials are created, you will need to get the *Client ID* from the credentials you created as well as the *Drive App ID*. So, if your *Credentials Client ID* is `362162162007-o0uhasgsdlte2s2or9cr265bg2bhvth1.apps.googleusercontent.com`, your *Drive App ID* will be `362162162007` (the first part of the ID prior to the `-`).
 
@@ -102,20 +54,25 @@ Then, open `client/assets/js/VARS.js` and configure it with your Google Drive in
 
 ```
 window.AFN_VARS = {
-  api_uri:"",
+  <...>
   google_client_id:"362162162007-o0uhasgsdlte2s2or9cr265bg2bhvth1.apps.googleusercontent.com",
   drive_app_id:"362162162007",
-  dropbox_key:"dummy",
+  <...>
 };
 ```
 
-> WARNING: Unless you have the intention of setting up Dropbox, make sure you put a dummy key in the VARS.js file. Otherwise, the app won't boot since this parameter will be missing.
+Next, open `docker4dev/.env` and add the following to it:
 
-Once you've setup the Drive integration, rebuild the application using `afn-app.sh`.
+```
+GOOGLE_CLIENT_ID=<your oauth2 client id>
+GOOGLE_CLIENT_SECRET=<your oauth2 client secret>
+```
 
-Should any issue arise in the app boot, make sure to look at the Javascript console for any error.
+### Creating the Google API key for the file picker
 
-If you were brave enough to reach the end of the setup and are having issues setting it up, feel free to open an issue in this repository.
+## Setting up Stripe
+
+## Setting up email notifications
 
 # Licence
 
