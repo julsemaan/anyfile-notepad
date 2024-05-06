@@ -70,6 +70,15 @@ GOOGLE_CLIENT_SECRET=<your oauth2 client secret>
 
 ### Creating the Google API key for the file picker
 
+### Starting the environment
+
+```
+cd docker4dev/
+docker compose up --build
+```
+
+Once all containers have started, the application will be available on http://localhost:8000
+
 ## Setting up Stripe
 
 ## Setting up email notifications
