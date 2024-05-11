@@ -45,12 +45,25 @@ GoogleOAuthController.prototype.init = function(){
 
 GoogleOAuthController.prototype.do_auth = function(user_id){
   var self = this
-  sessionStorage.google_auth_return_to = window.location;
-  var url = "/api/oauth2/google/authorize";
-  if(user_id) {
-    url += "?login_hint="+user_id;
+  var auth = function() {
+    sessionStorage.google_auth_return_to = window.location;
+    var url = "/api/oauth2/google/authorize";
+    if(user_id) {
+      url += "?login_hint="+user_id;
+    }
+    window.location = url;
+  };
+
+  if(!sessionStorage.hasAuthedOnce) {
+    $('#auth_modal').modal('show')
+    $('#start_g_oauth').click(function() {
+      auth();
+    });
   }
-  window.location = url;
+  else {
+    auth();
+  }
+
 }
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
@@ -67,6 +80,7 @@ GoogleOAuthController.prototype.setToken = function(token) {
   setCookie('access_token', token, 1);
   sessionStorage.access_token = token;
   gapi.client.setToken({"access_token":token});
+  sessionStorage.hasAuthedOnce = true;
 }
 
 GoogleOAuthController.prototype.ready = function(){
