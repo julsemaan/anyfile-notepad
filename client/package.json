@@ -5,7 +5,7 @@
     "bower": ">0.0.0",
     "dropbox": "<3.0.0",
     "minify": "2.1.8",
-    "node-sass": ">9.0.0",
+    "node-sass": ">=9.0.0",
     "tether-shepherd": "^1.8.1"
   }
 }
