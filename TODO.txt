@@ -3,7 +3,7 @@ X Debounce SUBMIT on contact form
 X Create sliding pane with adflare ad instead of infolinks
 X Have branch + GHA flow for BETA JS app
 X afn-app.sh needs exit on fail, pipe fail, etc
-- Prevent Authorize prompt from always coming up
+X Prevent Authorize prompt from always coming up
 - Reimplement authorize prompt and switch user prompt to let users know what's up before the redirect
 - Implement stats monitoring via API with Prometheus
 - Implement dark mode in menus and for the header
