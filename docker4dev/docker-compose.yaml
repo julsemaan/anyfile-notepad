@@ -1,15 +1,46 @@
-version: '3.8'
-
 services:
-  webserver:
-    build:
-      context: ../webserver/
+  admin:
+    image: python:3
+    entrypoint: bash
+    command:
+      - -c
+      - |
+        cd /src/admin
+        python3 -m http.server 8002
     ports:
-      - 8000:8000
+      - 8002:8002
+    volumes:
+      - ../admin/:/src/admin/
+
+  api:
+    entrypoint: bash
+    command:
+      - -c
+      - |
+        apt update && apt install -y inotify-tools
+        while true; do
+          cd /src/api
+          ./api &
+          inotifywait -r -e create,modify,delete .
+          pkill -9 -f api
+          make
+        done
+    build:
+      context: ../api/
+      target: build
+    ports:
+      - 8001:8080
     env_file:
       - .env
+    environment:
+      AFN_REST_DATA_DIR: /var/www/api
+      AFN_REST_USERNAME: deez
+      AFN_REST_PASSWORD: nuts
     volumes:
-      - client:/var/www/client
+      - api:/var/www/api
+      - ../api/:/src/api/
+      - /root/.cache/go-build:/root/.cache/go-build
+
   client:
     entrypoint: bash
     command:
@@ -25,6 +56,36 @@ services:
       - ../pages/:/src/client/pages/
       - client:/src/client/output/
 
+  webserver:
+    entrypoint: bash
+    command:
+      - -c
+      - |
+        apt update && apt install -y inotify-tools
+        while true; do
+          cd /src/webserver
+          ./webserver &
+          inotifywait -r -e create,modify,delete .
+          pkill -9 -f webserver
+          make
+        done
+    build:
+      context: ../webserver/
+      target: build
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    environment:
+      APP_BASE_URL: http://localhost:8000
+      AFN_PROD_APP_PATH: /var/www/client
+      AFN_DEV_APP_PATH: /var/www/client
+    volumes:
+      - client:/var/www/client
+      - ../webserver/:/src/webserver/
+      - /root/.cache/go-build:/root/.cache/go-build
+
 volumes:
+  api:
   client:
 

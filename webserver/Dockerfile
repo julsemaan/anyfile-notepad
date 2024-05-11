@@ -7,12 +7,10 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN --mount=type=cache,target=/root/.cache/go-build go build -v -o /out/webserver
+RUN --mount=type=cache,target=/root/.cache/go-build make
 
-FROM debian:bullseye as bin
+FROM alpine:3 as bin
 
-RUN apt update && apt install ca-certificates -yqq
-
-COPY --from=build /out/webserver /
+COPY --from=build /src/webserver/webserver /
 
 ENTRYPOINT /webserver
