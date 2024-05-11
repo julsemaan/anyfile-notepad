@@ -5,6 +5,7 @@ X Have branch + GHA flow for BETA JS app
 X afn-app.sh needs exit on fail, pipe fail, etc
 X Prevent Authorize prompt from always coming up
 - Reimplement authorize prompt and switch user prompt to let users know what's up before the redirect
+- Improve readme for setting up dev stuff
 - Implement stats monitoring via API with Prometheus
 - Implement dark mode in menus and for the header
 - Use JWT instead of session ID for afn-pp session (no need to sync sessions after)
