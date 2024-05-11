@@ -18,7 +18,7 @@ You may not use the Anyfile Notepad for any illegal or unauthorized purpose. You
 
 <h3>Account Payment</h3>
 
-You are billed at the start of each billing cycle (yearly) and the credit card we have on record for you is charged automatically. Payments are non-refundable, so there will be no refunds for any reason, such as canceling your account or downgrading your plan. Any such changes to your account will be effective on your next billing cycle (i.e. on the next yearly renewal).
+When subscribing to Anyfile Notepad++, you are billed at the start of each billing cycle (yearly) and the credit card we have on record for you is charged automatically. Payments are non-refundable and there will be no refunds for any reason, such as canceling your account or downgrading your plan. Any such changes to your account will be effective on your next billing cycle (i.e. on the next yearly renewal).
 
 For any upgrade or downgrade in plan level, your credit card will be automatically charged the new rate on your next billing cycle.
 
