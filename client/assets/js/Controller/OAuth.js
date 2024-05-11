@@ -6,13 +6,11 @@ function GoogleOAuthController(options){
   this.authed = false
   this.current_user = undefined
   this.client = undefined;
-  //this.init()
   this.queue = [];
 }
 
 GoogleOAuthController.prototype.init = function(){
   var self = this;
-  setTimeout(function(){self.check_authed()}, 15000)
   this.add_to_queue(function(){
     User.current_user(function(user){self.current_user = user});
   });
@@ -20,6 +18,11 @@ GoogleOAuthController.prototype.init = function(){
     application.propose_upgrade();
     self.keep_token_alive();
   });
+    
+
+  if(window.location.hash.match("^#google_access_token=")){
+    self.setToken(window.location.hash.replace("#google_access_token=", ""));
+  }
 
   if(!sessionStorage.access_token) {
     sessionStorage.access_token = getCookie("access_token");
@@ -34,86 +37,36 @@ GoogleOAuthController.prototype.init = function(){
     gapi.client.load('drive', 'v2', function(){
       gapi.load('picker', function() {
         var request = gapi.client.oauth2.userinfo.get();
-        application.controllers.google_oauth.execute_request(request, function(response){self.post_auth(true)})
+        application.controllers.google_oauth.execute_request(request, function(response){self.ready()})
       })
     })
   })
 }
 
-GoogleOAuthController.prototype.authorize_params = function(to_add) {
-  var self = this;
-  var base = {
-    client_id: self.client_id,
-    scope: self.scopes.join(" "),
-    ux_mode: 'popup',
-  };
-
-  if(User.get_session_user_id()){
-    base["user_id"] = User.get_session_user_id();
-  }
-
-  for (var attrname in to_add) { base[attrname] = to_add[attrname]; }
-
-  return base;
-}
-
-
 GoogleOAuthController.prototype.do_auth = function(user_id){
   var self = this
-  var isBack = false;
-
-  $('#auth_modal').modal('show')
-  $('#start_g_oauth').click(function(){
-    self.auth_popup(user_id)
-  })
-}
-
-GoogleOAuthController.prototype.auth_popup = function(user_id){
-  var self = this
-  //Do it without the immediate
-  var params = {callback: function(auth_result){self.post_auth(auth_result)}};
+  sessionStorage.google_auth_return_to = window.location;
+  var url = "/api/oauth2/google/authorize";
   if(user_id) {
-    params["hint"] = user_id;
+    url += "?login_hint="+user_id;
   }
-  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params(params))
-  this.client.requestAccessToken();
+  window.location = url;
 }
 
 GoogleOAuthController.prototype.auth_with_user = function(user_id, callback){
   var self = this;
-  this.client = google.accounts.oauth2.initTokenClient(self.authorize_params({hint : user_id, callback: function(auth_result){
-    application.controllers.editor.reset_collaboration();
-    self.post_auth(auth_result);
-    callback();
-  }}));
-  this.client.requestAccessToken({login_hint:user_id});
+  self.do_auth(user_id);
 }
 
 GoogleOAuthController.prototype.switch_user = function() {
   var self = this;
-  var previous_user = self.current_user;
-  self.auth_with_user(undefined, function(){
-    $('#app_restart_modal').modal('show'); 
-    window.location.hash = '#new' ; 
-    window.location.reload()
-  })
+  self.do_auth();
 }
 
-GoogleOAuthController.prototype.post_auth = function(auth_result){
-  var self = this;
-  if (auth_result && !auth_result.error) {
-    if(auth_result['access_token']) {
-      setCookie('access_token', auth_result['access_token'], 1)
-      sessionStorage.access_token = auth_result['access_token'];
-      gapi.client.setToken({"access_token":auth_result['access_token']});
-    }
-    self.ready()
-    $('#auth_modal').modal('hide')
-    //cool it worked
-  }
-  else{
-    this.auth_failed();
-  }
+GoogleOAuthController.prototype.setToken = function(token) {
+  setCookie('access_token', token, 1);
+  sessionStorage.access_token = token;
+  gapi.client.setToken({"access_token":token});
 }
 
 GoogleOAuthController.prototype.ready = function(){
@@ -131,18 +84,8 @@ GoogleOAuthController.prototype.add_to_queue = function(to_do){
 }
 
 GoogleOAuthController.prototype.show_reauth = function(){
-  $('#reauthenticate_modal').modal('show')
-}
-
-GoogleOAuthController.prototype.auth_failed = function(){
-  //$('#auth_failed_modal').modal('show')
-
-}
-
-GoogleOAuthController.prototype.check_authed = function(){
-  if(!this.authed){
-    this.auth_failed()
-  }
+  StatIncrement.record("GoogleOAuthController.prototype.show_reauth");
+  new Popup({ message : i18n('Failed to communicate with Google servers. Please restart the app.'), callback : function(result) {if(result) application.controllers.editor.restart_app(true)}, confirm_btn : i18n('Restart now')});
 }
 
 GoogleOAuthController.prototype.execute_request = function(request, callback, options){

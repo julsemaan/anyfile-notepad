@@ -729,8 +729,11 @@ EditorController.prototype.open_share_modal = function() {
   }
 }
 
-EditorController.prototype.restart_app = function() {
+EditorController.prototype.restart_app = function(skipConfirm) {
   var self = this;
+  if(skipConfirm) {
+    window.location.reload();
+  }
   new Popup({ message : i18n("Are you sure ?"), callback : function(result) {if(result) window.location.reload()}, confirm : true});
 }
 

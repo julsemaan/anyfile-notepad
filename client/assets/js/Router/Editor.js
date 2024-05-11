@@ -17,7 +17,7 @@ function EditorRouter(controller){
 
 EditorRouter.prototype.recordhashUrl = function() {
   // we don't want to record the access token hash
-  if(!window.location.hash.match('^#access_token')){
+  if(!window.location.hash.match('^#access_token') && !window.location.hash.match('^#google_access_token')){
     setCookie("last_hash_url", window.location.hash, 1);
   }
 }
@@ -117,6 +117,9 @@ EditorRouter.prototype.route = function(){
         window.location.hash = getCookie("last_hash_url") || "#new/Dropbox";
       });
     },
+    handle_google_token: function(transition){
+      window.location = sessionStorage.google_auth_return_to || "#new/GoogleDrive";
+    },
   };
 
   var action = actions[transition.targetName];
@@ -127,6 +130,10 @@ EditorRouter.prototype.route = function(){
 
   if(window.location.hash.match("^#access_token=")){
     actions.handle_dropbox_token();
+  }
+  
+  if(window.location.hash.match("^#google_access_token=")){
+    actions.handle_google_token();
   }
   
 // actions.redirect_new();
