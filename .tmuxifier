@@ -1,0 +1,16 @@
+session_root $PWD
+
+if initialize_session "afn"; then
+
+  new_window "compose"
+  run_cmd "cd docker4dev && docker compose up --build"
+
+  new_window "code"
+  split_v 1
+
+  select_window 2
+  select_pane 1
+fi
+
+finalize_and_go_to_session
+
