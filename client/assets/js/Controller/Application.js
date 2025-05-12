@@ -121,7 +121,7 @@ ApplicationController.prototype.propose_upgrade = function() {
 
   // If we reach the rotation count, we reset the counter + show the popup
   // Otherwise, we save the current count
-  if(true || count % 3 == 0) {
+  if(count % 3 == 0) {
     setCookie("propose-upgrade-count", 0);
     new Popup({ 
       title : i18n('Upgrade!'), 
