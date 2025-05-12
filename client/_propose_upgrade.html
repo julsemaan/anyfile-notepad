@@ -2,23 +2,13 @@
 <html style="overflow-y:hidden">
 <head>
 <title></title>
-{{{script_open}}} async src="//www.googletagservices.com/tag/js/gpt.js">{{{script_close}}}
-{{{script_open}}} type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js" async>{{{script_close}}}
-{{{script_open}}} type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js">{{{script_close}}}
 
-   	{{{script_tag}}} 
-
-        googletag.cmd.push(function() {
-            googletag.defineSlot("/61772569/dbmtiqbxqoopp7t3s9lq_anyfilenotepadsemaanca_480x320_1", [480, 320], "banner-480x320-1").addService(googletag.pubads());
-            googletag.pubads().collapseEmptyDivs(true);
-            googletag.enableServices();
-        });
-    {{{script_close}}}
+{{{script_open}}} type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0;{{{script_close}}}
+{{{script_open}}} type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js">{{{script_close}}}
 
 </head>
-<body style="padding:0;margin:0">
-<div id="banner-480x320-1">
-    {{{script_tag}}}googletag.cmd.push(function() { googletag.display("banner-480x320-1"); });{{{script_close}}}
+<body style="padding:0;margin:0;width:500px;height:400px;">
+<div>
 </div>
 </body>
 </html>
@@ -34,7 +24,7 @@
   </div>
 
   <div style="text-align:center">
-    <iframe style="border:none;width:500px;height:340px;" id="upgrade-frame-ad" src="about:blank"></iframe>
+    <iframe style="border:none;width:500px;height:400px;" id="upgrade-frame-ad" src="about:blank"></iframe>
   </div>
 
   <div class="propose-upgrade-timer">
@@ -45,28 +35,28 @@
   </div>
   
   {{{ concat "<scr" "ipt>" }}}
-  var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
-  doc.open();
-  var ads = Handlebars.compile($('#upgrade-ads').html());
-  doc.write(ads());
-  doc.close();
+    var doc = document.getElementById('upgrade-frame-ad').contentWindow.document;
+    doc.open();
+    var ads = Handlebars.compile($('#upgrade-ads').html());
+    doc.write(ads());
+    doc.close();
 
-  var secondsElem = $("#propose-upgrade-seconds-remaining");
-  var initial = secondsElem.html();
-  var i = setInterval(function() {
-    var remaining = parseInt(secondsElem.html());
-    remaining -= 1;
-    secondsElem.html(remaining);
+    var secondsElem = $("#propose-upgrade-seconds-remaining");
+    var initial = secondsElem.html();
+    var i = setInterval(function() {
 
-    secondsElem.closest(".propose-upgrade-timer").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
+      var remaining = parseInt(secondsElem.html());
+      remaining -= 1;
+      secondsElem.html(remaining);
 
-    if(remaining <= 0) {
-      clearInterval(i);
-      secondsElem.closest(".propose-upgrade-timer").hide();
-      secondsElem.closest(".modal").find(".modal-footer").show();
-    }
-  }, 1000)
+      secondsElem.closest(".propose-upgrade-timer").find(".progress-bar").css("width", (remaining/initial)*100 + "%");
 
+      if(remaining <= 0) {
+        clearInterval(i);
+        secondsElem.closest(".propose-upgrade-timer").hide();
+        secondsElem.closest(".modal").find(".modal-footer").show();
+      }
+    }, 1000)
   {{{ concat "</scr" "ipt>" }}}
 
 </script>
