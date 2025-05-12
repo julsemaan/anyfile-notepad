@@ -3,12 +3,17 @@
 <head>
 <title></title>
 
-{{{script_open}}} type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0;{{{script_close}}}
-{{{script_open}}} type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js">{{{script_close}}}
+{{{script_open}}} id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js">{{{script_close}}}
+
 
 </head>
 <body style="padding:0;margin:0;width:500px;height:400px;">
 <div>
+    {{{script_open}}} type="text/javascript">
+        aclib.runBanner({
+            zoneId: '9935426',
+        });
+    {{{script_close}}} 
 </div>
 </body>
 </html>
