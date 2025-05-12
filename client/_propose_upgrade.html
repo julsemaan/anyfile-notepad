@@ -44,7 +44,6 @@
   var secondsElem = $("#propose-upgrade-seconds-remaining");
   var initial = secondsElem.html();
   var i = setInterval(function() {
-
     var remaining = parseInt(secondsElem.html());
     remaining -= 1;
     secondsElem.html(remaining);
@@ -57,6 +56,7 @@
       secondsElem.closest(".modal").find(".modal-footer").show();
     }
   }, 1000)
+
   {{{ concat "</scr" "ipt>" }}}
 
 </script>
