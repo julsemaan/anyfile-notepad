@@ -43,13 +43,18 @@
     
   [% IF WITH_ADS %]
 	<div class="desktop-ads">
-    <div id='banner-160x600-1'>
-        <script type="text/javascript">
-            aclib.runBanner({
-                zoneId: '9935386',
-            });
-        </script>
-    </div>
+<div id='banner-160x600-1'>
+<script type="text/javascript">
+	atOptions = {
+		'key' : '17133d254dc58db1395ab65191071264',
+		'format' : 'iframe',
+		'height' : 600,
+		'width' : 160,
+		'params' : {}
+	};
+</script>
+<script async type="text/javascript" src="//imbueprescriptionhumiliation.com/17133d254dc58db1395ab65191071264/invoke.js"></script>
+</div>
 	</div>
   <script type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
   [% END %]
