@@ -20,8 +20,6 @@
     <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js"></script>
     <script type="text/javascript" src="https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"></script>
 
-    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-
     <script>
 
         googletag.cmd.push(function() {
@@ -41,15 +39,15 @@
   [% INCLUDE app.tt %]
 
   <script>
-    window._gapi_loaded = false;
+    var _gsi_loaded = false;
+    var _gapi_loaded = false;
     function gsi_loaded(){
-      if(!window._gapi_loaded) {
-        window._gapi_loaded = true;
-        application.controllers.google_oauth.init();
-      }
+      _gsi_loaded = true;
+      if(_gapi_loaded) application.controllers.google_oauth.init()
     }
     function gapi_loaded(){
-      gsi_loaded();
+      _gapi_loaded = true;
+      if(_gapi_loaded) application.controllers.google_oauth.init()
     }
   </script>
 
