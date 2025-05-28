@@ -40,12 +40,7 @@
 
   <script>
     var _gapi_loaded = false;
-    function gsi_loaded(){
-      if(!_gapi_loaded) {
-        _gapi_loaded = true;
-        application.controllers.google_oauth.init();
-      }
-    }
+    function gsi_loaded(){}
     function gapi_loaded(){
       if(!_gapi_loaded) {
         _gapi_loaded = true;
