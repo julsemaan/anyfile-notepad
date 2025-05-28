@@ -39,15 +39,18 @@
   [% INCLUDE app.tt %]
 
   <script>
-    var _gsi_loaded = false;
     var _gapi_loaded = false;
     function gsi_loaded(){
-      _gsi_loaded = true;
-      if(_gapi_loaded) application.controllers.google_oauth.init()
+      if(!_gapi_loaded) {
+        _gapi_loaded = true;
+        application.controllers.google_oauth.init();
+      }
     }
     function gapi_loaded(){
-      _gapi_loaded = true;
-      if(_gapi_loaded) application.controllers.google_oauth.init()
+      if(!_gapi_loaded) {
+        _gapi_loaded = true;
+        application.controllers.google_oauth.init();
+      }
     }
   </script>
 
