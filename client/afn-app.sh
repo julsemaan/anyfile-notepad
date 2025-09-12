@@ -239,7 +239,8 @@ function download_if_necessary() {
 }
 
 function json_resources() {
-  # Adding JSON resources (from prod for now...)
+  # Adding JSON resources (from prod for now...), change TS to trigger re-download in docker builds
+  TS=20250912
   download_if_necessary extensions.json https://api.anyfile-notepad.semaan.ca/extensions
   download_if_necessary syntaxes.json https://api.anyfile-notepad.semaan.ca/syntaxes
   download_if_necessary mime_types.json https://api.anyfile-notepad.semaan.ca/mime_types
