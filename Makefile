@@ -38,6 +38,18 @@ clean:
 	rm -fr client/fully-static/
 	rm -f client-dist.tgz
 
+.PHONY: go-test-all
+go-test-all:
+	cd webserver && go test ./...
+	cd api && go test ./...
+	cd utils && go test ./...
+
+.PHONY: go-coverage-all
+go-coverage-all:
+	cd webserver && go test ./... -covermode=atomic -coverprofile=coverage.out && go tool cover -func=coverage.out
+	cd api && go test ./... -covermode=atomic -coverprofile=coverage.out && go tool cover -func=coverage.out
+	cd utils && go test ./... -covermode=atomic -coverprofile=coverage.out && go tool cover -func=coverage.out
+
 .PHONY : deploy
 
 deploy:

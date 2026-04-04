@@ -17,6 +17,8 @@ import (
 
 var supportEmail = os.Getenv("AFN_SUPPORT_EMAIL")
 var appBaseURL = EnvOrDefault("APP_BASE_URL", "https://anyfile-notepad.semaan.ca")
+var prodAppPath = os.Getenv("AFN_PROD_APP_PATH")
+var devAppPath = os.Getenv("AFN_DEV_APP_PATH")
 
 var subscriptions = NewSubscriptions()
 var apiRegexp = regexp.MustCompile(`^/api`)
@@ -47,6 +49,12 @@ var aliasPaths = map[string]string{
 }
 
 func main() {
+	prodPathFlag := flag.String("prod-app-path", prodAppPath, "path to the production application files")
+	devPathFlag := flag.String("dev-app-path", devAppPath, "path to the production application files")
+	flag.Parse()
+	prodAppPath = *prodPathFlag
+	devAppPath = *devPathFlag
+
 	setup()
 
 	go func() {
@@ -85,10 +93,6 @@ func setupSessionsPersistence() {
 }
 
 func setupHandlers() {
-	prodAppPath := flag.String("prod-app-path", os.Getenv("AFN_PROD_APP_PATH"), "path to the production application files")
-	devAppPath := flag.String("dev-app-path", os.Getenv("AFN_DEV_APP_PATH"), "path to the production application files")
-	flag.Parse()
-
 	r := gin.Default()
 	api := r.Group("/api")
 
@@ -113,11 +117,11 @@ func setupHandlers() {
 
 	apiHandler = r
 
-	InfoPrint("Serving production application from", *prodAppPath)
-	appProdHandler = http.FileServer(http.Dir(*prodAppPath))
+	InfoPrint("Serving production application from", prodAppPath)
+	appProdHandler = http.FileServer(http.Dir(prodAppPath))
 
-	InfoPrint("Serving development application from", *devAppPath)
-	appDevHandler = http.FileServer(http.Dir(*devAppPath))
+	InfoPrint("Serving development application from", devAppPath)
+	appDevHandler = http.FileServer(http.Dir(devAppPath))
 
 	var err error
 	eventsManager, err = golongpoll.StartLongpoll(golongpoll.Options{
@@ -178,6 +182,13 @@ func setupBlockedUsersMap() {
 }
 
 func setup() {
+	if prodAppPath == "" {
+		prodAppPath = os.Getenv("AFN_PROD_APP_PATH")
+	}
+	if devAppPath == "" {
+		devAppPath = os.Getenv("AFN_DEV_APP_PATH")
+	}
+
 	setupBlockedUsersMap()
 
 	setupSessionsPersistence()
