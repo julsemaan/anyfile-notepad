@@ -39,6 +39,7 @@ const (
 
 var contactRequestsCache = cache.New(24*time.Hour, 1*time.Minute)
 var maxContactRequestsPerDay = 10
+var sendEmail = utils.SendEmail
 
 var statsdConn, _ = statsd.New(statsd.Address(os.Getenv("AFN_STATSD_URI")))
 
@@ -303,7 +304,7 @@ Reply-To: {{.ReplyTo}}
 			ReplyTo: item.Payload["contact_email"].(string),
 		})
 		msg, _ := io.ReadAll(&msgBytes)
-		utils.SendEmail(emails, msg)
+		sendEmail(emails, msg)
 	}
 
 }

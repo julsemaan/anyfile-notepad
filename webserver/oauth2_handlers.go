@@ -14,6 +14,12 @@ type googleOauth2ConfOptions struct {
 	redirectUrl string
 }
 
+var googleOauth2ConfBuilder = getGoogleOauth2Conf
+
+var googleOauth2Exchange = func(code string) (*oauth2.Token, error) {
+	return googleOauth2ConfBuilder(googleOauth2ConfOptions{}).Exchange(oauth2.NoContext, code)
+}
+
 func getGoogleOauth2Conf(opts googleOauth2ConfOptions) *oauth2.Config {
 	var googleOauth2Conf = &oauth2.Config{
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
@@ -37,7 +43,7 @@ func getGoogleOauth2Conf(opts googleOauth2ConfOptions) *oauth2.Config {
 func handleGoogleOauth2Authorize(c *gin.Context) {
 	// Redirect user to Google's consent page to ask for permission
 	// for the scopes specified above.
-	url := getGoogleOauth2Conf(googleOauth2ConfOptions{redirectUrl: c.Query("redirect_url")}).AuthCodeURL("webserverOauth2")
+	url := googleOauth2ConfBuilder(googleOauth2ConfOptions{redirectUrl: c.Query("redirect_url")}).AuthCodeURL("webserverOauth2")
 
 	if hint := c.Query("login_hint"); hint != "" {
 		url += fmt.Sprintf("&login_hint=%s", hint)
@@ -47,7 +53,7 @@ func handleGoogleOauth2Authorize(c *gin.Context) {
 }
 
 func handleGoogleOauth2Callback(c *gin.Context) {
-	tok, err := getGoogleOauth2Conf(googleOauth2ConfOptions{}).Exchange(oauth2.NoContext, c.Query("code"))
+	tok, err := googleOauth2Exchange(c.Query("code"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Unable to convert authorization code into token: %s", err)})
 		return
