@@ -1,4 +1,4 @@
-FROM golang:1.16-bullseye AS build
+FROM golang:1.26-bookworm AS build
 
 WORKDIR /src/api
 
@@ -14,4 +14,3 @@ FROM alpine:3 as bin
 COPY --from=build /src/api/api /
 
 ENTRYPOINT /api
-

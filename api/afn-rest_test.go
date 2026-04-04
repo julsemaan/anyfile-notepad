@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,6 +13,16 @@ import (
 	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/rest-layer/resource"
 )
+
+type errReader struct{}
+
+func (errReader) Read(p []byte) (int, error) {
+	return 0, errors.New("read failed")
+}
+
+func (errReader) Close() error {
+	return nil
+}
 
 func TestParseStatsPayload(t *testing.T) {
 	t.Run("uses forwarded for ip", func(t *testing.T) {
@@ -52,6 +63,21 @@ func TestParseStatsPayload(t *testing.T) {
 		_, err := parseStatsPayload(w, req)
 		if err == nil {
 			t.Fatal("expected parse error")
+		}
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("expected bad request status, got %d", w.Code)
+		}
+	})
+
+	t.Run("body read failures return bad request", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodPost, "/stats", nil)
+		req.Body = io.NopCloser(errReader{})
+		req.RemoteAddr = "192.0.2.15:43210"
+		w := httptest.NewRecorder()
+
+		_, err := parseStatsPayload(w, req)
+		if err == nil {
+			t.Fatal("expected read error")
 		}
 		if w.Code != http.StatusBadRequest {
 			t.Fatalf("expected bad request status, got %d", w.Code)
@@ -112,6 +138,18 @@ func TestAuthenticate(t *testing.T) {
 			t.Fatalf("expected unauthorized body, got %q", w.Body.String())
 		}
 	})
+
+	t.Run("rejects missing basic auth", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/syntaxes", nil)
+		w := httptest.NewRecorder()
+
+		if authenticate(w, req) {
+			t.Fatal("expected missing auth to fail")
+		}
+		if w.Code != http.StatusUnauthorized {
+			t.Fatalf("expected unauthorized status, got %d", w.Code)
+		}
+	})
 }
 
 func TestInsertContactRequestHook(t *testing.T) {
@@ -162,4 +200,69 @@ func TestEmailValidator(t *testing.T) {
 	if _, err := v.Validate("not-an-email"); err == nil {
 		t.Fatal("expected invalid email to fail validation")
 	}
+}
+
+func TestInsertedContactRequestHookSendsEmail(t *testing.T) {
+	originalSend := sendEmail
+	t.Cleanup(func() {
+		sendEmail = originalSend
+	})
+
+	t.Setenv("AFN_SUPPORT_EMAIL", "support@example.com")
+	sent := false
+	sendEmail = func(to []string, msg []byte) error {
+		sent = true
+		if len(to) != 1 || to[0] != "support@example.com" {
+			t.Fatalf("unexpected recipients: %#v", to)
+		}
+		if !strings.Contains(string(msg), "Need help") {
+			t.Fatalf("expected message content in email body, got %q", string(msg))
+		}
+		return nil
+	}
+
+	var err error
+	insertedContactRequestHook(context.Background(), []*resource.Item{{
+		ID: "req-1",
+		Payload: map[string]interface{}{
+			"message":       "Need help",
+			"contact_email": "user@example.com",
+		},
+	}}, &err)
+
+	if !sent {
+		t.Fatal("expected sendEmail to be called")
+	}
+}
+
+func TestHandleStats(t *testing.T) {
+	t.Run("returns OK on increment stats payload", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodPost, "/stats", strings.NewReader(`{"type":"increment","key":"hits"}`))
+		req.RemoteAddr = "192.0.2.15:12345"
+		w := httptest.NewRecorder()
+
+		handleStats(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d", w.Code)
+		}
+		if strings.TrimSpace(w.Body.String()) != "OK" {
+			t.Fatalf("unexpected body: %q", w.Body.String())
+		}
+	})
+
+	t.Run("returns OK on non-increment payload", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodPost, "/stats", strings.NewReader(`{"type":"noop","key":"hits"}`))
+		req.RemoteAddr = "192.0.2.16:12345"
+		w := httptest.NewRecorder()
+
+		handleStats(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d", w.Code)
+		}
+		if strings.TrimSpace(w.Body.String()) != "OK" {
+			t.Fatalf("unexpected body: %q", w.Body.String())
+		}
+	})
 }

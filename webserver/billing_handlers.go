@@ -21,6 +21,21 @@ import (
 	"github.com/stripe/stripe-go/webhook"
 )
 
+var (
+	doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+		return http.DefaultClient.Do(req)
+	}
+	stripeSubUpdate             = sub.Update
+	stripeSubCancel             = sub.Cancel
+	stripeSubNew                = sub.New
+	stripeCustomerGet           = customer.Get
+	stripeCustomerUpdate        = customer.Update
+	stripeCustomerNew           = customer.New
+	stripeWebhookConstructEvent = webhook.ConstructEvent
+	sendEmail                   = utils.SendEmail
+	generateCancelLinkID        = func() string { return secureRandomString(16) }
+)
+
 func renderEmailTemplate(tmplStr string, data interface{}) (string, error) {
 	tmpl, err := template.New("email").Parse(tmplStr)
 	if err != nil {
@@ -60,7 +75,7 @@ func LoadGoogleUser(c *gin.Context) {
 		if accessToken, err := c.Request.Cookie("access_token"); err == nil {
 			req.Header.Add("Authorization", "Bearer "+accessToken.Value)
 		}
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := doHTTPRequest(req)
 		if err != nil {
 			ErrPrint("Failed getting Google user", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
@@ -120,7 +135,7 @@ func handleSubscriptionResume(c *gin.Context) {
 		return
 	}
 
-	updatedSub, err := sub.Update(subscription.ID, &stripe.SubParams{EndCancel: false})
+	updatedSub, err := stripeSubUpdate(subscription.ID, &stripe.SubParams{EndCancel: false})
 	if err != nil {
 		ErrPrint("Failed resuming subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to resume the subscription. Please try again or contact " + supportEmail})
@@ -149,7 +164,7 @@ func handleSubscriptionCancel(c *gin.Context) {
 		return
 	}
 
-	updatedSub, err := sub.Cancel(subscription.ID, &stripe.SubParams{EndCancel: true})
+	updatedSub, err := stripeSubCancel(subscription.ID, &stripe.SubParams{EndCancel: true})
 	if err != nil {
 		ErrPrint("Failed canceling subscription for", userId, spew.Sdump(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to cancel the subscription. Please try again or contact " + supportEmail})
@@ -177,7 +192,7 @@ func handleSubscriptionUpgrade(c *gin.Context) {
 		customerParams.SetSource(form.StripeToken)
 		customerParams.AddMeta("google_email", form.UserEmail)
 
-		customer, err := customer.New(customerParams)
+		customer, err := stripeCustomerNew(customerParams)
 
 		if err != nil {
 			upgradeError(c, err, form.FailureUrl)
@@ -194,7 +209,7 @@ func handleSubscriptionUpgrade(c *gin.Context) {
 			},
 		}
 		subParams.AddMeta("user_id", form.UserId)
-		subscription, err := sub.New(subParams)
+		subscription, err := stripeSubNew(subParams)
 
 		if err != nil {
 			upgradeError(c, err, form.FailureUrl)
@@ -222,7 +237,7 @@ func upgradeError(c *gin.Context, err error, failureUrl string) {
 }
 
 func handleLinkCancel(c *gin.Context) {
-	cus, err := customer.Get(c.Param("cus_id"), nil)
+	cus, err := stripeCustomerGet(c.Param("cus_id"), nil)
 	if err != nil {
 		ErrPrint("Unable to retreive customer", c.Param("cus_id"))
 		c.JSON(http.StatusNotFound, gin.H{"message": "Unable to retreive customer information"})
@@ -271,7 +286,7 @@ Cheers!
 			return
 		}
 		msg := []byte(content)
-		if err := utils.SendEmail([]string{supportEmail}, msg); err != nil {
+		if err := sendEmail([]string{supportEmail}, msg); err != nil {
 			ErrPrint("Failed sending cancellation notification email", err)
 		}
 	}
@@ -281,7 +296,7 @@ func handleStripeHook(c *gin.Context) {
 	d, _ := c.GetRawData()
 
 	endpointSecret := os.Getenv("STRIPE_WEBHOOK_SECRET")
-	e, err := webhook.ConstructEvent(d, c.Request.Header.Get("Stripe-Signature"),
+	e, err := stripeWebhookConstructEvent(d, c.Request.Header.Get("Stripe-Signature"),
 		endpointSecret)
 
 	if err != nil {
@@ -314,7 +329,7 @@ func handleStripeHook(c *gin.Context) {
 		obj.Customer = os.Getenv("STRIPE_INVOICE_UPCOMING_WEBHOOK_TEST_CUSTOMER_ID")
 	}
 
-	cus, err := customer.Get(obj.Customer, nil)
+	cus, err := stripeCustomerGet(obj.Customer, nil)
 
 	if err != nil {
 		ErrPrint("Unable to get customer", obj.Customer, err)
@@ -325,12 +340,12 @@ func handleStripeHook(c *gin.Context) {
 	googleEmail = cus.Meta["google_email"]
 	customerEmail = cus.Email
 
-	cancelLinkId := secureRandomString(16)
+	cancelLinkId := generateCancelLinkID()
 	if cus.Meta["cancel_link_id"] == "" {
 		params := &stripe.CustomerParams{}
 		params.AddMeta("cancel_link_id", cancelLinkId)
 
-		_, err = customer.Update(cus.ID, params)
+		_, err = stripeCustomerUpdate(cus.ID, params)
 		if err != nil {
 			ErrPrint("Unable to update cancel link ID for", cus.ID)
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -395,7 +410,7 @@ The Anyfile Notepad team
 		return
 	}
 	msg := []byte(content)
-	if err := utils.SendEmail(emails, msg); err != nil {
+	if err := sendEmail(emails, msg); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}

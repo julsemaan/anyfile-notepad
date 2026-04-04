@@ -11,12 +11,43 @@ import (
 
 var reEmailFromDesc = regexp.MustCompile(`Customer for Google email: (.*)`)
 
+type customerIterator interface {
+	Next() bool
+	Customer() *stripe.Customer
+	Err() error
+}
+
+type stripeCustomerIterator struct {
+	iter *customer.Iter
+}
+
+func (i *stripeCustomerIterator) Next() bool {
+	return i.iter.Next()
+}
+
+func (i *stripeCustomerIterator) Customer() *stripe.Customer {
+	return i.iter.Customer()
+}
+
+func (i *stripeCustomerIterator) Err() error {
+	return i.iter.Err()
+}
+
+var listCustomers = func(params *stripe.CustomerListParams) customerIterator {
+	return &stripeCustomerIterator{iter: customer.List(params)}
+}
+
+var updateCustomer = customer.Update
+
 func main() {
 	stripe.Key = os.Getenv("STRIPE_SK")
+	updateCustomerEmails()
+}
 
+func updateCustomerEmails() {
 	params := &stripe.CustomerListParams{}
 	params.Filters.AddFilter("limit", "", "100")
-	i := customer.List(params)
+	i := listCustomers(params)
 
 	if i.Err() != nil {
 		panic("ERROR: Unable to load customers")
@@ -34,7 +65,7 @@ func main() {
 			}
 			customerParams := &stripe.CustomerParams{}
 			customerParams.AddMeta("google_email", matches[0][1])
-			_, err := customer.Update(c.ID, customerParams)
+			_, err := updateCustomer(c.ID, customerParams)
 			if err != nil {
 				panic("Error while updating customer " + c.Desc + ". ERROR: " + err.Error())
 			}
