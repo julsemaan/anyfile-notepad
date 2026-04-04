@@ -22,6 +22,9 @@ func TestRouter(t *testing.T) {
 	router := NewRouter(apiHandler, statsHandler, "user", "password")
 
 	t.Run("stats route bypasses auth", func(t *testing.T) {
+		apiCalled = false
+		statsCalled = false
+
 		req := httptest.NewRequest(http.MethodPost, "/stats", nil)
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
@@ -31,6 +34,22 @@ func TestRouter(t *testing.T) {
 		}
 		if apiCalled {
 			t.Fatal("did not expect api handler to be called")
+		}
+	})
+
+	t.Run("stats prefix does not bypass auth", func(t *testing.T) {
+		apiCalled = false
+		statsCalled = false
+
+		req := httptest.NewRequest(http.MethodPost, "/statsanything", nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		if w.Code != http.StatusUnauthorized {
+			t.Fatalf("expected 401, got %d", w.Code)
+		}
+		if statsCalled {
+			t.Fatal("did not expect stats handler to be called")
 		}
 	})
 

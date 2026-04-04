@@ -55,6 +55,9 @@ func TestAuthenticate(t *testing.T) {
 		if w.Body.String() != "Unauthorized" {
 			t.Fatalf("expected unauthorized body, got %q", w.Body.String())
 		}
+		if w.Header().Get("WWW-Authenticate") != `Basic realm="restricted"` {
+			t.Fatalf("expected basic auth challenge header, got %q", w.Header().Get("WWW-Authenticate"))
+		}
 	})
 
 	t.Run("rejects missing basic auth", func(t *testing.T) {

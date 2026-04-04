@@ -30,6 +30,7 @@ func IsOpenResource(r *http.Request) bool {
 func Authenticate(w http.ResponseWriter, r *http.Request, username string, password string) bool {
 	requestUsername, requestPassword, ok := r.BasicAuth()
 	if !ok || requestUsername != username || requestPassword != password {
+		w.Header().Set("WWW-Authenticate", `Basic realm="restricted"`)
 		w.WriteHeader(http.StatusUnauthorized)
 		_, _ = w.Write([]byte("Unauthorized"))
 		return false

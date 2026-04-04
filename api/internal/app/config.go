@@ -1,10 +1,14 @@
 package app
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 const defaultDataDir = "./db"
 const defaultListenAddr = ":8080"
 const defaultContactRequestsPerDay = 10
+const envMaxContactRequestsPerDay = "AFN_MAX_CONTACT_REQUESTS_PER_DAY"
 
 type Config struct {
 	DataDir                  string
@@ -34,6 +38,15 @@ func LoadConfigFromEnv() Config {
 		Password:                 os.Getenv("AFN_REST_PASSWORD"),
 		SupportEmail:             os.Getenv("AFN_SUPPORT_EMAIL"),
 		StatsdAddress:            os.Getenv("AFN_STATSD_URI"),
-		MaxContactRequestsPerDay: defaultContactRequestsPerDay,
+		MaxContactRequestsPerDay: loadMaxContactRequestsPerDay(),
 	}
+}
+
+func loadMaxContactRequestsPerDay() int {
+	maxPerDay, err := strconv.Atoi(os.Getenv(envMaxContactRequestsPerDay))
+	if err != nil || maxPerDay <= 0 {
+		return defaultContactRequestsPerDay
+	}
+
+	return maxPerDay
 }

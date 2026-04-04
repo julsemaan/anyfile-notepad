@@ -2,7 +2,8 @@ package resources
 
 import (
 	"errors"
-	"regexp"
+	"net/mail"
+	"strings"
 
 	"github.com/rs/rest-layer/schema"
 )
@@ -12,8 +13,6 @@ const ExtensionsCollection = "extensions"
 const SyntaxesCollection = "syntaxes"
 const SettingsCollection = "settings"
 const ContactRequestsCollection = "contact_requests"
-
-var emailRegex = regexp.MustCompile(`\S+@\S+`)
 
 func MimeTypeSchema() schema.Schema {
 	return schema.Schema{
@@ -137,7 +136,11 @@ func (emailValidator) Validate(value interface{}) (interface{}, error) {
 	if !ok {
 		return value, errors.New("Invalid email format")
 	}
-	if !emailRegex.MatchString(email) {
+	if strings.ContainsAny(email, "\r\n") {
+		return email, errors.New("Invalid email format")
+	}
+	addr, err := mail.ParseAddress(email)
+	if err != nil || addr.Address != email {
 		return email, errors.New("Invalid email format")
 	}
 	return email, nil

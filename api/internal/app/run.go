@@ -3,6 +3,7 @@ package app
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/julsemaan/anyfile-notepad/api/internal/contact"
 	"github.com/julsemaan/anyfile-notepad/api/internal/httpapi"
@@ -20,13 +21,16 @@ func Run(cfg Config) error {
 	schema.CreatedField.ReadOnly = false
 	schema.UpdatedField.ReadOnly = false
 
-	statsConn, _ := statsd.New(statsd.Address(cfg.StatsdAddress))
+	statsConn, err := statsd.New(statsd.Address(cfg.StatsdAddress))
+	if err != nil {
+		log.Printf("warning: statsd initialization failed: %v", err)
+	}
 	if statsConn != nil {
 		defer statsConn.Close()
 	}
 
 	statsService := stats.NewService(statsConn)
-	contactCache := cache.New(24*60*60*1000000000, 60*1000000000)
+	contactCache := cache.New(24*time.Hour, time.Minute)
 	contactService := contact.NewService(contactCache, cfg.MaxContactRequestsPerDay, cfg.SupportEmail, utils.SendEmail)
 
 	index := resources.BuildIndex(cfg.DataDir, resources.ContactHooks{

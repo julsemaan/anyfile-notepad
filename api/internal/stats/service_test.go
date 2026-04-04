@@ -65,6 +65,19 @@ func TestParsePayload(t *testing.T) {
 		}
 	})
 
+	t.Run("json null initializes payload map", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodPost, "/stats", strings.NewReader(`null`))
+		req.RemoteAddr = "192.0.2.15:43210"
+
+		payload, err := svc.ParsePayload(req)
+		if err != nil {
+			t.Fatalf("unexpected parse error: %v", err)
+		}
+		if payload["ip"] != "192.0.2.15" {
+			t.Fatalf("expected remote ip, got %q", payload["ip"])
+		}
+	})
+
 	t.Run("body read failures return error", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/stats", nil)
 		req.Body = io.NopCloser(errReader{})
@@ -85,5 +98,11 @@ func TestRecord(t *testing.T) {
 	expected := []string{"afn.stats-hits.192_0_2_15", "hits"}
 	if !reflect.DeepEqual(stub.keys, expected) {
 		t.Fatalf("unexpected metrics keys: %#v", stub.keys)
+	}
+
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "2001:db8::1"})
+	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.2001_db8__1" {
+		t.Fatalf("expected sanitized ipv6 metric key, got %#v", stub.keys)
 	}
 }

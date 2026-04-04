@@ -39,6 +39,9 @@ func (s *Service) ParsePayload(r *http.Request) (map[string]string, error) {
 	if err := decoder.Decode(&payload); err != nil {
 		return nil, ErrInvalidJSON
 	}
+	if payload == nil {
+		payload = map[string]string{}
+	}
 
 	payload["ip"] = extractIP(r)
 	return payload, nil
@@ -49,7 +52,7 @@ func (s *Service) Record(payload map[string]string) {
 		return
 	}
 
-	ipKey := strings.ReplaceAll(payload["ip"], ".", "_")
+	ipKey := strings.NewReplacer(".", "_", ":", "_").Replace(payload["ip"])
 	s.metrics.Increment("afn.stats-hits." + ipKey)
 
 	if payload["type"] == "increment" {
