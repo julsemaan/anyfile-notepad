@@ -12,6 +12,15 @@ import (
 	stripe "github.com/stripe/stripe-go"
 )
 
+func setupBillingSubscriptionReadRouter() *gin.Engine {
+	r := gin.New()
+	subscription := r.Group("/api/billing/subscription")
+	subscription.Use(LoadSubscription)
+	subscription.Use(LoadGoogleUser)
+	subscription.GET("/:user_id", handleSubscriptionRead)
+	return r
+}
+
 func TestRenderEmailTemplate(t *testing.T) {
 	out, err := renderEmailTemplate("Hello {{.Name}}", struct{ Name string }{Name: "Ada"})
 	if err != nil {
@@ -79,6 +88,116 @@ func TestLoadGoogleUser(t *testing.T) {
 		}
 		if got, ok := c.Get("google_user"); !ok || got == nil {
 			t.Fatal("expected google_user to be set in context")
+		}
+	})
+
+	t.Run("aborts when Google user id mismatches route user id", func(t *testing.T) {
+		doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"Id":"user-2","Email":"u@example.com"}`))}, nil
+		}
+		c, w := newContext("token")
+		LoadGoogleUser(c)
+		if w.Code != http.StatusUnauthorized {
+			t.Fatalf("expected 401, got %d", w.Code)
+		}
+	})
+}
+
+func TestBillingSubscriptionReadRoute(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	originalDo := doHTTPRequest
+	originalSubs := subscriptions
+	t.Cleanup(func() {
+		doHTTPRequest = originalDo
+		subscriptions = originalSubs
+	})
+
+	subscriptions = NewSubscriptions()
+	router := setupBillingSubscriptionReadRouter()
+
+	newRequest := func(userID, token string) *http.Request {
+		req := httptest.NewRequest(http.MethodGet, "/api/billing/subscription/"+userID, nil)
+		if token != "" {
+			req.AddCookie(&http.Cookie{Name: "access_token", Value: token})
+		}
+		return req
+	}
+
+	t.Run("returns not found when subscription does not exist", func(t *testing.T) {
+		calledGoogle := false
+		doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+			calledGoogle = true
+			return nil, errors.New("should not be called")
+		}
+
+		rr := httptest.NewRecorder()
+		router.ServeHTTP(rr, newRequest("missing-user", "token"))
+
+		if rr.Code != http.StatusNotFound {
+			t.Fatalf("expected 404, got %d", rr.Code)
+		}
+		if calledGoogle {
+			t.Fatal("expected Google user lookup to be skipped")
+		}
+	})
+
+	t.Run("returns ok for matching authenticated user", func(t *testing.T) {
+		err := subscriptions.SetSubscription(&stripe.Sub{Status: SubscriptionStatusActive, Meta: map[string]string{"user_id": "user-1"}})
+		if err != nil {
+			t.Fatalf("failed setting subscription: %v", err)
+		}
+
+		doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+			if got := req.Header.Get("Authorization"); got != "Bearer token-ok" {
+				t.Fatalf("unexpected auth header: %s", got)
+			}
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"Id":"user-1","Email":"u@example.com"}`))}, nil
+		}
+
+		rr := httptest.NewRecorder()
+		router.ServeHTTP(rr, newRequest("user-1", "token-ok"))
+
+		if rr.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d", rr.Code)
+		}
+		if !strings.Contains(rr.Body.String(), `"status":"active"`) {
+			t.Fatalf("expected subscription payload, got %q", rr.Body.String())
+		}
+	})
+
+	t.Run("returns unauthorized when authenticated Google user differs", func(t *testing.T) {
+		err := subscriptions.SetSubscription(&stripe.Sub{Status: SubscriptionStatusActive, Meta: map[string]string{"user_id": "user-2"}})
+		if err != nil {
+			t.Fatalf("failed setting subscription: %v", err)
+		}
+
+		doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"Id":"other-user","Email":"u@example.com"}`))}, nil
+		}
+
+		rr := httptest.NewRecorder()
+		router.ServeHTTP(rr, newRequest("user-2", "token-ok"))
+
+		if rr.Code != http.StatusUnauthorized {
+			t.Fatalf("expected 401, got %d", rr.Code)
+		}
+	})
+
+	t.Run("returns unauthorized for invalid Google token", func(t *testing.T) {
+		err := subscriptions.SetSubscription(&stripe.Sub{Status: SubscriptionStatusActive, Meta: map[string]string{"user_id": "user-3"}})
+		if err != nil {
+			t.Fatalf("failed setting subscription: %v", err)
+		}
+
+		doHTTPRequest = func(req *http.Request) (*http.Response, error) {
+			return &http.Response{StatusCode: http.StatusForbidden, Body: io.NopCloser(strings.NewReader("forbidden"))}, nil
+		}
+
+		rr := httptest.NewRecorder()
+		router.ServeHTTP(rr, newRequest("user-3", "bad-token"))
+
+		if rr.Code != http.StatusUnauthorized {
+			t.Fatalf("expected 401, got %d", rr.Code)
 		}
 	})
 }
