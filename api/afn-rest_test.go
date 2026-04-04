@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,6 +13,16 @@ import (
 	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/rest-layer/resource"
 )
+
+type errReader struct{}
+
+func (errReader) Read(p []byte) (int, error) {
+	return 0, errors.New("read failed")
+}
+
+func (errReader) Close() error {
+	return nil
+}
 
 func TestParseStatsPayload(t *testing.T) {
 	t.Run("uses forwarded for ip", func(t *testing.T) {
@@ -52,6 +63,21 @@ func TestParseStatsPayload(t *testing.T) {
 		_, err := parseStatsPayload(w, req)
 		if err == nil {
 			t.Fatal("expected parse error")
+		}
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("expected bad request status, got %d", w.Code)
+		}
+	})
+
+	t.Run("body read failures return bad request", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodPost, "/stats", nil)
+		req.Body = io.NopCloser(errReader{})
+		req.RemoteAddr = "192.0.2.15:43210"
+		w := httptest.NewRecorder()
+
+		_, err := parseStatsPayload(w, req)
+		if err == nil {
+			t.Fatal("expected read error")
 		}
 		if w.Code != http.StatusBadRequest {
 			t.Fatalf("expected bad request status, got %d", w.Code)
@@ -110,6 +136,18 @@ func TestAuthenticate(t *testing.T) {
 		}
 		if strings.TrimSpace(w.Body.String()) != "Unauthorized" {
 			t.Fatalf("expected unauthorized body, got %q", w.Body.String())
+		}
+	})
+
+	t.Run("rejects missing basic auth", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/syntaxes", nil)
+		w := httptest.NewRecorder()
+
+		if authenticate(w, req) {
+			t.Fatal("expected missing auth to fail")
+		}
+		if w.Code != http.StatusUnauthorized {
+			t.Fatalf("expected unauthorized status, got %d", w.Code)
 		}
 	})
 }

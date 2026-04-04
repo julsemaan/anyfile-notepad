@@ -228,6 +228,163 @@ func TestHandleSubscriptionCancelAndResumeValidation(t *testing.T) {
 	})
 }
 
+func TestHandleSubscriptionResume(t *testing.T) {
+	setupHTTPTestEnvironment(t)
+	gin.SetMode(gin.TestMode)
+
+	originalUpdate := stripeSubUpdate
+	originalSubs := subscriptions
+	t.Cleanup(func() {
+		stripeSubUpdate = originalUpdate
+		subscriptions = originalSubs
+	})
+
+	subscriptions = NewSubscriptions()
+
+	t.Run("returns 500 when Stripe update fails", func(t *testing.T) {
+		stripeSubUpdate = func(id string, params *stripe.SubParams) (*stripe.Sub, error) {
+			return nil, errors.New("stripe unavailable")
+		}
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		c.Request = httptest.NewRequest(http.MethodPost, "/", nil)
+		c.Params = gin.Params{{Key: "user_id", Value: "u1"}}
+		c.Set("subscription", &stripe.Sub{ID: "sub-1", EndCancel: true, Meta: map[string]string{"user_id": "u1"}})
+
+		handleSubscriptionResume(c)
+
+		if w.Code != http.StatusInternalServerError {
+			t.Fatalf("expected 500, got %d", w.Code)
+		}
+	})
+
+	t.Run("resumes canceled subscription", func(t *testing.T) {
+		stripeSubUpdate = func(id string, params *stripe.SubParams) (*stripe.Sub, error) {
+			if id != "sub-2" {
+				t.Fatalf("unexpected subscription id: %s", id)
+			}
+			if params == nil || params.EndCancel != false {
+				t.Fatalf("expected EndCancel=false params, got %#v", params)
+			}
+			return &stripe.Sub{ID: id, EndCancel: false, Meta: map[string]string{"user_id": "u2"}}, nil
+		}
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		c.Request = httptest.NewRequest(http.MethodPost, "/", nil)
+		c.Params = gin.Params{{Key: "user_id", Value: "u2"}}
+		c.Set("subscription", &stripe.Sub{ID: "sub-2", EndCancel: true, Meta: map[string]string{"user_id": "u2"}})
+
+		handleSubscriptionResume(c)
+
+		if w.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d", w.Code)
+		}
+		if got := subscriptions.GetSubscription("u2"); got == nil || got.ID != "sub-2" {
+			t.Fatalf("expected resumed subscription to be saved, got %#v", got)
+		}
+	})
+}
+
+func TestHandleSubscriptionUpgrade(t *testing.T) {
+	setupHTTPTestEnvironment(t)
+	gin.SetMode(gin.TestMode)
+
+	originalCustomerNew := stripeCustomerNew
+	originalSubNew := stripeSubNew
+	originalSubs := subscriptions
+	t.Cleanup(func() {
+		stripeCustomerNew = originalCustomerNew
+		stripeSubNew = originalSubNew
+		subscriptions = originalSubs
+	})
+
+	subscriptions = NewSubscriptions()
+
+	newCtx := func(body string) (*gin.Context, *httptest.ResponseRecorder) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		req := httptest.NewRequest(http.MethodGet, "/api/billing/subscription?"+body, nil)
+		c.Request = req
+		return c, w
+	}
+
+	t.Run("invalid form redirects to empty failure URL", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		req := httptest.NewRequest(http.MethodPost, "/api/billing/subscription", strings.NewReader("{"))
+		req.Header.Set("Content-Type", "application/json")
+		c.Request = req
+
+		handleSubscriptionUpgrade(c)
+
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("expected 400, got %d", w.Code)
+		}
+	})
+
+	t.Run("customer creation failure redirects to failure URL", func(t *testing.T) {
+		stripeCustomerNew = func(params *stripe.CustomerParams) (*stripe.Customer, error) {
+			return nil, errors.New("customer create failed")
+		}
+
+		c, w := newCtx("user_id=u1&user_email=u%40example.com&stripeToken=tok&stripeEmail=billing%40example.com&success_url=https%3A%2F%2Fok.local&failure_url=https%3A%2F%2Ffail.local")
+		handleSubscriptionUpgrade(c)
+
+		if w.Code != http.StatusFound {
+			t.Fatalf("expected 302, got %d", w.Code)
+		}
+		if got := w.Header().Get("Location"); got != "https://fail.local" {
+			t.Fatalf("expected redirect to failure URL, got %q", got)
+		}
+	})
+
+	t.Run("subscription creation failure redirects to failure URL", func(t *testing.T) {
+		stripeCustomerNew = func(params *stripe.CustomerParams) (*stripe.Customer, error) {
+			return &stripe.Customer{ID: "cus-1"}, nil
+		}
+		stripeSubNew = func(params *stripe.SubParams) (*stripe.Sub, error) {
+			return nil, errors.New("sub create failed")
+		}
+
+		c, w := newCtx("user_id=u2&user_email=u2%40example.com&stripeToken=tok&stripeEmail=billing%40example.com&success_url=https%3A%2F%2Fok.local&failure_url=https%3A%2F%2Ffail.local")
+		handleSubscriptionUpgrade(c)
+
+		if w.Code != http.StatusFound {
+			t.Fatalf("expected 302, got %d", w.Code)
+		}
+		if got := w.Header().Get("Location"); got != "https://fail.local" {
+			t.Fatalf("expected redirect to failure URL, got %q", got)
+		}
+	})
+
+	t.Run("successful upgrade creates subscription and redirects to success URL", func(t *testing.T) {
+		stripeCustomerNew = func(params *stripe.CustomerParams) (*stripe.Customer, error) {
+			return &stripe.Customer{ID: "cus-2"}, nil
+		}
+		stripeSubNew = func(params *stripe.SubParams) (*stripe.Sub, error) {
+			if params.Customer != "cus-2" {
+				t.Fatalf("unexpected customer on sub params: %s", params.Customer)
+			}
+			return &stripe.Sub{ID: "sub-3", Meta: map[string]string{"user_id": "u3"}}, nil
+		}
+
+		c, w := newCtx("user_id=u3&user_email=u3%40example.com&stripeToken=tok&stripeEmail=billing%40example.com&success_url=https%3A%2F%2Fok.local&failure_url=https%3A%2F%2Ffail.local")
+		handleSubscriptionUpgrade(c)
+
+		if w.Code != http.StatusFound {
+			t.Fatalf("expected 302, got %d", w.Code)
+		}
+		if got := w.Header().Get("Location"); got != "https://ok.local" {
+			t.Fatalf("expected success redirect, got %q", got)
+		}
+		if got := subscriptions.GetSubscription("u3"); got == nil || got.ID != "sub-3" {
+			t.Fatalf("expected created subscription to be saved, got %#v", got)
+		}
+	})
+}
+
 func TestHandleLinkCancel(t *testing.T) {
 	setupHTTPTestEnvironment(t)
 	gin.SetMode(gin.TestMode)

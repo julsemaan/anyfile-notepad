@@ -16,3 +16,20 @@ func TestNewClusterObserverAndHostURL(t *testing.T) {
 		t.Fatalf("unexpected URL: %s", u.String())
 	}
 }
+
+func TestClusterObserverGlpclientUsesBasicAuthEnv(t *testing.T) {
+	t.Setenv("CLUSTER_OBSERVER_USERNAME", "observer-user")
+	t.Setenv("CLUSTER_OBSERVER_PASSWORD", "observer-pass")
+
+	observer := NewClusterObserver([]string{"http://node1:8000"})
+	client := observer.glpclient("http://node1:8000", "reload")
+	if client == nil {
+		t.Fatal("expected glpclient instance")
+	}
+	if client.BasicAuthUsername != "observer-user" {
+		t.Fatalf("unexpected basic auth username: %q", client.BasicAuthUsername)
+	}
+	if client.BasicAuthPassword != "observer-pass" {
+		t.Fatalf("unexpected basic auth password: %q", client.BasicAuthPassword)
+	}
+}

@@ -10,6 +10,35 @@ import (
 	"github.com/stripe/stripe-go/sub"
 )
 
+type subscriptionIterator interface {
+	Next() bool
+	Sub() *stripe.Sub
+	Err() error
+}
+
+type stripeSubscriptionIterator struct {
+	iter *sub.Iter
+}
+
+func (s *stripeSubscriptionIterator) Next() bool {
+	return s.iter.Next()
+}
+
+func (s *stripeSubscriptionIterator) Sub() *stripe.Sub {
+	return s.iter.Sub()
+}
+
+func (s *stripeSubscriptionIterator) Err() error {
+	return s.iter.Err()
+}
+
+var listSubscriptions = func(params *stripe.SubListParams) subscriptionIterator {
+	return &stripeSubscriptionIterator{iter: sub.List(params)}
+}
+
+var cancelSubscription = sub.Cancel
+var sleepBeforeReloadRetry = time.Sleep
+
 const (
 	SubscriptionStatusActive   = "active"
 	SubscriptionStatusPastDue  = "past_due"
@@ -88,11 +117,11 @@ func (s *Subscriptions) GetSubscriptionByCustomer(cusId string) *stripe.Sub {
 func (s *Subscriptions) Reload() {
 	params := &stripe.SubListParams{}
 	params.Filters.AddFilter("limit", "", "100")
-	i := sub.List(params)
+	i := listSubscriptions(params)
 
 	if i.Err() != nil {
 		ErrPrint("Unable to reload subscriptions, retrying in 10 seconds")
-		time.Sleep(10 * time.Second)
+		sleepBeforeReloadRetry(10 * time.Second)
 		s.Reload()
 		return
 	}
@@ -119,7 +148,7 @@ func (s *Subscriptions) Maintenance() {
 	for _, asub := range s.data {
 		if asub.Status == SubscriptionStatusPastDue {
 			InfoPrint("Canceling past due subscription", asub.ID)
-			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
+			_, err := cancelSubscription(asub.ID, &stripe.SubParams{EndCancel: false})
 			serr, isStripeErr := err.(*stripe.Error)
 			if isStripeErr && serr.Code == "resource_missing" {
 				InfoPrint("Unable to cancel subscription as it was already canceled", asub.ID)
