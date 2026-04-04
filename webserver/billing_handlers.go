@@ -391,6 +391,7 @@ The Anyfile Notepad team
 	content, err := renderEmailTemplate(templateStr, data)
 	if err != nil {
 		ErrPrint("Failed rendering renewal email content", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	msg := []byte(content)

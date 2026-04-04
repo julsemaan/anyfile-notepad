@@ -10,7 +10,7 @@ import (
 func secureRandomString(c int) string {
 	b := make([]byte, c)
 	if _, err := rand.Read(b); err != nil {
-		log.Printf("ERROR: unable to generate a secure random string: %v", err)
+		ErrPrint("unable to generate a secure random string", err)
 		return ""
 	}
 	return hex.EncodeToString(b)
