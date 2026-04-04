@@ -1,6 +1,6 @@
 module github.com/julsemaan/anyfile-notepad/api
 
-go 1.12
+go 1.26
 
 require (
 	github.com/julsemaan/anyfile-notepad/utils v0.0.0-20230202010526-481b7f9b59a2
