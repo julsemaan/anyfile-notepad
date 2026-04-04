@@ -117,7 +117,7 @@ func ContactRequestSchema() schema.Schema {
 			"contact_email": {
 				Required:   true,
 				Filterable: true,
-				Validator:  emailValidator{},
+				Validator:  &emailValidator{},
 			},
 			"message": {
 				Required:   true,
