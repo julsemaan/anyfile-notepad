@@ -1,4 +1,4 @@
-FROM golang:1.16-bullseye AS build
+FROM golang:1.26-bullseye AS build
 
 WORKDIR /src/api
 
