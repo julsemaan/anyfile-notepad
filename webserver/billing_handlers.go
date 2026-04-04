@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -20,6 +20,20 @@ import (
 	"github.com/stripe/stripe-go/sub"
 	"github.com/stripe/stripe-go/webhook"
 )
+
+func renderEmailTemplate(tmplStr string, data interface{}) (string, error) {
+	tmpl, err := template.New("email").Parse(tmplStr)
+	if err != nil {
+		return "", err
+	}
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		return "", err
+	}
+	return buf.String(), nil
+}
+
+const webhookEventInvoiceUpcoming = "invoice.upcoming"
 
 func LoadSubscription(c *gin.Context) {
 	if userId := c.Param("user_id"); userId != "" {
@@ -47,10 +61,18 @@ func LoadGoogleUser(c *gin.Context) {
 			req.Header.Add("Authorization", "Bearer "+accessToken.Value)
 		}
 		resp, err := http.DefaultClient.Do(req)
-		if resp.StatusCode != http.StatusOK || err != nil {
-			respBody, _ := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			ErrPrint("Failed getting Google user", err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
+			return
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			respBody, _ := io.ReadAll(resp.Body)
 			ErrPrint("Failed getting Google user", resp.StatusCode, string(respBody))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
+			return
 		} else {
 			user := GoogleUser{}
 			dec := json.NewDecoder(resp.Body)
@@ -92,9 +114,8 @@ func handleSubscriptionResume(c *gin.Context) {
 
 	subscription := c.Value("subscription").(*stripe.Sub)
 	if !subscription.EndCancel {
-		willEnd := time.Unix(0, subscription.PeriodEnd*int64(time.Second))
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": fmt.Sprintf("This subscription is not currently canceled", willEnd),
+			"message": "This subscription is not currently canceled",
 		})
 		return
 	}
@@ -231,23 +252,28 @@ func handleLinkCancel(c *gin.Context) {
 	handleSubscriptionCancel(c)
 
 	if c.Writer.Status() == http.StatusOK {
-		msgTemplate, _ := template.New("cancelation-notification").Parse(`Subject: A subscription has been canceled through a renewal email
+		templateStr := `Subject: A subscription has been canceled through a renewal email
 To: {{.Emails}}
 Customer {{.CustomerEmail}} has just canceled his Anyfile Notepad subscription through an email link.
 
 Cheers!
-`)
-
-		var msgBytes bytes.Buffer
-		msgTemplate.Execute(&msgBytes, struct {
+`
+		data := struct {
 			Emails        string
 			CustomerEmail string
 		}{
 			Emails:        supportEmail,
 			CustomerEmail: cus.Email,
-		})
-		msg, _ := ioutil.ReadAll(&msgBytes)
-		utils.SendEmail([]string{supportEmail}, msg)
+		}
+		content, err := renderEmailTemplate(templateStr, data)
+		if err != nil {
+			ErrPrint("Failed rendering cancellation notification email", err)
+			return
+		}
+		msg := []byte(content)
+		if err := utils.SendEmail([]string{supportEmail}, msg); err != nil {
+			ErrPrint("Failed sending cancellation notification email", err)
+		}
 	}
 }
 
@@ -265,7 +291,7 @@ func handleStripeHook(c *gin.Context) {
 
 	InfoPrint(string(d))
 
-	if e.Type != "invoice.upcoming" {
+	if e.Type != webhookEventInvoiceUpcoming {
 		ErrPrint("Unsupported event type", e.Type)
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
@@ -275,7 +301,11 @@ func handleStripeHook(c *gin.Context) {
 		Customer      string
 		CustomerEmail string `json:"customer_email"`
 	}{}
-	json.Unmarshal(e.Data.Raw, &obj)
+	if err := json.Unmarshal(e.Data.Raw, &obj); err != nil {
+		ErrPrint("Failed unmarshalling webhook data", err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid webhook payload"})
+		return
+	}
 
 	var googleEmail string
 	var customerEmail string
@@ -326,7 +356,7 @@ func handleStripeHook(c *gin.Context) {
 
 	InfoPrint("Sending renewal notification email to", emails)
 
-	msgTemplate, _ := template.New("renewal-email").Parse(`Subject: Your Anyfile Notepad subscription is about to renew
+	templateStr := `Subject: Your Anyfile Notepad subscription is about to renew
 To: {{.Emails}}
 Greetings from Anyfile Notepad,
 
@@ -344,10 +374,8 @@ In the event your credit card cannot be billed your subscription will be automat
 Cheers!
 
 The Anyfile Notepad team
-`)
-
-	var msgBytes bytes.Buffer
-	msgTemplate.Execute(&msgBytes, struct {
+`
+	data := struct {
 		GoogleEmail  string
 		Emails       string
 		CustomerID   string
@@ -359,13 +387,18 @@ The Anyfile Notepad team
 		CustomerID:   cus.ID,
 		CancelLinkID: cancelLinkId,
 		BaseURL:      appBaseURL,
-	})
-	msg, _ := ioutil.ReadAll(&msgBytes)
-	err = utils.SendEmail(emails, msg)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
-	} else {
-		c.JSON(http.StatusOK, gin.H{})
 	}
+	content, err := renderEmailTemplate(templateStr, data)
+	if err != nil {
+		ErrPrint("Failed rendering renewal email content", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+	msg := []byte(content)
+	if err := utils.SendEmail(emails, msg); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
