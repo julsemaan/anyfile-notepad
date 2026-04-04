@@ -97,10 +97,10 @@ func (pps *PlusPlusSessions) RestoreFromFile(path string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	dec := json.NewDecoder(f)
 	err = dec.Decode(&pps.data)
-	defer f.Close()
 
 	return err
 }
@@ -116,8 +116,18 @@ func (pps *PlusPlusSessions) SaveToFile(path string) error {
 
 	enc := json.NewEncoder(tmp)
 	err = enc.Encode(pps.data)
-	defer tmp.Close()
+	if err != nil {
+		_ = tmp.Close()
+		return err
+	}
 
+	err = tmp.Sync()
+	if err != nil {
+		_ = tmp.Close()
+		return err
+	}
+
+	err = tmp.Close()
 	if err != nil {
 		return err
 	}

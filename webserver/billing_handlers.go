@@ -61,10 +61,18 @@ func LoadGoogleUser(c *gin.Context) {
 			req.Header.Add("Authorization", "Bearer "+accessToken.Value)
 		}
 		resp, err := http.DefaultClient.Do(req)
-		if resp.StatusCode != http.StatusOK || err != nil {
+		if err != nil {
+			ErrPrint("Failed getting Google user", err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
+			return
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
 			respBody, _ := io.ReadAll(resp.Body)
 			ErrPrint("Failed getting Google user", resp.StatusCode, string(respBody))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unable to find a Google user account with the provided authentication token."})
+			return
 		} else {
 			user := GoogleUser{}
 			dec := json.NewDecoder(resp.Body)
@@ -263,7 +271,9 @@ Cheers!
 			return
 		}
 		msg := []byte(content)
-		utils.SendEmail([]string{supportEmail}, msg)
+		if err := utils.SendEmail([]string{supportEmail}, msg); err != nil {
+			ErrPrint("Failed sending cancellation notification email", err)
+		}
 	}
 }
 
@@ -389,9 +399,5 @@ The Anyfile Notepad team
 		return
 	}
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
-	} else {
-		c.JSON(http.StatusOK, gin.H{})
-	}
+	c.JSON(http.StatusOK, gin.H{})
 }
