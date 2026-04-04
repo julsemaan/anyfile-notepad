@@ -71,4 +71,17 @@ func TestAuthenticate(t *testing.T) {
 			t.Fatalf("expected unauthorized status, got %d", w.Code)
 		}
 	})
+
+	t.Run("rejects empty configured credentials", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/syntaxes", nil)
+		req.SetBasicAuth("", "")
+		w := httptest.NewRecorder()
+
+		if Authenticate(w, req, "", "") {
+			t.Fatal("expected authentication to fail with empty config")
+		}
+		if w.Code != http.StatusUnauthorized {
+			t.Fatalf("expected unauthorized status, got %d", w.Code)
+		}
+	})
 }

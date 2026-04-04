@@ -77,7 +77,9 @@ func (s *Service) AfterInsert(_ context.Context, items []*resource.Item, err *er
 			log.Printf("Unable to build contact request email: %v", buildErr)
 			continue
 		}
-		_ = s.sendEmail(recipients, msg)
+		if sendErr := s.sendEmail(recipients, msg); sendErr != nil {
+			log.Printf("Unable to send contact request email: %v", sendErr)
+		}
 	}
 }
 

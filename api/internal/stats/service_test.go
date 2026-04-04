@@ -105,4 +105,10 @@ func TestRecord(t *testing.T) {
 	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.2001_db8__1" {
 		t.Fatalf("expected sanitized ipv6 metric key, got %#v", stub.keys)
 	}
+
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "bad:key"})
+	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.192_0_2_15" {
+		t.Fatalf("expected invalid metric key to be ignored, got %#v", stub.keys)
+	}
 }

@@ -14,6 +14,8 @@ const SyntaxesCollection = "syntaxes"
 const SettingsCollection = "settings"
 const ContactRequestsCollection = "contact_requests"
 
+var errInvalidEmailFormat = errors.New("invalid email format")
+
 func MimeTypeSchema() schema.Schema {
 	return schema.Schema{
 		Description: "The mime_type object",
@@ -134,14 +136,14 @@ type emailValidator struct{}
 func (emailValidator) Validate(value interface{}) (interface{}, error) {
 	email, ok := value.(string)
 	if !ok {
-		return value, errors.New("Invalid email format")
+		return value, errInvalidEmailFormat
 	}
 	if strings.ContainsAny(email, "\r\n") {
-		return email, errors.New("Invalid email format")
+		return email, errInvalidEmailFormat
 	}
 	addr, err := mail.ParseAddress(email)
 	if err != nil || addr.Address != email {
-		return email, errors.New("Invalid email format")
+		return email, errInvalidEmailFormat
 	}
 	return email, nil
 }

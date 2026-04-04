@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"crypto/subtle"
 	"log"
 	"net/http"
 	"strings"
@@ -28,8 +29,17 @@ func IsOpenResource(r *http.Request) bool {
 }
 
 func Authenticate(w http.ResponseWriter, r *http.Request, username string, password string) bool {
+	if username == "" || password == "" {
+		w.Header().Set("WWW-Authenticate", `Basic realm="restricted"`)
+		w.WriteHeader(http.StatusUnauthorized)
+		_, _ = w.Write([]byte("Unauthorized"))
+		return false
+	}
+
 	requestUsername, requestPassword, ok := r.BasicAuth()
-	if !ok || requestUsername != username || requestPassword != password {
+	validUsername := subtle.ConstantTimeCompare([]byte(requestUsername), []byte(username)) == 1
+	validPassword := subtle.ConstantTimeCompare([]byte(requestPassword), []byte(password)) == 1
+	if !ok || !validUsername || !validPassword {
 		w.Header().Set("WWW-Authenticate", `Basic realm="restricted"`)
 		w.WriteHeader(http.StatusUnauthorized)
 		_, _ = w.Write([]byte("Unauthorized"))

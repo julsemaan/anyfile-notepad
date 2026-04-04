@@ -32,9 +32,9 @@ func NewStatsHandler(statsService StatsService) http.Handler {
 		}
 
 		statsService.Record(payload)
-		log.Printf("Stats request from %s", payload["ip"])
+		log.Printf("Stats request from %q", payload["ip"])
 		if payload["type"] == "increment" {
-			log.Printf("afn.stats-hits.%s from %s", payload["key"], payload["ip"])
+			log.Printf("afn.stats-hits.%q from %q", payload["key"], payload["ip"])
 		}
 
 		_, _ = w.Write([]byte(fmt.Sprint("OK")))

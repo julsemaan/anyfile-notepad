@@ -15,6 +15,7 @@ var ErrInvalidPayload = errors.New("invalid payload")
 var ErrInvalidJSON = errors.New("invalid json")
 
 var remoteAddrRegex = regexp.MustCompile(`^([0-9.]+):`)
+var metricKeyRegex = regexp.MustCompile(`^[a-zA-Z0-9_.-]{1,64}$`)
 
 type Metrics interface {
 	Increment(bucket string)
@@ -56,7 +57,9 @@ func (s *Service) Record(payload map[string]string) {
 	s.metrics.Increment("afn.stats-hits." + ipKey)
 
 	if payload["type"] == "increment" {
-		s.metrics.Increment(payload["key"])
+		if metricKeyRegex.MatchString(payload["key"]) {
+			s.metrics.Increment(payload["key"])
+		}
 	}
 }
 
