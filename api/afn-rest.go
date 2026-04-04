@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +22,19 @@ import (
 	"github.com/rs/rest-layer/rest"
 	"github.com/rs/rest-layer/schema"
 	"gopkg.in/alexcesaro/statsd.v2"
+)
+
+// Precompiled regexes
+var pathStatsRE = regexp.MustCompile(`^/stats`)
+var emailRegex = regexp.MustCompile(`\S+@\S+`)
+
+// Small constants for collection names to avoid magic strings
+const (
+	mimeTypesColl  = "mime_types"
+	extensionsColl = "extensions"
+	syntaxesColl   = "syntaxes"
+	settingsColl   = "settings"
+	contactColl    = "contact_requests"
 )
 
 var contactRequestsCache = cache.New(24*time.Hour, 1*time.Minute)
@@ -150,23 +163,23 @@ func main() {
 		directory = "./db"
 	}
 
-	index.Bind("mime_types", mime_type, filestore.NewHandler(directory, "mime_types", []string{"type_name"}), resource.Conf{
+	index.Bind("mime_types", mime_type, filestore.NewHandler(directory, mimeTypesColl, []string{"type_name"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 
-	index.Bind("extensions", extension, filestore.NewHandler(directory, "extensions", []string{"name"}), resource.Conf{
+	index.Bind("extensions", extension, filestore.NewHandler(directory, extensionsColl, []string{"name"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 
-	index.Bind("syntaxes", syntax, filestore.NewHandler(directory, "syntaxes", []string{"ace_js_mode", "display_name"}), resource.Conf{
+	index.Bind("syntaxes", syntax, filestore.NewHandler(directory, syntaxesColl, []string{"ace_js_mode", "display_name"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 
-	index.Bind("settings", setting, filestore.NewHandler(directory, "settings", []string{"var_name"}), resource.Conf{
+	index.Bind("settings", setting, filestore.NewHandler(directory, settingsColl, []string{"var_name"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 
-	contactRequests := index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, "contact_requests", []string{"id"}), resource.Conf{
+	contactRequests := index.Bind("contact_requests", contactRequest, filestore.NewHandler(directory, contactColl, []string{"id"}), resource.Conf{
 		AllowedModes: resource.ReadWrite,
 	})
 	contactRequests.Use(resource.InsertEventHandlerFunc(insertContactRequestHook))
@@ -183,7 +196,7 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		if matched, _ := regexp.MatchString("^/stats", r.URL.Path); matched {
+		if pathStatsRE.MatchString(r.URL.Path) {
 			handleStats(w, r)
 			return
 		} else if isOpenResource(r) {
@@ -202,12 +215,16 @@ func main() {
 }
 
 func parseStatsPayload(w http.ResponseWriter, r *http.Request) (map[string]string, error) {
-	buf, _ := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Invalid payload", http.StatusBadRequest)
+		return nil, err
+	}
 	dec := json.NewDecoder(bytes.NewBuffer(buf))
 	var s map[string]string
-	err := dec.Decode(&s)
-	if err != nil {
-		panic(err)
+	if err := dec.Decode(&s); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return nil, err
 	}
 	if r.Header.Get("X-Forwarded-For") != "" {
 		s["ip"] = strings.Split(r.Header.Get("X-Forwarded-For"), ",")[0]
@@ -285,7 +302,7 @@ Reply-To: {{.ReplyTo}}
 			Message: item.Payload["message"].(string),
 			ReplyTo: item.Payload["contact_email"].(string),
 		})
-		msg, _ := ioutil.ReadAll(&msgBytes)
+		msg, _ := io.ReadAll(&msgBytes)
 		utils.SendEmail(emails, msg)
 	}
 
@@ -296,7 +313,7 @@ type emailValidator struct {
 
 func (emailValidator) Validate(value interface{}) (interface{}, error) {
 	email := value.(string)
-	if res, _ := regexp.MatchString(`\S+@\S+`, email); !res {
+	if res := emailRegex.MatchString(email); !res {
 		return email, errors.New("Invalid email format")
 	} else {
 		return email, nil

@@ -2,13 +2,18 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/sub"
+)
+
+const (
+	SubscriptionStatusActive   = "active"
+	SubscriptionStatusPastDue  = "past_due"
+	SubscriptionStatusCanceled = "canceled"
 )
 
 type Subscriptions struct {
@@ -28,7 +33,7 @@ func (s *Subscriptions) Empty() {
 }
 
 func (s *Subscriptions) CanHaveAccess(subscription *stripe.Sub) bool {
-	return subscription.Status == "active" || subscription.Status == "past_due"
+	return subscription.Status == SubscriptionStatusActive || subscription.Status == SubscriptionStatusPastDue
 }
 
 func (s *Subscriptions) ExtractUserId(subscription *stripe.Sub) string {
@@ -61,8 +66,8 @@ func (s *Subscriptions) DelSubscription(userId string) {
 }
 
 func (s *Subscriptions) GetSubscription(userId string) *stripe.Sub {
-	s.lock.Lock()
-	defer s.lock.Unlock()
+	s.lock.RLock()
+	defer s.lock.RUnlock()
 
 	return s.data[userId]
 }
@@ -101,7 +106,7 @@ func (s *Subscriptions) Reload() {
 		newdata[s.ExtractUserId(subscription)] = subscription
 	}
 
-	fmt.Printf("Reloaded %d subscriptions \n", count)
+	InfoPrint("Reloaded", count, "subscriptions")
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -112,7 +117,7 @@ func (s *Subscriptions) Maintenance() {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	for _, asub := range s.data {
-		if asub.Status == "past_due" {
+		if asub.Status == SubscriptionStatusPastDue {
 			InfoPrint("Canceling past due subscription", asub.ID)
 			_, err := sub.Cancel(asub.ID, &stripe.SubParams{EndCancel: false})
 			serr, isStripeErr := err.(*stripe.Error)
