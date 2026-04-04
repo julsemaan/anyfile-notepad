@@ -30,6 +30,7 @@ func setupHTTPTestEnvironment(t *testing.T) {
 	fixtures := map[string]string{
 		filepath.Join(rootDir, "app.html"):            "app.html\n",
 		filepath.Join(rootDir, "app-plus-plus.html"):  "app-plus-plus.html\n",
+		filepath.Join(rootDir, "ace.js"):              "console.log('ace fixture')\n",
 		filepath.Join(devDir, "app.html"):             "dev/app.html\n",
 		filepath.Join(siteDir, "news.html"):           "site/news.html\n",
 		filepath.Join(siteDir, "faq.html"):            "site/faq.html\n",
