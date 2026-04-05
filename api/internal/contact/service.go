@@ -14,6 +14,7 @@ import (
 )
 
 var errTooManyRequests = errors.New("Too many contact requests, try again later")
+var errUnableToSendEmail = errors.New("Unable to process contact request, please try again later")
 
 var messageTemplate = template.Must(template.New("contact-email").Parse(`Subject: Anyfile Notepad - Message from {{.ReplyTo}}
 To: {{.Emails}}
@@ -50,10 +51,20 @@ func (s *Service) BeforeInsert(_ context.Context, items []*resource.Item) error 
 		return errTooManyRequests
 	}
 
+	if s.sendEmail == nil || s.supportEmail == "" {
+		return nil
+	}
+
+	recipients := []string{s.supportEmail}
 	for _, item := range items {
-		if s.cache != nil {
-			id := fmt.Sprint(item.ID)
-			s.cache.SetDefault(id, item.ID)
+		msg, buildErr := buildMessage(recipients, item)
+		if buildErr != nil {
+			log.Printf("Unable to build contact request email: %v", buildErr)
+			return errUnableToSendEmail
+		}
+		if sendErr := s.sendEmail(recipients, msg); sendErr != nil {
+			log.Printf("Unable to send contact request email: %v", sendErr)
+			return errUnableToSendEmail
 		}
 	}
 
@@ -66,19 +77,10 @@ func (s *Service) AfterInsert(_ context.Context, items []*resource.Item, err *er
 		return
 	}
 
-	if s.sendEmail == nil || s.supportEmail == "" {
-		return
-	}
-
-	recipients := []string{s.supportEmail}
 	for _, item := range items {
-		msg, buildErr := buildMessage(recipients, item)
-		if buildErr != nil {
-			log.Printf("Unable to build contact request email: %v", buildErr)
-			continue
-		}
-		if sendErr := s.sendEmail(recipients, msg); sendErr != nil {
-			log.Printf("Unable to send contact request email: %v", sendErr)
+		if s.cache != nil {
+			id := fmt.Sprint(item.ID)
+			s.cache.SetDefault(id, item.ID)
 		}
 	}
 }
