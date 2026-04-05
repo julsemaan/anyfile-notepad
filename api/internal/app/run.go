@@ -9,7 +9,6 @@ import (
 	"github.com/julsemaan/anyfile-notepad/api/internal/httpapi"
 	"github.com/julsemaan/anyfile-notepad/api/internal/resources"
 	"github.com/julsemaan/anyfile-notepad/api/internal/stats"
-	"github.com/julsemaan/anyfile-notepad/utils"
 	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
@@ -31,7 +30,7 @@ func Run(cfg Config) error {
 
 	statsService := stats.NewService(statsConn)
 	contactCache := cache.New(24*time.Hour, time.Minute)
-	contactService := contact.NewService(contactCache, cfg.MaxContactRequestsPerDay, cfg.SupportEmail, utils.SendEmail)
+	contactService := contact.NewService(contactCache, cfg.MaxContactRequestsPerDay, cfg.SupportEmail, sendEmailWithOptionalTLS)
 
 	index := resources.BuildIndex(cfg.DataDir, resources.ContactHooks{
 		Insert:   resource.InsertEventHandlerFunc(contactService.BeforeInsert),

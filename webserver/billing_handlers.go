@@ -14,7 +14,6 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/inverse-inc/packetfence/go/sharedutils"
-	"github.com/julsemaan/anyfile-notepad/utils"
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/sub"
@@ -32,7 +31,7 @@ var (
 	stripeCustomerUpdate        = customer.Update
 	stripeCustomerNew           = customer.New
 	stripeWebhookConstructEvent = webhook.ConstructEvent
-	sendEmail                   = utils.SendEmail
+	sendEmail                   = sendEmailWithOptionalTLS
 	generateCancelLinkID        = func() string { return secureRandomString(16) }
 )
 

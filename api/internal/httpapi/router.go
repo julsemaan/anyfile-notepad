@@ -21,5 +21,5 @@ func NewRouter(apiHandler http.Handler, statsHandler http.Handler, username stri
 		apiHandler.ServeHTTP(w, r)
 	})
 
-	return withCORS(handler)
+	return withAccessLog(withCORS(handler))
 }
