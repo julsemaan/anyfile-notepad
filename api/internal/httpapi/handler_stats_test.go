@@ -73,6 +73,19 @@ func TestStatsHandler(t *testing.T) {
 		}
 	})
 
+	t.Run("payload too large returns request entity too large", func(t *testing.T) {
+		stub := &statsServiceStub{err: stats.ErrPayloadTooLarge}
+		handler := NewStatsHandler(stub)
+
+		req := httptest.NewRequest(http.MethodPost, "/stats", strings.NewReader("{}"))
+		w := httptest.NewRecorder()
+		handler.ServeHTTP(w, req)
+
+		if w.Code != http.StatusRequestEntityTooLarge {
+			t.Fatalf("expected 413, got %d", w.Code)
+		}
+	})
+
 	t.Run("unknown errors return bad request", func(t *testing.T) {
 		stub := &statsServiceStub{err: errors.New("boom")}
 		handler := NewStatsHandler(stub)

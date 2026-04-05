@@ -28,7 +28,11 @@ func Run(cfg Config) error {
 		defer statsConn.Close()
 	}
 
-	statsService := stats.NewService(statsConn)
+	var metrics stats.Metrics
+	if statsConn != nil {
+		metrics = statsConn
+	}
+	statsService := stats.NewService(metrics)
 	contactCache := cache.New(24*time.Hour, time.Minute)
 	contactService := contact.NewService(contactCache, cfg.MaxContactRequestsPerDay, cfg.SupportEmail, sendEmailWithOptionalTLS)
 

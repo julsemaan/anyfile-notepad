@@ -44,8 +44,8 @@ func TestBeforeInsert(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected insert hook to reject above threshold")
 	}
-	if err.Error() != "Too many contact requests, try again later" {
-		t.Fatalf("unexpected error message: %v", err)
+	if !errors.Is(err, errTooManyRequests) {
+		t.Fatalf("expected errTooManyRequests, got %v", err)
 	}
 }
 
@@ -108,8 +108,8 @@ func TestBeforeInsertFailsWhenEmailSendFails(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected insert hook to fail when email send fails")
 	}
-	if err.Error() != "Unable to process contact request, please try again later" {
-		t.Fatalf("unexpected error message: %v", err)
+	if !errors.Is(err, errUnableToSendEmail) {
+		t.Fatalf("expected errUnableToSendEmail, got %v", err)
 	}
 }
 

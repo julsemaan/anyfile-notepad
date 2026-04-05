@@ -21,7 +21,6 @@ func IsOpenResource(r *http.Request) bool {
 	}
 
 	if r.Method == http.MethodGet {
-		log.Print("Allowing without authentication for namespace that don't modify resources")
 		return true
 	}
 

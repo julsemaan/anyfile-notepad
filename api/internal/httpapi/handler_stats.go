@@ -21,6 +21,8 @@ func NewStatsHandler(statsService StatsService) http.Handler {
 		payload, err := statsService.ParsePayload(r)
 		if err != nil {
 			switch {
+			case errors.Is(err, stats.ErrPayloadTooLarge):
+				http.Error(w, "Payload too large", http.StatusRequestEntityTooLarge)
 			case errors.Is(err, stats.ErrInvalidPayload):
 				http.Error(w, "Invalid payload", http.StatusBadRequest)
 			case errors.Is(err, stats.ErrInvalidJSON):

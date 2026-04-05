@@ -78,6 +78,16 @@ func TestParsePayload(t *testing.T) {
 		}
 	})
 
+	t.Run("too large payload returns error", func(t *testing.T) {
+		tooLargeValue := strings.Repeat("a", int(maxPayloadSizeBytes)+32)
+		req := httptest.NewRequest(http.MethodPost, "/stats", strings.NewReader(`{"type":"increment","key":"`+tooLargeValue+`"}`))
+
+		_, err := svc.ParsePayload(req)
+		if !errors.Is(err, ErrPayloadTooLarge) {
+			t.Fatalf("expected ErrPayloadTooLarge, got %v", err)
+		}
+	})
+
 	t.Run("body read failures return error", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/stats", nil)
 		req.Body = io.NopCloser(errReader{})
@@ -110,5 +120,11 @@ func TestRecord(t *testing.T) {
 	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "bad:key"})
 	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.192_0_2_15" {
 		t.Fatalf("expected invalid metric key to be ignored, got %#v", stub.keys)
+	}
+
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "not-an-ip"})
+	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.unknown" {
+		t.Fatalf("expected invalid ip metric key to be normalized, got %#v", stub.keys)
 	}
 }

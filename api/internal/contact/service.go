@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"strings"
 	"text/template"
@@ -13,8 +12,8 @@ import (
 	"github.com/rs/rest-layer/resource"
 )
 
-var errTooManyRequests = errors.New("Too many contact requests, try again later")
-var errUnableToSendEmail = errors.New("Unable to process contact request, please try again later")
+var errTooManyRequests = errors.New("too many contact requests, try again later")
+var errUnableToSendEmail = errors.New("unable to process contact request, please try again later")
 
 var messageTemplate = template.Must(template.New("contact-email").Parse(`Subject: Anyfile Notepad - Message from {{.ReplyTo}}
 To: {{.Emails}}
@@ -108,5 +107,5 @@ func buildMessage(recipients []string, item *resource.Item) ([]byte, error) {
 		return nil, err
 	}
 
-	return io.ReadAll(&msgBytes)
+	return msgBytes.Bytes(), nil
 }
