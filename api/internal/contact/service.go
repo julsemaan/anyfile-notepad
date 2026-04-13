@@ -46,7 +46,7 @@ func NewService(cache Cache, maxPerDay int, supportEmail string, sendEmail Sende
 }
 
 func (s *Service) BeforeInsert(_ context.Context, items []*resource.Item) error {
-	if s.cache != nil && s.cache.ItemCount() >= s.maxPerDay {
+	if s.cache != nil && s.cache.ItemCount()+len(items) > s.maxPerDay {
 		return errTooManyRequests
 	}
 

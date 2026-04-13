@@ -7,6 +7,7 @@ import (
 	"net/smtp"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var smtpSendMail = smtp.SendMail
@@ -25,7 +26,9 @@ func SendEmail(to []string, msg []byte) error {
 		auth = smtp.PlainAuth("", user, password, host)
 	}
 
-	skipTLSVerify, _ := strconv.ParseBool(os.Getenv("SMTP_SKIP_TLS_VERIFY"))
+	rawSkipTLSVerify := strings.TrimSpace(os.Getenv("SMTP_SKIP_TLS_VERIFY"))
+	rawSkipTLSVerify = strings.Trim(rawSkipTLSVerify, "\"'")
+	skipTLSVerify, _ := strconv.ParseBool(rawSkipTLSVerify)
 
 	// Here we do it all: connect to our server, set up a message and send it
 	err := error(nil)

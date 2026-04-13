@@ -61,7 +61,7 @@ $(function(){
     e.preventDefault();
     $.ajax({
       type: "POST",
-      url: "http://localhost:8001/contact_requests",
+      url: "https://api.anyfile-notepad.semaan.ca/contact_requests",
       data: JSON.stringify({
         "contact_email":$('#contact_email').val(),
         "message":$('#message').val(),
@@ -86,4 +86,3 @@ $(function(){
 </script>
 
 <!--- end panel -->
-

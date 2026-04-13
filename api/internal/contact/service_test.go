@@ -49,6 +49,20 @@ func TestBeforeInsert(t *testing.T) {
 	}
 }
 
+func TestBeforeInsertRejectsBatchThatExceedsLimit(t *testing.T) {
+	cache := newCacheStub()
+	cache.SetDefault("existing-1", "existing-1")
+
+	svc := NewService(cache, 2, "support@example.com", nil)
+	err := svc.BeforeInsert(context.Background(), []*resource.Item{{ID: "req-2"}, {ID: "req-3"}})
+	if err == nil {
+		t.Fatal("expected insert hook to reject batch that exceeds limit")
+	}
+	if !errors.Is(err, errTooManyRequests) {
+		t.Fatalf("expected errTooManyRequests, got %v", err)
+	}
+}
+
 func TestAfterInsertNoopOnError(t *testing.T) {
 	cache := newCacheStub()
 	svc := NewService(cache, 10, "support@example.com", nil)

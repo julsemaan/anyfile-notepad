@@ -118,4 +118,34 @@ func TestSendEmail(t *testing.T) {
 			t.Fatal("did not expect normal sender to be called")
 		}
 	})
+
+	t.Run("skip tls verify accepts quoted bool", func(t *testing.T) {
+		t.Setenv("SMTP_SKIP_TLS_VERIFY", "'true'")
+
+		normalSenderCalled := false
+		smtpSendMail = func(addr string, auth smtp.Auth, from string, to []string, msg []byte) error {
+			normalSenderCalled = true
+			return nil
+		}
+
+		customSenderCalled := false
+		smtpSendMailWithTLSConfig = func(addr string, host string, from string, to []string, msg []byte, auth smtp.Auth, skipTLSVerify bool) error {
+			customSenderCalled = true
+			if !skipTLSVerify {
+				t.Fatal("expected skipTLSVerify to be true")
+			}
+			return nil
+		}
+
+		err := SendEmail([]string{"support@example.com"}, []byte("msg"))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if !customSenderCalled {
+			t.Fatal("expected custom tls sender to be called")
+		}
+		if normalSenderCalled {
+			t.Fatal("did not expect normal sender to be called")
+		}
+	})
 }
