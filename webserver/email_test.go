@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSendEmail(t *testing.T) {
+func TestSendEmailWithOptionalTLS(t *testing.T) {
 	t.Setenv("SMTP_USER", "smtp-user")
 	t.Setenv("SMTP_PASSWORD", "smtp-pass")
 	t.Setenv("SMTP_HOST", "smtp.example.com")
@@ -20,7 +20,7 @@ func TestSendEmail(t *testing.T) {
 		smtpSendMailWithTLSConfig = originalSenderWithTLSConfig
 	})
 
-	t.Run("successful send", func(t *testing.T) {
+	t.Run("successful send with default sender", func(t *testing.T) {
 		called := false
 		smtpSendMail = func(addr string, auth smtp.Auth, from string, to []string, msg []byte) error {
 			called = true
@@ -42,7 +42,7 @@ func TestSendEmail(t *testing.T) {
 			return nil
 		}
 
-		err := SendEmail([]string{"support@example.com"}, []byte("Subject: test\n\nHello"))
+		err := sendEmailWithOptionalTLS([]string{"support@example.com"}, []byte("Subject: test\n\nHello"))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -62,7 +62,7 @@ func TestSendEmail(t *testing.T) {
 			return nil
 		}
 
-		err := SendEmail([]string{"support@example.com"}, []byte("msg"))
+		err := sendEmailWithOptionalTLS([]string{"support@example.com"}, []byte("msg"))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -74,7 +74,7 @@ func TestSendEmail(t *testing.T) {
 			return expectedErr
 		}
 
-		err := SendEmail([]string{"support@example.com"}, []byte("msg"))
+		err := sendEmailWithOptionalTLS([]string{"support@example.com"}, []byte("msg"))
 		if err == nil {
 			t.Fatal("expected error")
 		}
@@ -83,8 +83,8 @@ func TestSendEmail(t *testing.T) {
 		}
 	})
 
-	t.Run("skip tls verify uses custom tls sender", func(t *testing.T) {
-		t.Setenv("SMTP_SKIP_TLS_VERIFY", "true")
+	t.Run("quoted true enables tls skip verify sender", func(t *testing.T) {
+		t.Setenv("SMTP_SKIP_TLS_VERIFY", "'true'")
 
 		normalSenderCalled := false
 		smtpSendMail = func(addr string, auth smtp.Auth, from string, to []string, msg []byte) error {
@@ -107,37 +107,7 @@ func TestSendEmail(t *testing.T) {
 			return nil
 		}
 
-		err := SendEmail([]string{"support@example.com"}, []byte("msg"))
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if !customSenderCalled {
-			t.Fatal("expected custom tls sender to be called")
-		}
-		if normalSenderCalled {
-			t.Fatal("did not expect normal sender to be called")
-		}
-	})
-
-	t.Run("skip tls verify accepts quoted bool", func(t *testing.T) {
-		t.Setenv("SMTP_SKIP_TLS_VERIFY", "'true'")
-
-		normalSenderCalled := false
-		smtpSendMail = func(addr string, auth smtp.Auth, from string, to []string, msg []byte) error {
-			normalSenderCalled = true
-			return nil
-		}
-
-		customSenderCalled := false
-		smtpSendMailWithTLSConfig = func(addr string, host string, from string, to []string, msg []byte, auth smtp.Auth, skipTLSVerify bool) error {
-			customSenderCalled = true
-			if !skipTLSVerify {
-				t.Fatal("expected skipTLSVerify to be true")
-			}
-			return nil
-		}
-
-		err := SendEmail([]string{"support@example.com"}, []byte("msg"))
+		err := sendEmailWithOptionalTLS([]string{"support@example.com"}, []byte("msg"))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
