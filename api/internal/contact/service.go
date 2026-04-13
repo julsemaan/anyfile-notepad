@@ -5,10 +5,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 	"text/template"
 
+	"github.com/julsemaan/anyfile-notepad/api/internal/logging"
 	"github.com/rs/rest-layer/resource"
 )
 
@@ -58,11 +58,11 @@ func (s *Service) BeforeInsert(_ context.Context, items []*resource.Item) error 
 	for _, item := range items {
 		msg, buildErr := buildMessage(recipients, item)
 		if buildErr != nil {
-			log.Printf("ERROR: Unable to build contact request email: %v", buildErr)
+			logging.Errorf("Unable to build contact request email: %v", buildErr)
 			return errUnableToSendEmail
 		}
 		if sendErr := s.sendEmail(recipients, msg); sendErr != nil {
-			log.Printf("ERROR: Unable to send contact request email: %v", sendErr)
+			logging.Errorf("Unable to send contact request email: %v", sendErr)
 			return errUnableToSendEmail
 		}
 	}
@@ -72,7 +72,7 @@ func (s *Service) BeforeInsert(_ context.Context, items []*resource.Item) error 
 
 func (s *Service) AfterInsert(_ context.Context, items []*resource.Item, err *error) {
 	if err != nil && *err != nil {
-		log.Println("ERROR: Not sending contact request email because there was an error saving the contact request")
+		logging.Error("Not sending contact request email because there was an error saving the contact request")
 		return
 	}
 
