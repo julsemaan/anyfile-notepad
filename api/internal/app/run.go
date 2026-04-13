@@ -22,7 +22,7 @@ func Run(cfg Config) error {
 
 	statsConn, err := statsd.New(statsd.Address(cfg.StatsdAddress))
 	if err != nil {
-		log.Printf("warning: statsd initialization failed: %v", err)
+		log.Printf("ERROR: statsd initialization failed: %v", err)
 	}
 	if statsConn != nil {
 		defer statsConn.Close()

@@ -8,6 +8,6 @@ import (
 
 func main() {
 	if err := app.Run(app.LoadConfigFromEnv()); err != nil {
-		log.Fatal(err)
+		log.Fatalf("ERROR: %v", err)
 	}
 }
