@@ -7,6 +7,7 @@ import (
 
 	"github.com/julsemaan/anyfile-notepad/api/internal/contact"
 	"github.com/julsemaan/anyfile-notepad/api/internal/httpapi"
+	"github.com/julsemaan/anyfile-notepad/api/internal/logging"
 	"github.com/julsemaan/anyfile-notepad/api/internal/resources"
 	"github.com/julsemaan/anyfile-notepad/api/internal/stats"
 	cache "github.com/patrickmn/go-cache"
@@ -22,7 +23,7 @@ func Run(cfg Config) error {
 
 	statsConn, err := statsd.New(statsd.Address(cfg.StatsdAddress))
 	if err != nil {
-		log.Printf("warning: statsd initialization failed: %v", err)
+		logging.Errorf("statsd initialization failed: %v", err)
 	}
 	if statsConn != nil {
 		defer statsConn.Close()
