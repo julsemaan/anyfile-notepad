@@ -125,7 +125,7 @@ func TestRecord(t *testing.T) {
 	if stub.hits != 1 {
 		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
 	}
-	expected = []string{"afn.app.file-edit.extension"}
+	expected = []string{"afn.app.file-edit.*"}
 	if !reflect.DeepEqual(stub.keys, expected) {
 		t.Fatalf("unexpected metrics keys for extension bucket: %#v", stub.keys)
 	}
