@@ -108,15 +108,37 @@ func TestRecord(t *testing.T) {
 	stub := &metricsStub{}
 	svc := NewService(stub)
 
-	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "hits"})
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.app-load"})
 
 	if stub.hits != 1 {
 		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
 	}
 
-	expected := []string{"hits"}
+	expected := []string{"afn.app.app-load"}
 	if !reflect.DeepEqual(stub.keys, expected) {
 		t.Fatalf("unexpected metrics keys: %#v", stub.keys)
+	}
+
+	stub.hits = 0
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.file-edit.extensions.txt"})
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	expected = []string{"afn.app.file-edit.extension"}
+	if !reflect.DeepEqual(stub.keys, expected) {
+		t.Fatalf("unexpected metrics keys for extension bucket: %#v", stub.keys)
+	}
+
+	stub.hits = 0
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.some-new-stat"})
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	expected = []string{metricKeyOther}
+	if !reflect.DeepEqual(stub.keys, expected) {
+		t.Fatalf("unexpected metrics keys for fallback bucket: %#v", stub.keys)
 	}
 
 	stub.hits = 0
