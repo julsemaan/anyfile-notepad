@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/julsemaan/anyfile-notepad/api/internal/contact"
@@ -46,15 +47,33 @@ func Run(cfg Config) error {
 	metricsMux := http.NewServeMux()
 	metricsMux.Handle("/metrics", promhttp.Handler())
 
+	metricsServer := &http.Server{
+		Addr:              cfg.MetricsListenAddr,
+		Handler:           metricsMux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
+	apiServer := &http.Server{
+		Addr:              cfg.ListenAddr,
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
 	errCh := make(chan error, 2)
 	go func() {
-		log.Printf("Serving Prometheus metrics on http://localhost%s/metrics", cfg.MetricsListenAddr)
-		errCh <- http.ListenAndServe(cfg.MetricsListenAddr, metricsMux)
+		log.Printf("Serving Prometheus metrics on %s", logURL(cfg.MetricsListenAddr, "/metrics"))
+		errCh <- metricsServer.ListenAndServe()
 	}()
 
 	go func() {
-		log.Printf("Serving API on http://localhost%s", cfg.ListenAddr)
-		errCh <- http.ListenAndServe(cfg.ListenAddr, router)
+		log.Printf("Serving API on %s", logURL(cfg.ListenAddr, ""))
+		errCh <- apiServer.ListenAndServe()
 	}()
 
 	for {
@@ -65,4 +84,12 @@ func Run(cfg Config) error {
 
 		return err
 	}
+}
+
+func logURL(addr string, path string) string {
+	if strings.HasPrefix(addr, ":") {
+		addr = "localhost" + addr
+	}
+
+	return "http://" + addr + path
 }

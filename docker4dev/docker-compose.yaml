@@ -30,13 +30,14 @@ services:
       target: build
     ports:
       - 8001:8080
-      - 8003:9090 
+      - 8003:9090
     env_file:
       - .env
     environment:
       AFN_REST_DATA_DIR: /var/www/api
       AFN_REST_USERNAME: deez
       AFN_REST_PASSWORD: nuts
+      AFN_METRICS_LISTEN_ADDR: :9090
     volumes:
       - api:/var/www/api
       - ../api/:/src/api/

@@ -7,7 +7,7 @@ import (
 
 const defaultDataDir = "./db"
 const defaultListenAddr = ":8080"
-const defaultMetricsListenAddr = ":9090"
+const defaultMetricsListenAddr = "127.0.0.1:9090"
 const defaultContactRequestsPerDay = 10
 const envMaxContactRequestsPerDay = "AFN_MAX_CONTACT_REQUESTS_PER_DAY"
 
