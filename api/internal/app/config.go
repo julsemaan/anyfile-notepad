@@ -16,7 +16,6 @@ type Config struct {
 	Username                 string
 	Password                 string
 	SupportEmail             string
-	StatsdAddress            string
 	MaxContactRequestsPerDay int
 }
 
@@ -37,7 +36,6 @@ func LoadConfigFromEnv() Config {
 		Username:                 os.Getenv("AFN_REST_USERNAME"),
 		Password:                 os.Getenv("AFN_REST_PASSWORD"),
 		SupportEmail:             os.Getenv("AFN_SUPPORT_EMAIL"),
-		StatsdAddress:            os.Getenv("AFN_STATSD_URI"),
 		MaxContactRequestsPerDay: loadMaxContactRequestsPerDay(),
 	}
 }

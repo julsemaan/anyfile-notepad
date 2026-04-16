@@ -15,13 +15,13 @@ var ErrInvalidJSON = errors.New("invalid json")
 var ErrPayloadTooLarge = errors.New("payload too large")
 
 const maxPayloadSizeBytes = 4 * 1024
-const unknownIPMetricKey = "unknown"
 
 var remoteAddrRegex = regexp.MustCompile(`^([0-9.]+):`)
 var metricKeyRegex = regexp.MustCompile(`^[a-zA-Z0-9_.-]{1,64}$`)
 
 type Metrics interface {
-	Increment(bucket string)
+	IncrementStatsHits()
+	IncrementKey(key string)
 }
 
 type Service struct {
@@ -69,39 +69,13 @@ func (s *Service) Record(payload map[string]string) {
 		return
 	}
 
-	ipKey := normalizeIPMetricKey(payload["ip"])
-	s.metrics.Increment("afn.stats-hits." + ipKey)
+	s.metrics.IncrementStatsHits()
 
 	if payload["type"] == "increment" {
 		if metricKeyRegex.MatchString(payload["key"]) {
-			s.metrics.Increment(payload["key"])
+			s.metrics.IncrementKey(payload["key"])
 		}
 	}
-}
-
-func normalizeIPMetricKey(raw string) string {
-	candidate := strings.TrimSpace(raw)
-	if candidate == "" {
-		return unknownIPMetricKey
-	}
-
-	if host, _, err := net.SplitHostPort(candidate); err == nil {
-		candidate = host
-	} else {
-		candidate = strings.Trim(candidate, "[]")
-	}
-
-	ip := net.ParseIP(candidate)
-	if ip == nil {
-		return unknownIPMetricKey
-	}
-
-	ipKey := strings.NewReplacer(".", "_", ":", "_").Replace(ip.String())
-	if ipKey == "" || len(ipKey) > 64 {
-		return unknownIPMetricKey
-	}
-
-	return ipKey
 }
 
 func extractIP(r *http.Request) string {

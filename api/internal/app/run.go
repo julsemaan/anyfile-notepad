@@ -10,28 +10,17 @@ import (
 	"github.com/julsemaan/anyfile-notepad/api/internal/resources"
 	"github.com/julsemaan/anyfile-notepad/api/internal/stats"
 	cache "github.com/patrickmn/go-cache"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/rest-layer/resource"
 	"github.com/rs/rest-layer/rest"
 	"github.com/rs/rest-layer/schema"
-	"gopkg.in/alexcesaro/statsd.v2"
 )
 
 func Run(cfg Config) error {
 	schema.CreatedField.ReadOnly = false
 	schema.UpdatedField.ReadOnly = false
 
-	statsConn, err := statsd.New(statsd.Address(cfg.StatsdAddress))
-	if err != nil {
-		log.Printf("warning: statsd initialization failed: %v", err)
-	}
-	if statsConn != nil {
-		defer statsConn.Close()
-	}
-
-	var metrics stats.Metrics
-	if statsConn != nil {
-		metrics = statsConn
-	}
+	metrics := stats.NewPrometheusMetrics()
 	statsService := stats.NewService(metrics)
 	contactCache := cache.New(24*time.Hour, time.Minute)
 	contactService := contact.NewService(contactCache, cfg.MaxContactRequestsPerDay, cfg.SupportEmail, sendEmailWithOptionalTLS)
@@ -49,6 +38,7 @@ func Run(cfg Config) error {
 	router := httpapi.NewRouter(
 		restHandler,
 		httpapi.NewStatsHandler(statsService),
+		promhttp.Handler(),
 		cfg.Username,
 		cfg.Password,
 	)
