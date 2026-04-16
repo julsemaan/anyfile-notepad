@@ -30,6 +30,7 @@ services:
       target: build
     ports:
       - 8001:8080
+      - 8003:9090 
     env_file:
       - .env
     environment:

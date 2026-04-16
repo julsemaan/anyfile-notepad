@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -38,11 +39,30 @@ func Run(cfg Config) error {
 	router := httpapi.NewRouter(
 		restHandler,
 		httpapi.NewStatsHandler(statsService),
-		promhttp.Handler(),
 		cfg.Username,
 		cfg.Password,
 	)
 
-	log.Printf("Serving API on http://localhost%s", cfg.ListenAddr)
-	return http.ListenAndServe(cfg.ListenAddr, router)
+	metricsMux := http.NewServeMux()
+	metricsMux.Handle("/metrics", promhttp.Handler())
+
+	errCh := make(chan error, 2)
+	go func() {
+		log.Printf("Serving Prometheus metrics on http://localhost%s/metrics", cfg.MetricsListenAddr)
+		errCh <- http.ListenAndServe(cfg.MetricsListenAddr, metricsMux)
+	}()
+
+	go func() {
+		log.Printf("Serving API on http://localhost%s", cfg.ListenAddr)
+		errCh <- http.ListenAndServe(cfg.ListenAddr, router)
+	}()
+
+	for {
+		err := <-errCh
+		if errors.Is(err, http.ErrServerClosed) {
+			continue
+		}
+
+		return err
+	}
 }

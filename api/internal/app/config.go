@@ -7,12 +7,14 @@ import (
 
 const defaultDataDir = "./db"
 const defaultListenAddr = ":8080"
+const defaultMetricsListenAddr = ":9090"
 const defaultContactRequestsPerDay = 10
 const envMaxContactRequestsPerDay = "AFN_MAX_CONTACT_REQUESTS_PER_DAY"
 
 type Config struct {
 	DataDir                  string
 	ListenAddr               string
+	MetricsListenAddr        string
 	Username                 string
 	Password                 string
 	SupportEmail             string
@@ -30,9 +32,15 @@ func LoadConfigFromEnv() Config {
 		listenAddr = defaultListenAddr
 	}
 
+	metricsListenAddr := os.Getenv("AFN_METRICS_LISTEN_ADDR")
+	if metricsListenAddr == "" {
+		metricsListenAddr = defaultMetricsListenAddr
+	}
+
 	return Config{
 		DataDir:                  dataDir,
 		ListenAddr:               listenAddr,
+		MetricsListenAddr:        metricsListenAddr,
 		Username:                 os.Getenv("AFN_REST_USERNAME"),
 		Password:                 os.Getenv("AFN_REST_PASSWORD"),
 		SupportEmail:             os.Getenv("AFN_SUPPORT_EMAIL"),
