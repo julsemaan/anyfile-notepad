@@ -52,6 +52,12 @@
 
 <script>
 $(function(){
+  var contactApiBaseUrl = "https://api.anyfile-notepad.semaan.ca";
+  if (window.AFN_VARS) {
+    contactApiBaseUrl = window.AFN_VARS.afn_api_uri || contactApiBaseUrl;
+  }
+  contactApiBaseUrl = contactApiBaseUrl.replace(/\/+$/, "");
+
   if(window.location.search.match("feedback")) {
     $('.contact-warning').hide()
   }
@@ -61,7 +67,7 @@ $(function(){
     e.preventDefault();
     $.ajax({
       type: "POST",
-      url: "https://api.anyfile-notepad.semaan.ca/contact_requests",
+      url: contactApiBaseUrl + "/contact_requests",
       data: JSON.stringify({
         "contact_email":$('#contact_email').val(),
         "message":$('#message').val(),
