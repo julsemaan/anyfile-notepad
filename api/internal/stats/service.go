@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/julsemaan/anyfile-notepad/api/internal/logging"
 )
 
 var ErrInvalidPayload = errors.New("invalid payload")
@@ -98,7 +100,12 @@ func (s *Service) Record(payload map[string]string) {
 
 	if payload["type"] == "increment" {
 		if metricKeyRegex.MatchString(payload["key"]) {
-			s.metrics.IncrementKey(normalizeIncrementMetricKey(payload["key"]))
+			normalizedKey := normalizeIncrementMetricKey(payload["key"])
+			if normalizedKey == metricKeyOther && payload["key"] != metricKeyOther {
+				logging.Errorf("unknown increment metric key: %s", payload["key"])
+			}
+
+			s.metrics.IncrementKey(normalizedKey)
 		}
 	}
 }

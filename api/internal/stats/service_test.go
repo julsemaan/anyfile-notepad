@@ -1,8 +1,10 @@
 package stats
 
 import (
+	"bytes"
 	"errors"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -132,13 +134,20 @@ func TestRecord(t *testing.T) {
 
 	stub.hits = 0
 	stub.keys = nil
+	var logBuf bytes.Buffer
+	oldWriter := log.Writer()
+	log.SetOutput(&logBuf)
 	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.some-new-stat"})
+	log.SetOutput(oldWriter)
 	if stub.hits != 1 {
 		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
 	}
 	expected = []string{metricKeyOther}
 	if !reflect.DeepEqual(stub.keys, expected) {
 		t.Fatalf("unexpected metrics keys for fallback bucket: %#v", stub.keys)
+	}
+	if !strings.Contains(logBuf.String(), "unknown increment metric key: afn.app.some-new-stat") {
+		t.Fatalf("expected unknown metric key log, got %q", logBuf.String())
 	}
 
 	stub.hits = 0

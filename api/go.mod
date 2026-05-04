@@ -3,7 +3,6 @@ module github.com/julsemaan/anyfile-notepad/api
 go 1.26
 
 require (
-	github.com/julsemaan/anyfile-notepad/utils v0.0.0-20230202010526-481b7f9b59a2
 	github.com/julsemaan/rest-layer-file v0.0.0-20230518012330-1c28ed9eb6a7
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.2

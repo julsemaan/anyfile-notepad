@@ -7,7 +7,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 		t.Setenv("AFN_METRICS_LISTEN_ADDR", "")
 
 		cfg := LoadConfigFromEnv()
-		if cfg.MetricsListenAddr != defaultMetricsListenAddr {
+		if cfg.MetricsListenAddr != ":9090" {
 			t.Fatalf("expected default metrics listen addr, got %q", cfg.MetricsListenAddr)
 		}
 	})

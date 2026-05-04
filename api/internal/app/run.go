@@ -9,6 +9,7 @@ import (
 
 	"github.com/julsemaan/anyfile-notepad/api/internal/contact"
 	"github.com/julsemaan/anyfile-notepad/api/internal/httpapi"
+	"github.com/julsemaan/anyfile-notepad/api/internal/logging"
 	"github.com/julsemaan/anyfile-notepad/api/internal/resources"
 	"github.com/julsemaan/anyfile-notepad/api/internal/stats"
 	cache "github.com/patrickmn/go-cache"
@@ -65,25 +66,31 @@ func Run(cfg Config) error {
 		IdleTimeout:       60 * time.Second,
 	}
 
-	errCh := make(chan error, 2)
-	go func() {
-		log.Printf("Serving Prometheus metrics on %s", logURL(cfg.MetricsListenAddr, "/metrics"))
-		errCh <- metricsServer.ListenAndServe()
-	}()
+	go serveMetrics(metricsServer, cfg.MetricsListenAddr)
 
-	go func() {
-		log.Printf("Serving API on %s", logURL(cfg.ListenAddr, ""))
-		errCh <- apiServer.ListenAndServe()
-	}()
+	return serveAPI(apiServer, cfg.ListenAddr)
+}
 
-	for {
-		err := <-errCh
-		if errors.Is(err, http.ErrServerClosed) {
-			continue
-		}
+type listenAndServer interface {
+	ListenAndServe() error
+}
 
+func serveMetrics(server listenAndServer, addr string) {
+	log.Printf("Serving Prometheus metrics on %s", logURL(addr, "/metrics"))
+
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		logging.Errorf("Prometheus metrics server stopped: %v", err)
+	}
+}
+
+func serveAPI(server listenAndServer, addr string) error {
+	log.Printf("Serving API on %s", logURL(addr, ""))
+
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
+
+	return nil
 }
 
 func logURL(addr string, path string) string {
