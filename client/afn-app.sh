@@ -176,17 +176,24 @@ function application_js() {
   add_js_asset public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
   add_js_asset public/jquery.cookie.min.js $APPLICATION_JS
 
-  add_js_asset assets/js/libs/rsvp.min.js $APPLICATION_JS
-  add_js_asset assets/js/libs/route-recognizer.js $APPLICATION_JS
-  add_js_asset assets/js/DataBinder.js $APPLICATION_JS
-  add_js_asset assets/js/Model.js $APPLICATION_JS
-  add_js_asset assets/js/Model/Preference.js $APPLICATION_JS
-  add_js_asset assets/js/Model/CloudFile.js $APPLICATION_JS
-  add_js_asset assets/js/Widget/Preference.js $APPLICATION_JS
-  add_js_asset assets/js/helpers.js $APPLICATION_JS
+  # Single authoritative list of files needing explicit ordering (dependency order)
+  MANUAL_JS_FILES=(
+    assets/js/libs/rsvp.min.js
+    assets/js/libs/route-recognizer.js
+    assets/js/DataBinder.js
+    assets/js/Model.js
+    assets/js/Model/Preference.js
+    assets/js/Model/CloudFile.js
+    assets/js/Widget/Preference.js
+    assets/js/helpers.js
+  )
 
-  # todo - exclude the files above
-  find assets/js/ -name '*.js' | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
+  for file in "${MANUAL_JS_FILES[@]}"; do
+    add_js_asset "$file" $APPLICATION_JS
+  done
+
+  # Add remaining assets/js/ files, excluding those already added
+  find assets/js/ -name '*.js' | grep -v -F -f <(printf '%s\n' "${MANUAL_JS_FILES[@]}") | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
   if ! is_webdev; then
     ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
