@@ -31,6 +31,7 @@
 - `julsemaan-tmp/` — scratch area; ignore unless user explicitly wants it.
 
 ## Critical repo caveats
+- This repo is brownfield and has evolved organically over the last 15 years. Applied higher than usual precautions when doing destructive commands. A refactor in this repo has led to an `rm -fr /*` due to an unset variable by an agentic coding tool.
 - Client build script is in 2 places but is a symlink:
   - client/afn-app.sh
   - ./afn-app.sh
