@@ -21,11 +21,16 @@ func (errReader) Close() error {
 }
 
 type metricsStub struct {
+	hits int
 	keys []string
 }
 
-func (s *metricsStub) Increment(bucket string) {
-	s.keys = append(s.keys, bucket)
+func (s *metricsStub) IncrementStatsHits() {
+	s.hits++
+}
+
+func (s *metricsStub) IncrementKey(key string) {
+	s.keys = append(s.keys, key)
 }
 
 func TestParsePayload(t *testing.T) {
@@ -103,28 +108,66 @@ func TestRecord(t *testing.T) {
 	stub := &metricsStub{}
 	svc := NewService(stub)
 
-	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "hits"})
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.app-load"})
 
-	expected := []string{"afn.stats-hits.192_0_2_15", "hits"}
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+
+	expected := []string{"afn.app.app-load"}
 	if !reflect.DeepEqual(stub.keys, expected) {
 		t.Fatalf("unexpected metrics keys: %#v", stub.keys)
 	}
 
+	stub.hits = 0
 	stub.keys = nil
-	svc.Record(map[string]string{"ip": "2001:db8::1"})
-	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.2001_db8__1" {
-		t.Fatalf("expected sanitized ipv6 metric key, got %#v", stub.keys)
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.file-edit.extensions.txt"})
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	expected = []string{"afn.app.file-edit.*"}
+	if !reflect.DeepEqual(stub.keys, expected) {
+		t.Fatalf("unexpected metrics keys for extension bucket: %#v", stub.keys)
 	}
 
+	stub.hits = 0
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "afn.app.some-new-stat"})
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	expected = []string{metricKeyOther}
+	if !reflect.DeepEqual(stub.keys, expected) {
+		t.Fatalf("unexpected metrics keys for fallback bucket: %#v", stub.keys)
+	}
+
+	stub.hits = 0
+	stub.keys = nil
+	svc.Record(map[string]string{"ip": "2001:db8::1"})
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	if len(stub.keys) != 0 {
+		t.Fatalf("did not expect increment key metric, got %#v", stub.keys)
+	}
+
+	stub.hits = 0
 	stub.keys = nil
 	svc.Record(map[string]string{"ip": "192.0.2.15", "type": "increment", "key": "bad:key"})
-	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.192_0_2_15" {
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	if len(stub.keys) != 0 {
 		t.Fatalf("expected invalid metric key to be ignored, got %#v", stub.keys)
 	}
 
+	stub.hits = 0
 	stub.keys = nil
 	svc.Record(map[string]string{"ip": "not-an-ip"})
-	if len(stub.keys) != 1 || stub.keys[0] != "afn.stats-hits.unknown" {
-		t.Fatalf("expected invalid ip metric key to be normalized, got %#v", stub.keys)
+	if stub.hits != 1 {
+		t.Fatalf("expected 1 stats hit increment, got %d", stub.hits)
+	}
+	if len(stub.keys) != 0 {
+		t.Fatalf("did not expect increment key metric, got %#v", stub.keys)
 	}
 }

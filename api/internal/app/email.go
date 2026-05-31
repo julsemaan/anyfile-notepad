@@ -2,12 +2,13 @@ package app
 
 import (
 	"crypto/tls"
-	"fmt"
 	"net"
 	"net/smtp"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/julsemaan/anyfile-notepad/api/internal/logging"
 )
 
 var smtpSendMail = smtp.SendMail
@@ -37,7 +38,7 @@ func sendEmailWithOptionalTLS(to []string, msg []byte) error {
 		err = smtpSendMail(addr, auth, from, to, msg)
 	}
 	if err != nil {
-		fmt.Println("ERROR: Unable to send email:", err)
+		logging.Error("Unable to send email:", err)
 		return err
 	}
 

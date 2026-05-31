@@ -18,7 +18,6 @@ func TestRouter(t *testing.T) {
 		statsCalled = true
 		w.WriteHeader(http.StatusOK)
 	})
-
 	router := NewRouter(apiHandler, statsHandler, "user", "password")
 
 	t.Run("stats route bypasses auth", func(t *testing.T) {
