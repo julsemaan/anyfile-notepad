@@ -34,7 +34,6 @@
 - Client build script is in 2 places but is a symlink:
   - client/afn-app.sh
   - ./afn-app.sh
-  Keep both in sync if build logic changes.
 - Client build downloads resource JSON from live API URLs into `client/tmp/cache/`:
   - `extensions.json`
   - `syntaxes.json`
