@@ -12,7 +12,7 @@
 # and prints the decoded MIME type on stdout.
 #
 # Non-matching lines are silently ignored.
-# Malformed hex values produce a warning on stderr and continue.
+# Odd-length hex values produce a warning on stderr and continue.
 
 use strict;
 use warnings;
@@ -22,8 +22,8 @@ my $matched = 0;
 while (my $line = <>) {
     while ($line =~ /afn\.app\.file-edit\.mime-type\.hex\.([0-9A-Fa-f]+)/g) {
         my $hex = $1;
-        if ($hex !~ /^[0-9A-Fa-f]+$/) {
-            warn "decode_hex_mime_stats.pl: warning: malformed hex '$hex' at line $.\n";
+        if (length($hex) % 2 != 0) {
+            warn "decode_hex_mime_stats.pl: warning: odd-length hex '$hex' at line $.\n";
             next;
         }
         my $decoded = pack("H*", $hex);
