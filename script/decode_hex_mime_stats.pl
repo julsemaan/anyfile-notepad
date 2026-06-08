@@ -32,4 +32,4 @@ while (my $line = <>) {
     }
 }
 
-exit 0;
+exit $matched ? 0 : 1;
