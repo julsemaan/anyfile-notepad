@@ -10,9 +10,12 @@ Class("StatIncrement", ["Stat"]);
 
 StatIncrement.hex_encode = function(str) {
   var hex = '';
-  for (var i = 0; i < str.length; i++) {
-    var code = str.charCodeAt(i);
-    hex += code.toString(16);
+  // Encode as UTF-8 bytes, then hex-encode each byte with zero-padding.
+  // unescape(encodeURIComponent(str)) yields a string where each char is one UTF-8 byte (0-255).
+  var bytes = unescape(encodeURIComponent(str));
+  for (var i = 0; i < bytes.length; i++) {
+    var code = bytes.charCodeAt(i);
+    hex += ('0' + code.toString(16)).slice(-2);
   }
   return hex;
 }
