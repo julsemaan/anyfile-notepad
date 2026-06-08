@@ -282,6 +282,7 @@ EditorController.prototype.edit = function(id){
         StatIncrement.record("file-edit."+self.provider);
         // NOTE: Extension already has a dot at the beginning
         StatIncrement.record("file-edit.extensions"+self.file.extension());
+        StatIncrement.record_file_edit_mime_type(self.file.mime_type || self.file.mime_type_from_extension());
 
         self.post_file_load();
         self.recent_files_controller.add_file(self.file);
