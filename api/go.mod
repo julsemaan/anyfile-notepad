@@ -3,11 +3,10 @@ module github.com/julsemaan/anyfile-notepad/api
 go 1.26
 
 require (
-	github.com/julsemaan/anyfile-notepad/utils v0.0.0-20230202010526-481b7f9b59a2
 	github.com/julsemaan/rest-layer-file v0.0.0-20230518012330-1c28ed9eb6a7
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.2
-	github.com/rs/rest-layer v0.0.0-20160505213648-cb84bc79b5b8
+	github.com/rs/rest-layer v0.2.0
 )
 
 require (
@@ -21,9 +20,9 @@ require (
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/sys v0.35.0 // indirect
+	golang.org/x/crypto v0.51.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
 )
 
