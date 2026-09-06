@@ -53,10 +53,10 @@
 		'params' : {}
 	};
 </script>
-<script src="https://parchmentuniquevista.com/17133d254dc58db1395ab65191071264/invoke.js"></script>
+<script src="https://parchmentuniquevista.com/17133d254dc58db1395ab65191071264/invoke.js" async></script>
 </div>
 	</div>
-  <script type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
+  <script type="text/javascript"> var infolinks_pid = 3221959; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js" async></script>
   [% END %]
 </div>
 
