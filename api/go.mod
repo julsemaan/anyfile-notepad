@@ -1,6 +1,6 @@
 module github.com/julsemaan/anyfile-notepad/api
 
-go 1.26.0
+go 1.26.7
 
 require (
 	github.com/julsemaan/rest-layer-file v0.0.0-20230518012330-1c28ed9eb6a7

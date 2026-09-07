@@ -1,6 +1,6 @@
 module github.com/julsemaan/anyfile-notepad/webserver
 
-go 1.26.0
+go 1.26.7
 
 require (
 	github.com/davecgh/go-spew v1.1.1
