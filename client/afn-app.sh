@@ -48,7 +48,7 @@ function add_min_prefix() {
 }
 export -f add_min_prefix
 
-RUNNING_DIR=$(pwd)
+RUNNING_DIR="$(pwd -P)"
 
 if [ "${AFN_BUILD_DIR+x}" = "x" ]; then
   COMPILED_APP="$AFN_BUILD_DIR"
@@ -73,6 +73,13 @@ if [ "$COMPILED_APP" == "/" ]; then
   echo "Refusing to build into the root directory" >&2
   exit 1
 fi
+
+case "$RUNNING_DIR/" in
+  "$COMPILED_APP/"*)
+    echo "Refusing to clean the source directory or one of its ancestors" >&2
+    exit 1
+    ;;
+esac
 
 if [ -n "${AFN_BUILD_DIR:-}" ]; then
   echo "Building app into $COMPILED_APP"
