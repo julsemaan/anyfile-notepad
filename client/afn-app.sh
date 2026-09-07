@@ -50,15 +50,35 @@ export -f add_min_prefix
 
 RUNNING_DIR=$(pwd)
 
-if ! [ -z $AFN_BUILD_DIR ]; then
-  echo "Building app into $AFN_BUILD_DIR"
+if [ "${AFN_BUILD_DIR+x}" = "x" ]; then
   COMPILED_APP="$AFN_BUILD_DIR"
 else
   COMPILED_APP="$RUNNING_DIR/tmp/app-compiled"
 fi
 
+if [ -z "$COMPILED_APP" ]; then
+  echo "Refusing to build into an empty output directory" >&2
+  exit 1
+fi
+
+COMPILED_APP="$(realpath -m -- "$COMPILED_APP")"
+if [ "$COMPILED_APP" == "/" ]; then
+  echo "Refusing to build into the root directory" >&2
+  exit 1
+fi
+
+mkdir -p -- "$COMPILED_APP"
+COMPILED_APP="$(realpath -- "$COMPILED_APP")"
+if [ "$COMPILED_APP" == "/" ]; then
+  echo "Refusing to build into the root directory" >&2
+  exit 1
+fi
+
+if [ -n "${AFN_BUILD_DIR:-}" ]; then
+  echo "Building app into $COMPILED_APP"
+fi
+
 SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
-WEB_PID_FILE="$RUNNING_DIR/tmp/web.pid"
 
 APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
 APP_VERSION="dyn"
@@ -152,9 +172,9 @@ function application_css() {
   ./node_modules/.bin/node-sass --include-path assets/css/ assets/css/editor.css.scss >> $APPLICATION_CSS
 
   if ! is_webdev; then
-    ./node_modules/.bin/minify $APPLICATION_CSS > `add_min_prefix $APPLICATION_CSS`
+    ./node_modules/.bin/minify "$APPLICATION_CSS" > "$(add_min_prefix "$APPLICATION_CSS")"
   else
-    cp $APPLICATION_CSS `add_min_prefix $APPLICATION_CSS`
+    cp "$APPLICATION_CSS" "$(add_min_prefix "$APPLICATION_CSS")"
   fi
 }
 
@@ -196,9 +216,9 @@ function application_js() {
   find assets/js/ -name '*.js' | grep -v -F -f <(printf '%s\n' "${MANUAL_JS_FILES[@]}") | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
   if ! is_webdev; then
-    ./node_modules/.bin/minify $APPLICATION_JS > `add_min_prefix $APPLICATION_JS`
+    ./node_modules/.bin/minify "$APPLICATION_JS" > "$(add_min_prefix "$APPLICATION_JS")"
   else
-    cp $APPLICATION_JS `add_min_prefix $APPLICATION_JS`
+    cp "$APPLICATION_JS" "$(add_min_prefix "$APPLICATION_JS")"
   fi
 }
 
@@ -246,7 +266,8 @@ function download_if_necessary() {
 }
 
 function json_resources() {
-  # Adding JSON resources (from prod for now...), change TS to trigger re-download in docker builds
+  # Adding JSON resources (from prod for now...), change this marker to trigger re-download in docker builds
+  # shellcheck disable=SC2034
   TS=20250912
   download_if_necessary extensions.json https://api.anyfile-notepad.semaan.ca/extensions
   download_if_necessary syntaxes.json https://api.anyfile-notepad.semaan.ca/syntaxes
@@ -256,7 +277,7 @@ function json_resources() {
 function build_all() {
   mkdir -p $COMPILED_APP
   cd /tmp/
-  rm -fr $COMPILED_APP/*
+  rm -fr -- "${COMPILED_APP:?}"/*
   cd -
 
   mkdir -p $COMPILED_APP
@@ -285,9 +306,7 @@ function watch_dir() {
   OPTIONS=${3:-}
   while true; do
     inotifywait $OPTIONS -r -e create,modify,delete $RUNNING_DIR/$DIR
-    for action in $2; do
-      eval $action
-    done
+    eval "$ACTION"
   done
 }
 
