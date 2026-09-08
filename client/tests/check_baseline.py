@@ -45,6 +45,10 @@ def main():
         "node-sass": (">0.0.0", "4.14.1"),
         "tether-shepherd": ("^1.8.1", "1.8.1"),
     }
+    check(
+        set(package.get("dependencies", {})) == set(expected_npm),
+        "package.json dependency set changed",
+    )
     for name, (declaration, version) in expected_npm.items():
         check(
             package.get("dependencies", {}).get(name) == declaration,
