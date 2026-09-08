@@ -110,6 +110,7 @@ def main():
         "bower dependency declarations changed",
     )
     check("devDependencies" not in bower, "bower devDependencies must stay absent")
+    check("resolutions" not in bower, "bower resolutions must stay absent")
 
     for path in (
         "afn-app.sh",
