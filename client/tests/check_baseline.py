@@ -115,9 +115,12 @@ def main():
         check(path in build, "build input is not recorded: {}".format(path))
 
     render = read("render.pl")
-    check("WITH_ADS => 1" in render and "app.html" in render, "ads app variant is not rendered")
     check(
-        "WITH_ADS => 0" in render and "app-plus-plus.html" in render,
+        "WITH_ADS => 1}, $COMPILED_APP_DIR.'/app.html'" in render,
+        "ads app variant is not rendered",
+    )
+    check(
+        "WITH_ADS => 0}, $COMPILED_APP_DIR.'/app-plus-plus.html'" in render,
         "ad-free app variant is not rendered",
     )
 
