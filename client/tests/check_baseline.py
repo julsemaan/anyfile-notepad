@@ -207,6 +207,10 @@ def main():
         not (CLIENT / "assets/css/common.css.scss").is_file(),
         "assets/css/common.css.scss must stay absent",
     )
+    check(
+        not (CLIENT / "assets/js/libs/handlebars.js").is_file(),
+        "assets/js/libs/handlebars.js must stay absent",
+    )
     editor_css = read("assets/css/editor.css.scss")
     check(
         '@use "libs/bundled-material.min.css.scss"' in editor_css,
