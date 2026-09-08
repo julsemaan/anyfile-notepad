@@ -74,7 +74,7 @@ Every `assets/js/*.js` file is appended by the broad `find` in `application_js()
 | `assets/js/libs/rsvp.min.js` | RSVP 3.1.0 | Promises used by models and the Shepherd tour. App and site bundles. |
 | `assets/js/libs/route-recognizer.js` | Route Recognizer 0.1.9 | Hash route matching, through the local router. App and site bundles. |
 | `assets/js/libs/router.min.js` | Version not recorded; uses the local Route Recognizer and RSVP | Hash routing. App and site bundles. |
-| `assets/js/libs/l10n.js` | Version not recorded; file credits `purl.eligrey.com/github/l10n.js` | Loaded by the broad bundle; no direct application call was found in source. Runtime confirmation is missing. |
+| `assets/js/libs/l10n.js` | Version not recorded; file credits `purl.eligrey.com/github/l10n.js` | Installs `String.toLocaleString`, `String.prototype.toLocaleString`, and `String.locale`; used by LocaleController `addLocale`, `findLocale`, and `i18n` plus ApplicationController `setupLocaleFlash`. |
 | `assets/js/libs/material.min.js` and `ripples.min.js` | Version not recorded; the site credits Bootstrap Material Design | Material controls and ripple effects. App and site bundles. |
 | `assets/js/libs/rcolor.min.js` | Version and source not recorded | Generates collaborator colors from `helpers.js`. App and site bundles. |
 | `assets/js/libs/jquery.fix.clone.js` | Local jQuery `clone()` patch; no package version | Extends jQuery and is loaded by the broad bundle. |
