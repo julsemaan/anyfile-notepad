@@ -1,4 +1,4 @@
-@import "libs/bundled-material.min.css.scss";
+@use "libs/bundled-material.min.css.scss";
 
 @mixin anchor($direction, $color) {
   width: 0; 
@@ -407,7 +407,7 @@ h6.menu_header {
         color:white !important;
       }
       .syntax_button.disabled {
-        color:rgba(#000000, (26/100)) !important;
+        color:rgba(#000000, 0.26) !important;
       }
     }
 
