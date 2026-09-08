@@ -128,7 +128,7 @@ function pages_css() {
   fi
 
   cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss
-  ./node_modules/.bin/node-sass --include-path assets/css/ assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
+  ./node_modules/.bin/sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
   
   rm -f assets/css/libs/bootstrap.min.css.scss
 }
@@ -176,10 +176,10 @@ function application_css() {
   add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
   add_css_asset node_modules/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS
-  ./node_modules/.bin/node-sass --include-path assets/css/ assets/css/editor.css.scss >> $APPLICATION_CSS
+  ./node_modules/.bin/sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss >> $APPLICATION_CSS
 
   if ! is_webdev; then
-    ./node_modules/.bin/minify "$APPLICATION_CSS" > "$(add_min_prefix "$APPLICATION_CSS")"
+    ./node_modules/.bin/minify "$APPLICATION_CSS" --fail-on-error > "$(add_min_prefix "$APPLICATION_CSS")"
   else
     cp "$APPLICATION_CSS" "$(add_min_prefix "$APPLICATION_CSS")"
   fi
@@ -202,6 +202,7 @@ function application_js() {
   add_js_asset node_modules/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
   add_js_asset public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
   add_js_asset public/jquery.cookie.min.js $APPLICATION_JS
+  add_js_asset node_modules/handlebars/dist/handlebars.js $APPLICATION_JS
 
   # Single authoritative list of files needing explicit ordering (dependency order)
   MANUAL_JS_FILES=(
@@ -223,7 +224,7 @@ function application_js() {
   find assets/js/ -name '*.js' | grep -v -F -f <(printf '%s\n' "${MANUAL_JS_FILES[@]}") | while read file; do add_js_asset "$file" $APPLICATION_JS ; done
 
   if ! is_webdev; then
-    ./node_modules/.bin/minify "$APPLICATION_JS" > "$(add_min_prefix "$APPLICATION_JS")"
+    ./node_modules/.bin/minify "$APPLICATION_JS" --fail-on-error > "$(add_min_prefix "$APPLICATION_JS")"
   else
     cp "$APPLICATION_JS" "$(add_min_prefix "$APPLICATION_JS")"
   fi

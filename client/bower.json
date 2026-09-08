@@ -10,7 +10,7 @@
   "homepage": "https://anyfile-notepad.semaan.ca",
   "private": true,
   "dependencies": {
-    "ace-anyfile-notepad": "anyfile-notepad-v1.3.3",
+    "ace-anyfile-notepad": "https://github.com/julsemaan/ace.git#29c744e292c7fd20c8283ed528b9c12b6174a83d",
     "bootstrap": "3.1.1",
     "jquery-ui": "~1.11",
     "jquery": "~1.11"
