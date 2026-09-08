@@ -310,7 +310,11 @@ h6.menu_header {
       font-size:20px;
     }
     a.for_menu_header.menu_back {
-      @extend a.small.menu_back;
+      width:30px;
+      height:30px;
+      padding-left:5px;
+      padding-top:5px;
+      font-size:20px;
       top:5px;
       right:20px;
     }

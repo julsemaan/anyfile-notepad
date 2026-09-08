@@ -2,11 +2,13 @@
   "name": "anyfile-notepad",
   "version": "0.0.1",
   "dependencies": {
-    "bower": ">0.0.0",
     "dropbox": "<3.0.0",
     "handlebars": "4.7.9",
-    "minify": "2.1.8",
-    "node-sass": ">0.0.0",
     "tether-shepherd": "^1.8.1"
+  },
+  "devDependencies": {
+    "bower": "1.8.14",
+    "sass": "1.104.0",
+    "minify": "15.3.1"
   }
 }
