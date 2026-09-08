@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check the committed client dependency and browser-input baseline."""
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -74,6 +75,11 @@ def main():
     )
 
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
+    check(
+        hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
+        == "97d20f7ed8b12b1a27185113b3de3cbbcde650c87c83c6b1d7f4b9cf17ddc3de",
+        "package-lock SHA-256 digest changed",
+    )
     check(
         len(lock.get("packages", {})) == 245,
         "package-lock package count is not 245",

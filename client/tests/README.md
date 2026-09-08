@@ -8,7 +8,7 @@ Run this from the repository root:
 python3 client/tests/check_baseline.py
 ```
 
-The check uses only the Python standard library. It reads the committed npm and Bower manifests plus `.minify.json`, verifies the lockfile version 3 shape with 245 `packages` entries and the pinned `node_modules` resolutions, verifies the split runtime and dev dependency sets against the lock root `packages[""]`, checks the Bower SHA pin, checks the build's browser inputs including npm Handlebars and both `sass` and `minify --fail-on-error` invocations, checks the CSS anchors (`common.css.scss` absent, `@use` with no `@import`, moved flash and footer styles, inlined menu fix), checks both rendered app variants, and checks selected external-load anchors. It no longer expects a vendored Handlebars file or a print-window jQuery load. It does not install packages, access the network, run Docker, start a browser, load `VARS.js`, or write build output.
+The check uses only the Python standard library. It reads the committed npm and Bower manifests plus `.minify.json`, verifies the lockfile version 3 shape with 245 `packages` entries, its fixed SHA-256 digest, and the pinned `node_modules` resolutions, verifies the split runtime and dev dependency sets against the lock root `packages[""]`, checks the Bower SHA pin, checks the build's browser inputs including npm Handlebars and both `sass` and `minify --fail-on-error` invocations, checks the CSS anchors (`common.css.scss` absent, `@use` with no `@import`, moved flash and footer styles, inlined menu fix), checks both rendered app variants, and checks selected external-load anchors. It no longer expects a vendored Handlebars file or a print-window jQuery load. It does not install packages, access the network, run Docker, start a browser, load `VARS.js`, or write build output.
 
 A passing result means the committed source still describes the recorded baseline. It is not a browser smoke result and does not prove that an image was built or deployed.
 
@@ -26,7 +26,7 @@ The runtime baseline has not been run because the deployed image, an immutable r
 
 | Scenario | Status | Required evidence |
 |---|---|---|
-| `/app.html` and `/app-plus-plus.html` each load as the actual variant; menus and editor render | Not run | Deployed image, isolated browser, and a way to reach both variants without changing subscription gating |
+| `/app.html` loads the ad-enabled variant for an unpaid session and the ad-free variant for a paid session; menus and editor render | Not run | Deployed image, isolated browser, and unpaid and paid sessions |
 | Open, edit, save, and reload exact text, including Unicode and line breaks | Not run | Disposable Google Drive and Dropbox files |
 | Autosave and file browsing | Not run | Disposable files and browser network capture |
 | Preferences and dialogs, including keyboard focus, confirm, and cancel | Not run | Fixed-viewport browser run and console capture |
@@ -41,4 +41,4 @@ No runtime failures are claimed. The dependency inventory records source-level l
 
 Use isolated disposable profiles and fixed viewport sizes such as 1280x800 and 390x844. Do not use real user files or leave tokens, session identifiers, or private file contents in artifacts. Capture the source commit, image tag or digest, request failures, console errors, and sanitized screenshots. Record existing failures separately from regressions.
 
-The rollback image remains **unavailable**. Do not substitute the mutable `client-base:latest` tag for a known-good client image.
+The rollback image remains **unavailable**. Do not substitute a mutable client-base tag for a known-good client image.
