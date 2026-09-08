@@ -354,7 +354,6 @@ EditorController.prototype.print = function(){
   var numbered_text = lines.join('\n');
   $('#print_content .with_line_numbers').text(numbered_text);
   $('#print_content .without_line_numbers').text(this.editor_view.getValue());
-  myWindow.document.write("<script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>");
   myWindow.document.write($('#print_content').html());
 }
 
