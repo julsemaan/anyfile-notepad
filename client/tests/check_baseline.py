@@ -49,6 +49,8 @@ def main():
         set(package.get("dependencies", {})) == set(expected_npm),
         "package.json dependency set changed",
     )
+    for section in ("devDependencies", "optionalDependencies", "peerDependencies"):
+        check(section not in package, "package.json {} must stay absent".format(section))
     for name, (declaration, version) in expected_npm.items():
         check(
             package.get("dependencies", {}).get(name) == declaration,
@@ -80,6 +82,7 @@ def main():
         bower.get("dependencies") == expected_bower,
         "bower dependency declarations changed",
     )
+    check("devDependencies" not in bower, "bower devDependencies must stay absent")
 
     for path in (
         "afn-app.sh",
