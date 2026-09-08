@@ -8,9 +8,15 @@ Run this from the repository root:
 python3 client/tests/check_baseline.py
 ```
 
-The check uses only the Python standard library. It reads the committed npm and Bower manifests, verifies the recorded lockfile counts and known vendored version markers, checks the build's browser inputs, checks both rendered app variants, and checks selected external-load anchors. It does not install packages, access the network, run Docker, start a browser, load `VARS.js`, or write build output.
+The check uses only the Python standard library. It reads the committed npm and Bower manifests plus `.minify.json`, verifies the lockfile version 3 shape with 245 `packages` entries and the pinned `node_modules` resolutions, verifies the split runtime and dev dependency sets against the lock root `packages[""]`, checks the Bower SHA pin, checks the build's browser inputs including npm Handlebars and both `sass` and `minify --fail-on-error` invocations, checks the CSS anchors (`common.css.scss` absent, `@use` with no `@import`, moved flash and footer styles, inlined menu fix), checks both rendered app variants, and checks selected external-load anchors. It no longer expects a vendored Handlebars file or a print-window jQuery load. It does not install packages, access the network, run Docker, start a browser, load `VARS.js`, or write build output.
 
 A passing result means the committed source still describes the recorded baseline. It is not a browser smoke result and does not prove that an image was built or deployed.
+
+## Companion node checks
+
+`client/tests/print-source-check.js` runs with plain node and no install step. It covers the print template and print controller wiring that the Python check anchors.
+
+`client/tests/handlebars.js` needs `node_modules` present because Handlebars now comes from npm 4.7.9 instead of a vendored file. Run it only when `node_modules` exists; otherwise record it as not run.
 
 ## Browser baseline status
 

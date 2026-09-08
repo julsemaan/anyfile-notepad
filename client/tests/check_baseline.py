@@ -22,58 +22,79 @@ def read(path):
     return (CLIENT / path).read_text(encoding="utf-8")
 
 
-def lock_entry_count(dependencies):
-    return len(dependencies) + sum(
-        lock_entry_count(entry.get("dependencies", {}))
-        for entry in dependencies.values()
-    )
-
-
 def main():
     try:
         package = json.loads(read("package.json"))
         lock = json.loads(read("package-lock.json"))
         bower = json.loads(read("bower.json"))
+        minify_conf = json.loads(read(".minify.json"))
     except (OSError, ValueError) as error:
         print("FAIL: unable to read manifests: {}".format(error))
         return 1
 
     expected_npm = {
-        "bower": (">0.0.0", "1.8.8"),
-        "dropbox": ("<3.0.0", "2.5.13"),
-        "minify": ("2.1.8", "2.1.8"),
-        "node-sass": (">0.0.0", "4.14.1"),
-        "tether-shepherd": ("^1.8.1", "1.8.1"),
+        "dropbox": "<3.0.0",
+        "handlebars": "4.7.9",
+        "tether-shepherd": "^1.8.1",
+    }
+    expected_dev_npm = {
+        "bower": "1.8.14",
+        "sass": "1.104.0",
+        "minify": "15.3.1",
     }
     check(
-        set(package.get("dependencies", {})) == set(expected_npm),
+        package.get("dependencies", {}) == expected_npm,
         "package.json dependency set changed",
     )
-    for section in ("devDependencies", "optionalDependencies", "peerDependencies"):
+    check(
+        package.get("devDependencies", {}) == expected_dev_npm,
+        "package.json devDependency set changed",
+    )
+    for section in ("optionalDependencies", "peerDependencies"):
         check(section not in package, "package.json {} must stay absent".format(section))
-    for name, (declaration, version) in expected_npm.items():
+    for name, declaration in expected_npm.items():
         check(
             package.get("dependencies", {}).get(name) == declaration,
             "package.json declaration changed for {}".format(name),
         )
-        entry = lock.get("dependencies", {}).get(name, {})
+    for name, declaration in expected_dev_npm.items():
+        check(
+            package.get("devDependencies", {}).get(name) == declaration,
+            "package.json declaration changed for {}".format(name),
+        )
+
+    root = lock.get("packages", {}).get("", {})
+    check(
+        root.get("dependencies", {}) == expected_npm,
+        "package-lock root dependencies changed",
+    )
+    check(
+        root.get("devDependencies", {}) == expected_dev_npm,
+        "package-lock root devDependencies changed",
+    )
+
+    check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
+    check(
+        len(lock.get("packages", {})) == 245,
+        "package-lock package count is not 245",
+    )
+    expected_lock = {
+        "node_modules/dropbox": "2.5.13",
+        "node_modules/handlebars": "4.7.9",
+        "node_modules/tether-shepherd": "1.8.1",
+        "node_modules/bower": "1.8.14",
+        "node_modules/sass": "1.104.0",
+        "node_modules/minify": "15.3.1",
+    }
+    for name, version in expected_lock.items():
+        entry = lock.get("packages", {}).get(name, {})
         check(
             entry.get("version") == version,
             "package-lock resolution changed for {}".format(name),
         )
 
-    check(lock.get("lockfileVersion") == 1, "package-lock is not lockfile version 1")
-    check(
-        len(lock.get("dependencies", {})) == 252,
-        "package-lock top-level entry count is not 252",
-    )
-    check(
-        lock_entry_count(lock.get("dependencies", {})) == 292,
-        "package-lock physical entry count is not 292",
-    )
-
     expected_bower = {
-        "ace-anyfile-notepad": "anyfile-notepad-v1.3.3",
+        "ace-anyfile-notepad": "https://github.com/julsemaan/ace.git#29c744e292c7fd20c8283ed528b9c12b6174a83d",
         "bootstrap": "3.1.1",
         "jquery-ui": "~1.11",
         "jquery": "~1.11",
@@ -89,7 +110,7 @@ def main():
         "render.pl",
         "editor-layout.tt",
         "site/layout.tt",
-        "assets/js/libs/handlebars.js",
+        ".minify.json",
         "assets/js/libs/rsvp.min.js",
         "assets/js/libs/route-recognizer.js",
         "public/jquery.cookie.min.js",
@@ -110,9 +131,10 @@ def main():
         "node_modules/tether-shepherd/dist/js/shepherd.min.js",
         "public/jqueryFileTree/jqueryFileTree.js",
         "public/jquery.cookie.min.js",
+        "node_modules/handlebars/dist/handlebars.js",
         "find assets/js/ -name '*.js'",
-        "node-sass",
-        "./node_modules/.bin/minify",
+        "sass --no-source-map --load-path",
+        "--fail-on-error",
         "bower_components/ace-anyfile-notepad/afn-dist/",
     ):
         check(path in build, "build input is not recorded: {}".format(path))
@@ -128,7 +150,6 @@ def main():
     )
 
     version_markers = {
-        "assets/js/libs/handlebars.js": "handlebars v4.0.5",
         "assets/js/libs/rsvp.min.js": "@version   3.1.0",
         "assets/js/libs/route-recognizer.js": "VERSION = '0.1.9'",
         "public/jquery.cookie.min.js": "jQuery Cookie Plugin v1.4.0",
@@ -157,9 +178,6 @@ def main():
             "//resources.infolinks.com/js/infolinks_main.js",
         ),
         "_upgrade.html": ("https://checkout.stripe.com/checkout.js",),
-        "assets/js/Controller/Editor.js": (
-            "https://code.jquery.com/jquery-1.11.3.min.js",
-        ),
         "public/sw.js": (
             "https://luckypushh.com/ntfc.php?p=1621486&r=sw",
         ),
@@ -171,6 +189,61 @@ def main():
         source = read(path)
         for load in loads:
             check(load in source, "external load is not recorded: {}".format(load))
+
+    check(
+        not (CLIENT / "assets/css/common.css.scss").is_file(),
+        "assets/css/common.css.scss must stay absent",
+    )
+    editor_css = read("assets/css/editor.css.scss")
+    check(
+        '@use "libs/bundled-material.min.css.scss"' in editor_css,
+        "editor CSS material import changed",
+    )
+    check("@" + "import" not in editor_css, "editor CSS still uses @import")
+    check(
+        "a.for_menu_header.menu_back" in editor_css,
+        "editor CSS menu size fix missing",
+    )
+    check(
+        "rgba(#000000, 0.26)" in editor_css,
+        "editor CSS disabled syntax color changed",
+    )
+    pages_css = read("assets/css/pages.css.scss")
+    check(
+        '@use "libs/bootstrap.min.css.scss"' in pages_css,
+        "pages CSS bootstrap import changed",
+    )
+    check(
+        '@use "libs/bundled-material.min.css.scss"' in pages_css,
+        "pages CSS material import changed",
+    )
+    check("@" + "import" not in pages_css, "pages CSS still uses @import")
+    check(".flash_notice" in pages_css, "pages CSS flash styles missing")
+    check(".footer_menu" in pages_css, "pages CSS footer styles missing")
+    check(
+        "sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss" in build,
+        "pages sass invocation changed",
+    )
+    check(
+        "sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss" in build,
+        "editor sass invocation changed",
+    )
+    check(
+        'minify "$APPLICATION_CSS" --fail-on-error' in build,
+        "css minify invocation changed",
+    )
+    check(
+        'minify "$APPLICATION_JS" --fail-on-error' in build,
+        "js minify invocation changed",
+    )
+    check(
+        minify_conf.get("css", {}).get("type") == "clean-css",
+        ".minify.json css type changed",
+    )
+    check(
+        minify_conf.get("js", {}).get("type") == "terser",
+        ".minify.json js type changed",
+    )
 
     if failures:
         print("FAIL: client baseline source check")
