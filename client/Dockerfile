@@ -1,4 +1,4 @@
-FROM ghcr.io/julsemaan/anyfile-notepad/client-base:latest
+FROM ghcr.io/julsemaan/anyfile-notepad/client-base:f37e641c284f0f24d431da390d039a9a6af26527
 
 WORKDIR /src/client
 
