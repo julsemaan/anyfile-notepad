@@ -130,6 +130,12 @@ def main():
 
     build = read("afn-app.sh")
     for path in (
+        "add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
+        "cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
+        "add_css_asset node_modules/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS",
+        "add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS",
+        "sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss",
+        "sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss",
         "node_modules/dropbox/dist/Dropbox-sdk.min.js",
         "bower_components/jquery/dist/jquery.min.js",
         "bower_components/jquery-ui/jquery-ui.min.js",

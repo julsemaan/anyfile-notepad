@@ -13,7 +13,7 @@ The committed client has these dependency inputs:
 - `bower.json` declares four Bower dependencies. There is no committed Bower lockfile.
 - `client/Dockerfile` starts from `ghcr.io/julsemaan/anyfile-notepad/client-base:f37e641c284f0f24d431da390d039a9a6af26527`. That separately published base image is built from `client/base/Dockerfile`, so the source recipe is not the direct base input to the full image.
 - `client/base/Dockerfile` uses the pinned `node:24.20.0-bookworm` image, installs npm `11.19.0` globally, and installs apt inputs including `git` plus CPAN inputs. The exact installed apt and CPAN versions are not recorded here.
-- `node_modules/`, `bower_components/`, `output/`, and `assets/js/VARS.js` are absent from this checkout and are ignored by git. The static check therefore inspects source wiring only.
+- `node_modules/`, `bower_components/`, and `assets/js/VARS.js` are absent from this checkout and ignored by git. `output/` is also absent, but is not covered by either ignore file. The static check therefore inspects source wiring only.
 
 The expected image flow is `client-full:<workflow tag>` followed by `client-light:<workflow tag>`. The workflow tag is derived from the GitHub commit SHA. The deployment repository and the currently deployed tag or digest are outside this repository, so no deployed image or rollback image is identified by this baseline.
 
