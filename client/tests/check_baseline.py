@@ -169,6 +169,19 @@ def main():
         "ad-free app variant is not rendered",
     )
 
+    expected_libs = {
+        "jquery.fix.clone.js",
+        "l10n.js",
+        "material.min.js",
+        "rcolor.min.js",
+        "ripples.min.js",
+        "route-recognizer.js",
+        "router.min.js",
+        "rsvp.min.js",
+    }
+    actual_libs = {path.name for path in (CLIENT / "assets/js/libs").glob("*.js")}
+    check(actual_libs == expected_libs, "assets/js/libs/*.js filename set changed")
+
     version_markers = {
         "assets/js/libs/rsvp.min.js": "@version   3.1.0",
         "assets/js/libs/route-recognizer.js": "VERSION = '0.1.9'",
