@@ -43,6 +43,13 @@ def main():
         "sass": "1.104.0",
         "minify": "15.3.1",
     }
+    expected_package = {
+        "name": "anyfile-notepad",
+        "version": "0.0.1",
+        "dependencies": expected_npm,
+        "devDependencies": expected_dev_npm,
+    }
+    check(package == expected_package, "package.json manifest changed")
     check(
         package.get("dependencies", {}) == expected_npm,
         "package.json dependency set changed",
