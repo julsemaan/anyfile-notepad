@@ -14,7 +14,7 @@ A passing result means the committed source still describes the recorded baselin
 
 ## Companion node checks
 
-`client/tests/print-source-check.js` runs with plain node and no install step. It covers the print template and print controller wiring that the Python check anchors.
+`client/tests/print-source-check.js` runs with plain node and no install step. `check_baseline.py` does not inspect `print.tt` or `assets/js/Controller/Editor.js`; `print-source-check.js` provides that coverage on its own.
 
 `client/tests/handlebars.js` needs `node_modules` present because Handlebars now comes from npm 4.7.9 instead of a vendored file. Run it only when `node_modules` exists; otherwise record it as not run.
 
