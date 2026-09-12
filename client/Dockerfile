@@ -3,9 +3,10 @@ FROM ghcr.io/julsemaan/anyfile-notepad/client-base:f37e641c284f0f24d431da390d039
 WORKDIR /src/client
 
 COPY package.json .
+COPY package-lock.json .
 COPY bower.json .
 
-RUN npm install
+RUN npm ci
 RUN ./node_modules/.bin/bower install
 
 # Keep a copy of the dependencies
