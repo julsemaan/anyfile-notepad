@@ -9,117 +9,94 @@ There are two milestones:
 - **Containment:** patch exposed libraries and replace obsolete build tooling.
 - **Recovery:** remove unsupported dependencies and make updates routine.
 
+This branch now includes the four merged client changes from `origin/master`, PRs #91 through #94. They replace the obsolete build toolchain, add the source inventory and checks, move Handlebars to npm, and remove jQuery from the print window. The only additional work here is the plan update and the locked-install change in `client/Dockerfile`.
+
 ## Findings
 
-| Area | Current state | Consequence |
+| Area | Current state | Status |
 |---|---|---|
-| npm | Five direct dependencies; lockfile contains 252 package names | A live advisory lookup matched 29 package names. These are not necessarily exploitable browser vulnerabilities. |
-| Installation | `client/Dockerfile` runs `npm install` before copying the lockfile | The committed lockfile does not describe production builds reliably. |
-| Build tools | Node 16/Buster, locked `node-sass` 4.14.1, `minify` 2.1.8 | Unsupported tooling and vulnerable transitive dependencies. |
-| Browser libraries | Bower supplies jQuery ~1.11, jQuery UI ~1.11, Bootstrap 3.1.1 | npm auditing misses these libraries entirely. |
-| Vendored code | Handlebars 4.0.5, old Marked, several legacy plugins | More dependencies outside package-manager tracking. |
-| Printing | Loads jQuery 1.11.3 directly from a CDN | Updating the main bundle alone leaves an old copy active. |
-| Editor | Custom Ace 1.3.3 fork, built using another `npm install` | An additional dependency tree and a compatibility risk. |
-| Dropbox | Locked SDK 2.5.13 | Current SDK migration changes authentication APIs, responses, and errors. |
+| Build toolchain | The client base uses pinned Node 24.20.0 and npm 11.19.0. Dart Sass is pinned to 1.104.0 and `minify` to 15.3.1. | Complete |
+| npm installation | `client/package-lock.json` is lockfile version 3. `client/Dockerfile` now copies both npm manifests and uses `npm ci`. Bower and the nested Ace build still install separately. | Install evidence open |
+| Handlebars | Handlebars 4.7.9 is managed by npm and appended from `node_modules`. The vendored copy is gone. | Complete |
+| Printing | The print window uses native DOM event handlers and loads no jQuery. | Complete |
+| Editor | The Ace fork is pinned to commit `29c744e292c7fd20c8283ed528b9c12b6174a83d`. The merged toolchain work confirmed that it builds under Node 24. Its nested npm install remains. | Migration open |
+| Docker installation | The client image still installs Bower and the nested Ace dependencies. The apt and CPAN versions are not recorded. | Unresolved |
+| Bower libraries | Bower still supplies Bootstrap 3.1.1, jQuery 1.11, jQuery UI 1.11, and the Ace fork. There is no Bower lockfile. | Unresolved |
+| Dropbox | The client still uses the locked 2.5.13 SDK through the old integration boundary. | Unresolved |
+| Remaining vendored code | Marked, the router, RSVP, localization, material scripts, jQuery Cookie, file-tree code, and other vendored assets remain. | Unresolved |
+| Vulnerability data | Existing audit reports disagree and do not establish browser exploitability. | Fresh audit required |
 
-This plan is based on source inspection and package metadata/advisory queries. No dependencies were installed, images built, or running application tested. Recheck release versions and advisories when implementing each phase.
+Do not record a current vulnerability count in this plan. Run a fresh npm audit, shipped-asset scan, and separate builder and final-image scans before using vulnerability results to set priorities. The dated result in `client/DEPENDENCIES.md` is source evidence, not a current release assessment.
 
 ## 1. Establish a trustworthy baseline
 
-**Scope:** one preparation PR.
+**Status: partial.** The source dependency inventory is complete. The deployed-image and browser baseline are not.
 
-- Record the versions actually installed in the currently deployed client image, including Bower and the nested Ace build. Do not assume they match `package-lock.json`.
-- Inventory vendored JavaScript, CSS, and externally loaded scripts. Record version or source commit, usage, and known advisories.
-- Classify findings as shipped browser code, build/install code, or unused code that can be removed.
-- Establish a small browser smoke suite and capture baseline screenshots.
+- [x] Inventory the committed npm, Bower, Docker, Ace, vendored, and external-script inputs in `client/DEPENDENCIES.md`.
+- [x] Add the source-only checks in `client/tests/check_baseline.py` and the print and Handlebars checks.
+- [ ] Record the versions actually installed in the deployed client image, including Bower and the nested Ace build.
+- [ ] Identify a known-good deployed image and a rollback image.
+- [ ] Capture browser screenshots, console output, and network evidence.
+- [ ] Run the smoke suite for opening, editing, saving, autosave, file browsing, printing, preferences, dialogs, and two-browser collaboration.
+- [ ] Cover `/app.html`, `/app-plus-plus.html`, and representative site pages.
 
-Cover opening, editing, saving, autosave, file browsing, printing, preferences, dialogs, and two-browser collaboration. Include both `/app.html` and `/app-plus-plus.html`, plus site pages.
-
-**Files:** `client/package.json`, a small proposed `client/tests/` suite, and dependency inventory documentation.
-
-**Exit gate:** a reproducible baseline and a known-good image available for rollback. Any demonstrated exploitable issue gets a separate hotfix immediately.
+The exit gate remains open. The deployed image, rollback image, disposable accounts and files, approved browser runner, screenshots, and browser smoke results are still missing. Any demonstrated exploitable issue gets a separate hotfix immediately.
 
 ## 2. Replace obsolete build tooling and enforce the lockfile
 
-**Scope:** two coordinated PRs, toolchain first, deterministic installation second.
+**Status: partial.** The toolchain changes are complete. Clean locked-install evidence and browser verification are still open.
 
-- Replace `node-sass` with Dart Sass.
-- Upgrade `minify` to a maintained release. Keep the existing concatenation pipeline rather than introduce a bundler.
-- Move the builder to Node 24 LTS on a supported Debian base.
-- Replace unbounded dependency ranges with deliberate versions and regenerate the lockfile under the selected Node/npm versions.
-- Change the Dockerfile to copy both manifests before installation and use `npm ci`.
-- Separate build tools from browser dependencies in `package.json`, but continue auditing both.
-- Pin the client-base image to a version or digest instead of `latest`.
+- [x] Replace Node Sass with Dart Sass 1.104.0.
+- [x] Upgrade `minify` to 15.3.1 and keep the existing concatenation pipeline.
+- [x] Move the builder to pinned Node 24.20.0 and npm 11.19.0 on the pinned Debian base.
+- [x] Replace unbounded build dependency declarations with pinned versions.
+- [x] Regenerate the lockfile under the selected Node and npm versions.
+- [x] Separate runtime and build dependencies in `client/package.json`.
+- [x] Pin the client-base image in `client/Dockerfile`.
+- [x] Confirm that the pinned Ace fork builds under Node 24.
+- [x] Copy `package.json` and `package-lock.json` before installation and use `npm ci` in `client/Dockerfile`.
+- [ ] Demonstrate a clean `npm ci` and production Docker build.
+- [ ] Verify generated CSS, font and image paths, minified JavaScript, both app variants, and site pages in a browser.
 
-**Files:**
-
-- `client/package.json`, `client/package-lock.json`
-- `client/afn-app.sh`, also exposed through the root symlink
-- `client/base/Dockerfile`, `client/Dockerfile`
-- Matching client/base workflows where necessary
-
-**Important blocker:** the Ace fork runs its own old build tooling. Test that early. If it prevents the supported Node upgrade, bring the Ace work from phase 4 forward rather than restore obsolete Node.
-
-**Exit gate:**
-
-- Clean installation and production build succeed.
-- Generated CSS, font/image paths, and minified JavaScript work.
-- No changes to the existing output-directory safety checks.
-- Both app variants and site pages pass smoke checks.
+The phase 2 exit gate stays open until the clean install and production build are evidenced and the browser checks pass. Keep the nested Ace installation unchanged until the Ace migration.
 
 [Node Sass is end-of-life](https://sass-lang.com/blog/node-sass-is-end-of-life/), so upgrading it to its final version is not a durable fix.
 
 ## 3. Patch browser dependencies without redesigning the UI
 
-**Scope:** several small PRs. Start urgent patches alongside phase 2 where practical.
+**Status: partial.** Handlebars and the print window are complete. The remaining browser dependencies still need separate compatibility work.
 
 ### Handlebars
 
-Move the vendored 4.0.5 copy to a pinned npm dependency. The registry reported **4.7.9** during planning.
-
-Test templates against the application's prototype-based models. Newer Handlebars restricts prototype access. Fix affected template inputs or helpers; **do not globally re-enable unsafe prototype access**.
-
-**Files:** manifests, build script, `client/assets/js/HBRenderer.js`, affected templates, removal of the old vendored copy.
+- [x] Move the vendored 4.0.5 copy to the pinned npm dependency 4.7.9.
+- [x] Keep the application bundle on the npm copy and remove the vendored file.
+- [x] Test templates against prototype-based models without globally enabling unsafe prototype access.
 
 ### jQuery and legacy plugins
 
-- Upgrade to **jQuery 3.7.1 as a compatibility bridge**, not directly to 4.
-- Use jQuery Migrate during testing to identify required fixes, then remove it.
-- Check whether jQuery UI is actually needed. Source inspection found no obvious widget calls in application code. Remove it only after checking plugins and browser behavior; otherwise upgrade to the current compatible release.
-- Remove the print window's CDN dependency by converting its small event handlers to native DOM APIs.
-- Verify material/ripples, file-tree behavior, and the custom `clone()` patch.
-- Investigate removal of `jquery.cookie` and the old tour. Source inspection found no application calls to `$.cookie` or `menu_change_tour`, but that needs runtime confirmation.
-
-**Files:** manifests, build script, `client/print.tt`, `client/assets/js/Controller/Editor.js`, affected plugins and controllers.
+- [ ] Upgrade to jQuery 3.7.1 as a compatibility bridge, then use jQuery Migrate during testing and remove it.
+- [ ] Check whether jQuery UI is needed. Remove it only after checking plugins and browser behavior; otherwise upgrade it to a compatible release.
+- [x] Remove the print window's jQuery dependency by using native DOM handlers.
+- [ ] Verify material/ripples, file-tree behavior, and the custom `clone()` patch.
+- [ ] Confirm whether `jquery.cookie` and the old tour are unused, then remove them if runtime checks support it.
 
 ### Bootstrap and Marked
 
-- Upgrade Bootstrap **3.1.1 → 3.4.1 only as temporary containment**.
-- Replace the unversioned Marked copy with a pinned maintained release and adapt `client/assets/js/MDRenderer.js` to its token format.
-- Test the existing site panel layout and raw HTML behavior. Confirm the content trust boundary; a Markdown parser is not an HTML sanitizer.
+- [ ] Upgrade Bootstrap 3.1.1 to 3.4.1 only as temporary containment.
+- [ ] Replace the unversioned Marked copy with a pinned maintained release and adapt `client/assets/js/MDRenderer.js` to its token format.
+- [ ] Test the existing site panel layout and raw HTML behavior. Confirm the content trust boundary because a Markdown parser is not an HTML sanitizer.
 
-**Exit gate:** no old duplicate libraries in bundles or print/network requests; smoke tests pass; malicious filenames and rendered content do not execute JavaScript.
+The exit gate requires no old duplicate libraries in bundles or print/network requests, passing smoke checks, and no JavaScript execution from malicious filenames or rendered content.
 
-**Bootstrap 3.4.1 is not the finish line.** Bootstrap 3 is unsupported, and current advisories also cover 3.4.1. Record any remaining exposure explicitly.
+Bootstrap 3.4.1 is not the finish line. Bootstrap 3 is unsupported, and remaining advisories must be recorded as explicit temporary exceptions or fixed.
 
 ## 4. Migrate Dropbox and Ace independently
 
-These are the highest data-loss risks. Do not combine them into one PR.
+These are the highest data-loss risks. Do not combine them in one PR.
 
 ### Dropbox
 
-Upgrade to the current supported SDK after reviewing each intervening breaking change.
-
-The existing code assumes:
-
-- Authentication methods live directly on the client.
-- Authentication URL generation is synchronous.
-- Response fields are directly accessible.
-- Errors have the old SuperAgent structure.
-
-Adapt those assumptions, preferably at the existing `DropboxRequest` boundary.
-
-**Files:** `client/assets/js/Controller/OAuth.js`, `client/assets/js/Controller/FileExplorer.js`, `client/assets/js/Model/DropboxFile.js`, manifests and build script.
+Upgrade to the current supported SDK after reviewing each intervening breaking change. The existing code assumes authentication methods live directly on the client, authentication URL generation is synchronous, response fields are directly accessible, and errors have the old SuperAgent structure. Adapt those assumptions at the existing `DropboxRequest` boundary where possible.
 
 **Exit gate:** sign-in, restored sessions, listing, download, create, overwrite, expired authorization, and network failure all work. Failed saves must preserve editor contents and must not mark data saved.
 
@@ -127,53 +104,53 @@ Authentication-flow or token-storage changes require a separate approved decisio
 
 ### Ace
 
-- Compare the custom fork with upstream and identify required changes.
-- Prefer the maintained `ace-builds` distribution over compiling the old fork during every build.
-- Preserve existing asset URLs, modes, themes, keyboard bindings, and completion behavior.
-- Test collaboration specifically, including remote edits and prevention of rebroadcast loops.
+Compare the custom fork with upstream and identify required changes. Prefer the maintained `ace-builds` distribution over compiling the old fork during every build. Preserve existing asset URLs, modes, themes, keyboard bindings, and completion behavior. Test collaboration specifically, including remote edits and prevention of rebroadcast loops.
 
-**Files:** manifests, build script, `client/assets/js/Controller/Editor.js`, affected editor widgets, and `client/render.pl` only if asset discovery changes.
+**Ace exit gate:** edit, save, and reload round trips preserve content, all referenced Ace assets load, and two-browser collaboration passes.
 
-**Exit gate:** edit/save/reload round trips preserve content, all referenced Ace assets load, and two-browser collaboration passes.
-
-Once no dependencies remain in Bower, remove `client/bower.json`, Bower itself, and its Docker installation/copy steps.
+Once no dependencies remain in Bower, remove `client/bower.json`, Bower, and its Docker installation and copy steps.
 
 ## 5. Finish unsupported UI dependencies
 
-**Scope:** a separate compatibility migration, split by UI section.
+Move Bootstrap 3 to the maintained Bootstrap 5 line in a separate compatibility migration, split by UI section.
 
-- Move Bootstrap 3 to the maintained Bootstrap 5 line.
 - Replace the old Bootstrap Material integration with existing CSS and native controls where practical.
 - Migrate dialogs, menus, forms, site panels, utility classes, and icons in small reviewed sections.
 - Keep jQuery for application code. Removing it wholesale is unnecessary.
 - Consider jQuery 4 only after incompatible plugins are gone.
-- Account for remaining vendored router, RSVP, localization, and other libraries. Each needs a pinned source and an explicit retain/update/replace decision.
+- Account for the remaining vendored router, RSVP, localization, and other libraries. Give each one a pinned source and an explicit retain, update, or replace decision.
+- Do not blindly rename `tether-shepherd` to `shepherd.js`. The current package has API and licensing changes. Removing an unused tour is preferable, subject to confirmation.
 
-Do not blindly rename `tether-shepherd` to `shepherd.js`. The current package has API and licensing changes. Removing an unused tour is preferable, subject to confirmation.
-
-**Files:** relevant templates, `client/assets/js/Popup.js`, affected controllers, SCSS, manifests, and build script.
-
-**Exit gate:** no unsupported Bootstrap/material stack; desktop/mobile screenshots, keyboard navigation, focus handling, and both app variants pass.
+The exit gate requires no unsupported Bootstrap or material stack, passing desktop and mobile screenshots, keyboard navigation, focus handling, and both app variants.
 
 ## 6. Prevent another backlog
 
-Start this during phase 2; tighten gates as findings are cleared.
+Start this during phase 2 and tighten the gates as findings are cleared.
 
-- Configure one dependency-update bot for weekly grouped patch/minor PRs and separate major upgrades.
+- Configure one dependency-update bot for weekly grouped patch and minor PRs, with major upgrades separate.
 - Add CI checks for clean installation, production builds, and browser smoke tests.
 - Audit all npm dependencies, scan shipped assets for vendored libraries, and scan builder and final images separately.
-- Block newly introduced high/critical findings initially. At completion, require no unresolved high/critical findings without an approved, expiring exception.
+- Block new high and critical findings initially. At completion, require no unresolved high or critical findings without an approved, expiring exception.
 - Track lower-severity exploitable findings too. Severity alone must not determine priority.
 - Review external scripts separately, including `client/public/sw.js`. npm cannot audit remotely loaded code.
 - Use the existing beta route for each phase, then promote after verification. Roll back by image tag rather than rebuilding historical manifests.
 
-**Files:** `.github/dependabot.yml` or equivalent, client workflows, and the smoke suite. Build/deploy changes require approval before implementation.
+The baseline inventory, source checks, and production-build validation are phase 6 groundwork. They do not complete dependency-update automation, fresh audits, image scanning, or browser CI. Changes to build and deployment workflows require approval before implementation.
 
 ## Definition of done
 
 The client installs from one enforced lockfile, builds on supported tooling, and ships no unidentified dependency copies. Unsupported libraries are removed or covered by explicit temporary exceptions. Every phase leaves a tested, releasable client.
 
-**Start with phases 1–3. They deliver the fastest security improvement. Schedule phases 4–5 as separate migration work, but do not call Bootstrap 3.4.1 or jQuery 3.7.1 the permanent endpoint.**
+Start with phases 1 through 3. They deliver the fastest security improvement. Schedule phases 4 and 5 as separate migration work, but do not call Bootstrap 3.4.1 or jQuery 3.7.1 the permanent endpoint.
+
+## Validation for this update
+
+- `python3 client/tests/check_baseline.py`: passed.
+- `node client/tests/print-source-check.js`: passed.
+- `node client/tests/handlebars.js`: passed after a local `npm ci`.
+- Local `npm ci`: passed under Node 25.9.0 and npm 11.12.1; this does not replace the pinned production-image check.
+- Production Docker build: blocked because the local Docker daemon is unavailable.
+- No application-runtime, auth, subscription, or deployment files changed after the `origin/master` merge. The Dockerfile installation change is intentional.
 
 ## References
 
