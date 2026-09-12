@@ -118,6 +118,7 @@ def main():
     )
     check("devDependencies" not in bower, "bower devDependencies must stay absent")
     check("resolutions" not in bower, "bower resolutions must stay absent")
+    check("overrides" not in bower, "bower overrides must stay absent")
 
     for path in (
         "afn-app.sh",
@@ -181,6 +182,14 @@ def main():
     }
     actual_libs = {path.name for path in (CLIENT / "assets/js/libs").glob("*.js")}
     check(actual_libs == expected_libs, "assets/js/libs/*.js filename set changed")
+    actual_libs_recursive = {
+        path.relative_to(CLIENT / "assets/js/libs").as_posix()
+        for path in (CLIENT / "assets/js/libs").rglob("*.js")
+    }
+    check(
+        actual_libs_recursive == expected_libs,
+        "assets/js/libs nested filename set changed",
+    )
 
     version_markers = {
         "assets/js/libs/rsvp.min.js": "@version   3.1.0",
