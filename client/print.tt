@@ -11,20 +11,19 @@
   <pre class="without_line_numbers"></pre>
 
   <script>
-    $('#print').click(function(){
+    document.getElementById('print').addEventListener('click', function(){
       window.print()
     });
 
-    var line_numbers_on = false;
-    $('#line_numbers_checkbox').change( function(){
-      line_numbers_on = !line_numbers_on;
-      if(line_numbers_on) {
-        $('.without_line_numbers').addClass('hide')
-        $('.with_line_numbers').removeClass('hide')
+    var line_numbers_checkbox = document.getElementById('line_numbers_checkbox');
+    line_numbers_checkbox.addEventListener('change', function(){
+      if(line_numbers_checkbox.checked) {
+        document.querySelector('.without_line_numbers').classList.add('hide')
+        document.querySelector('.with_line_numbers').classList.remove('hide')
       }
-      else { 
-        $('.without_line_numbers').removeClass('hide')
-        $('.with_line_numbers').addClass('hide')
+      else {
+        document.querySelector('.without_line_numbers').classList.remove('hide')
+        document.querySelector('.with_line_numbers').classList.add('hide')
       }
     });
   </script>

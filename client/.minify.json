@@ -1,0 +1,11 @@
+{
+  "css": {
+    "type": "clean-css",
+    "clean-css": {
+      "compatibility": "*"
+    }
+  },
+  "js": {
+    "type": "terser"
+  }
+}
