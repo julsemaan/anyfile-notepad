@@ -214,6 +214,7 @@ def main():
             "https://apis.google.com/js/client.js?onload=gapi_loaded",
             "https://accounts.google.com/gsi/client",
         ),
+        "_propose_upgrade.html": ("//www.googletagservices.com/tag/js/gpt.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"),
         "analytics.tt": ("//www.google-analytics.com/analytics.js",),
         "app.tt": (
             "https://parchmentuniquevista.com/17133d254dc58db1395ab65191071264/invoke.js",

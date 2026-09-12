@@ -104,7 +104,7 @@ The source contains these external loads. Remote scripts have no committed versi
 | `https://api.anyfile-notepad.semaan.ca/extensions`, `/syntaxes`, `/mime_types` | Build downloads JSON resources, unless a webdev cache is reused | `afn-app.sh` |
 | `//fonts.googleapis.com/icon?family=Material+Icons` | App document load in both rendered variants | `editor-layout.tt` |
 | `//www.google-analytics.com/analytics.js` | App and site document load | `analytics.tt` |
-| `//www.googletagservices.com/tag/js/gpt.js` | Included by the shared app layout; ad setup is in that layout | `editor-layout.tt` |
+| `//www.googletagservices.com/tag/js/gpt.js` | Included by the shared app layout; ad setup is in that layout | `editor-layout.tt`, `_propose_upgrade.html` |
 | `https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js` and `vdbmtiqbxqoopp7t3s9lq.js` | Shared app layout and the upgrade prompt template | `editor-layout.tt`, `_propose_upgrade.html` |
 | `https://apis.google.com/js/client.js?onload=gapi_loaded` | App load for Google OAuth, Drive, and Picker APIs | `editor-layout.tt` |
 | `https://accounts.google.com/gsi/client` | App load for Google Identity Services | `editor-layout.tt` |
