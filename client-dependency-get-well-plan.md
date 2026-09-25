@@ -16,35 +16,35 @@ This branch now includes the four merged client changes from `origin/master`, PR
 | Area | Current state | Status |
 |---|---|---|
 | Build toolchain | The client base uses pinned Node 24.20.0 and npm 11.19.0. Dart Sass is pinned to 1.104.0 and `minify` to 15.3.1. | Complete |
-| npm installation | `client/package-lock.json` is lockfile version 3. `client/Dockerfile` now copies both npm manifests and uses `npm ci`. Bower and the nested Ace build still install separately. | Install evidence open |
+| npm installation | `client/package-lock.json` is lockfile version 3. `client/Dockerfile` copies both npm manifests and uses `npm ci`. A local full-image build on the current commit passed output checks under Node 24.20.0 and npm 11.19.0. The current commit has not yet been built and deployed to beta. | Local build verified; beta check pending |
 | Handlebars | Handlebars 4.7.9 is managed by npm and appended from `node_modules`. The vendored copy is gone. | Complete |
 | Printing | The print window uses native DOM event handlers and loads no jQuery. | Complete |
-| Editor | The Ace fork is pinned to commit `29c744e292c7fd20c8283ed528b9c12b6174a83d`. The merged toolchain work confirmed that it builds under Node 24. Its nested npm install remains. | Migration open |
-| Docker installation | The client image still installs Bower and the nested Ace dependencies. The apt and CPAN versions are not recorded. | Unresolved |
-| Bower libraries | Bower still supplies Bootstrap 3.1.1, jQuery 1.11, jQuery UI 1.11, and the Ace fork. There is no Bower lockfile. | Unresolved |
+| Editor | The Ace fork is pinned to `29c744e292c7fd20c8283ed528b9c12b6174a83d`. In the local image, the prebuilt `afn-dist` exists and its output was checked. `afn-app.sh` runs nested `npm install` only when `afn-dist` is absent; this image had no nested `node_modules`, and `npm ls --depth=0` reported five unmet dependencies. | Prebuilt output verified; source build unverified |
+| Docker installation | The client image installs Bower. The Ace build script conditionally runs a nested npm install only when no `afn-dist` exists; the local image used the prebuilt distribution. Apt and CPAN versions are not recorded. | Partially verified |
+| Bower libraries | The local full image resolved Bootstrap 3.1.1, jQuery 1.11.3, jQuery UI 1.11.4, and Ace commit `29c744e292c7fd20c8283ed528b9c12b6174a83d`. There is no Bower lockfile; these resolutions have not been inspected in the deployed image. | Local image recorded; deployed image open |
 | Dropbox | The client still uses the locked 2.5.13 SDK through the old integration boundary. | Unresolved |
 | Remaining vendored code | Marked, the router, RSVP, localization, material scripts, jQuery Cookie, file-tree code, and other vendored assets remain. | Unresolved |
-| Vulnerability data | Existing audit reports disagree and do not establish browser exploitability. | Fresh audit required |
+| Vulnerability data | The latest `npm audit --package-lock-only --ignore-scripts` and `npm audit --omit=dev --package-lock-only --ignore-scripts` runs both reported 16 findings (1 low, 2 moderate, 10 high, 3 critical). Some findings trace through Dropbox 2.5.13. These are npm dependency-tree results, not evidence of browser exploitability; Bower, shipped assets, and image contents still need separate scans. | npm audit done; exposure assessment open |
 
-Do not record a current vulnerability count in this plan. Run a fresh npm audit, shipped-asset scan, and separate builder and final-image scans before using vulnerability results to set priorities. The dated result in `client/DEPENDENCIES.md` is source evidence, not a current release assessment.
+The npm audit results above are a current package-tree snapshot from this session, not a browser exploitability assessment or complete release scan. Do not run `npm audit fix` without reviewing the Dropbox and SDK compatibility impact. Scan shipped assets and the builder and final images separately before setting priorities.
 
 ## 1. Establish a trustworthy baseline
 
-**Status: partial.** The source dependency inventory is complete. The deployed-image and browser baseline are not.
+**Status: partial.** The source inventory and a user-reported browser baseline are available. Exact deployed and rollback image digests, captured browser evidence, and deployed dependency versions remain open.
 
 - [x] Inventory the committed npm, Bower, Docker, Ace, vendored, and external-script inputs in `client/DEPENDENCIES.md`.
 - [x] Add the source-only checks in `client/tests/check_baseline.py` and the print and Handlebars checks.
-- [ ] Record the versions actually installed in the deployed client image, including Bower and the nested Ace build.
-- [ ] Identify a known-good deployed image and a rollback image.
-- [ ] Capture browser screenshots, console output, and network evidence.
-- [ ] Run the smoke suite for opening, editing, saving, autosave, file browsing, printing, preferences, dialogs, and two-browser collaboration.
-- [ ] Cover `/app.html`, `/app-plus-plus.html`, and representative site pages.
+- [ ] Record the versions installed in the deployed image. Local-image Bower resolutions are recorded above; the deployed image and Ace nested build were not inspected.
+- [ ] Record and verify the deployed beta image digest and a retrievable rollback image digest. The current beta is reported to use artifacts from GHA run `34271951657`, which built commit `7c7d328abe666e2f505448b0f7323c5661b2301e`; preserve its image tag while testing the next build.
+- [ ] Save sanitized screenshots, Console output, and Network evidence. The user reports completing the beta app browser tests, but artifacts and exact scenario results were not shared.
+- [x] User reports completing the necessary app browser tests on beta at `https://app.v4geo-beta.semaan.ca/` against the image from GHA run `34271951657`.
+- [ ] Record results for representative site pages and confirm the full smoke checklist, including file save/reload, printing, and two-browser collaboration.
 
-The exit gate remains open. The deployed image, rollback image, disposable accounts and files, approved browser runner, screenshots, and browser smoke results are still missing. Any demonstrated exploitable issue gets a separate hotfix immediately.
+The baseline is useful for before/after comparison, but its evidence is user-reported and tied to the older image. Keep the exit gate open until image and rollback identifiers and browser evidence are recorded. Any demonstrated exploitable issue gets a separate hotfix immediately.
 
 ## 2. Replace obsolete build tooling and enforce the lockfile
 
-**Status: partial.** The toolchain changes are complete. Clean locked-install evidence and browser verification are still open.
+**Status: partial.** The current commit built locally with the locked npm install. Browser verification against that image is still open.
 
 - [x] Replace Node Sass with Dart Sass 1.104.0.
 - [x] Upgrade `minify` to 15.3.1 and keep the existing concatenation pipeline.
@@ -55,10 +55,12 @@ The exit gate remains open. The deployed image, rollback image, disposable accou
 - [x] Pin the client-base image in `client/Dockerfile`.
 - [x] Confirm that the pinned Ace fork builds under Node 24.
 - [x] Copy `package.json` and `package-lock.json` before installation and use `npm ci` in `client/Dockerfile`.
-- [ ] Demonstrate a clean `npm ci` and production Docker build.
-- [ ] Verify generated CSS, font and image paths, minified JavaScript, both app variants, and site pages in a browser.
+- [x] Build the current commit locally. The full image reported Node 24.20.0 and npm 11.19.0; output checks passed for both app variants, the home page, Ace, and minified JS/CSS. The derived light image passed the corresponding output checks.
+- [ ] Build the current commit in GHA and record the full and light image tags/digests.
+- [ ] Deploy that image to beta, retain the existing beta image as rollback, and rerun the browser checks against the new image.
+- [ ] Verify generated CSS, font and image paths, minified JavaScript, both app variants, and site pages in the browser.
 
-The phase 2 exit gate stays open until the clean install and production build are evidenced and the browser checks pass. Keep the nested Ace installation unchanged until the Ace migration.
+The phase 2 exit gate stays open until the current image is built in GHA, tested in beta, and the browser checks pass. Keep the nested Ace installation behavior unchanged until the Ace migration.
 
 [Node Sass is end-of-life](https://sass-lang.com/blog/node-sass-is-end-of-life/), so upgrading it to its final version is not a durable fix.
 
@@ -143,14 +145,16 @@ The client installs from one enforced lockfile, builds on supported tooling, and
 
 Start with phases 1 through 3. They deliver the fastest security improvement. Schedule phases 4 and 5 as separate migration work, but do not call Bootstrap 3.4.1 or jQuery 3.7.1 the permanent endpoint.
 
-## Validation for this update
+## Validation and progress update
 
-- `python3 client/tests/check_baseline.py`: passed.
+- `python3 client/tests/check_baseline.py`: passed (100 checks).
 - `node client/tests/print-source-check.js`: passed.
-- `node client/tests/handlebars.js`: passed after a local `npm ci`.
-- Local `npm ci`: passed under Node 25.9.0 and npm 11.12.1; this does not replace the pinned production-image check.
-- Production Docker build: blocked because the local Docker daemon is unavailable.
-- No application-runtime, auth, subscription, or deployment files changed after the `origin/master` merge. The Dockerfile installation change is intentional.
+- `node client/tests/handlebars.js`: passed.
+- Local full-image build for commit `5157bb938655497268691c984c5659f327f7d5c4`: user-confirmed output checks passed; Node 24.20.0 and npm 11.19.0. The light-image output checks also exited successfully. Build logs and image digests were not saved here.
+- Local Bower resolutions: jQuery 1.11.3, jQuery UI 1.11.4, Bootstrap 3.1.1, Ace commit `29c744e292c7fd20c8283ed528b9c12b6174a83d`. Ace `afn-dist` was present; nested `node_modules` was absent. `npm ls --depth=0` exited 1 with five unmet dependencies, consistent with the build script skipping nested installation when prebuilt `afn-dist` exists.
+- `npm audit --package-lock-only --ignore-scripts` and `npm audit --omit=dev --package-lock-only --ignore-scripts`: each reported 16 findings (1 low, 2 moderate, 10 high, 3 critical). These scans do not cover Bower, vendored assets, or image contents, and do not prove browser exploitability.
+- Browser: user reports completing the beta app tests successfully at `https://app.v4geo-beta.semaan.ca/`. GHA run `34271951657` completed successfully on `master` at `7c7d328abe666e2f505448b0f7323c5661b2301e`, before the `npm ci` Dockerfile change. The current commit `5157bb938655497268691c984c5659f327f7d5c4` has not yet been deployed to beta. Screenshots, sanitized Console/Network output, and deployed/rollback image digests were not provided.
+- Next: build the current commit in GHA, record image tags/digests, deploy to beta with the old image retained for rollback, and repeat the browser checks before closing phase 2.
 
 ## References
 
