@@ -109,6 +109,68 @@ func testGetStaticResource(t *testing.T, path string, expectedCode int, expected
 	}
 }
 
+func TestHTTPHandlerForceAds(t *testing.T) {
+	setupHTTPTestEnvironment(t)
+	subscriptions.SetSubscription(&stripe.Sub{
+		Status: SubscriptionStatusActive,
+		Meta:   map[string]string{"user_id": testUserId},
+	})
+	plusPlusSessions.Set("paid-session", &PlusPlusSession{GoogleUserId: testUserId, ValidUntil: time.Now().Add(time.Hour)})
+	originalBlocked := blockedUsersMap
+	t.Cleanup(func() { blockedUsersMap = originalBlocked })
+
+	for _, path := range []string{"/app", "/app.html", "/app-plus-plus.html"} {
+		for _, identity := range []string{"current_google_user_id", "ppsid"} {
+			for _, value := range []string{"missing", "", "0", "true", "1"} {
+				t.Run(path+"/"+identity+"/"+value, func(t *testing.T) {
+					req := httptest.NewRequest(http.MethodGet, path, nil)
+					id := testUserId
+					if identity == "ppsid" {
+						id = "paid-session"
+					}
+					req.AddCookie(&http.Cookie{Name: identity, Value: id})
+					if value != "missing" {
+						req.AddCookie(&http.Cookie{Name: "AFNForceAds", Value: value})
+					}
+					rr := httptest.NewRecorder()
+					Handler{}.ServeHTTP(rr, req)
+					want := "app-plus-plus.html\n"
+					if value == "1" {
+						want = "app.html\n"
+					}
+					if rr.Code != http.StatusOK || rr.Body.String() != want {
+						t.Fatalf("got %d %q, want %q", rr.Code, rr.Body.String(), want)
+					}
+					if rr.Header().Get("Cache-Control") != "no-cache, no-store, must-revalidate" {
+						t.Fatal("app must remain uncached")
+					}
+					if identity == "current_google_user_id" && len(rr.Result().Cookies()) == 0 {
+						t.Fatal("paid user must still receive a session")
+					}
+				})
+			}
+		}
+	}
+
+	for _, blocked := range []bool{false, true} {
+		req := httptest.NewRequest(http.MethodGet, "/app", nil)
+		req.AddCookie(&http.Cookie{Name: "ppsid", Value: "paid-session"})
+		req.AddCookie(&http.Cookie{Name: "AFNForceAds", Value: "1"})
+		want := "dev/app.html\n"
+		if blocked {
+			blockedUsersMap = map[string]bool{testUserId: true}
+			want = "site/blocked_user.html\n"
+		} else {
+			req.AddCookie(&http.Cookie{Name: "AFNVersion", Value: "dev"})
+		}
+		rr := httptest.NewRecorder()
+		Handler{}.ServeHTTP(rr, req)
+		if rr.Code != http.StatusOK || rr.Body.String() != want {
+			t.Fatalf("blocked=%v: got %d %q, want %q", blocked, rr.Code, rr.Body.String(), want)
+		}
+	}
+}
+
 func TestHTTPHandlerRoutesAndHeaders(t *testing.T) {
 	setupHTTPTestEnvironment(t)
 
