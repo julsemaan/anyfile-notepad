@@ -36,8 +36,8 @@ function harness(cookie, protocol = 'https:') {
 }
 
 const about = fs.readFileSync(path.join(root, '_about.html'), 'utf8');
-const control = about.match(/<(button|a)\b[^>]*onclick="([^"]+)"[^>]*>.*?build_id.*?<\/(?:button|a)>/);
-assert(control, 'Build ID must be a focusable control');
+const control = about.match(/<(span)\b[^>]*onclick="([^"]+)"[^>]*>.*?build_id.*?<\/span>/);
+assert(control, 'Build ID must have a click handler');
 const h = harness('');
 h.context.event = {shiftKey: false};
 vm.runInContext(control[2], h.context);
