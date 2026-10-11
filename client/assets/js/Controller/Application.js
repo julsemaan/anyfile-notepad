@@ -16,6 +16,36 @@ function ApplicationController() {
   }
 
   this.controllers = {};
+  if(getCookie("AFNForceAds") === "1") {
+    this.set_ad_testing_cookie(true);
+  }
+}
+
+ApplicationController.prototype.set_ad_testing_cookie = function(enabled) {
+  document.cookie = "AFNForceAds=" + (enabled ? "1" : "") +
+    "; Path=/; SameSite=Lax; Max-Age=" + (enabled ? "31536000" : "0") +
+    (window.location.protocol === "https:" ? "; Secure" : "");
+}
+
+ApplicationController.prototype.toggle_ad_testing = function() {
+  var self = this;
+  var enabled = getCookie("AFNForceAds") === "1";
+  new Popup({
+    message: enabled ? i18n("Disable ad testing and reload the app?") : i18n("Enable ad testing and reload the app?"),
+    confirm: true,
+    callback: function(result) {
+      if(result) {
+        self.set_ad_testing_cookie(!enabled);
+        window.location.reload();
+      }
+    }
+  });
+}
+
+ApplicationController.prototype.setupAdTestingFlash = function() {
+  if(getCookie("AFNForceAds") === "1") {
+    this.controllers.editor.flash.sticky_warning(i18n("Ad testing is enabled.") + " <a href='javascript:void(0)' onclick='application.toggle_ad_testing()'>" + i18n("Disable ad testing.") + "</a>");
+  }
 }
 
 ApplicationController.prototype.startLoading = function() {
