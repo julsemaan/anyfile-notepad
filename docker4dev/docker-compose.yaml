@@ -45,6 +45,7 @@ services:
       - /root/.cache/go-build:/root/.cache/go-build
 
   client:
+    init: true
     entrypoint: bash
     command:
       - -c

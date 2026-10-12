@@ -4,6 +4,10 @@ const path = require('path');
 const vm = require('vm');
 const {spawnSync} = require('child_process');
 
+const compose = fs.readFileSync(path.join(__dirname, '..', '..', 'docker4dev', 'docker-compose.yaml'), 'utf8');
+const clientService = compose.match(/^  client:\n([\s\S]*?)(?=^  webserver:)/m)[1];
+assert.match(clientService, /^    init: true$/m, 'client needs an init process so idle sleep handles SIGTERM outside PID 1');
+
 const build = fs.readFileSync(path.join(__dirname, '..', 'afn-app.sh'), 'utf8');
 const entrypoint = build.slice(build.indexOf('\nbuild_all\n'), build.indexOf('\nfunction watch_dir()'));
 for (const [mode, option, buildStatus, expectedStatus, expectedOutput] of [
