@@ -17,13 +17,15 @@ services:
     command:
       - -c
       - |
-        while true; do
-          cd /src/api
-          make
-          ./api &
-          inotifywait -r -e create,modify,delete .
-          pkill -9 -f api
-        done
+        cd /src/api
+        make && exec ./api
+    develop:
+      watch:
+        - action: restart
+          path: ../api/
+          ignore:
+            - api
+            - coverage*
     build:
       context: ../api/
       target: dev
@@ -49,7 +51,21 @@ services:
       - |
         cp -a /src/node_modules /src/client/
         cp -a /src/bower_components /src/client/
-        ./afn-app.sh webdev
+        ./afn-app.sh webdev --once && exec sleep infinity
+    develop:
+      watch:
+        - action: restart
+          path: ../client/
+          ignore:
+            - node_modules/
+            - bower_components/
+            - output/
+            - tmp/
+            - dist/
+            - fully-static/
+            - assets/css/libs/bootstrap.min.css.scss
+        - action: restart
+          path: ../pages/
     build:
       context: ../client/
     volumes:
@@ -62,13 +78,15 @@ services:
     command:
       - -c
       - |
-        while true; do
-          cd /src/webserver
-          ./webserver &
-          inotifywait -r -e create,modify,delete .
-          pkill -9 -f webserver
-          make
-        done
+        cd /src/webserver
+        make && exec ./webserver
+    develop:
+      watch:
+        - action: restart
+          path: ../webserver/
+          ignore:
+            - webserver
+            - coverage*
     build:
       context: ../webserver/
       target: dev

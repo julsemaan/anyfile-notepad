@@ -5,6 +5,25 @@ const vm = require('vm');
 const {spawnSync} = require('child_process');
 
 const build = fs.readFileSync(path.join(__dirname, '..', 'afn-app.sh'), 'utf8');
+const entrypoint = build.slice(build.indexOf('\nbuild_all\n'), build.indexOf('\nfunction watch_dir()'));
+for (const [mode, option, buildStatus, expectedStatus, expectedOutput] of [
+  ['webdev', '--once', 0, 0, 'built\n'],
+  ['webdev', '', 0, 0, 'built\nwatching\n'],
+  ['', '', 0, 0, 'built\n'],
+  ['webdev', '--once', 1, 1, 'built\n']
+]) {
+  const result = spawnSync('bash', ['-c', `
+    set -e
+    WEBDEV="$1"
+    is_webdev() { [ "$WEBDEV" == "webdev" ]; }
+    build_all() { echo built; return ${buildStatus}; }
+    ${entrypoint}
+    echo watching
+  `, 'build-test', mode, option], {encoding: 'utf8'});
+  assert.equal(result.status, expectedStatus, 'build exit status: ' + result.stderr);
+  assert.equal(result.stdout, expectedOutput, 'only standalone webdev starts watching');
+}
+
 const renderCommand = build.match(/^  perl render\.pl .*$/m)[0];
 const render = fs.readFileSync(path.join(__dirname, '..', 'render.pl'), 'utf8');
 const options = render.slice(render.indexOf('my ($COMPILED_APP_DIR'), render.indexOf('my $tt'));

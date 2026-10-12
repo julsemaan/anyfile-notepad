@@ -309,7 +309,7 @@ function build_all() {
 
 build_all
 
-if ! is_webdev; then
+if ! is_webdev || [ "${2:-}" == "--once" ]; then
   exit
 fi
 
