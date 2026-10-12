@@ -35,7 +35,7 @@ def main():
 
     expected_npm = {
         "dropbox": "<3.0.0",
-        "handlebars": "4.7.9",
+        "handlebars": "4.7.10",
         "tether-shepherd": "^1.8.1",
     }
     expected_dev_npm = {
@@ -84,7 +84,7 @@ def main():
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
     check(
         hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
-        == "97d20f7ed8b12b1a27185113b3de3cbbcde650c87c83c6b1d7f4b9cf17ddc3de",
+        == "7bb775af2c706db0704927d4a4764b68a54750089dfa82a4d588c5e0191d15cb",
         "package-lock SHA-256 digest changed",
     )
     check(
@@ -93,7 +93,8 @@ def main():
     )
     expected_lock = {
         "node_modules/dropbox": "2.5.13",
-        "node_modules/handlebars": "4.7.9",
+        "node_modules/handlebars": "4.7.10",
+        "node_modules/source-map-js": "1.2.2",
         "node_modules/tether-shepherd": "1.8.1",
         "node_modules/bower": "1.8.14",
         "node_modules/sass": "1.104.0",
@@ -217,7 +218,7 @@ def main():
         "_propose_upgrade.html": ("//www.googletagservices.com/tag/js/gpt.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"),
         "analytics.tt": ("//www.google-analytics.com/analytics.js",),
         "app.tt": (
-            "https://parchmentuniquevista.com/17133d254dc58db1395ab65191071264/invoke.js",
+            "https://otelev.com/22/17133d254dc58db1395ab65191071264",
             "//resources.infolinks.com/js/infolinks_main.js",
         ),
         "_upgrade.html": ("https://checkout.stripe.com/checkout.js",),
