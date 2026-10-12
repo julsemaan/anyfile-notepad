@@ -79,6 +79,8 @@ docker compose up --build
 
 Once all containers have started, the application will be available on http://localhost:8000
 
+The Compose dev workflow runs `afn-app.sh webdev` and reloads the app after each successful rebuild. Unsaved edits still trigger the existing browser warning. If you cancel, the page stays open without repeated prompts for that build; a later successful build can prompt again.
+
 ## Setting up Stripe
 
 ## Setting up email notifications

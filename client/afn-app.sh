@@ -87,12 +87,8 @@ fi
 
 SHOULD_RESET_FILE="$RUNNING_DIR/tmp/should_reset"
 
-APP_VERSION_ID=`date | sha1sum -t | awk '{print $1}'`
 APP_VERSION="dyn"
 APP_COMMIT_ID=${APP_COMMIT_ID:-"N/A"}
-
-APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
-APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
 
 # Delete the cache directory
 rm -fr tmp/cache/
@@ -252,7 +248,7 @@ function app() {
   fi
 
   cp editor-layout.tt $COMPILED_APP/editor-layout.tt
-  perl render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json
+  perl render.pl --COMPILED_APP_DIR=$COMPILED_APP --APP_VERSION_ID=$APP_VERSION_ID --APP_VERSION=$APP_VERSION --APP_COMMIT_ID=$APP_COMMIT_ID --SYNTAX_DB=$COMPILED_APP/syntaxes.json --WEBDEV "$WEBDEV"
 }
 
 function public_assets() {
@@ -283,6 +279,10 @@ function json_resources() {
 }
 
 function build_all() {
+  APP_VERSION_ID=$(date +%s%N | sha1sum -t | awk '{print $1}')
+  APPLICATION_CSS="$COMPILED_APP/assets/application-$APP_VERSION_ID.css"
+  APPLICATION_JS="$COMPILED_APP/assets/application-$APP_VERSION_ID.js"
+
   mkdir -p $COMPILED_APP
   cd /tmp/
   rm -fr -- "${COMPILED_APP:?}"/*
@@ -300,6 +300,11 @@ function build_all() {
   editor_part
   app
   public_assets
+
+  if is_webdev; then
+    printf '%s\n' "$APP_VERSION_ID" > "$COMPILED_APP/dev-build-id.txt.tmp"
+    mv -- "$COMPILED_APP/dev-build-id.txt.tmp" "$COMPILED_APP/dev-build-id.txt"
+  fi
 }
 
 build_all
