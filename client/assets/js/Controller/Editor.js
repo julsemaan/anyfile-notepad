@@ -570,6 +570,10 @@ EditorController.prototype.publish_realtime_event = function(e){
 
   e.google_user_id = application.controllers.google_oauth.current_user.user_id;
   e.google_user_name = application.controllers.google_oauth.current_user.name;
+  if(e.type == 'leaved') {
+    self.realtime_document.publish_event(e);
+    return;
+  }
   self.realtime_document.publish_event(e).fail(function(){
     console.error("Error publishing realtime event, will retry in a second");
     setTimeout(function() {
