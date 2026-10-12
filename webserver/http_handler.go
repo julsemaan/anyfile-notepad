@@ -59,6 +59,9 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 		w.Header().Set("Pragma", "no-cache")
 		w.Header().Set("Expires", "0")
 
+		forceAdsCookie, err := r.Cookie("AFNForceAds")
+		forceAds := err == nil && forceAdsCookie.Value == "1"
+
 		var userId string
 		if sessionIdCookie, err := r.Cookie("ppsid"); err == nil {
 			sid := sessionIdCookie.Value
@@ -85,7 +88,9 @@ func (h Handler) ServeStaticApplication(w http.ResponseWriter, r *http.Request) 
 					InfoPrint(userId, "subscription isn't valid anymore")
 				} else {
 					InfoPrint(userId, "allowing access to ++ app")
-					r.URL.Path = "/app-plus-plus.html"
+					if !forceAds {
+						r.URL.Path = "/app-plus-plus.html"
+					}
 
 					// Setup the session for shared accounts if the current user is the one that has the paid version
 					if userIdCookie != nil && userIdCookie.Value == userId {

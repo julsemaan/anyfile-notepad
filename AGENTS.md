@@ -68,7 +68,13 @@
 
 ## Local dev + build commands
 - Full dev stack:
-  - `cd docker4dev && docker compose up --build`
+  - `cd docker4dev && docker compose up --build --watch`
+  - Requires Docker Compose 2.32.2 or newer for restart rules on bind mounts. Plain `up` does not watch.
+  - Watch batches saves and ignores common editor temporary files and generated output. Container shutdown replaces broad `pkill -9` calls.
+  - Go compile errors leave the service offline until a corrected save. Client restarts copy dependencies and download the three production resource JSON files again, adding overhead.
+  - Successful client builds publish the browser reload marker; failed builds do not. Unsaved-edit warnings remain, with one prompt per build if cancelled.
+  - Environment changes require `docker compose up --force-recreate --watch`; dependency manifest or Dockerfile changes require an explicit image rebuild with `docker compose up --build --watch`.
+  - Standalone client `webdev` keeps its internal watcher. Production workflows are unchanged.
 - Local ports in dev stack:
   - app/webserver: `http://localhost:8000`
   - API: `http://localhost:8001`

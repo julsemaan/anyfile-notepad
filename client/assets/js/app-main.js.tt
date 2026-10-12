@@ -96,6 +96,7 @@ application.controllers.google_oauth.add_to_queue(function(){
       
       application.setupDevMode();
       application.setupLocaleFlash();
+      application.setupAdTestingFlash();
 
       var msg;
 
