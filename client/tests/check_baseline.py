@@ -36,6 +36,7 @@ def main():
     expected_npm = {
         "bootstrap": "3.4.1",
         "jquery": "3.7.1",
+        "marked": "18.1.1",
         "dropbox": "<3.0.0",
         "handlebars": "4.7.10",
     }
@@ -85,16 +86,17 @@ def main():
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
     check(
         hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
-        == "46b52481bedfceec998f3d6861237f925e57929fcfb48fee90c4e66d5c595742",
+        == "ac38132cbd65b166f769d7bccafe9a969d6220a699ce0eee72b2670956b43166",
         "package-lock SHA-256 digest changed",
     )
     check(
-        len(lock.get("packages", {})) == 245,
-        "package-lock package count is not 245",
+        len(lock.get("packages", {})) == 246,
+        "package-lock package count is not 246",
     )
     expected_lock = {
         "node_modules/bootstrap": "3.4.1",
         "node_modules/jquery": "3.7.1",
+        "node_modules/marked": "18.1.1",
         "node_modules/dropbox": "2.5.13",
         "node_modules/handlebars": "4.7.10",
         "node_modules/source-map-js": "1.2.2",
@@ -130,7 +132,6 @@ def main():
         "assets/js/libs/route-recognizer.js",
         "public/jqueryFileTree/jqueryFileTree.js",
         "public/jqueryFileTree/jqueryFileTree.css",
-        "public/marked.js",
         "public/sw.js",
     ):
         check((CLIENT / path).is_file(), "missing committed input: {}".format(path))
@@ -146,6 +147,7 @@ def main():
         "node_modules/jquery/dist/jquery.min.js",
         "node_modules/bootstrap/dist/js/bootstrap.min.js",
         'cp node_modules/bootstrap/dist/fonts/* "$COMPILED_APP/fonts/"',
+        'cp node_modules/marked/lib/marked.umd.js "$COMPILED_APP/marked.js"',
         "public/jqueryFileTree/jqueryFileTree.js",
         "node_modules/handlebars/dist/handlebars.js",
         "find assets/js/ -name '*.js'",
@@ -163,7 +165,8 @@ def main():
           "jQuery must load before Bootstrap")
     check(build.index("cp -frp public/*") < build.index("cp node_modules/bootstrap/dist/fonts/*"),
           "npm Bootstrap fonts must override public fonts")
-    for path in ("assets/js/Controller/Tour.js", "public/jquery.cookie.min.js"):
+    check('src="/marked.js"' in read("site/layout.tt"), "site Marked URL must remain unchanged")
+    for path in ("assets/js/Controller/Tour.js", "public/jquery.cookie.min.js", "public/marked.js"):
         check(not (CLIENT / path).exists(), "obsolete input remains: {}".format(path))
     for name in ("tether-shepherd", "tether"):
         check("node_modules/" + name not in lock["packages"], "obsolete npm package: " + name)

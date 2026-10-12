@@ -251,6 +251,7 @@ function public_assets() {
   cp -frp public/* $COMPILED_APP/
   mkdir -p "$COMPILED_APP/fonts"
   cp node_modules/bootstrap/dist/fonts/* "$COMPILED_APP/fonts/"
+  cp node_modules/marked/lib/marked.umd.js "$COMPILED_APP/marked.js"
 }
 
 function download_if_necessary() {
