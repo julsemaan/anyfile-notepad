@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "dropbox": "<3.0.0",
-    "handlebars": "4.7.10",
-    "tether-shepherd": "^1.8.1"
+    "handlebars": "4.7.10"
   },
   "devDependencies": {
     "bower": "1.8.14",

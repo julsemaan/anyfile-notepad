@@ -170,7 +170,6 @@ function application_css() {
   fi
 
   add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
-  add_css_asset node_modules/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS
   add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS
   ./node_modules/.bin/sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss >> $APPLICATION_CSS
 
@@ -192,12 +191,8 @@ function application_js() {
 
   add_js_asset node_modules/dropbox/dist/Dropbox-sdk.min.js $APPLICATION_JS
   add_js_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
-  add_js_asset bower_components/jquery-ui/jquery-ui.min.js $APPLICATION_JS
   add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
-  add_js_asset node_modules/tether-shepherd/dist/js/tether.js $APPLICATION_JS
-  add_js_asset node_modules/tether-shepherd/dist/js/shepherd.min.js $APPLICATION_JS
   add_js_asset public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
-  add_js_asset public/jquery.cookie.min.js $APPLICATION_JS
   add_js_asset node_modules/handlebars/dist/handlebars.js $APPLICATION_JS
 
   # Single authoritative list of files needing explicit ordering (dependency order)

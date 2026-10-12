@@ -2,7 +2,6 @@ function ApplicationController() {
   this.dev_mode_name = "dev";
   this.dev_mode = (getCookie("AFNVersion") == this.dev_mode_name); 
   this.dev_mode_available = false;
-  this.tour_controller = new TourController({});
   this.is_mobile();
   StatIncrement.record("app-load");
   if(this.is_mobile()) {

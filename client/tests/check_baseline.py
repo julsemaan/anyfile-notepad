@@ -36,7 +36,6 @@ def main():
     expected_npm = {
         "dropbox": "<3.0.0",
         "handlebars": "4.7.10",
-        "tether-shepherd": "^1.8.1",
     }
     expected_dev_npm = {
         "bower": "1.8.14",
@@ -84,18 +83,17 @@ def main():
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
     check(
         hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
-        == "7bb775af2c706db0704927d4a4764b68a54750089dfa82a4d588c5e0191d15cb",
+        == "595fd39e6fd5d55f9e859a1561126712f26bb3f7387d715afa45de9d6a426b94",
         "package-lock SHA-256 digest changed",
     )
     check(
-        len(lock.get("packages", {})) == 245,
-        "package-lock package count is not 245",
+        len(lock.get("packages", {})) == 243,
+        "package-lock package count is not 243",
     )
     expected_lock = {
         "node_modules/dropbox": "2.5.13",
         "node_modules/handlebars": "4.7.10",
         "node_modules/source-map-js": "1.2.2",
-        "node_modules/tether-shepherd": "1.8.1",
         "node_modules/bower": "1.8.14",
         "node_modules/sass": "1.104.0",
         "node_modules/minify": "15.3.1",
@@ -110,7 +108,6 @@ def main():
     expected_bower = {
         "ace-anyfile-notepad": "https://github.com/julsemaan/ace.git#29c744e292c7fd20c8283ed528b9c12b6174a83d",
         "bootstrap": "3.1.1",
-        "jquery-ui": "~1.11",
         "jquery": "~1.11",
     }
     check(
@@ -129,7 +126,6 @@ def main():
         ".minify.json",
         "assets/js/libs/rsvp.min.js",
         "assets/js/libs/route-recognizer.js",
-        "public/jquery.cookie.min.js",
         "public/jqueryFileTree/jqueryFileTree.js",
         "public/jqueryFileTree/jqueryFileTree.css",
         "public/marked.js",
@@ -141,18 +137,13 @@ def main():
     for path in (
         "add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
         "cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
-        "add_css_asset node_modules/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS",
         "add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS",
         "sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss",
         "sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss",
         "node_modules/dropbox/dist/Dropbox-sdk.min.js",
         "bower_components/jquery/dist/jquery.min.js",
-        "bower_components/jquery-ui/jquery-ui.min.js",
         "bower_components/bootstrap/dist/js/bootstrap.min.js",
-        "node_modules/tether-shepherd/dist/js/tether.js",
-        "node_modules/tether-shepherd/dist/js/shepherd.min.js",
         "public/jqueryFileTree/jqueryFileTree.js",
-        "public/jquery.cookie.min.js",
         "node_modules/handlebars/dist/handlebars.js",
         "find assets/js/ -name '*.js'",
         "sass --no-source-map --load-path",
@@ -160,6 +151,18 @@ def main():
         "bower_components/ace-anyfile-notepad/afn-dist/",
     ):
         check(path in build, "build input is not recorded: {}".format(path))
+
+    for path in ("assets/js/Controller/Tour.js", "public/jquery.cookie.min.js"):
+        check(not (CLIENT / path).exists(), "obsolete input remains: {}".format(path))
+    for name in ("tether-shepherd", "tether"):
+        check("node_modules/" + name not in lock["packages"], "obsolete npm package: " + name)
+    for name in ("jquery-ui", "jquery.cookie", "tether-shepherd"):
+        check(name not in build, "obsolete bundle input: " + name)
+    source = "\n".join(path.read_text() for path in (CLIENT / "assets/js").rglob("*.js"))
+    for consumer in ("TourController", "tour_controller", "Shepherd", "$.cookie", "$.removeCookie"):
+        check(consumer not in source, "obsolete consumer: " + consumer)
+    check("function getCookie(" in source and "function setCookie(" in source,
+          "native cookie helpers must remain")
 
     render = read("render.pl")
     check(
@@ -195,7 +198,6 @@ def main():
     version_markers = {
         "assets/js/libs/rsvp.min.js": "@version   3.1.0",
         "assets/js/libs/route-recognizer.js": "VERSION = '0.1.9'",
-        "public/jquery.cookie.min.js": "jQuery Cookie Plugin v1.4.0",
         "public/jqueryFileTree/jqueryFileTree.js": "Version 1.01",
     }
     for path, marker in version_markers.items():
