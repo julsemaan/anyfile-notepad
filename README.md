@@ -16,7 +16,7 @@ NOTE: The instructions were tested on Ubuntu but will work with some adjustments
 
 Install docker using these instructions: https://docs.docker.com/engine/install/ubuntu/
 
-Ensure you then install the docker compose plugin:
+Install the Docker Compose plugin, version **2.32.2 or newer**. Earlier releases incorrectly skip restart watch rules for bind-mounted paths:
 
 ```
 # apt-get install docker-compose-plugin
@@ -74,10 +74,18 @@ GOOGLE_CLIENT_SECRET=<your oauth2 client secret>
 
 ```
 cd docker4dev/
-docker compose up --build
+docker compose up --build --watch
 ```
 
 Once all containers have started, the application will be available on http://localhost:8000
+
+Compose Watch restarts the affected container when API, webserver, client, or page sources change. Plain `docker compose up` does not enable automatic rebuilds. Compose batches rapid saves and ignores common editor temporary files; generated binaries, coverage output, client dependencies, and build output are excluded. Container shutdown replaces the old immediate, broad `pkill -9` calls.
+
+Go services compile on each restart. A compile error leaves that service offline until the next corrected save. The client runs `afn-app.sh webdev --once` per restart, repeats dependency copying, and downloads all three production API resource JSON files again. This adds rebuild overhead and requires access to the production API. Standalone `./afn-app.sh webdev` still uses its internal watcher.
+
+The browser polls the successful-build marker and reloads after a successful build. Failed builds do not publish a marker. Unsaved edits still trigger the existing browser warning. If you cancel, the page stays open without repeated prompts for that build; a later successful build can prompt again.
+
+Watch does not apply `docker4dev/.env` changes or reinstall dependencies. After environment changes, run `docker compose up --force-recreate --watch`. After dependency manifest or Dockerfile changes, stop the current session and run `docker compose up --build --watch` to rebuild the images. Named-volume data survives restarts.
 
 ## Setting up Stripe
 

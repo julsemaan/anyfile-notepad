@@ -159,10 +159,12 @@ CloudFile.prototype.generate_collab_id = function() {
 CloudFile.prototype.publish_event = function(e) {
   var self = this;
   e.publisher_uuid = self._publisher_uuid;
-  return $.post(
-    AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events/"+self.collab_id,
-    JSON.stringify(e)
-  );
+  var url = AFN_VARS["collab_uri"] + "/api/collaboration/realtime_events/"+self.collab_id;
+  var data = JSON.stringify(e);
+  if(e.type == 'leaved') {
+    return navigator.sendBeacon(url, data);
+  }
+  return $.post(url, data);
 }
 
 CloudFile.prototype.events_since = function(since) {

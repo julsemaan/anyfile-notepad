@@ -10,6 +10,33 @@
   <link rel="stylesheet" type="text/css" href="/assets/application-[% APP_VERSION_ID %].min.css" media="all">
 
   <script type="text/javascript" src="/assets/application-[% APP_VERSION_ID %].min.js"></script>
+  [% IF WEBDEV == 'webdev' %]
+  <script>
+    (function() {
+      var build_id = '[% APP_VERSION_ID %]';
+      function poll() {
+        $.ajax({
+          url: '/dev-build-id.txt',
+          dataType: 'text',
+          cache: false,
+          timeout: 5000,
+          success: function(id) {
+            id = $.trim(id);
+            if(id && id != build_id) {
+              build_id = id;
+              window.location.reload();
+            }
+          },
+          complete: function() {
+            setTimeout(poll, 1000);
+          }
+        });
+      }
+      setTimeout(poll, 1000);
+    })();
+  </script>
+  [% END %]
+
   <script type="text/javascript" src="/ace.js/ace.js"></script>
   <script src="/ace.js/ext-language_tools.js"></script>
 

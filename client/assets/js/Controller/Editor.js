@@ -94,10 +94,13 @@ EditorController.prototype.initialize_html = function(){
   });
 
   $(window).bind('beforeunload',function(){
-    self.publish_realtime_event({'type':'leaved'});
     if(!self.safe_to_quit || (self.file && self.file.did_content_change()) ){
       return i18n("You have unsaved changes or your file is still being saved. You will lose your changes")
     }
+  });
+
+  $(window).bind('pagehide',function(){
+    self.publish_realtime_event({'type':'leaved'});
   });
 
   $(window).on('keyup.ctrl-keys keydown.ctrl-keys', function(event){
@@ -567,6 +570,10 @@ EditorController.prototype.publish_realtime_event = function(e){
 
   e.google_user_id = application.controllers.google_oauth.current_user.user_id;
   e.google_user_name = application.controllers.google_oauth.current_user.name;
+  if(e.type == 'leaved') {
+    self.realtime_document.publish_event(e);
+    return;
+  }
   self.realtime_document.publish_event(e).fail(function(){
     console.error("Error publishing realtime event, will retry in a second");
     setTimeout(function() {
