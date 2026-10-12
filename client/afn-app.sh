@@ -123,7 +123,7 @@ function pages_css() {
     rm -f $COMPILED_APP/assets/pages-*.css
   fi
 
-  cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss
+  cp node_modules/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss
   ./node_modules/.bin/sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss >> $COMPILED_APP/assets/pages-$APP_VERSION_ID.css
   
   rm -f assets/css/libs/bootstrap.min.css.scss
@@ -169,7 +169,7 @@ function application_css() {
     rm -f $COMPILED_APP/assets/application-*.css
   fi
 
-  add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
+  add_css_asset node_modules/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS
   add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS
   ./node_modules/.bin/sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss >> $APPLICATION_CSS
 
@@ -190,8 +190,8 @@ function application_js() {
   fi
 
   add_js_asset node_modules/dropbox/dist/Dropbox-sdk.min.js $APPLICATION_JS
-  add_js_asset bower_components/jquery/dist/jquery.min.js $APPLICATION_JS
-  add_js_asset bower_components/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
+  add_js_asset node_modules/jquery/dist/jquery.min.js $APPLICATION_JS
+  add_js_asset node_modules/bootstrap/dist/js/bootstrap.min.js $APPLICATION_JS
   add_js_asset public/jqueryFileTree/jqueryFileTree.js $APPLICATION_JS
   add_js_asset node_modules/handlebars/dist/handlebars.js $APPLICATION_JS
 
@@ -249,6 +249,8 @@ function app() {
 function public_assets() {
   # Adding public assets
   cp -frp public/* $COMPILED_APP/
+  mkdir -p "$COMPILED_APP/fonts"
+  cp node_modules/bootstrap/dist/fonts/* "$COMPILED_APP/fonts/"
 }
 
 function download_if_necessary() {

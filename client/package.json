@@ -2,6 +2,8 @@
   "name": "anyfile-notepad",
   "version": "0.0.1",
   "dependencies": {
+    "bootstrap": "3.4.1",
+    "jquery": "3.7.1",
     "dropbox": "<3.0.0",
     "handlebars": "4.7.10"
   },

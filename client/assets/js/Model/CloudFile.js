@@ -190,7 +190,7 @@ CloudFile.prototype.get_realtime_events = function(start_at, callback) {
   if(!self.id) return;
 
   self.events_since(start_at)
-    .success(function(data){
+    .done(function(data){
       if(self._run_realtime) {
         var events = data["events"] || [];
         var latest;

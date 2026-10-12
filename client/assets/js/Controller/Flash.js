@@ -23,7 +23,7 @@ FlashController.prototype.post_init = function(args){
 
 FlashController.prototype.update_count = function() {
   var self = this;
-  self.set("count", self.dynamic_flash.children().size() + self.sticky_flash.children().size());
+  self.set("count", self.dynamic_flash.children().length + self.sticky_flash.children().length);
 }
 
 FlashController.prototype.get_alert_id = function(){

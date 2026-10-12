@@ -34,6 +34,8 @@ def main():
         return 1
 
     expected_npm = {
+        "bootstrap": "3.4.1",
+        "jquery": "3.7.1",
         "dropbox": "<3.0.0",
         "handlebars": "4.7.10",
     }
@@ -83,14 +85,16 @@ def main():
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
     check(
         hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
-        == "595fd39e6fd5d55f9e859a1561126712f26bb3f7387d715afa45de9d6a426b94",
+        == "46b52481bedfceec998f3d6861237f925e57929fcfb48fee90c4e66d5c595742",
         "package-lock SHA-256 digest changed",
     )
     check(
-        len(lock.get("packages", {})) == 243,
-        "package-lock package count is not 243",
+        len(lock.get("packages", {})) == 245,
+        "package-lock package count is not 245",
     )
     expected_lock = {
+        "node_modules/bootstrap": "3.4.1",
+        "node_modules/jquery": "3.7.1",
         "node_modules/dropbox": "2.5.13",
         "node_modules/handlebars": "4.7.10",
         "node_modules/source-map-js": "1.2.2",
@@ -107,8 +111,6 @@ def main():
 
     expected_bower = {
         "ace-anyfile-notepad": "https://github.com/julsemaan/ace.git#29c744e292c7fd20c8283ed528b9c12b6174a83d",
-        "bootstrap": "3.1.1",
-        "jquery": "~1.11",
     }
     check(
         bower.get("dependencies") == expected_bower,
@@ -135,14 +137,15 @@ def main():
 
     build = read("afn-app.sh")
     for path in (
-        "add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
-        "cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
+        "add_css_asset node_modules/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
+        "cp node_modules/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
         "add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS",
         "sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss",
         "sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss",
         "node_modules/dropbox/dist/Dropbox-sdk.min.js",
-        "bower_components/jquery/dist/jquery.min.js",
-        "bower_components/bootstrap/dist/js/bootstrap.min.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/bootstrap/dist/js/bootstrap.min.js",
+        'cp node_modules/bootstrap/dist/fonts/* "$COMPILED_APP/fonts/"',
         "public/jqueryFileTree/jqueryFileTree.js",
         "node_modules/handlebars/dist/handlebars.js",
         "find assets/js/ -name '*.js'",
@@ -152,6 +155,14 @@ def main():
     ):
         check(path in build, "build input is not recorded: {}".format(path))
 
+    check("bower_components/jquery" not in build and "bower_components/bootstrap" not in build,
+          "old Bower jQuery/Bootstrap bundle inputs remain")
+    check("jquery-migrate" not in build, "diagnostic Migrate must not ship")
+    check(build.index("node_modules/jquery/dist/jquery.min.js") <
+          build.index("node_modules/bootstrap/dist/js/bootstrap.min.js"),
+          "jQuery must load before Bootstrap")
+    check(build.index("cp -frp public/*") < build.index("cp node_modules/bootstrap/dist/fonts/*"),
+          "npm Bootstrap fonts must override public fonts")
     for path in ("assets/js/Controller/Tour.js", "public/jquery.cookie.min.js"):
         check(not (CLIENT / path).exists(), "obsolete input remains: {}".format(path))
     for name in ("tether-shepherd", "tether"):
