@@ -15,7 +15,6 @@ import (
 	stripe "github.com/stripe/stripe-go"
 )
 
-// caca pipi
 var supportEmail = os.Getenv("AFN_SUPPORT_EMAIL")
 var appBaseURL = EnvOrDefault("APP_BASE_URL", "https://anyfile-notepad.semaan.ca")
 var prodAppPath = os.Getenv("AFN_PROD_APP_PATH")
