@@ -9,7 +9,7 @@ This is a source inventory. It is not an inventory of the deployed image. No app
 The committed client has these dependency inputs:
 
 - `package.json` declares three npm runtime dependencies and three npm dev dependencies.
-- `package-lock.json` is lockfile version 3 with 245 entries in `packages`, including the root `packages[""]` entry. It is the complete committed npm name and version list. The Dockerfile does not copy it before running `npm install`, so the installed image is not proven to match it.
+- `package-lock.json` is lockfile version 3 with 245 entries in `packages`, including the root `packages[""]` entry. It is the complete committed npm name and version list. `client/Dockerfile` copies both `package.json` and `package-lock.json` before running `npm ci`. This describes source configuration; deployed-image contents have not been verified.
 - `bower.json` declares four Bower dependencies. There is no committed Bower lockfile.
 - `client/Dockerfile` starts from `ghcr.io/julsemaan/anyfile-notepad/client-base:f37e641c284f0f24d431da390d039a9a6af26527`. That separately published base image is built from `client/base/Dockerfile`, so the source recipe is not the direct base input to the full image.
 - `client/base/Dockerfile` uses the pinned `node:24.20.0-bookworm@sha256:be23f54a88d34e8824c741b19b91064094f92c1c97b194144bfc8b50d67258e2` image, installs npm `11.19.0` globally, and installs apt inputs including `git` plus CPAN inputs. The exact installed apt and CPAN versions are not recorded here.
