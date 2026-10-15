@@ -61,4 +61,43 @@ requests[3].reject();
 assert.strictEqual(requests.length, 4, 'disabled polling does not restart');
 assert.strictEqual(delivered.length, 1);
 assert.strictEqual(retries.length, 1);
+const cancelPage = fs.readFileSync(path.join(client, '../pages/email-cancel.markdown'), 'utf8');
+const cancelScript = cancelPage.match(/<script>([\s\S]*?)<\/script>/)[1];
+const failureMessage = 'There was an error canceling your subscription. Please contact support@semaan.ca via email to cancel this subscription.';
+for (const [method, response, resultClass, message] of [
+  ['resolve', {message: 'Cancelled'}, 'alert-success', 'Cancelled'],
+  ['reject', {status: 400, responseJSON: {message: 'Already cancelled'}}, 'alert-warning', 'Already cancelled'],
+  ['reject', {status: 500, responseJSON: {message: 'Server error'}}, 'alert-danger', failureMessage]
+]) {
+  const button = {
+    on: (event, callback) => { assert.strictEqual(event, 'click'); button.click = callback; },
+    hide: () => { button.hidden = true; }
+  };
+  const result = {
+    addClass: value => { result.className = value; },
+    html: value => { result.message = value; }
+  };
+  const $ = selector => {
+    assert.ok(selector === '#unsubscribe' || selector === '#result');
+    return selector === '#unsubscribe' ? button : result;
+  };
+  const request = {
+    done: callback => { request.resolve = callback; return request; },
+    fail: callback => { request.reject = callback; return request; }
+  };
+  $.post = url => {
+    assert.strictEqual(url, '/api/billing/link_cancel/customer/link');
+    return request;
+  };
+  vm.runInNewContext(cancelScript, {
+    $, window: {location: {href: 'https://example.com/email-cancel?cus_id=customer&cancel_link_id=link'}}
+  });
+  button.click();
+  assert.strictEqual(typeof request.resolve, 'function');
+  assert.strictEqual(typeof request.reject, 'function');
+  request[method](response);
+  assert.strictEqual(button.hidden, true);
+  assert.strictEqual(result.className, resultClass);
+  assert.strictEqual(result.message, message);
+}
 console.log('jQuery compatibility checks passed');
