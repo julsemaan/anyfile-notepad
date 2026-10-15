@@ -100,4 +100,65 @@ for (const [method, response, resultClass, message] of [
   assert.strictEqual(result.className, resultClass);
   assert.strictEqual(result.message, message);
 }
+// Exercise real Popup/Model initialization with only the browser UI boundary stubbed.
+const popupTemplate = fs.readFileSync(path.join(client, '_popup.html'), 'utf8').match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+const elements = new Map();
+const $ = selector => {
+  if (!elements.has(selector)) {
+    const element = {
+      html: () => popupTemplate,
+      insertAfter: () => { element.inserted = true; },
+      modal: options => { element.modalState = options; },
+      css: () => 1050,
+      click: callback => { element.clickHandler = callback; }
+    };
+    elements.set(selector, element);
+  }
+  return elements.get(selector);
+};
+$.fn = {};
+$.extend = (target, source) => { for (const key in source) target[key] = source[key]; };
+const saveTimers = [];
+const popupContext = {
+  $, jQuery: $, context: {}, i18n: text => text,
+  Handlebars: require('../node_modules/handlebars'),
+  DataBinder: function() { this.on = () => {}; this.trigger = () => {}; },
+  setTimeout: (callback, delay) => saveTimers.push({callback, delay})
+};
+popupContext.window = popupContext;
+vm.createContext(popupContext);
+for (const source of ['Model.js', 'helpers.js', 'Popup.js', 'Controller/Editor.js']) {
+  vm.runInContext(fs.readFileSync(path.join(client, 'assets/js', source), 'utf8'), popupContext);
+}
+const popups = [
+  new popupContext.Popup({message: 'First dialog', confirm: true}),
+  new popupContext.Popup({message: 'Second dialog', confirm: true}),
+  new popupContext.Popup({message: 'Explicit ID', popup_id: 'custom-popup', confirm: true})
+];
+assert.strictEqual(popups[2].popup_id, 'custom-popup');
+const ids = popups.flatMap(popup => [popup.popup_id, popup.cancel_id, popup.confirm_id]);
+assert.strictEqual(new Set(ids).size, ids.length, 'popup and button IDs must be distinct');
+for (const popup of popups) {
+  const markup = popupContext.Handlebars.compile(popupTemplate)(popup);
+  assert.strictEqual($(markup).inserted, true, 'popup markup must be inserted');
+  for (const id of [popup.popup_id, popup.cancel_id, popup.confirm_id]) {
+    assert.ok(markup.includes('id="' + id + '"'), 'rendered markup must contain each ID');
+  }
+  assert.strictEqual($('#' + popup.popup_id).modalState.show, true);
+  assert.strictEqual(typeof $('#' + popup.cancel_id).clickHandler, 'function');
+  assert.strictEqual(typeof $('#' + popup.confirm_id).clickHandler, 'function');
+}
+let saved = false;
+const editor = Object.create(popupContext.EditorController.prototype);
+Object.assign(editor, {
+  file: {title: 'New file', persisted: false, update: () => { saved = true; }},
+  editor_view: {getValue: () => 'content', focus: () => {}},
+  saving_in_progress: () => {}
+});
+editor.save();
+assert.strictEqual($('#file_being_saved').modalState.show, true);
+assert.strictEqual(saveTimers.length, 1, 'new-file save must reach the update timer');
+assert.strictEqual(saveTimers[0].delay, 500);
+saveTimers[0].callback();
+assert.strictEqual(saved, true, 'new-file save must call file.update');
 console.log('jQuery compatibility checks passed');
