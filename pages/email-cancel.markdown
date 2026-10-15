@@ -26,10 +26,10 @@ function handleResult(resultClass, message) {
 
 $("#unsubscribe").on("click", function() {
   $.post("/api/billing/link_cancel/"+getParameterByName("cus_id")+"/"+getParameterByName("cancel_link_id"))
-    .success(function(response){
+    .done(function(response){
       handleResult("alert-success", response.message);
     })
-    .error(function(response){ 
+    .fail(function(response){
       if(response.responseJSON.message && response.status == 400) {
         handleResult("alert-warning", response.responseJSON.message);
       } else {

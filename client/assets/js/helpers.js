@@ -160,8 +160,9 @@ function getQueryParam(variable) {
   } 
 }
 
+var unique_id_counter = 0;
 function uniqueId() {
-  return $('<a></a>').uniqueId().attr('id');
+  return 'afn-id-' + (++unique_id_counter);
 }
 
 function parseQueryString(str) {

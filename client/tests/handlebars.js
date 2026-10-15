@@ -10,7 +10,7 @@ vm.runInNewContext(
   browser
 );
 const Handlebars = browser.Handlebars;
-assert.strictEqual(Handlebars.VERSION, '4.7.9');
+assert.strictEqual(Handlebars.VERSION, '4.7.10');
 Handlebars.registerHelper('i18n', value => value);
 
 function templateFrom(file, attribute) {

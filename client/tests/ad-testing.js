@@ -21,7 +21,6 @@ function harness(cookie, protocol = 'https:') {
     window: {location: {protocol, reload: () => reloads++}, onbeforeunload: beforeunload},
     Popup: function(options) { popups.push(options); },
     i18n: text => text,
-    TourController: function() {},
     StatIncrement: {record: () => {}},
     $: () => ({is: () => true})
   };

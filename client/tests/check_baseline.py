@@ -34,9 +34,11 @@ def main():
         return 1
 
     expected_npm = {
+        "bootstrap": "3.4.1",
+        "jquery": "3.7.1",
+        "marked": "18.1.1",
         "dropbox": "<3.0.0",
-        "handlebars": "4.7.9",
-        "tether-shepherd": "^1.8.1",
+        "handlebars": "4.7.10",
     }
     expected_dev_npm = {
         "bower": "1.8.14",
@@ -84,17 +86,20 @@ def main():
     check(lock.get("lockfileVersion") == 3, "package-lock is not lockfile version 3")
     check(
         hashlib.sha256((CLIENT / "package-lock.json").read_bytes()).hexdigest()
-        == "97d20f7ed8b12b1a27185113b3de3cbbcde650c87c83c6b1d7f4b9cf17ddc3de",
+        == "ac38132cbd65b166f769d7bccafe9a969d6220a699ce0eee72b2670956b43166",
         "package-lock SHA-256 digest changed",
     )
     check(
-        len(lock.get("packages", {})) == 245,
-        "package-lock package count is not 245",
+        len(lock.get("packages", {})) == 246,
+        "package-lock package count is not 246",
     )
     expected_lock = {
+        "node_modules/bootstrap": "3.4.1",
+        "node_modules/jquery": "3.7.1",
+        "node_modules/marked": "18.1.1",
         "node_modules/dropbox": "2.5.13",
-        "node_modules/handlebars": "4.7.9",
-        "node_modules/tether-shepherd": "1.8.1",
+        "node_modules/handlebars": "4.7.10",
+        "node_modules/source-map-js": "1.2.2",
         "node_modules/bower": "1.8.14",
         "node_modules/sass": "1.104.0",
         "node_modules/minify": "15.3.1",
@@ -108,9 +113,6 @@ def main():
 
     expected_bower = {
         "ace-anyfile-notepad": "https://github.com/julsemaan/ace.git#29c744e292c7fd20c8283ed528b9c12b6174a83d",
-        "bootstrap": "3.1.1",
-        "jquery-ui": "~1.11",
-        "jquery": "~1.11",
     }
     check(
         bower.get("dependencies") == expected_bower,
@@ -128,30 +130,25 @@ def main():
         ".minify.json",
         "assets/js/libs/rsvp.min.js",
         "assets/js/libs/route-recognizer.js",
-        "public/jquery.cookie.min.js",
         "public/jqueryFileTree/jqueryFileTree.js",
         "public/jqueryFileTree/jqueryFileTree.css",
-        "public/marked.js",
         "public/sw.js",
     ):
         check((CLIENT / path).is_file(), "missing committed input: {}".format(path))
 
     build = read("afn-app.sh")
     for path in (
-        "add_css_asset bower_components/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
-        "cp bower_components/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
-        "add_css_asset node_modules/tether-shepherd/dist/css/shepherd-theme-default.css $APPLICATION_CSS",
+        "add_css_asset node_modules/bootstrap/dist/css/bootstrap.min.css $APPLICATION_CSS",
+        "cp node_modules/bootstrap/dist/css/bootstrap.min.css assets/css/libs/bootstrap.min.css.scss",
         "add_css_asset public/jqueryFileTree/jqueryFileTree.css $APPLICATION_CSS",
         "sass --no-source-map --load-path assets/css/ assets/css/pages.css.scss",
         "sass --no-source-map --load-path assets/css/ assets/css/editor.css.scss",
         "node_modules/dropbox/dist/Dropbox-sdk.min.js",
-        "bower_components/jquery/dist/jquery.min.js",
-        "bower_components/jquery-ui/jquery-ui.min.js",
-        "bower_components/bootstrap/dist/js/bootstrap.min.js",
-        "node_modules/tether-shepherd/dist/js/tether.js",
-        "node_modules/tether-shepherd/dist/js/shepherd.min.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/bootstrap/dist/js/bootstrap.min.js",
+        'cp node_modules/bootstrap/dist/fonts/* "$COMPILED_APP/fonts/"',
+        'cp node_modules/marked/lib/marked.umd.js "$COMPILED_APP/marked.js"',
         "public/jqueryFileTree/jqueryFileTree.js",
-        "public/jquery.cookie.min.js",
         "node_modules/handlebars/dist/handlebars.js",
         "find assets/js/ -name '*.js'",
         "sass --no-source-map --load-path",
@@ -159,6 +156,27 @@ def main():
         "bower_components/ace-anyfile-notepad/afn-dist/",
     ):
         check(path in build, "build input is not recorded: {}".format(path))
+
+    check("bower_components/jquery" not in build and "bower_components/bootstrap" not in build,
+          "old Bower jQuery/Bootstrap bundle inputs remain")
+    check("jquery-migrate" not in build, "diagnostic Migrate must not ship")
+    check(build.index("node_modules/jquery/dist/jquery.min.js") <
+          build.index("node_modules/bootstrap/dist/js/bootstrap.min.js"),
+          "jQuery must load before Bootstrap")
+    check(build.index("cp -frp public/*") < build.index("cp node_modules/bootstrap/dist/fonts/*"),
+          "npm Bootstrap fonts must override public fonts")
+    check('src="/marked.js"' in read("site/layout.tt"), "site Marked URL must remain unchanged")
+    for path in ("assets/js/Controller/Tour.js", "public/jquery.cookie.min.js", "public/marked.js"):
+        check(not (CLIENT / path).exists(), "obsolete input remains: {}".format(path))
+    for name in ("tether-shepherd", "tether"):
+        check("node_modules/" + name not in lock["packages"], "obsolete npm package: " + name)
+    for name in ("jquery-ui", "jquery.cookie", "tether-shepherd"):
+        check(name not in build, "obsolete bundle input: " + name)
+    source = "\n".join(path.read_text() for path in (CLIENT / "assets/js").rglob("*.js"))
+    for consumer in ("TourController", "tour_controller", "Shepherd", "$.cookie", "$.removeCookie"):
+        check(consumer not in source, "obsolete consumer: " + consumer)
+    check("function getCookie(" in source and "function setCookie(" in source,
+          "native cookie helpers must remain")
 
     render = read("render.pl")
     check(
@@ -194,7 +212,6 @@ def main():
     version_markers = {
         "assets/js/libs/rsvp.min.js": "@version   3.1.0",
         "assets/js/libs/route-recognizer.js": "VERSION = '0.1.9'",
-        "public/jquery.cookie.min.js": "jQuery Cookie Plugin v1.4.0",
         "public/jqueryFileTree/jqueryFileTree.js": "Version 1.01",
     }
     for path, marker in version_markers.items():
@@ -217,7 +234,7 @@ def main():
         "_propose_upgrade.html": ("//www.googletagservices.com/tag/js/gpt.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/sdbmtiqbxqoopp7t3s9lq.js", "https://storage.googleapis.com/dbmtiqbxqoopp7t3s9lq/vdbmtiqbxqoopp7t3s9lq.js"),
         "analytics.tt": ("//www.google-analytics.com/analytics.js",),
         "app.tt": (
-            "https://parchmentuniquevista.com/17133d254dc58db1395ab65191071264/invoke.js",
+            "https://otelev.com/22/17133d254dc58db1395ab65191071264",
             "//resources.infolinks.com/js/infolinks_main.js",
         ),
         "_upgrade.html": ("https://checkout.stripe.com/checkout.js",),

@@ -1,44 +1,59 @@
-# Client baseline checks
+# Client dependency checks
 
-## Source-only check
+## Run checks
 
-Run this from the repository root:
+From the repository root, using Node 24.20.0 and npm 11.19.0:
 
 ```sh
+cd client && npm ci && cd ..
 python3 client/tests/check_baseline.py
+for check in client/tests/*.js; do
+  node "$check" || exit
+done
 ```
 
-The check uses only the Python standard library. It reads the committed npm and Bower manifests plus `.minify.json`, verifies the lockfile version 3 shape with 245 `packages` entries, its fixed SHA-256 digest, and the pinned `node_modules` resolutions, verifies the split runtime and dev dependency sets against the lock root `packages[""]`, checks the Bower SHA pin and rejects `devDependencies`, `resolutions`, and `overrides`, checks the build's browser inputs including npm Handlebars and both `sass` and `minify --fail-on-error` invocations, checks the CSS anchors (`common.css.scss` absent, `@use` with no `@import`, moved flash and footer styles, inlined menu fix), checks both rendered app variants, checks the `assets/js/libs` filename set with a fail-closed nested-file check and selected version markers, and checks selected external-load anchors. It no longer expects a vendored Handlebars file or a print-window jQuery load. It does not install packages, access the network, run Docker, start a browser, load `VARS.js`, or write build output. It does not inspect `Dockerfile` or `base/Dockerfile`, so changes to their base-image, Node, or npm pins can pass unnoticed. It pins only the top level `assets/js/libs` set plus a nested-file rejection, so the 49 first party files under `assets/js/` outside `libs` can change unnoticed. It records the Ace `afn-dist` build input string but does not inspect the Ace nested tree.
+The baseline uses Python's standard library. It checks manifest sets, lockfile version 3, all 246 package entries through a fixed SHA-256 digest, selected resolutions, bundle paths/order, removal of obsolete inputs, npm font copy ordering, `/marked.js`, both app template variants, CSS anchors, and external script URLs. It does not install dependencies, build images, read `VARS.js`, or verify Docker/toolchain pins or Ace's nested tree.
 
-A passing result means the committed source still describes the recorded baseline. It is not a browser smoke result and does not prove that an image was built or deployed.
+## Node checks
 
-## Companion node checks
+| Check | Coverage |
+|---|---|
+| `handlebars.js` | npm 4.7.10 browser distribution; templates, escaping, and denied prototype access |
+| `jquery-compat.js` | Flash counts with `.length`; collaboration `.done()` polling, event delivery, own-event filtering, cursor progression, retries and disabled polling |
+| `markdown.js` | npm Marked 18.1.1 UMD; inline formatting, links, lists, code, exact panel delimiters, trusted raw HTML, balanced columns, all 12 committed pages |
+| `ad-testing.js` | Native ad-testing cookie enable/disable and application startup without the removed tour |
+| `dev-reload.js` | Successful-build reload marker and unsaved-edit prompt behavior |
+| `editor-unload.js` | Editor unload behavior |
+| `print-source-check.js` | Native print-window handling without jQuery |
+| `realtime-departure.js` | Lifecycle-safe departures and ordinary event publish retries |
 
-`client/tests/print-source-check.js` runs with plain node and no install step. `check_baseline.py` does not inspect `print.tt` or `assets/js/Controller/Editor.js`; `print-source-check.js` provides that coverage on its own.
+Handlebars, jQuery compatibility, and Markdown checks require npm dependencies. These are small Node checks with mocks, not a browser framework. The Markdown DOM stub does not execute trusted page scripts or model browser HTML parsing. `MDRenderer` is for trusted first-party pages only. Marked does not sanitize HTML.
 
-`client/tests/handlebars.js` needs `node_modules` present because Handlebars now comes from npm 4.7.9 instead of a vendored file. Run it only when `node_modules` exists; otherwise record it as not run.
+## Current results
 
-## Browser baseline status
+Source `6ccf2a0fe075cf41714832c66dcc2ecb4b8258d9`, Node 24.20.0/npm 11.19.0:
 
-No browser runner is included. The repository has no existing client test harness, and adding a browser framework or runner needs a separate approved choice. The source-only check is the smallest repeatable check that can run without that approval.
+- Clean `npm ci`, 118 baseline assertions, and all eight Node checks passed. The lockfile remained unchanged.
+- Isolated asset build passed Sass, concatenation, JS/CSS minification, minified JS syntax, exact npm Bootstrap fonts and Marked copies, and removed-library checks. It was not a full app/image build.
+- Full and production-only audits both exited 1 with 16 findings: 1 low, 3 moderate, 10 high, 2 critical. Handlebars and source-map-js are no longer flagged. See `../DEPENDENCIES.md` for retained findings.
+- Supplied-diff agent review found no important code issues. It did not independently execute tests or inspect images.
 
-The runtime baseline has not been run because the deployed image, an immutable rollback image, disposable accounts/files, and an approved isolated browser environment are unavailable. These are gaps, not passing results.
+## Open browser and release gates
 
-| Scenario | Status | Required evidence |
-|---|---|---|
-| `/app.html` loads the ad-enabled variant for an unpaid session and the ad-free variant for a paid session; menus and editor render | Not run | Deployed image, isolated browser, and unpaid and paid sessions |
-| Open, edit, save, and reload exact text, including Unicode and line breaks | Not run | Disposable Google Drive and Dropbox files |
-| Autosave and file browsing | Not run | Disposable files and browser network capture |
-| Preferences and dialogs, including keyboard focus, confirm, and cancel | Not run | Fixed-viewport browser run and console capture |
-| Printing, line numbers, and print preview | Not run | Browser print-window run and manual preview inspection |
-| Two-browser collaboration convergence without rebroadcast loops | Not run | Two isolated browser profiles and one disposable collaborative file |
-| Home and representative site content/form pages | Not run | Deployed or locally built image plus page-content service |
-| Desktop/mobile screenshots and console/network diagnostics | Not run | Fixed viewports, sanitized artifacts, and browser DevTools output |
+The sandbox has no usable browser or Docker daemon. Local Perl lacks `Template`, and Ace is absent. No full/light images or beta release were verified for this source.
 
-No runtime failures are claimed. The dependency inventory records source-level limitations separately from test outcomes.
+Before release, record the final source SHA, full/light GHA image tags and immutable digests, and a retrievable known-good rollback image. Verify both app variants, generated JS/CSS, `/marked.js`, fonts and Ace output. Check that no removed libraries or obsolete duplicate copies ship.
 
-## When browser access is available
+Use disposable accounts/files and isolated browser profiles at desktop and mobile sizes, such as 1280x800 and 390x844. Capture sanitized screenshots, console errors and failed requests without tokens, session IDs or private content.
 
-Use isolated disposable profiles and fixed viewport sizes such as 1280x800 and 390x844. Do not use real user files or leave tokens, session identifiers, or private file contents in artifacts. Capture the source commit, image tag or digest, request failures, console errors, and sanitized screenshots. Record existing failures separately from regressions.
+All scenarios below remain open for this batch:
 
-The rollback image remains **unavailable**. Do not substitute a mutable client-base tag for a known-good client image.
+- Paid/ad-free behavior with `AFNForceAds` disabled, and the ads-enabled variant.
+- Google Drive and Dropbox open, edit, save, reload, autosave, and file browsing. Hostile filenames must not execute scripts.
+- Startup, native cookies, menus, file-tree expansion and animations without UI/Cookie/tour inputs. Restore the affected dependency if an indirect consumer appears.
+- Dialogs, keyboard focus, preferences, cloned textarea/select controls, printing, and desktop/mobile layout.
+- Two-browser collaboration with no rebroadcast loops.
+- Home, FAQ, contact and payment pages, including panels, links, raw HTML and column layout. Check missing content and duplicated paragraph wrappers.
+- Font requests, console errors and failed network requests.
+
+Use uncompressed jQuery Migrate only for diagnosis if needed. It is absent from release inputs, and final behavior must pass without it. Keep removals and the beta release unverified until evidence exists. Historical user-reported beta success does not validate this batch.

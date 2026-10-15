@@ -49,24 +49,15 @@ MDRenderer.prototype.createGrid = function(){
   var width = 12 / self.columns;
   var panels = self.createPanels();
   
-  var missing = self.columns - (panels.length % self.columns);
-  var per_column = (panels.length + missing) / self.columns;
-
-  // inserts an empty panel at each bottom of row starting from the end to make all columns equal
-  for(var i=0; i<missing; i++){
-    panels.splice((length - (i*per_column) -1), 0, $('<span style="display:none"></span>'));
-  }
-  
+  var index = 0;
   var row = $('<div class="row"></div>');
-  var column = $('<div class="col-md-'+width+'"></div>');
-  for(var i in panels){
-    i = parseInt(i)
-    column.append(panels[i]);
-    // we switch column if necessary
-    if((i+1) % per_column == 0){
-      if(column) row.append(column);
-      column = $('<div class="col-md-'+width+'"></div>');
+  for(var i=0; i<self.columns; i++){
+    var column = $('<div class="col-md-'+width+'"></div>');
+    var per_column = Math.ceil((panels.length - index) / (self.columns - i));
+    for(var j=0; j<per_column; j++){
+      column.append(panels[index++]);
     }
+    row.append(column);
   }
   return row;
 }
@@ -76,28 +67,23 @@ MDRenderer.prototype.createPanels = function() {
   var panels = [];
   var title;
   var panel_items = [];
-  for(var i in self.elements){
+  for(var i=0; i<self.elements.length; i++){
     var element = self.elements[i];
-    if(element.type == "heading"){
+    if(element.type == "heading" && element.depth == 1){
       // Just a random info header
-      if (element.depth == 1){
-        panels.push($("<h3 class='alert alert-success'></h3>").html(element.text));
-      }
-      else if(element.depth == 2){
-        title = element.text;
-      }
+      panels.push($("<h3 class='alert alert-success'></h3>").html(marked.Parser.parseInline(element.tokens)));
     }
-    else if(element.type == "paragraph"){
-      panel_items.push(element)
+    else if(element.type == "heading" && element.depth == 2){
+      title = marked.Parser.parseInline(element.tokens);
     }
-    else if(element.text == "<!--- end panel -->\n"){
+    else if(element.type == "html" && /^<!--- end panel -->\n*$/.test(element.text)){
       var panel = self.createPanel(title, panel_items);
       panels.push(panel);
 
       title = undefined;
       panel_items = [];
     }
-    else if(element.type == "html") {
+    else {
       panel_items.push(element);
     }
   }
@@ -107,15 +93,14 @@ MDRenderer.prototype.createPanels = function() {
 MDRenderer.prototype.createPanel = function(title, panel_items){
   var self = this; 
   var panel = $('<div class="panel panel-primary"></div>')
-  var panel_header = $('<h4 class="panel-heading"></h3>');
+  var panel_header = $('<h4 class="panel-heading"></h4>');
   var panel_body = $('<div class="panel-body"></div>');
   panel.append(panel_header);
   panel.append(panel_body);
 
   panel_header.html(title);
-  for(var i in panel_items){
-    var e = panel_items[i].type == "paragraph" ? $('<p></p>').html(panel_items[i].text) : $(panel_items[i].text);
-    panel_body.append(e);
-  }
+  // Only trusted first-party pages: raw HTML, styles and scripts are intentional.
+  // Do not use this renderer for user-supplied Markdown.
+  panel_body.append(marked.parser(panel_items));
   return panel;
 }
